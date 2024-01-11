@@ -16,23 +16,20 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
-/** IO implementation for Pigeon2 */
+/** IO implementation for NavX2 */
 public class GyroIOPigeon2 implements GyroIO {
-  private final Pigeon2 pigeon = new Pigeon2(20);
-  private final StatusSignal<Double> yaw = pigeon.getYaw();
-  private final StatusSignal<Double> yawVelocity = pigeon.getAngularVelocityZWorld();
+  private final AHRS NavX2 = new AHRS(SPI.Port.kMXP);
+  private final StatusSignal<Double> yaw = NavX2.getYaw();
+  private final StatusSignal<Double> yawVelocity = NavX2.getRate();
 
-  public GyroIOPigeon2() {
-    pigeon.getConfigurator().apply(new Pigeon2Configuration());
-    pigeon.getConfigurator().setYaw(0.0);
+  public GyroIONavX2() {
+    NavX2.reset();
     yaw.setUpdateFrequency(100.0);
     yawVelocity.setUpdateFrequency(100.0);
-    pigeon.optimizeBusUtilization();
+    //pigeon.optimizeBusUtilization();
   }
 
   @Override
