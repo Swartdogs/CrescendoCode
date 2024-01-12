@@ -168,11 +168,6 @@ public class ModuleIOMotor implements ModuleIO {
   }
 
   @Override
-  public void updateInputs(ModuleIOInputs inputs) {
-    
-  }
-
-  @Override
   public void setDriveVoltage(double volts) {
     driveSparkMax.setVoltage(volts);
   }
@@ -201,16 +196,6 @@ public class ModuleIOMotor implements ModuleIO {
 
 public class ModuleIOMotor implements ModuleIO {
   
-
-    
-
-
-
-    
-  
-
-  
-
   @Override
   public void setDriveVoltage(double volts) {
     driveTalon.setControl(new VoltageOut(volts));
