@@ -13,29 +13,25 @@
 
 package frc.robot.subsystems.drive;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.StatusSignal;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.SPI.Port;
 
 /** IO implementation for NavX2 */
-public class GyroIOPigeon2 implements GyroIO {
-  private final AHRS NavX2 = new AHRS(SPI.Port.kMXP);
-  private final StatusSignal<Double> yaw = NavX2.getYaw();
-  private final StatusSignal<Double> yawVelocity = NavX2.getRate();
+public class GyroIONavX2 implements GyroIO 
+{
+  private final AHRS NavX2 = new AHRS(Port.kMXP);
 
-  public GyroIONavX2() {
+  public GyroIONavX2() 
+  {
     NavX2.reset();
-    yaw.setUpdateFrequency(100.0);
-    yawVelocity.setUpdateFrequency(100.0);
-    //pigeon.optimizeBusUtilization();
   }
 
   @Override
-  public void updateInputs(GyroIOInputs inputs) {
-    inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
-    inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
-    inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
+  public void updateInputs(GyroIOInputs inputs) 
+  {
+    inputs.yawPosition = Rotation2d.fromDegrees(NavX2.getYaw());
+    inputs.yawVelocityRadPerSec = Units.degreesToRadians(NavX2.getRate());
   }
 }

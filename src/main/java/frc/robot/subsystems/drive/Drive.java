@@ -114,14 +114,10 @@ public class Drive extends SubsystemBase {
     // loop cycle in x, y, and theta based only on the modules,
     // without the gyro. The gyro is always disconnected in simulation.
     var twist = kinematics.toTwist2d(wheelDeltas);
-    if (gyroInputs.connected) {
-      // If the gyro is connected, replace the theta component of the twist
-      // with the change in angle since the last loop cycle.
-      twist =
-          new Twist2d(
-              twist.dx, twist.dy, gyroInputs.yawPosition.minus(lastGyroRotation).getRadians());
-      lastGyroRotation = gyroInputs.yawPosition;
-    }
+    twist =
+        new Twist2d(
+            twist.dx, twist.dy, gyroInputs.yawPosition.minus(lastGyroRotation).getRadians());
+    lastGyroRotation = gyroInputs.yawPosition;
     // Apply the twist (change since last loop cycle) to the current pose
     pose = pose.exp(twist);
   }
