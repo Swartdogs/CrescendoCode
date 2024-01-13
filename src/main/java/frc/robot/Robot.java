@@ -13,8 +13,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.drive.Module;
+import frc.robot.subsystems.drive.ModuleIOSparkMax;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -31,7 +41,16 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-
+  private Joystick joystick;
+  private Module swerveModule;
+  private ModuleIOSparkMax swerveModuleIO;
+  private double xSupplier;
+  private double ySupplier;
+  private double omegaSupplier;
+  private static final double DEADBAND = 0.1;
+  private double hypoLength;
+  private Rotation2d angle;
+  private SwerveModuleState swerveModuleState;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -86,7 +105,10 @@ public class Robot extends LoggedRobot {
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
-    robotContainer = new RobotContainer();
+    //robotContainer = new RobotContainer();
+    swerveModuleIO = new ModuleIOSparkMax(1);
+    swerveModule = new Module(swerveModuleIO, 1);
+    joystick = new Joystick(1);
   }
 
   /** This function is called periodically during all modes. */
@@ -137,7 +159,29 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() 
+  {
+    xSupplier = joystick.getX();
+    ySupplier = joystick.getY();
+    omegaSupplier = joystick.getZ();
+
+    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier, ySupplier), DEADBAND);
+    Rotation2d linearDirection = new Rotation2d(xSupplier, ySupplier);
+    double omega = MathUtil.applyDeadband(omegaSupplier, DEADBAND);
+
+    // Square values
+    linearMagnitude = linearMagnitude * linearMagnitude;
+    omega = Math.copySign(omega * omega, omega);
+    // Calcaulate new linear velocity
+    Translation2d linearVelocity =
+    new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
+
+    hypoLength = linearVelocity.getNorm();
+    angle = linearVelocity.getAngle();
+    swerveModuleState = new SwerveModuleState(hypoLength, angle);
+    swerveModule.runSetpoint(swerveModuleState);
+    swerveModule.periodic();
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
