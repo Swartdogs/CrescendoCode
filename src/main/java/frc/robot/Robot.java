@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.drive.Module;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -51,6 +50,9 @@ public class Robot extends LoggedRobot {
   private double hypoLength;
   private Rotation2d angle;
   private SwerveModuleState swerveModuleState;
+  private double y;
+  private double x;
+  private double angleNum;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -105,7 +107,7 @@ public class Robot extends LoggedRobot {
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
-    //robotContainer = new RobotContainer();
+    // robotContainer = new RobotContainer();
     swerveModuleIO = new ModuleIOSparkMax(1);
     swerveModule = new Module(swerveModuleIO, 1);
     joystick = new Joystick(1);
@@ -159,8 +161,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() 
-  {
+  public void teleopPeriodic() {
     xSupplier = joystick.getX();
     ySupplier = joystick.getY();
     omegaSupplier = joystick.getZ();
@@ -174,13 +175,21 @@ public class Robot extends LoggedRobot {
     omega = Math.copySign(omega * omega, omega);
     // Calcaulate new linear velocity
     Translation2d linearVelocity =
-    new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
+        new Pose2d(new Translation2d(), linearDirection)
+            .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+            .getTranslation();
 
     hypoLength = linearVelocity.getNorm();
     angle = linearVelocity.getAngle();
+    y = linearVelocity.getY();
+    x = linearVelocity.getX();
+    angleNum = Math.atan(y / x);
     swerveModuleState = new SwerveModuleState(hypoLength, angle);
     swerveModule.runSetpoint(swerveModuleState);
     swerveModule.periodic();
+
+    Logger.recordOutput("hypo", hypoLength);
+    Logger.recordOutput("angle", angleNum);
   }
 
   /** This function is called once when test mode is enabled. */

@@ -19,19 +19,16 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI.Port;
 
 /** IO implementation for NavX2 */
-public class GyroIONavX2 implements GyroIO 
-{
-    private final AHRS NavX2 = new AHRS(Port.kMXP);
+public class GyroIONavX2 implements GyroIO {
+  private final AHRS NavX2 = new AHRS(Port.kMXP);
 
-    public GyroIONavX2() 
-    {
-        NavX2.reset();
-    }
+  public GyroIONavX2() {
+    NavX2.reset();
+  }
 
-    @Override
-    public void updateInputs(GyroIOInputs inputs) 
-    {
-        inputs.yawPosition          = Rotation2d.fromDegrees(NavX2.getYaw());
-        inputs.yawVelocityRadPerSec = Units.degreesToRadians(NavX2.getRate());
-    }
+  @Override
+  public void updateInputs(GyroIOInputs inputs) {
+    inputs.yawPosition = Rotation2d.fromDegrees(NavX2.getYaw());
+    inputs.yawVelocityRadPerSec = Units.degreesToRadians(NavX2.getRate());
+  }
 }
