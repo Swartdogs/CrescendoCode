@@ -19,11 +19,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.io.IOException;
 import java.util.Optional;
+import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -48,22 +53,22 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
     // // Record metadata
-    // Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-    // Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    // Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-    // switch (BuildConstants.DIRTY) {
-    //   case 0:
-    //     Logger.recordMetadata("GitDirty", "All changes committed");
-    //     break;
-    //   case 1:
-    //     Logger.recordMetadata("GitDirty", "Uncomitted changes");
-    //     break;
-    //   default:
-    //     Logger.recordMetadata("GitDirty", "Unknown");
-    //     break;
-    // }
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
 
     AprilTagFieldLayout aprilTagFieldLayout = null;
 
@@ -72,56 +77,53 @@ public class Robot extends LoggedRobot {
       aprilTagFieldLayout =
           AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
       System.out.println("Loaded the AprilTag field layout from the resource file");
-    } catch (IOException e) {
-      // Handle IOException specifically
-      System.out.println("IOException encountered: " + e.getMessage());
-      e.printStackTrace();
     } catch (Exception e) {
-      // Handle any other exceptions
-      System.out.println("An unexpected error occurred: " + e.getMessage());
-      e.printStackTrace();
+      System.out.println("Exception encountered: " + e.getMessage());
     }
 
     // Initialize the camera
-    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
+    camera = new PhotonCamera("frontCam");
 
     // Define the transform from the robot to the camera (assuming the camera is mounted facing
     // forward)
     Transform3d robotToCam =
-        new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
-
+        new Transform3d(
+            new Translation3d(Units.inchesToMeters(12), 0, Units.inchesToMeters(5.25)),
+            new Rotation3d(0, 0, 0));
     // Construct the PhotonPoseEstimator
     poseEstimator =
         new PhotonPoseEstimator(
             aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, robotToCam);
 
+    poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
+
     // Set up data receivers & replay source
-    // switch (Constants.currentMode) {
-    //   case REAL:
-    //     // Running on a real robot, log to a USB stick ("/U/logs")
-    //     Logger.addDataReceiver(new WPILOGWriter());
-    //     Logger.addDataReceiver(new NT4Publisher());
-    //     break;
+    switch (Constants.currentMode) {
+      case REAL:
+        // Running on a real robot, log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-    //   case SIM:
-    //     // Running a physics simulator, log to NT
-    //     Logger.addDataReceiver(new NT4Publisher());
-    //     break;
+      case SIM:
+        // Running a physics simulator, log to NT
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-    //   case REPLAY:
-    //     // Replaying a log, set up replay source
-    //     setUseTiming(false); // Run as fast as possible
-    //     String logPath = LogFileUtil.findReplayLog();
-    //     Logger.setReplaySource(new WPILOGReader(logPath));
-    //     Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-    //     break;
-    // }
+      case REPLAY:
+        // Replaying a log, set up replay source
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
+    }
 
     // See http://bit.ly/3YIzFZ6 for more information on timestamps in AdvantageKit.
-    // Logger.disableDeterministicTimestamps()
+    Logger.disableDeterministicTimestamps();
 
     // Start AdvantageKit logger
-    // Logger.start();
+    Logger.start();
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
@@ -131,19 +133,16 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled commands, running already-scheduled commands, removing
-    // finished or interrupted commands, and running subsystem periodic() methods.
-    // This must be called from the robot's periodic block in order for anything in
-    // the Command-based framework to work.
-    // CommandScheduler.getInstance().run();
-    // Get the estimated global pose of the robot
+
     Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(memory);
 
+    // Check if any AprilTags have been detected
     if (estimatedPose.isPresent()) {
       memory = estimatedPose.get().estimatedPose.toPose2d();
-      // Do something with the estimated pose, like updating the robot's position on a dashboard
-      System.out.println("Estimated Pose: " + memory);
+
+      Logger.recordOutput("Position", memory);
+
+      System.out.println("Time: " + estimatedPose.get().timestampSeconds + ", Pose: " + memory);
     }
   }
 
@@ -151,10 +150,9 @@ public class Robot extends LoggedRobot {
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
     // Set the reference pose for the estimator
-    poseEstimator.setReferencePose(prevEstimatedRobotPose);
+    poseEstimator.setLastPose(prevEstimatedRobotPose);
 
     // Update the estimator and get the estimated robot pose
-    // System.out.println("Updated the estimator");
     return poseEstimator.update();
   }
   /** This function is called once when the robot is disabled. */
