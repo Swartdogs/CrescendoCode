@@ -30,6 +30,8 @@ public interface ModuleIO {
     public double turnAppliedVolts = 0.0;
     public double[] turnCurrentAmps = new double[] {};
     public double turnPositionRad = 0.0;
+    public double turnPositionDegrees = 0.0;
+    public double turnAbsolutePositionDegrees = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

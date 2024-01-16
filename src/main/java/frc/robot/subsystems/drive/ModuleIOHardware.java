@@ -27,8 +27,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 
 /**
  * Module IO implementation for SparkMax drive motor controller, SparkMax turn motor controller (NEO
@@ -57,35 +56,37 @@ public class ModuleIOHardware implements ModuleIO {
   private final CANSparkMax turnSparkMax;
 
   private final RelativeEncoder turnRelativeEncoder;
-  private final AnalogInput turnAbsoluteEncoder;
+  private final AnalogPotentiometer turnAbsoluteEncoder;
 
   private final Rotation2d absoluteEncoderOffset;
+  private final double scale = 360 / 0.92;
+  private final double offset = (360 - scale) / 2.0;
 
   public ModuleIOHardware(int index) {
     switch (index) {
       case 0:
         driveTalon = new TalonFX(1);
         turnSparkMax = new CANSparkMax(2, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(0);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        turnAbsoluteEncoder = new AnalogPotentiometer(0, scale, offset);
+        absoluteEncoderOffset = Rotation2d.fromDegrees(38); // MUST BE CALIBRATED
         break;
       case 1:
         driveTalon = new TalonFX(3);
         turnSparkMax = new CANSparkMax(4, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(1);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        turnAbsoluteEncoder = new AnalogPotentiometer(1, scale, offset);
+        absoluteEncoderOffset = Rotation2d.fromDegrees(22); // MUST BE CALIBRATED
         break;
       case 2:
         driveTalon = new TalonFX(5);
         turnSparkMax = new CANSparkMax(6, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(2);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        turnAbsoluteEncoder = new AnalogPotentiometer(3, scale, offset);
+        absoluteEncoderOffset = Rotation2d.fromDegrees(210); // MUST BE CALIBRATED
         break;
       case 3:
         driveTalon = new TalonFX(7);
         turnSparkMax = new CANSparkMax(8, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(3);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        turnAbsoluteEncoder = new AnalogPotentiometer(2, scale, offset);
+        absoluteEncoderOffset = Rotation2d.fromDegrees(126); // MUST BE CALIBRATED
         break;
       default:
         throw new RuntimeException("Invalid module index");
@@ -111,6 +112,8 @@ public class ModuleIOHardware implements ModuleIO {
     turnSparkMax.setCANTimeout(250);
 
     turnRelativeEncoder = turnSparkMax.getEncoder();
+
+    turnSparkMax.setInverted(true);
   }
 
   @Override
@@ -125,9 +128,9 @@ public class ModuleIOHardware implements ModuleIO {
     inputs.driveCurrentAmps = new double[] {driveCurrent.getValueAsDouble()};
 
     inputs.turnAbsolutePosition =
-        new Rotation2d(
-                turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V() * 2.0 * Math.PI)
-            .minus(absoluteEncoderOffset);
+        Rotation2d.fromDegrees(
+            Math.IEEEremainder(
+                turnAbsoluteEncoder.get() - absoluteEncoderOffset.getDegrees(), 360));
     inputs.turnPosition =
         Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
     inputs.turnVelocityRadPerSec =
@@ -135,6 +138,8 @@ public class ModuleIOHardware implements ModuleIO {
             / TURN_GEAR_RATIO;
     inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
     inputs.turnCurrentAmps = new double[] {turnSparkMax.getOutputCurrent()};
+    inputs.turnPositionDegrees = inputs.turnPosition.getDegrees();
+    inputs.turnAbsolutePositionDegrees = inputs.turnAbsolutePosition.getDegrees();
   }
 
   @Override

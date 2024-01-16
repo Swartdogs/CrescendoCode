@@ -13,11 +13,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -81,7 +77,7 @@ public class Robot extends LoggedRobot {
     switch (Constants.currentMode) {
       case REAL:
         // Running on a real robot, log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new WPILOGWriter("/home/lvuser"));
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
@@ -107,10 +103,10 @@ public class Robot extends LoggedRobot {
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
-    // robotContainer = new RobotContainer();
-    swerveModuleIO = new ModuleIOSparkMax(1);
-    swerveModule = new Module(swerveModuleIO, 1);
-    joystick = new Joystick(1);
+    robotContainer = new RobotContainer();
+    // swerveModuleIO = new ModuleIOSparkMax(1);
+    // swerveModule = new Module(swerveModuleIO, 1);
+    // joystick = new Joystick(1);
   }
 
   /** This function is called periodically during all modes. */
@@ -121,7 +117,7 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
-    //CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once when the robot is disabled. */
@@ -162,34 +158,34 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    xSupplier = joystick.getX();
-    ySupplier = joystick.getY();
-    omegaSupplier = joystick.getZ();
+    // xSupplier = joystick.getX();
+    // ySupplier = joystick.getY();
+    // omegaSupplier = joystick.getZ();
 
-    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier, ySupplier), DEADBAND);
-    Rotation2d linearDirection = new Rotation2d(xSupplier, ySupplier);
-    double omega = MathUtil.applyDeadband(omegaSupplier, DEADBAND);
+    // double linearMagnitude = MathUtil.applyDeadband(Math.hypot(xSupplier, ySupplier), DEADBAND);
+    // Rotation2d linearDirection = new Rotation2d(xSupplier, ySupplier);
+    // double omega = MathUtil.applyDeadband(omegaSupplier, DEADBAND);
 
-    // Square values
-    linearMagnitude = linearMagnitude * linearMagnitude;
-    omega = Math.copySign(omega * omega, omega);
-    // Calcaulate new linear velocity
-    Translation2d linearVelocity =
-        new Pose2d(new Translation2d(), linearDirection)
-            .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
-            .getTranslation();
+    // // Square values
+    // linearMagnitude = linearMagnitude * linearMagnitude;
+    // omega = Math.copySign(omega * omega, omega);
+    // // Calcaulate new linear velocity
+    // Translation2d linearVelocity =
+    //     new Pose2d(new Translation2d(), linearDirection)
+    //         .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+    //         .getTranslation();
 
-    hypoLength = linearVelocity.getNorm();
-    angle = linearVelocity.getAngle();
-    y = linearVelocity.getY();
-    x = linearVelocity.getX();
-    angleNum = Math.atan(y / x);
-    swerveModuleState = new SwerveModuleState(hypoLength, angle);
-    swerveModule.runSetpoint(swerveModuleState);
-    swerveModule.periodic();
+    // hypoLength = linearVelocity.getNorm();
+    // angle = linearVelocity.getAngle();
+    // y = linearVelocity.getY();
+    // x = linearVelocity.getX();
+    // angleNum = Math.atan(y / x);
+    // swerveModuleState = new SwerveModuleState(hypoLength, angle);
+    // swerveModule.runSetpoint(swerveModuleState);
+    // swerveModule.periodic();
 
-    Logger.recordOutput("hypo", hypoLength);
-    Logger.recordOutput("angle", angleNum);
+    // Logger.recordOutput("hypo", hypoLength);
+    // Logger.recordOutput("angle", angleNum);
   }
 
   /** This function is called once when test mode is enabled. */
