@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.VisionConstants;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,12 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+
 
 
 public class Vision extends SubsystemBase {
@@ -35,7 +43,6 @@ public class Vision extends SubsystemBase {
   private static final double circleFitPrecision = 0.01;
   private static final int minTargetCount = 3; // For calculating odometry
   private static final double extraLatencySecs = 0.06; // Approximate camera + network latency
-
   private static final boolean alwaysIdleOn = true; // Always light the LEDs during teleop
   private static final double targetGraceSecs = 0.5;
   private static final double blinkPeriodSecs = 3.0;
@@ -48,6 +55,7 @@ public class Vision extends SubsystemBase {
   private static final double vizOriginX = 540.0;
   private static final double vizOriginY = 1536.0;
   private static final double vizHeightMeters = 12.0;
+  
 
   // FOV constants
   private static final double vpw =
@@ -55,11 +63,10 @@ public class Vision extends SubsystemBase {
   private static final double vph =
       2.0 * Math.tan(VisionConstants.fovVertical.getRadians() / 2.0);
 
+  private final VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
   private final VisionIO io;
-  private final VisionIOInputs inputs = new VisionIOInputs();
-
+  
   private double lastCaptureTimestamp = 0.0;
-  private Supplier<VisionLedMode> modeSupplier;
   private Supplier<Boolean> climbModeSupplier;
   private RobotState robotState;
 
@@ -71,6 +78,9 @@ public class Vision extends SubsystemBase {
   private boolean forceLeds = false;
   private boolean autoEnabled = false;
   private Timer targetGraceTimer = new Timer();
+  
+  private Pose2d memory = new Pose2d();
+  private PhotonPoseEstimator poseEstimator;
 
   /** Creates a new Vision. */
   public Vision(VisionIO io) {
@@ -78,11 +88,6 @@ public class Vision extends SubsystemBase {
     targetGraceTimer.start();
   }
 
-  public void setSuppliers(Supplier<VisionLedMode> modeSupplier,
-      Supplier<Boolean> climbModeSupplier) {
-    this.modeSupplier = modeSupplier;
-    this.climbModeSupplier = climbModeSupplier;
-  }
 
   public void setRobotState(RobotState robotState) {
     this.robotState = robotState;
@@ -111,7 +116,7 @@ public class Vision extends SubsystemBase {
   }
     
 @Override
-  public void robotPeriodic() {
+  public void periodic() {
 
     Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(memory);
 
@@ -124,4 +129,14 @@ public class Vision extends SubsystemBase {
       System.out.println("Time: " + estimatedPose.get().timestampSeconds + ", Pose: " + memory);
     }
   }
+
+
+  private Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+    // Set the reference pose for the estimator
+    poseEstimator.setLastPose(prevEstimatedRobotPose);
+
+    // Update the estimator and get the estimated robot pose
+    return poseEstimator.update();
+  }
+
 }
