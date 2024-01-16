@@ -4,18 +4,17 @@
 
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.networktables.NetworkTableEvent;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
-
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
-
-import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.networktables.NetworkTableInstance;
 
 /** Vision hardware implementation for PhotonVision. */
 public class VisionIOPhotonlib implements VisionIO {
@@ -28,16 +27,18 @@ public class VisionIOPhotonlib implements VisionIO {
 
   public VisionIOPhotonlib() {
     NetworkTableInstance.getDefault()
-        .getEntry("/photonvision/" + cameraName + "/latencyMillis")
-        .addListener(event -> {
+      .addListener(
+        NetworkTableInstance.getDefault().getEntry("/photonvision/" + cameraName + "/latencyMillis"),
+        EnumSet.of(NetworkTableEvent.Kind.kValueRemote),
+        event -> {
           PhotonPipelineResult result = camera.getLatestResult();
-          double timestamp = Logger.getInstance().getRealTimestamp()
-              - (result.getLatencyMillis() / 1000.0);
+          double timestamp =
+              Logger.getRealTimestamp() - (result.getLatencyMillis() / 1000.0);
 
           List<Double> cornerXList = new ArrayList<>();
           List<Double> cornerYList = new ArrayList<>();
           for (PhotonTrackedTarget target : result.getTargets()) {
-            for (TargetCorner corner : target.getCorners()) {
+            for (TargetCorner corner : target.getDetectedCorners()) {
               cornerXList.add(corner.x);
               cornerYList.add(corner.y);
             }
@@ -45,13 +46,11 @@ public class VisionIOPhotonlib implements VisionIO {
 
           synchronized (VisionIOPhotonlib.this) {
             captureTimestamp = timestamp;
-            cornerX =
-                cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
-            cornerY =
-                cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
+            cornerX = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
+            cornerY = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
           }
-
-        }, EntryListenerFlags.kUpdate);
+        }
+      );
   }
 
   @Override
@@ -66,4 +65,3 @@ public class VisionIOPhotonlib implements VisionIO {
     camera.setLED(enabled ? VisionLEDMode.kOn : VisionLEDMode.kOff);
   }
 }
-
