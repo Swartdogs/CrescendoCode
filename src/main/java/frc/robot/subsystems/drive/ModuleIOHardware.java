@@ -44,7 +44,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 public class ModuleIOHardware implements ModuleIO {
   // Gear ratios for SDS MK4i L2, adjust as necessary
   private static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
-  private static final double TURN_GEAR_RATIO = 150.0 / 7.0;
+  private static final double TURN_GEAR_RATIO = 40.0 / 1.0; // 150.0 / 7.0
 
   private final StatusSignal<Double> drivePosition;
   private final StatusSignal<Double> driveVelocity;
@@ -68,25 +68,25 @@ public class ModuleIOHardware implements ModuleIO {
         driveTalon = new TalonFX(1);
         turnSparkMax = new CANSparkMax(2, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogPotentiometer(0, scale, offset);
-        absoluteEncoderOffset = Rotation2d.fromDegrees(38); // MUST BE CALIBRATED
+        absoluteEncoderOffset = Rotation2d.fromDegrees(39); // MUST BE CALIBRATED
         break;
       case 1:
-        driveTalon = new TalonFX(3);
-        turnSparkMax = new CANSparkMax(4, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogPotentiometer(1, scale, offset);
-        absoluteEncoderOffset = Rotation2d.fromDegrees(22); // MUST BE CALIBRATED
-        break;
-      case 2:
         driveTalon = new TalonFX(5);
         turnSparkMax = new CANSparkMax(6, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogPotentiometer(3, scale, offset);
-        absoluteEncoderOffset = Rotation2d.fromDegrees(210); // MUST BE CALIBRATED
+        absoluteEncoderOffset = Rotation2d.fromDegrees(-150); // MUST BE CALIBRATED
+        break;
+      case 2:
+        driveTalon = new TalonFX(3);
+        turnSparkMax = new CANSparkMax(4, MotorType.kBrushless);
+        turnAbsoluteEncoder = new AnalogPotentiometer(1, scale, offset);
+        absoluteEncoderOffset = Rotation2d.fromDegrees(68); // MUST BE CALIBRATED
         break;
       case 3:
         driveTalon = new TalonFX(7);
         turnSparkMax = new CANSparkMax(8, MotorType.kBrushless);
         turnAbsoluteEncoder = new AnalogPotentiometer(2, scale, offset);
-        absoluteEncoderOffset = Rotation2d.fromDegrees(126); // MUST BE CALIBRATED
+        absoluteEncoderOffset = Rotation2d.fromDegrees(-37); // MUST BE CALIBRATED
         break;
       default:
         throw new RuntimeException("Invalid module index");
@@ -113,7 +113,7 @@ public class ModuleIOHardware implements ModuleIO {
 
     turnRelativeEncoder = turnSparkMax.getEncoder();
 
-    turnSparkMax.setInverted(true);
+    // turnSparkMax.setInverted(true);
   }
 
   @Override

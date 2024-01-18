@@ -20,6 +20,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 
 /**
@@ -44,7 +45,7 @@ public class ModuleIOSparkMax implements ModuleIO {
 
   private final RelativeEncoder driveEncoder;
   private final RelativeEncoder turnRelativeEncoder;
-  private final AnalogInput turnAbsoluteEncoder;
+  private final DutyCycleEncoder turnAbsoluteEncoder;
 
   private final boolean isTurnMotorInverted = true;
   private final Rotation2d absoluteEncoderOffset;
@@ -54,25 +55,25 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 0:
         driveSparkMax = new CANSparkMax(1, MotorType.kBrushless);
         turnSparkMax = new CANSparkMax(2, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(0);
+        turnAbsoluteEncoder = new DutyCycleEncoder(0);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       case 1:
         driveSparkMax = new CANSparkMax(3, MotorType.kBrushless);
         turnSparkMax = new CANSparkMax(4, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(1);
+        turnAbsoluteEncoder = new DutyCycleEncoder(1);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       case 2:
         driveSparkMax = new CANSparkMax(5, MotorType.kBrushless);
         turnSparkMax = new CANSparkMax(6, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(2);
+        turnAbsoluteEncoder = new DutyCycleEncoder(2);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       case 3:
         driveSparkMax = new CANSparkMax(7, MotorType.kBrushless);
         turnSparkMax = new CANSparkMax(8, MotorType.kBrushless);
-        turnAbsoluteEncoder = new AnalogInput(3);
+        turnAbsoluteEncoder = new DutyCycleEncoder(3);
         absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
         break;
       default:
@@ -120,7 +121,7 @@ public class ModuleIOSparkMax implements ModuleIO {
 
     inputs.turnAbsolutePosition =
         new Rotation2d(
-                turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V() * 2.0 * Math.PI)
+                turnAbsoluteEncoder.getAbsolutePosition() * 2.0 * Math.PI)
             .minus(absoluteEncoderOffset);
     inputs.turnPosition =
         Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);

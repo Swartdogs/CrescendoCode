@@ -58,9 +58,9 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIONavX2(),
-                new ModuleIOHardware(0),
-                new ModuleIOHardware(1),
-                new ModuleIOHardware(2),
+                new ModuleIOSim(),
+                new ModuleIOSim(),
+                new ModuleIOSim(),
                 new ModuleIOHardware(3));
         // flywheel = new Flywheel(new FlywheelIOSparkMax());
         // drive = new Drive(
