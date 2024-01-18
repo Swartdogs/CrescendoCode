@@ -11,7 +11,6 @@ import java.util.EnumSet;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
@@ -58,10 +57,5 @@ public class VisionIOPhotonlib implements VisionIO {
     inputs.captureTimestamp = captureTimestamp;
     inputs.cornerX = cornerX;
     inputs.cornerY = cornerY;
-  }
-
-  @Override
-  public void setLeds(boolean enabled) {
-    camera.setLED(enabled ? VisionLEDMode.kOn : VisionLEDMode.kOff);
   }
 }
