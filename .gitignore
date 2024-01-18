@@ -164,8 +164,16 @@ bin/
 # sim gui things
 simgui-ds.json
 simgui.json
+ctre_sim/
+networktables.json
 
 # vscode
 .vscode/**
 
+# AdvantageKit
+logs/
+
 BuildConstants.java
+
+!.vscode/java-formatter.xml
+!.vscode/settings.json
