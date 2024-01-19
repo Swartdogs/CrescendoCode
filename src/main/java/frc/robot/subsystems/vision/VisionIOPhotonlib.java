@@ -6,62 +6,63 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Constants;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
+
 /** Vision hardware implementation for PhotonVision. */
-public class VisionIOPhotonlib implements VisionIO {
-  private static final String cameraName = "frontCam";
-  private final PhotonCamera camera = new PhotonCamera(cameraName);
+public class VisionIOPhotonlib implements VisionIO
+{
+    private final PhotonCamera _camera = new PhotonCamera(Constants.Vision.CAMERANAME);
 
-  private double captureTimestamp = 0.0;
-  private double[] cornerX = new double[] {};
-  private double[] cornerY = new double[] {};
+    private double _captureTimestamp = 0.0;
+    private double[] _cornerX = new double[]
+    {};
+    private double[] _cornerY = new double[]
+    {};
 
-  public VisionIOPhotonlib() {
-    NetworkTableInstance.getDefault()
-      .addListener(
-        NetworkTableInstance.getDefault().getEntry("/photonvision/" + cameraName + "/latencyMillis"),
-        EnumSet.of(NetworkTableEvent.Kind.kValueRemote),
-        event -> {
-          PhotonPipelineResult result = camera.getLatestResult();
-          double timestamp =
-              Logger.getRealTimestamp() - (result.getLatencyMillis() / 1000.0);
+    public VisionIOPhotonlib()
+    {
+        NetworkTableInstance.getDefault().addListener(
+                NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.CAMERANAME + "/latencyMillis"),
+                EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
+                {
+                    PhotonPipelineResult result = _camera.getLatestResult();
+                    double timestamp = Logger.getRealTimestamp() - (result.getLatencyMillis() / 1000.0);
 
-          List<Double> cornerXList = new ArrayList<>();
-          List<Double> cornerYList = new ArrayList<>();
-          for (PhotonTrackedTarget target : result.getTargets()) {
-            for (TargetCorner corner : target.getDetectedCorners()) {
-              cornerXList.add(corner.x);
-              cornerYList.add(corner.y);
-            }
-          }
+                    List<Double> cornerXList = new ArrayList<>();
+                    List<Double> cornerYList = new ArrayList<>();
+                    for (PhotonTrackedTarget target : result.getTargets())
+                    {
+                        for (TargetCorner corner : target.getDetectedCorners())
+                        {
+                            cornerXList.add(corner.x);
+                            cornerYList.add(corner.y);
+                        }
+                    }
 
-          synchronized (VisionIOPhotonlib.this) {
-            captureTimestamp = timestamp;
-            cornerX = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
-            cornerY = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
-          }
-        }
-      );
-  }
+                    synchronized (VisionIOPhotonlib.this)
+                    {
+                        _captureTimestamp = timestamp;
+                        _cornerX = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
+                        _cornerY = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
+                    }
+                });
+    }
 
-  @Override
-  public synchronized void updateInputs(VisionIOInputs inputs) {
-    inputs.captureTimestamp = captureTimestamp;
-    inputs.cornerX = cornerX;
-    inputs.cornerY = cornerY;
-  }
-
-  @Override
-  public void setLeds(boolean enabled) {
-    camera.setLED(enabled ? VisionLEDMode.kOn : VisionLEDMode.kOff);
-  }
+    @Override
+    public synchronized void updateInputs(VisionIOInputs inputs)
+    {
+        inputs.captureTimestamp = _captureTimestamp;
+        inputs.cornerX = _cornerX;
+        inputs.cornerY = _cornerY;
+    }
 }
