@@ -1,25 +1,25 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "java.server.launchMode": "Standard",
-    "files.exclude": {
-        "**/.git": true,
-        ".github/": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "bin/": true,
-        "build/": true,
-        ".gradle/": true,
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true,
-        "**/*~": true
-    },
-    "java.format.settings.url": ".vscode/java-formatter.xml",
-    "[java]": {
-        "editor.tabSize": 4,
-        "editor.detectIndentation": false
-    }
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.server.launchMode": "Standard",
+  "files.exclude": {
+    "**/.git": true,
+    ".github/": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "bin/": true,
+    "build/": true,
+    ".gradle/": true,
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "**/*~": true
+  },
+  "java.format.settings.url": ".vscode/java-formatter.xml",
+  "[java]": {
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false
+  }
 }

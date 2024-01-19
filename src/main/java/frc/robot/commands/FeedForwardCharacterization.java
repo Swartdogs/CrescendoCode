@@ -23,99 +23,87 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class FeedForwardCharacterization extends Command
-{
-    private final Consumer<Double>          _voltageConsumer;
-    private final Supplier<Double>          _velocitySupplier;
-    
-    private final Timer                     _timer = new Timer();
+public class FeedForwardCharacterization extends Command {
+  private final Consumer<Double> _voltageConsumer;
+  private final Supplier<Double> _velocitySupplier;
 
-    private FeedForwardCharacterizationData _data;
+  private final Timer _timer = new Timer();
 
-    /** Creates a new FeedForwardCharacterization command. */
-    public FeedForwardCharacterization(Subsystem subsystem, Consumer<Double> voltageConsumer, Supplier<Double> velocitySupplier)
-    {
-        addRequirements(subsystem);
-        
-        _voltageConsumer  = voltageConsumer;
-        _velocitySupplier = velocitySupplier;
+  private FeedForwardCharacterizationData _data;
+
+  /** Creates a new FeedForwardCharacterization command. */
+  public FeedForwardCharacterization(
+      Subsystem subsystem, Consumer<Double> voltageConsumer, Supplier<Double> velocitySupplier) {
+    addRequirements(subsystem);
+
+    _voltageConsumer = voltageConsumer;
+    _velocitySupplier = velocitySupplier;
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    _data = new FeedForwardCharacterizationData();
+
+    _timer.reset();
+    _timer.start();
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    if (_timer.get() < Constants.Characterization.START_DELAY_SECS) {
+      _voltageConsumer.accept(0.0);
+    } else {
+      double voltage =
+          (_timer.get() - Constants.Characterization.START_DELAY_SECS)
+              * Constants.Characterization.RAMP_VOLTS_PER_SEC;
+      _voltageConsumer.accept(voltage);
+      _data.add(_velocitySupplier.get(), voltage);
+    }
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    _voltageConsumer.accept(0.0);
+    _timer.stop();
+    _data.print();
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
+
+  public static class FeedForwardCharacterizationData {
+    private final List<Double> _velocityData = new LinkedList<>();
+    private final List<Double> _voltageData = new LinkedList<>();
+
+    public void add(double velocity, double voltage) {
+      if (Math.abs(velocity) > 1E-4) {
+        _velocityData.add(Math.abs(velocity));
+        _voltageData.add(Math.abs(voltage));
+      }
     }
 
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize()
-    {
-        _data = new FeedForwardCharacterizationData();
+    public void print() {
+      if (_velocityData.size() == 0 || _voltageData.size() == 0) {
+        return;
+      }
 
-        _timer.reset();
-        _timer.start();
+      PolynomialRegression regression =
+          new PolynomialRegression(
+              _velocityData.stream().mapToDouble(Double::doubleValue).toArray(),
+              _voltageData.stream().mapToDouble(Double::doubleValue).toArray(),
+              1);
+
+      System.out.println("FF Characterization Results:");
+      System.out.println("\tCount=" + Integer.toString(_velocityData.size()) + "");
+      System.out.println(String.format("\tR2=%.5f", regression.R2()));
+      System.out.println(String.format("\tkS=%.5f", regression.beta(0)));
+      System.out.println(String.format("\tkV=%.5f", regression.beta(1)));
     }
-
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute()
-    {
-        if (_timer.get() < Constants.Characterization.START_DELAY_SECS)
-        {
-            _voltageConsumer.accept(0.0);
-        }
-        else
-        {
-            double voltage = (_timer.get() - Constants.Characterization.START_DELAY_SECS) * Constants.Characterization.RAMP_VOLTS_PER_SEC;
-            _voltageConsumer.accept(voltage);
-            _data.add(_velocitySupplier.get(), voltage);
-        }
-    }
-
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted)
-    {
-        _voltageConsumer.accept(0.0);
-        _timer.stop();
-        _data.print();
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished()
-    {
-        return false;
-    }
-
-    public static class FeedForwardCharacterizationData
-    {
-        private final List<Double> _velocityData = new LinkedList<>();
-        private final List<Double> _voltageData  = new LinkedList<>();
-
-        public void add(double velocity, double voltage)
-        {
-            if (Math.abs(velocity) > 1E-4)
-            {
-                _velocityData.add(Math.abs(velocity));
-                _voltageData.add(Math.abs(voltage));
-            }
-        }
-
-        public void print()
-        {
-            if (_velocityData.size() == 0 || _voltageData.size() == 0)
-            {
-                return;
-            }
-
-            PolynomialRegression regression = new PolynomialRegression
-            (
-                _velocityData.stream().mapToDouble(Double::doubleValue).toArray(),
-                _voltageData.stream().mapToDouble(Double::doubleValue).toArray(), 
-                1
-            );
-
-            System.out.println("FF Characterization Results:");
-            System.out.println("\tCount=" + Integer.toString(_velocityData.size()) + "");
-            System.out.println(String.format("\tR2=%.5f", regression.R2()));
-            System.out.println(String.format("\tkS=%.5f", regression.beta(0)));
-            System.out.println(String.format("\tkV=%.5f", regression.beta(1)));
-        }
-    }
+  }
 }
