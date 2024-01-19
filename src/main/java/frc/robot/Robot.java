@@ -13,26 +13,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -43,8 +31,6 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-  private PhotonCamera camera;
-  private PhotonPoseEstimator poseEstimator;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -52,7 +38,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    // // Record metadata
+    // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
@@ -69,33 +55,6 @@ public class Robot extends LoggedRobot {
         Logger.recordMetadata("GitDirty", "Unknown");
         break;
     }
-
-    AprilTagFieldLayout aprilTagFieldLayout = null;
-
-    try {
-      // Load the AprilTag field layout from the resource file
-      aprilTagFieldLayout =
-          AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-      System.out.println("Loaded the AprilTag field layout from the resource file");
-    } catch (Exception e) {
-      System.out.println("Exception encountered: " + e.getMessage());
-    }
-
-    // Initialize the camera
-    camera = new PhotonCamera("frontCam");
-
-    // Define the transform from the robot to the camera (assuming the camera is mounted facing
-    // forward)
-    Transform3d robotToCam =
-        new Transform3d(
-            new Translation3d(Units.inchesToMeters(12), 0, Units.inchesToMeters(5.25)),
-            new Rotation3d(0, 0, 0));
-    // Construct the PhotonPoseEstimator
-    poseEstimator =
-        new PhotonPoseEstimator(
-            aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, robotToCam);
-
-    poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
     // Set up data receivers & replay source
     switch (Constants.currentMode) {
@@ -120,41 +79,27 @@ public class Robot extends LoggedRobot {
     }
 
     // See http://bit.ly/3YIzFZ6 for more information on timestamps in AdvantageKit.
-    Logger.disableDeterministicTimestamps();
+    // Logger.disableDeterministicTimestamps()
 
     // Start AdvantageKit logger
     Logger.start();
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
-    // robotContainer = new RobotContainer();
+    robotContainer = new RobotContainer();
   }
 
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
-
-    Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(memory);
-
-    // Check if any AprilTags have been detected
-    if (estimatedPose.isPresent()) {
-      memory = estimatedPose.get().estimatedPose.toPose2d();
-
-      Logger.recordOutput("Position", memory);
-
-      System.out.println("Time: " + estimatedPose.get().timestampSeconds + ", Pose: " + memory);
-    }
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled commands, running already-scheduled commands, removing
+    // finished or interrupted commands, and running subsystem periodic() methods.
+    // This must be called from the robot's periodic block in order for anything in
+    // the Command-based framework to work.
+    CommandScheduler.getInstance().run();
   }
 
-  Pose2d memory = new Pose2d();
-
-  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-    // Set the reference pose for the estimator
-    poseEstimator.setLastPose(prevEstimatedRobotPose);
-
-    // Update the estimator and get the estimated robot pose
-    return poseEstimator.update();
-  }
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {}
