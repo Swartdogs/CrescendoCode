@@ -27,7 +27,7 @@ public final class Constants
 
   public static class Vision 
   {
-    public static final String CAMERANAME = "frontCam";
+    public static final String CAMERA_NAME = "frontCam";
   }
   public static enum Mode {
     /** Running on a real robot. */
