@@ -93,7 +93,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     inputs.driveCurrentAmps = new double[] {_driveSparkMax.getOutputCurrent()};
 
     inputs.turnAbsolutePosition =
-        Rotation2d.fromRotations(-_turnAbsoluteEncoder.getAbsolutePosition())
+        Rotation2d.fromRotations(_turnAbsoluteEncoder.getAbsolutePosition())
             .minus(_absoluteEncoderOffset);
     inputs.turnPosition =
         Rotation2d.fromRotations(
