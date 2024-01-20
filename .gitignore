@@ -173,7 +173,7 @@ networktables.json
 # AdvantageKit
 logs/
 
-BuildConstants.java
+src/main/java/frc/robot/BuildConstants.java
 
 !.vscode/java-formatter.xml
 !.vscode/settings.json
