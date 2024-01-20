@@ -23,22 +23,22 @@ import org.littletonrobotics.junction.Logger;
 
 public class Module
 {
-    private final ModuleIO _io;
+    private final ModuleIO                 _io;
     private final ModuleIOInputsAutoLogged _inputs = new ModuleIOInputsAutoLogged();
-    private final int _index;
+    private final int                      _index;
 
     private final SimpleMotorFeedforward _driveFeedforward;
-    private final PIDController _driveFeedback;
-    private final PIDController _turnFeedback;
+    private final PIDController          _driveFeedback;
+    private final PIDController          _turnFeedback;
 
-    private Rotation2d _angleSetpoint = null;
-    private Double _speedSetpoint = null;
+    private Rotation2d _angleSetpoint      = null;
+    private Double _speedSetpoint          = null;
     private Rotation2d _turnRelativeOffset = null;
-    private double _lastPositionMeters = 0.0;
+    private double _lastPositionMeters     = 0.0;
 
     public Module(ModuleIO io, int index)
     {
-        _io = io;
+        _io    = io;
         _index = index;
 
         // Switch constants based on mode (the physics simulator is treated as a
@@ -50,21 +50,21 @@ public class Module
             _driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
 
             _driveFeedback = new PIDController(0.05, 0.0, 0.0);
-            _turnFeedback = new PIDController(7.0, 0.0, 0.0);
+            _turnFeedback  = new PIDController(7.0, 0.0, 0.0);
             break;
 
         case SIM:
             _driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);
 
             _driveFeedback = new PIDController(0.1, 0.0, 0.0);
-            _turnFeedback = new PIDController(10.0, 0.0, 0.0);
+            _turnFeedback  = new PIDController(10.0, 0.0, 0.0);
             break;
 
         default:
             _driveFeedforward = new SimpleMotorFeedforward(0.0, 0.0);
 
             _driveFeedback = new PIDController(0.0, 0.0, 0.0);
-            _turnFeedback = new PIDController(0.0, 0.0, 0.0);
+            _turnFeedback  = new PIDController(0.0, 0.0, 0.0);
             break;
         }
 

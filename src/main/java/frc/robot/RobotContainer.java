@@ -60,8 +60,7 @@ public class RobotContainer
 
         // Sim robot, instantiate physics sim IO implementations
         case SIM:
-            _drive = new Drive(new GyroIO()
-            {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+            _drive = new Drive(new GyroIO(){}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
             break;
 
         // Replayed robot, disable IO implementations
@@ -75,36 +74,21 @@ public class RobotContainer
             break;
         }
 
-        // Set up auto routines
-        // NamedCommands.registerCommand(
-        // "Run Flywheel",
-        // Commands.startEnd(
-        // () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
-        // flywheel)
-        // .withTimeout(5.0));
-
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
         _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive,
                 _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
-        // autoChooser.addOption(
-        // "Flywheel FF Characterization",
-        // new FeedForwardCharacterization(
-        // flywheel, flywheel::runVolts, flywheel::getCharacterizationVelocity));
-
         // Configure the button bindings
         configureButtonBindings();
 
-        _drive.setPose(new Pose2d(new Translation2d(Units.inchesToMeters(231.2), Units.inchesToMeters(161.625)),
-                new Rotation2d()));
+        _drive.setPose(new Pose2d(new Translation2d(Units.inchesToMeters(231.2), Units.inchesToMeters(161.625)), new Rotation2d()));
     }
 
     private void configureButtonBindings()
     {
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
-                () -> -_joystick.getZ()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
     }
 
     public Command getAutonomousCommand()

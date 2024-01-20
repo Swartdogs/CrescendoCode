@@ -24,7 +24,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot
 {
-    private Command _autonomousCommand;
+    private Command        _autonomousCommand;
     private RobotContainer _robotContainer;
 
     @Override
