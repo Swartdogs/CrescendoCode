@@ -17,44 +17,51 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
 /** Vision hardware implementation for PhotonVision. */
-public class VisionIOPhotonlib implements VisionIO {
-  private final PhotonCamera _camera = new PhotonCamera(Constants.Vision.CAMERA_NAME);
+public class VisionIOPhotonlib implements VisionIO
+{
+    private final PhotonCamera _camera = new PhotonCamera(Constants.Vision.CAMERA_NAME);
 
-  private double _captureTimestamp = 0.0;
-  private double[] _cornerX = new double[] {};
-  private double[] _cornerY = new double[] {};
+    private double _captureTimestamp = 0.0;
+    private double[] _cornerX = new double[]
+    {};
+    private double[] _cornerY = new double[]
+    {};
 
-  public VisionIOPhotonlib() {
-    NetworkTableInstance.getDefault()
-        .addListener(
-            NetworkTableInstance.getDefault()
-                .getEntry("/photonvision/" + Constants.Vision.CAMERA_NAME + "/latencyMillis"),
-            EnumSet.of(NetworkTableEvent.Kind.kValueRemote),
-            event -> {
-              PhotonPipelineResult result = _camera.getLatestResult();
-              double timestamp = Logger.getRealTimestamp() - (result.getLatencyMillis() / 1000.0);
+    public VisionIOPhotonlib()
+    {
+        NetworkTableInstance.getDefault().addListener(
+                NetworkTableInstance.getDefault()
+                        .getEntry("/photonvision/" + Constants.Vision.CAMERA_NAME + "/latencyMillis"),
+                EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
+                {
+                    PhotonPipelineResult result = _camera.getLatestResult();
+                    double timestamp = Logger.getRealTimestamp() - (result.getLatencyMillis() / 1000.0);
 
-              List<Double> cornerXList = new ArrayList<>();
-              List<Double> cornerYList = new ArrayList<>();
-              for (PhotonTrackedTarget target : result.getTargets()) {
-                for (TargetCorner corner : target.getDetectedCorners()) {
-                  cornerXList.add(corner.x);
-                  cornerYList.add(corner.y);
-                }
-              }
+                    List<Double> cornerXList = new ArrayList<>();
+                    List<Double> cornerYList = new ArrayList<>();
+                    for (PhotonTrackedTarget target : result.getTargets())
+                    {
+                        for (TargetCorner corner : target.getDetectedCorners())
+                        {
+                            cornerXList.add(corner.x);
+                            cornerYList.add(corner.y);
+                        }
+                    }
 
-              synchronized (VisionIOPhotonlib.this) {
-                _captureTimestamp = timestamp;
-                _cornerX = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
-                _cornerY = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
-              }
-            });
-  }
+                    synchronized (VisionIOPhotonlib.this)
+                    {
+                        _captureTimestamp = timestamp;
+                        _cornerX = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
+                        _cornerY = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
+                    }
+                });
+    }
 
-  @Override
-  public synchronized void updateInputs(VisionIOInputs inputs) {
-    inputs.captureTimestamp = _captureTimestamp;
-    inputs.cornerX = _cornerX;
-    inputs.cornerY = _cornerY;
-  }
+    @Override
+    public synchronized void updateInputs(VisionIOInputs inputs)
+    {
+        inputs.captureTimestamp = _captureTimestamp;
+        inputs.cornerX = _cornerX;
+        inputs.cornerY = _cornerY;
+    }
 }
