@@ -82,8 +82,6 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
-
-        _drive.setPose(new Pose2d(new Translation2d(Units.inchesToMeters(231.2), Units.inchesToMeters(161.625)), new Rotation2d()));
     }
 
     private void configureButtonBindings()

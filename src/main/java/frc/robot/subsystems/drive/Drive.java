@@ -54,7 +54,7 @@ public class Drive extends SubsystemBase
         _modules[3] = new Module(brModuleIO, 3);
 
         // Configure AutoBuilder for PathPlanner
-        AutoBuilder.configureHolonomic(this::get_pose, this::setPose,
+        AutoBuilder.configureHolonomic(this::getPose, this::setPose,
                 () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
                 new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS,
                         new ReplanningConfig()),
@@ -213,7 +213,7 @@ public class Drive extends SubsystemBase
 
     /** Returns the current odometry pose. */
     @AutoLogOutput(key = "Odometry/Robot")
-    public Pose2d get_pose()
+    public Pose2d getPose()
     {
         return _pose;
     }

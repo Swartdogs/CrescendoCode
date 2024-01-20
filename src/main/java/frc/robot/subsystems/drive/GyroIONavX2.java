@@ -32,6 +32,5 @@ public class GyroIONavX2 implements GyroIO
     {
         inputs.yawPosition          = Rotation2d.fromDegrees(-_navx.getYaw());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(-_navx.getRate());
-        inputs.yawPositionDegrees   = inputs.yawPosition.getDegrees();
     }
 }

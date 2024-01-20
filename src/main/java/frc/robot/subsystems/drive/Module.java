@@ -32,9 +32,9 @@ public class Module
     private final PIDController          _turnFeedback;
 
     private Rotation2d _angleSetpoint      = null;
-    private Double _speedSetpoint          = null;
+    private Double     _speedSetpoint      = null;
     private Rotation2d _turnRelativeOffset = null;
-    private double _lastPositionMeters     = 0.0;
+    private double     _lastPositionMeters = 0.0;
 
     public Module(ModuleIO io, int index)
     {

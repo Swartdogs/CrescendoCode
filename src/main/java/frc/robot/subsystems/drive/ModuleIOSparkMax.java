@@ -99,7 +99,6 @@ public class ModuleIOSparkMax implements ModuleIO
         inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_turnRelativeEncoder.getVelocity()) / Constants.Drive.TURN_GEAR_RATIO;
         inputs.turnAppliedVolts      = _turnSparkMax.getAppliedOutput() * _turnSparkMax.getBusVoltage();
         inputs.turnCurrentAmps       = new double[]{_turnSparkMax.getOutputCurrent() };
-        inputs.turnPositionRad       = Rotation2d.fromRotations(_turnRelativeEncoder.getPosition() / Constants.Drive.TURN_GEAR_RATIO).getRadians();
     }
 
     @Override
