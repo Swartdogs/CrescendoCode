@@ -21,7 +21,7 @@ import org.photonvision.targeting.TargetCorner;
 /** Vision hardware implementation for PhotonVision. */
 public class VisionIOPhotonlib implements VisionIO
 {
-    private final PhotonCamera _camera = new PhotonCamera(Constants.Vision.CAMERANAME);
+    private final PhotonCamera _camera = new PhotonCamera(Constants.Vision.CAMERA_NAME);
 
     private double _captureTimestamp = 0.0;
     private double[] _cornerX = new double[]
@@ -32,7 +32,7 @@ public class VisionIOPhotonlib implements VisionIO
     public VisionIOPhotonlib()
     {
         NetworkTableInstance.getDefault().addListener(
-                NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.CAMERANAME + "/latencyMillis"),
+                NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.CAMERA_NAME + "/latencyMillis"),
                 EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
                 {
                     PhotonPipelineResult result = _camera.getLatestResult();
