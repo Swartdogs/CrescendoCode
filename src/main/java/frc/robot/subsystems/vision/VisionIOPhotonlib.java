@@ -7,7 +7,6 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -16,7 +15,6 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
-
 
 /** Vision hardware implementation for PhotonVision. */
 public class VisionIOPhotonlib implements VisionIO
@@ -32,7 +30,8 @@ public class VisionIOPhotonlib implements VisionIO
     public VisionIOPhotonlib()
     {
         NetworkTableInstance.getDefault().addListener(
-                NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.CAMERA_NAME + "/latencyMillis"),
+                NetworkTableInstance.getDefault()
+                        .getEntry("/photonvision/" + Constants.Vision.CAMERA_NAME + "/latencyMillis"),
                 EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
                 {
                     PhotonPipelineResult result = _camera.getLatestResult();
