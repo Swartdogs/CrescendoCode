@@ -14,32 +14,40 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CmdIntakeReverseIntake;
+import frc.robot.commands.CmdIntakeStartIntake;
+import frc.robot.commands.CmdIntakeStopIntake;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.IntakeIOSparkMax;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+
+import java.util.ArrayList;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
     // Subsystems
     private final Drive _drive;
+    private Intake _intake;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
 
     // Controls
     private final Joystick _joystick = new Joystick(1);
+    private ArrayList<JoystickButton> _buttons;
 
     public RobotContainer()
     {
@@ -56,6 +64,14 @@ public class RobotContainer
                                             Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
+
+            _intake = new Intake(new IntakeIOSparkMax(5));
+            _buttons = new ArrayList<JoystickButton>();
+
+            for (int i = 0; i < 12; i++)
+            {
+                _buttons.add(new JoystickButton(_joystick, i + 1));
+            }
             break;
 
         // Sim robot, instantiate physics sim IO implementations
@@ -87,8 +103,18 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
+        CmdIntakeStartIntake startIntake = new CmdIntakeStartIntake(_intake);
+        CmdIntakeReverseIntake reverseIntake = new CmdIntakeReverseIntake(_intake);
+        CmdIntakeStopIntake stopIntake = new CmdIntakeStopIntake(_intake);
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
                         () -> -_joystick.getZ()));
+
+        _buttons.get(2).onTrue(startIntake);
+        _buttons.get(2).onFalse(Commands.runOnce(startIntake::cancel));
+        _buttons.get(3).onTrue(reverseIntake);
+        _buttons.get(3).onFalse(Commands.runOnce(reverseIntake::cancel));
+        _buttons.get(4).onTrue(stopIntake);
     }
 
     public Command getAutonomousCommand()

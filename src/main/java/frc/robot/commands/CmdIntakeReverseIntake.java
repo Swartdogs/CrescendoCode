@@ -18,7 +18,7 @@ public class CmdIntakeReverseIntake extends Command
     {
         _intakeSubsystem.setIntakeVoltage(-Constants.Intake.INTAKE_VOLTAGE);
     }
-    
+
     @Override
     public void end(boolean interrupted)
     {
