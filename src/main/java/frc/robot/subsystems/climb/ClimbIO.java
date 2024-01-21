@@ -6,22 +6,31 @@ package frc.robot.subsystems.climb;
 
 import org.littletonrobotics.junction.AutoLog;
 
-/** Add your docs here. */
 public interface ClimbIO 
 {
     @AutoLog
     public static class ClimbIOInputs
     {
-        public double  measuredExtension = 0.0;   // from potentimeter
-        public boolean lockState         = false; // solenoid
+        public double  extensionLeft  = 0.0;
+        public double  extensionRight = 0.0;
+        
+        public boolean lockStateLeft  = false;
+        public boolean lockStateRight = false;
+
+        public double appliedVoltsLeft  = 0.0;
+        public double appliedVoltsRight = 0.0;
+
+        public double[] currentAmpsLeft  = new double[]{};
+        public double[] currnetAmpsRight = new double[]{};
     }
 
-    /** Updates the set of loggable inputs. */
     public default void updateInputs(ClimbIOInputs inputs){}
 
-    /** Run the climb motor at the specified voltage. */
-    public default void setVoltage(double volts){}
+    public default void setVoltageLeft(double volts){}
 
-    /** Enable or disable brake mode on the drive motor. */
-    public default void setLockState(boolean enable){}
+    public default void setVoltageRight(double volts){}
+
+    public default void setLockStateLeft(boolean enable, ClimbIOInputs inputs){}
+
+    public default void setLockStateRight(boolean enable, ClimbIOInputs inputs){}
 }

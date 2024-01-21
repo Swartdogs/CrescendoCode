@@ -8,38 +8,85 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import frc.robot.Constants;
 
 public class ClimbIOSparkMax implements ClimbIO
 {
-    public final CANSparkMax _climbSparkMax;
-    public final AnalogInput _potentiometer;
-    public final Solenoid    _solenoid;
+    public final CANSparkMax _climbSparkMaxLeft;
+    public final CANSparkMax _climbSparkMaxRight;
 
-    public ClimbIOSparkMax(int climbCanId, int potentiometerChannel, int solenoidId)
+    public final AnalogInput _potentiometerLeft;
+    public final AnalogInput _potentiometerRight;
+    
+    public final Solenoid _solenoidLeft;
+    public final Solenoid _solenoidRight;
+
+    public ClimbIOSparkMax
+    (
+        int climbCanIdLeft, 
+        int climbCanIdRight, 
+        
+        int potentiometerChannelLeft, 
+        int potentiometerChannelRight, 
+        
+        int solenoidIdLeft, 
+        int solenoidIdRight
+    )
     {
-        _climbSparkMax = new CANSparkMax(climbCanId, MotorType.kBrushless);
-        _potentiometer = new AnalogInput(potentiometerChannel);
-        _solenoid      = new Solenoid(PneumaticsModuleType.CTREPCM, solenoidId);
+        _climbSparkMaxLeft  = new CANSparkMax(climbCanIdLeft, MotorType.kBrushless);
+        _climbSparkMaxRight = new CANSparkMax(climbCanIdRight, MotorType.kBrushless);
+
+        _potentiometerLeft  = new AnalogInput(potentiometerChannelLeft);
+        _potentiometerRight = new AnalogInput(potentiometerChannelRight);
+        
+        _solenoidLeft  = new Solenoid(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_ID_LEFT);
+        _solenoidRight = new Solenoid(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_ID_RIGHT);
     }
 
     @Override
     public void updateInputs(ClimbIOInputs inputs)
     {
-        inputs.measuredExtension = _potentiometer.getValue(); // TODO, scaling factor work
-        inputs.lockState         = _solenoid.get();
+        inputs.extensionLeft  = _potentiometerLeft.getValue(); // TODO, scaling factor work
+        inputs.extensionRight = _potentiometerRight.getValue();
+
+        inputs.lockStateLeft  = !_solenoidLeft.get();
+        inputs.lockStateRight = !_solenoidRight.get();
+
+        inputs.appliedVoltsLeft  = _climbSparkMaxLeft.getAppliedOutput() * _climbSparkMaxLeft.getBusVoltage();
+        inputs.appliedVoltsRight = _climbSparkMaxRight.getAppliedOutput() * _climbSparkMaxRight.getBusVoltage();
+
+        inputs.currentAmpsLeft  = new double[]{_climbSparkMaxLeft.getOutputCurrent()};
+        inputs.currnetAmpsRight = new double[]{_climbSparkMaxRight.getOutputCurrent()};
     }
 
     @Override
-    public void setVoltage(double volts)
+    public void setVoltageLeft(double volts)
     {
-        _climbSparkMax.setVoltage(volts);
+        _climbSparkMaxLeft.setVoltage(volts);
     }
 
     @Override
-    public void setLockState(boolean enable)
+    public void setVoltageRight(double volts)
     {
-        _solenoid.set(enable);
+        _climbSparkMaxRight.setVoltage(volts);
+    }
+
+    @Override
+    public void setLockStateLeft(boolean enable, ClimbIOInputs inputs)
+    {
+        if(inputs.lockStateLeft != enable)
+        {
+            _solenoidLeft.set(!enable);
+        }
+    }
+
+    @Override
+    public void setLockStateRight(boolean enable, ClimbIOInputs inputs)
+    {
+        if(inputs.lockStateRight != enable)
+        {
+            _solenoidRight.set(!enable);
+        }
     }
 }

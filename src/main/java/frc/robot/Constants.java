@@ -15,6 +15,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public final class Constants
 {
@@ -94,5 +95,13 @@ public final class Constants
             /** Replaying from a log file. */
             REPLAY
         }
+    }
+
+    public static class Pnuematics
+    {
+        public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
+
+        public static final int SOLENOID_ID_LEFT  = 1; // TODO: Find Ids
+        public static final int SOLENOID_ID_RIGHT = 2;
     }
 }
