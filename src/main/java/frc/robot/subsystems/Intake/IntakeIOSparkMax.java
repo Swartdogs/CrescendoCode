@@ -2,25 +2,27 @@ package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 
-public class IntakeIOSparkMax implements IntakeIO {
-  private CANSparkMax _intakeSparkMax;
-  private RelativeEncoder _intakeEncoder;
+public class IntakeIOSparkMax implements IntakeIO
+{
+    private CANSparkMax _intakeSparkMax;
 
+    public IntakeIOSparkMax(int canId)
+    {
+        _intakeSparkMax = new CANSparkMax(canId, MotorType.kBrushless);
+    }
 
-  public IntakeIOSparkMax(int canId) {
-    _intakeSparkMax = new CANSparkMax(canId, MotorType.kBrushless);
-    _intakeEncoder = _intakeSparkMax.getEncoder();
-  }
+    @Override
+    public void updateInputs(IntakeIOInputs inputs)
+    {
+        inputs.appliedVolts = _intakeSparkMax.getAppliedOutput() * _intakeSparkMax.getBusVoltage();
+        inputs.currentAmps = new double[]
+        { _intakeSparkMax.getOutputCurrent() };
+    }
 
-  @Override
-  public void updateInputs(IntakeIOInputs inputs) {
-    inputs.intakeSpeed = _intakeEncoder.getVelocity();
-  }
-
-  @Override
-  public void setVoltage(double volts) {
-    _intakeSparkMax.setVoltage(volts);
-  }
+    @Override
+    public void setVoltage(double volts)
+    {
+        _intakeSparkMax.setVoltage(volts);
+    }
 }

@@ -24,10 +24,10 @@ public class ModuleIOSim implements ModuleIO
     private final Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
 
     private DCMotorSim _driveSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private DCMotorSim _turnSim  = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
+    private DCMotorSim _turnSim = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
 
     private double _driveAppliedVolts = 0.0;
-    private double _turnAppliedVolts  = 0.0;
+    private double _turnAppliedVolts = 0.0;
 
     @Override
     public void updateInputs(ModuleIOInputs inputs)
@@ -35,16 +35,18 @@ public class ModuleIOSim implements ModuleIO
         _driveSim.update(Constants.General.LOOP_PERIOD_SECS);
         _turnSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.drivePositionRad       = _driveSim.getAngularPositionRad();
+        inputs.drivePositionRad = _driveSim.getAngularPositionRad();
         inputs.driveVelocityRadPerSec = _driveSim.getAngularVelocityRadPerSec();
-        inputs.driveAppliedVolts      = _driveAppliedVolts;
-        inputs.driveCurrentAmps       = new double[]{Math.abs(_driveSim.getCurrentDrawAmps()) };
+        inputs.driveAppliedVolts = _driveAppliedVolts;
+        inputs.driveCurrentAmps = new double[]
+        { Math.abs(_driveSim.getCurrentDrawAmps()) };
 
-        inputs.turnAbsolutePosition  = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
-        inputs.turnPosition          = new Rotation2d(_turnSim.getAngularPositionRad());
+        inputs.turnAbsolutePosition = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
+        inputs.turnPosition = new Rotation2d(_turnSim.getAngularPositionRad());
         inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
-        inputs.turnAppliedVolts      = _turnAppliedVolts;
-        inputs.turnCurrentAmps       = new double[]{Math.abs(_turnSim.getCurrentDrawAmps()) };
+        inputs.turnAppliedVolts = _turnAppliedVolts;
+        inputs.turnCurrentAmps = new double[]
+        { Math.abs(_turnSim.getCurrentDrawAmps()) };
     }
 
     @Override

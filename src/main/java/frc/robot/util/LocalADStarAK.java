@@ -118,8 +118,8 @@ public class LocalADStarAK implements Pathfinder
 
     private static class ADStarIO implements LoggableInputs
     {
-        public LocalADStar adStar                = new LocalADStar();
-        public boolean isNewPathAvailable        = false;
+        public LocalADStar adStar = new LocalADStar();
+        public boolean isNewPathAvailable = false;
         public List<PathPoint> currentPathPoints = Collections.emptyList();
 
         @Override
@@ -128,13 +128,13 @@ public class LocalADStarAK implements Pathfinder
             table.put("IsNewPathAvailable", isNewPathAvailable);
 
             double[] pointsLogged = new double[currentPathPoints.size() * 2];
-            int idx               = 0;
+            int idx = 0;
 
             for (PathPoint point : currentPathPoints)
             {
-                pointsLogged[idx]     = point.position.getX();
+                pointsLogged[idx] = point.position.getX();
                 pointsLogged[idx + 1] = point.position.getY();
-                
+
                 idx += 2;
             }
 
