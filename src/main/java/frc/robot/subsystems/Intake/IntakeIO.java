@@ -8,7 +8,8 @@ public interface IntakeIO
     public static class IntakeIOInputs
     {
         public double appliedVolts = 0.0;
-        public double[] currentAmps = new double[]{};
+        public double[] currentAmps = new double[]
+        {};
     }
 
     public default void updateInputs(IntakeIOInputs inputs)
