@@ -47,7 +47,7 @@ public class Drive extends SubsystemBase
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
         this._gyroIO = gyroIO;
-        
+
         _modules[0] = new Module(flModuleIO, 0);
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
@@ -55,11 +55,12 @@ public class Drive extends SubsystemBase
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(this::getPose, this::setPose,
-                () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
-                new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS,
-                        new ReplanningConfig()),
-                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red,
-                this);
+                        () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
+                        new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED,
+                                        Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                        () -> DriverStation.getAlliance().isPresent()
+                                        && DriverStation.getAlliance().get() == Alliance.Red,
+                        this);
 
         Pathfinding.setPathfinder(new LocalADStarAK());
 
@@ -129,7 +130,7 @@ public class Drive extends SubsystemBase
     public void runVelocity(ChassisSpeeds speeds)
     {
         // Calculate module setpoints
-        ChassisSpeeds discreteSpeeds       = ChassisSpeeds.discretize(speeds, 0.02);
+        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drive.MAX_LINEAR_SPEED);
