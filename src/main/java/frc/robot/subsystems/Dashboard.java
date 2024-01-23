@@ -38,22 +38,19 @@ public class Dashboard {
 
     // Camera Stream
     _cameraStream =
-        tab.getLayout("Camera Stream", BuiltInLayouts.kGrid)
+        tab.add("Camera Stream", false) // get the intanse of the camera stream
             .withPosition(0, 0)
             .withSize(12, 13)
             .withProperties(Map.of())
-            .add(
-                "Camera Stream",
-                BuiltInWidgets.kCameraStream) // Placeholder for camera stream widget
+            // .withWidget(BuiltInWidgets.kCameraStream)
             .getEntry();
 
     // Field
     _field =
-        tab.getLayout("Field", BuiltInLayouts.kGrid)
+        tab.add("field", false)
             .withPosition(12, 0)
             .withSize(14, 8)
             .withProperties(Map.of())
-            .add("Field", BuiltInWidgets.kCameraStream) // Placeholder for field widget
             .getEntry();
 
     // Alliance, Target, and Intake boxes
@@ -91,7 +88,7 @@ public class Dashboard {
 
     // Swerve Module Angles
     var driveSettingsLayout =
-        tab.getLayout("Drive Subsystem", BuiltInLayouts.kGrid).withPosition(0, 0).withSize(4, 3);
+        tab.getLayout("Drive Subsystem", BuiltInLayouts.kGrid).withPosition(26, 4).withSize(4, 3);
     _flAngle =
         driveSettingsLayout
             .add("FL Offset", 0.0)
@@ -126,16 +123,19 @@ public class Dashboard {
         tab.getLayout("Height and Speed", BuiltInLayouts.kGrid)
             .withPosition(12, 8)
             .withSize(9, 5)
-            .withProperties(Map.of());
+            .withProperties(Map.of("Number of columns", 2, "Number of rows", 1));
     _heightNumberBar =
         heightAndSpeedLayout.add("Height", 0).withWidget(BuiltInWidgets.kNumberBar).getEntry();
-    _speedDial = heightAndSpeedLayout.add("Speed", 0).withWidget(BuiltInWidgets.kDial).getEntry();
-
+    _speedDial =
+        heightAndSpeedLayout
+            .add("Speed", 0)
+            .withWidget(BuiltInWidgets.kDial)
+            .getEntry();
     // Autonomous Options
     var autonomousLayout =
         tab.getLayout("Autonomous", BuiltInLayouts.kGrid)
             .withPosition(21, 8)
-            .withSize(5, 9)
+            .withSize(9, 5)
             .withProperties(
                 Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
 
