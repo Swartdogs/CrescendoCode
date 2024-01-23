@@ -4,14 +4,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase
 {
-    private ShooterIO _io; 
-    private final ShooterIOInputsAutoLogged _inputs = new ShooterIOInputsAutoLogged();
+    private ShooterBedIO _leftBedIO;
+    private ShooterBedIO _rightBedIO;
+    
+    private final ShooterBedIOInputsAutoLogged _bedInputs = new ShooterBedIOInputsAutoLogged();
+    private final 
 
 
     /** Creates a new Shooter. */
-    public Shooter()
+    public Shooter(ShooterBedIO leftBedIO, ShooterBedIO rightBedIO)
     {
-
+        _leftBedIO = leftBedIO;
+        _rightBedIO = rightBedIO;
     }
 
     @Override
