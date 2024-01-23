@@ -90,4 +90,10 @@ public class Climb extends SubsystemBase
 
         _io.setVoltageRight(volts);
     }
+
+    public static Climb getInstance()
+    {
+	// TODO Auto-generated method stub
+	throw new UnsupportedOperationException("Unimplemented method 'getInstance'");
+    }
 }

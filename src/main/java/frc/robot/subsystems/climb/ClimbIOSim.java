@@ -4,7 +4,11 @@
 
 package frc.robot.subsystems.climb;
 
-public class ClimbIOSim 
+public class ClimbIOSim implements ClimbIO
 {
+    @Override
+    public void updateInputs(ClimbIOInputs inputs)
+    {
 
+    }
 }
