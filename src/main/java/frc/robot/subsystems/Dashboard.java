@@ -125,12 +125,12 @@ public class Dashboard {
             .withSize(9, 5)
             .withProperties(Map.of("Number of columns", 2, "Number of rows", 1));
     _heightNumberBar =
-        heightAndSpeedLayout.add("Height", 0).withWidget(BuiltInWidgets.kNumberBar).getEntry();
-    _speedDial =
         heightAndSpeedLayout
-            .add("Speed", 0)
-            .withWidget(BuiltInWidgets.kDial)
+            .add("Height", 0)
+            .withWidget(BuiltInWidgets.kNumberBar)
+            .withProperties(Map.of("Orientation", "VERTICAL"))
             .getEntry();
+    _speedDial = heightAndSpeedLayout.add("Speed", 0).withWidget(BuiltInWidgets.kDial).getEntry();
     // Autonomous Options
     var autonomousLayout =
         tab.getLayout("Autonomous", BuiltInLayouts.kGrid)
