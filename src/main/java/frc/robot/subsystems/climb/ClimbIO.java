@@ -11,8 +11,8 @@ public interface ClimbIO
     @AutoLog
     public static class ClimbIOInputs
     {
-        public double  extensionLeft  = 0.0;
-        public double  extensionRight = 0.0;
+        public double extensionLeft  = 0.0;
+        public double extensionRight = 0.0;
         
         public boolean lockStateLeft  = false;
         public boolean lockStateRight = false;
