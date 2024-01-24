@@ -5,28 +5,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.climb.Climb;
 
 public class CmdClimbRightSetpoint extends Command {
-  /** Creates a new CmdClimbRightSetpoint. */
-  public CmdClimbRightSetpoint() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  private Climb _climb;
+  private double _setpoint;
+
+  public CmdClimbRightSetpoint(Climb climb, double setpoint) {
+    _climb = climb;
+    _setpoint = setpoint;
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    _climb.setSetpointRight(_setpoint);
+  }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return _climb.isAtRightSetpoint();
   }
 }
