@@ -74,6 +74,11 @@ public final class Constants
         public static final Rotation2d MODULE_BR_OFFSET = Rotation2d.fromRadians(-1.63);
     }
 
+    public static class Shooter // FIXME: Update all these values
+    {
+        public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromRadians(0);
+    }
+
     public static class General
     {
         public static final double LOOP_PERIOD_SECS = 0.02;

@@ -16,6 +16,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.drive.Drive;
@@ -24,18 +25,26 @@ import frc.robot.subsystems.drive.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterBedIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
+
+import java.util.ArrayList;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
     // Subsystems
     private final Drive _drive;
+    private Shooter _shooter;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
 
     // Controls
     private final Joystick _joystick = new Joystick(1);
+    private ArrayList<JoystickButton> _buttons;
 
     public RobotContainer()
     {
@@ -52,6 +61,9 @@ public class RobotContainer
                                             Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
+
+            _shooter = new Shooter(new ShooterBedIOSparkMax(7, 8, 3, Constants.Shooter.BED_ANGLE_OFFSET),
+                            new ShooterFlywheelIOSparkMax(9, 10)); // FIXME: Set correct IDs
             break;
 
         // Sim robot, instantiate physics sim IO implementations
@@ -85,6 +97,7 @@ public class RobotContainer
     {
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
                         () -> -_joystick.getZ()));
+
     }
 
     public Command getAutonomousCommand()
