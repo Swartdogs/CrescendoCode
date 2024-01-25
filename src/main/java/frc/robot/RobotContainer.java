@@ -65,7 +65,7 @@ public class RobotContainer
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
 
-            _intake = new Intake(new IntakeIOSparkMax(5));
+            _intake = new Intake(new IntakeIOSparkMax(9));
             _buttons = new ArrayList<JoystickButton>();
 
             for (int i = 0; i < 12; i++)
