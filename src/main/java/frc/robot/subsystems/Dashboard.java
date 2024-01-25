@@ -30,11 +30,24 @@ public class Dashboard {
   private GenericEntry _autonomousSplitButton;
   private GenericEntry _autonomousComboBox;
 
+  private GenericEntry _frOffset;
+  private GenericEntry _flOffset;
+  private GenericEntry _brOffset;
+  private GenericEntry _blOffset;
+  private GenericEntry pickupSpeed;
+  private GenericEntry leftOffset;
+  private GenericEntry rightOffset;
+  private GenericEntry HangerSpeed;
+  private GenericEntry NoteShootSpeed;
+  private GenericEntry NoteloadTimeOut;
+  private GenericEntry ShooterOffset;
+
   // SendableChoosers for Autonomous options
   private SendableChooser<Integer> _autoDelayChooser;
 
   public Dashboard() {
     var tab = Shuffleboard.getTab("Dashboard");
+    var SettingsTab = Shuffleboard.getTab("Settings");
 
     // Camera Stream
     _cameraStream =
@@ -174,6 +187,56 @@ public class Dashboard {
     initializeOffsetSetting("BR Offset", Constants.Drive.BR_OFFSET, _brAngle,
             Drive.getInstance().getSwerveModule(Constants.Drive.BR_INDEX)::setRotationZero);
      */
+
+    var outerLayout =
+        SettingsTab.getLayout("Settings", BuiltInLayouts.kList)
+            .withPosition(0, 0)
+            .withSize(37, 10)
+            .withProperties(Map.of("Number of columns", 5, "Number of rows", 1));
+
+    var driveSettings =
+        outerLayout
+            .getLayout("Drive Subsystem", BuiltInLayouts.kGrid)
+            .withPosition(0, 0)
+            .withSize(4, 3);
+
+    _frOffset =
+        driveSettings
+            .add("FL Offset", 0.0)
+            .withPosition(0, 0)
+            .withSize(2, 2)
+            .withWidget(BuiltInWidgets.kTextView)
+            .getEntry();
+
+    _frOffset =
+        driveSettings
+            .add("FR Offset", 0.0)
+            .withPosition(2, 0)
+            .withSize(2, 2)
+            .withWidget(BuiltInWidgets.kTextView)
+            .getEntry();
+
+    _blOffset =
+        driveSettings
+            .add("BL Offset", 0.0)
+            .withPosition(0, 2)
+            .withSize(2, 2)
+            .withWidget(BuiltInWidgets.kTextView)
+            .getEntry();
+
+    _brOffset =
+        driveSettings
+            .add("BR Offset", 0.0)
+            .withPosition(2, 2)
+            .withSize(2, 2)
+            .withWidget(BuiltInWidgets.kTextView)
+            .getEntry();
+
+    var PickupSetting =
+        outerLayout
+            .getLayout("Drive Subsystem", BuiltInLayouts.kGrid)
+            .withPosition(0, 0)
+            .withSize(4, 3);
   }
 
   // Method to initialize settings with default values and listen for changes
