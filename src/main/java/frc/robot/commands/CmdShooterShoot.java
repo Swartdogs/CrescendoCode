@@ -11,27 +11,29 @@ public class CmdShooterShoot extends Command
 {
     private Shooter _shooter;
 
-    private double _upperVoltage;
-    private double _lowerVoltage;
+    private double _upperVelocity;
+    private double _lowerVelocity;
 
-    public CmdShooterShoot(Shooter shooter, double lowerVoltage, double upperVoltage)
+    public CmdShooterShoot(Shooter shooter, double lowerVelocity, double upperVelocity)
     {
         _shooter = shooter;
-        _lowerVoltage = lowerVoltage;
-        _upperVoltage = upperVoltage;
+        _lowerVelocity = lowerVelocity;
+        _upperVelocity = upperVelocity;
     }
 
     @Override
     public void initialize()
     {
-        _shooter.setVoltage(_upperVoltage, _lowerVoltage);
+        _shooter.setUpperVelocity(_upperVelocity);
+        _shooter.setLowerVelocity(_lowerVelocity);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
     {
-        _shooter.setVoltage(0,0);
+        _shooter.setUpperVoltage(0);
+        _shooter.setLowerVoltage(0);
     }
 
     // Returns true when the command should end.

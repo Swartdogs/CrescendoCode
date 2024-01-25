@@ -108,8 +108,6 @@ public class RobotContainer
         CmdShooterSetBedAngle _setBedLow = new CmdShooterSetBedAngle(_shooter, new Rotation2d(30));
         CmdShooterSetBedAngle _setBedHigh = new CmdShooterSetBedAngle(_shooter, new Rotation2d(45));
 
-
-
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
                         () -> -_joystick.getZ()));
         _buttons.get(3).onTrue(_stopShooter);

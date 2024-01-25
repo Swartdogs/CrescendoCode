@@ -18,6 +18,15 @@ public interface ShooterFlywheelIO
     public default void updateInputs(ShooterFlywheelIOInputs inputs)
     {}
 
-    public default void setVoltage(double upperVolts, double lowerVolts)
+    public default void setUpperVelocity(double upperVelocity)
+    {}
+
+    public default void setLowerVelocity(double lowerVelocity)
+    {}
+
+    public default void setUpperVoltage(double upperVolts)
+    {}
+
+    public default void setLowerVoltage(double lowerVolts)
     {}
 }

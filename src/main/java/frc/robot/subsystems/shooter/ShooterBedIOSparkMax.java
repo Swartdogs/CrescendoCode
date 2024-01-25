@@ -13,6 +13,7 @@ public class ShooterBedIOSparkMax implements ShooterBedIO
     private AnalogEncoder _bedAbsoluteEncoder;
     private Rotation2d _bedAbsoluteEncoderOffset;
 
+    @SuppressWarnings("resource")
     public ShooterBedIOSparkMax(int bedCanID, int followerBedCanID, int absoluteEncoderChannel,
                     Rotation2d bedAbsoluteEncoderOffset)
     {

@@ -17,11 +17,12 @@ public class Shooter extends SubsystemBase
 
     private SimpleMotorFeedforward _flywheelFeedforward;
     private PIDController _bedFeedback;
-    private PIDController _flywheelFeedback;
+    private PIDController _upperFlywheelFeedback;
+    private PIDController _lowerFlywheelFeedback;
 
     private Rotation2d _angleSetpoint = null;
-    private Double _upperVoltageSetpoint = null;
-    private Double _lowerVoltageSetpoint = null;
+    private Double _upperVelocitySetpoint = null;
+    private Double _lowerVelocitySetpoint = null;
 
     public Shooter(ShooterBedIO bedIO, ShooterFlywheelIO flywheelIO)
     {
@@ -30,7 +31,9 @@ public class Shooter extends SubsystemBase
 
         _flywheelFeedforward = new SimpleMotorFeedforward(0, 0);
         _bedFeedback = new PIDController(0, 0, 0); // FIXME: Set values, calibrate
-        _flywheelFeedback = new PIDController(0, 0, 0);
+        _upperFlywheelFeedback = new PIDController(0, 0, 0);
+        _lowerFlywheelFeedback = new PIDController(0, 0, 0);
+
     }
 
     @Override
@@ -46,11 +49,18 @@ public class Shooter extends SubsystemBase
             _bedIO.setVoltage(_bedFeedback.calculate(_bedInputs.bedAngle.getRadians(), _angleSetpoint.getRadians()));
         }
 
-        if (_upperVoltageSetpoint != null)
+        if (_upperVelocitySetpoint != null)
         {
-            _flywheelIO.setVoltage(_flywheelFeedforward.calculate(_flywheelInputs.upperFlywheelAppliedVolts)
-                            + _flywheelFeedback.calculate(_flywheelInputs.upperFlywheelAppliedVolts, _upperVoltageSetpoint),(_flywheelFeedforward.calculate(_flywheelInputs.lowerFlywheelAppliedVolts)
-                            + _flywheelFeedback.calculate(_flywheelInputs.lowerFlywheelAppliedVolts, _lowerVoltageSetpoint)));
+            _flywheelIO.setUpperVoltage(_flywheelFeedforward.calculate(_flywheelInputs.upperFlywheelAppliedVolts)
+                            + _upperFlywheelFeedback.calculate(_flywheelInputs.upperFlywheelAppliedVolts,
+                                            _upperVelocitySetpoint));
+        }
+
+        if (_lowerVelocitySetpoint != null)
+        {
+            _flywheelIO.setLowerVoltage(_flywheelFeedforward.calculate(_flywheelInputs.lowerFlywheelAppliedVolts)
+                            + _lowerFlywheelFeedback.calculate(_flywheelInputs.lowerFlywheelAppliedVolts,
+                                            _lowerVelocitySetpoint));
         }
     }
 
@@ -59,9 +69,26 @@ public class Shooter extends SubsystemBase
         _angleSetpoint = angleSetpoint;
     }
 
-    public void setVoltage(double upperVoltageSetpoint, double lowerVoltageSetpoint)
+    public void setUpperVelocity(double upperVelocitySetpoint)
     {
-        _upperVoltageSetpoint = upperVoltageSetpoint;
-        _lowerVoltageSetpoint = lowerVoltageSetpoint;
+        _upperVelocitySetpoint = upperVelocitySetpoint;
+    }
+
+    public void setLowerVelocity(double lowerVelocitySetpoint)
+    {
+        _lowerVelocitySetpoint = lowerVelocitySetpoint;
+    }
+
+    public void setUpperVoltage(double upperVoltage)
+    {
+        _upperVelocitySetpoint = null;
+        _flywheelIO.setUpperVoltage(0);
+
+    }
+
+    public void setLowerVoltage(double lowerVoltage)
+    {
+        _lowerVelocitySetpoint = null;
+        _flywheelIO.setLowerVoltage(0);
     }
 }

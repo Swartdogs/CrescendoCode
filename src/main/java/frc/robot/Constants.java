@@ -77,6 +77,8 @@ public final class Constants
     public static class Shooter // FIXME: Update all these values
     {
         public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromRadians(0);
+        public static final Rotation2d MAX_BED_ANGLE = Rotation2d.fromRadians(0);
+        public static final Rotation2d MIN_BED_ANGLE = Rotation2d.fromRadians(0);
     }
 
     public static class General
