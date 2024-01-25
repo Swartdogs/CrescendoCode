@@ -34,13 +34,13 @@ public class Dashboard {
   private GenericEntry _flOffset;
   private GenericEntry _brOffset;
   private GenericEntry _blOffset;
-  private GenericEntry pickupSpeed;
-  private GenericEntry leftOffset;
-  private GenericEntry rightOffset;
-  private GenericEntry HangerSpeed;
-  private GenericEntry NoteShootSpeed;
-  private GenericEntry NoteloadTimeOut;
-  private GenericEntry ShooterOffset;
+  private GenericEntry _pickupSpeed;
+  private GenericEntry _leftOffset;
+  private GenericEntry _rightOffset;
+  private GenericEntry _HangerSpeed;
+  private GenericEntry _NoteShootSpeed;
+  private GenericEntry _NoteloadTimeOut;
+  private GenericEntry _ShooterOffset;
 
   // SendableChoosers for Autonomous options
   private SendableChooser<Integer> _autoDelayChooser;
@@ -189,22 +189,23 @@ public class Dashboard {
      */
 
     var outerLayout =
-        SettingsTab.getLayout("Settings", BuiltInLayouts.kList)
+        SettingsTab.getLayout("Settings", BuiltInLayouts.kGrid)
             .withPosition(0, 0)
             .withSize(37, 10)
-            .withProperties(Map.of("Number of columns", 5, "Number of rows", 1));
+            .withProperties(
+                Map.of("Number of columns", 5, "Number of rows", 1, "Label position", "TOP"));
 
     var driveSettings =
         outerLayout
-            .getLayout("Drive Subsystem", BuiltInLayouts.kGrid)
+            .getLayout("Drive Subsystem", BuiltInLayouts.kList)
             .withPosition(0, 0)
-            .withSize(4, 3);
+            .withSize(8, 10)
+            .withProperties(Map.of("label position", "LEFT"));
 
     _frOffset =
         driveSettings
             .add("FL Offset", 0.0)
             .withPosition(0, 0)
-            .withSize(2, 2)
             .withWidget(BuiltInWidgets.kTextView)
             .getEntry();
 
@@ -212,7 +213,6 @@ public class Dashboard {
         driveSettings
             .add("FR Offset", 0.0)
             .withPosition(2, 0)
-            .withSize(2, 2)
             .withWidget(BuiltInWidgets.kTextView)
             .getEntry();
 
@@ -220,7 +220,6 @@ public class Dashboard {
         driveSettings
             .add("BL Offset", 0.0)
             .withPosition(0, 2)
-            .withSize(2, 2)
             .withWidget(BuiltInWidgets.kTextView)
             .getEntry();
 
@@ -228,15 +227,64 @@ public class Dashboard {
         driveSettings
             .add("BR Offset", 0.0)
             .withPosition(2, 2)
-            .withSize(2, 2)
             .withWidget(BuiltInWidgets.kTextView)
             .getEntry();
 
-    var PickupSetting =
+    var pickupSetting =
         outerLayout
-            .getLayout("Drive Subsystem", BuiltInLayouts.kGrid)
+            .getLayout("Pickup", BuiltInLayouts.kList)
+            .withPosition(1, 0)
+            .withSize(7, 10)
+            .withProperties(Map.of("label position", "LEFT"));
+
+    _pickupSpeed =
+        pickupSetting
+            .add("Pickup Speed", 0.0)
+            .withWidget(BuiltInWidgets.kTextView)
             .withPosition(0, 0)
-            .withSize(4, 3);
+            .getEntry();
+
+    var hangerSetting =
+        outerLayout
+            .getLayout("Hanger", BuiltInLayouts.kList)
+            .withPosition(2, 0)
+            .withProperties(Map.of("label position", "LEFT"))
+            .withSize(7, 10);
+
+    _leftOffset =
+        hangerSetting.add("Left Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+
+    _rightOffset =
+        hangerSetting.add("Right Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+
+    _HangerSpeed =
+        hangerSetting.add("Hanger Speed", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+
+    var noteSetting =
+        outerLayout
+            .getLayout("Note", BuiltInLayouts.kList)
+            .withPosition(3, 0)
+            .withSize(8, 10)
+            .withProperties(Map.of("label position", "LEFT"));
+
+    _NoteShootSpeed =
+        noteSetting.add("Note Shoot Speed", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+
+    _NoteloadTimeOut =
+        noteSetting.add("Note Load Timeout", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+
+    var shooterSetting =
+        outerLayout
+            .getLayout("Shooter", BuiltInLayouts.kList)
+            .withPosition(4, 0)
+            .withSize(7, 10)
+            .withProperties(Map.of("label position", "LEFT"));
+
+    _ShooterOffset =
+        shooterSetting
+            .add("Shooter Relative Offset", 0.0)
+            .withWidget(BuiltInWidgets.kTextView)
+            .getEntry();
   }
 
   // Method to initialize settings with default values and listen for changes
