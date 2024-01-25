@@ -11,6 +11,8 @@ public class CmdIntakeStartIntake extends Command
     public CmdIntakeStartIntake(Intake intakeSubsystem)
     {
         _intakeSubsystem = intakeSubsystem;
+
+        addRequirements(_intakeSubsystem);
     }
 
     @Override

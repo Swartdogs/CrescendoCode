@@ -11,6 +11,8 @@ public class CmdIntakeReverseIntake extends Command
     public CmdIntakeReverseIntake(Intake intakeSubsystem)
     {
         _intakeSubsystem = intakeSubsystem;
+
+        addRequirements(_intakeSubsystem);
     }
 
     @Override

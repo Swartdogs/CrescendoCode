@@ -10,6 +10,8 @@ public class IntakeIOSparkMax implements IntakeIO
     public IntakeIOSparkMax(int canId)
     {
         _intakeSparkMax = new CANSparkMax(canId, MotorType.kBrushless);
+
+        _intakeSparkMax.setInverted(true);
     }
 
     @Override

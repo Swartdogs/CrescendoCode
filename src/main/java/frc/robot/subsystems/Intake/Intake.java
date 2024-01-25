@@ -2,7 +2,9 @@ package frc.robot.subsystems.Intake;
 
 import org.littletonrobotics.junction.Logger;
 
-public class Intake
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Intake extends SubsystemBase
 {
     private IntakeIO _io;
     private double _intakeVoltage = 0.0;
@@ -13,6 +15,7 @@ public class Intake
         _io = io;
     }
 
+    @Override
     public void periodic()
     {
         _io.updateInputs(_inputs);

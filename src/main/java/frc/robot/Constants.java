@@ -55,7 +55,7 @@ public final class Constants
 
     public static class Intake
     {
-        public static final double INTAKE_VOLTAGE = 4.0;
+        public static final double INTAKE_VOLTAGE = 10;
     }
 
     public static class Drive
