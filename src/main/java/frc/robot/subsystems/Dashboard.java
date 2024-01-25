@@ -34,13 +34,13 @@ public class Dashboard {
   private GenericEntry _flOffset;
   private GenericEntry _brOffset;
   private GenericEntry _blOffset;
-  private GenericEntry pickupSpeed;
-  private GenericEntry leftOffset;
-  private GenericEntry rightOffset;
-  private GenericEntry HangerSpeed;
-  private GenericEntry NoteShootSpeed;
-  private GenericEntry NoteloadTimeOut;
-  private GenericEntry ShooterOffset;
+  private GenericEntry _pickupSpeed;
+  private GenericEntry _leftOffset;
+  private GenericEntry _rightOffset;
+  private GenericEntry _HangerSpeed;
+  private GenericEntry _NoteShootSpeed;
+  private GenericEntry _NoteloadTimeOut;
+  private GenericEntry _ShooterOffset;
 
   // SendableChoosers for Autonomous options
   private SendableChooser<Integer> _autoDelayChooser;
@@ -189,14 +189,14 @@ public class Dashboard {
      */
 
     var outerLayout =
-        SettingsTab.getLayout("Settings", BuiltInLayouts.kList)
+        SettingsTab.getLayout("Settings", BuiltInLayouts.kGrid)
             .withPosition(0, 0)
             .withSize(37, 10)
             .withProperties(Map.of("Number of columns", 5, "Number of rows", 1));
 
     var driveSettings =
         outerLayout
-            .getLayout("Drive Subsystem", BuiltInLayouts.kGrid)
+            .getLayout("Drive Subsystem", BuiltInLayouts.kList)
             .withPosition(0, 0)
             .withSize(4, 3);
 
@@ -234,9 +234,36 @@ public class Dashboard {
 
     var PickupSetting =
         outerLayout
-            .getLayout("Drive Subsystem", BuiltInLayouts.kGrid)
+            .getLayout("Pickup", BuiltInLayouts.kList)
             .withPosition(0, 0)
             .withSize(4, 3);
+    _pickupSpeed =
+        PickupSetting
+            .add("Pickup Speed", 0.0)
+            .withPosition (8,1)
+            .withSize (7,12)
+            .withWidget (BuiltInWidgets.kTextView)
+            .getEntry();
+    var NoteSetting =
+        outerLayout
+            .getLayout("Note", BuiltInLayouts.kList)
+            .withPosition(0,0)
+            .withSize(4,3)
+    _NoteShootSpeed =
+        NoteSetting
+            .add("Note Shoot Speed", 0.0)
+            .withPosition(24,1)
+            .withSize(8,17)
+            .withWidget(BuiltInWidgets.kTextView)
+            .getEntry();
+    _NoteloadTimeOut =
+        NoteSetting
+            .add("Note Load Timeout", 0.0)
+            .withPosition(24,1)
+            .withSize(8,17)
+            .withWidget(BuiltInWidgets.kTextView)
+            .getEntry();
+
   }
 
   // Method to initialize settings with default values and listen for changes
