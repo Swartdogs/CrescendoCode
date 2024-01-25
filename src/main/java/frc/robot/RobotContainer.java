@@ -14,9 +14,14 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CmdShooterSetBedAngle;
+import frc.robot.commands.CmdShooterShoot;
+import frc.robot.commands.CmdShooterStop;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.drive.Drive;
@@ -95,8 +100,23 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
+        CmdShooterShoot _flipShoot = new CmdShooterShoot(_shooter, 6, 10);
+        CmdShooterShoot _straightShoot = new CmdShooterShoot(_shooter, 8, 8);
+
+        CmdShooterStop _stopShooter = new CmdShooterStop(_shooter);
+
+        CmdShooterSetBedAngle _setBedLow = new CmdShooterSetBedAngle(_shooter, new Rotation2d(30));
+        CmdShooterSetBedAngle _setBedHigh = new CmdShooterSetBedAngle(_shooter, new Rotation2d(45));
+
+
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
                         () -> -_joystick.getZ()));
+        _buttons.get(3).onTrue(_stopShooter);
+        _buttons.get(6).onTrue(_flipShoot);
+        _buttons.get(7).onTrue(_straightShoot);
+        _buttons.get(10).onTrue(_setBedLow);
+        _buttons.get(11).onTrue(_setBedHigh);
 
     }
 

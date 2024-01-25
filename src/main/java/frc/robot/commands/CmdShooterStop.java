@@ -19,7 +19,7 @@ public class CmdShooterStop extends Command
     @Override
     public void initialize()
     {
-        _shooter.setVoltage(0);
+        _shooter.setVoltage(0,0);
     }
     
     @Override

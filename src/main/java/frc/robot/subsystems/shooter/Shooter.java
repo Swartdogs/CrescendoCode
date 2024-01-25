@@ -20,7 +20,8 @@ public class Shooter extends SubsystemBase
     private PIDController _flywheelFeedback;
 
     private Rotation2d _angleSetpoint = null;
-    private Double _voltageSetpoint = null;
+    private Double _upperVoltageSetpoint = null;
+    private Double _lowerVoltageSetpoint = null;
 
     public Shooter(ShooterBedIO bedIO, ShooterFlywheelIO flywheelIO)
     {
@@ -45,10 +46,11 @@ public class Shooter extends SubsystemBase
             _bedIO.setVoltage(_bedFeedback.calculate(_bedInputs.bedAngle.getRadians(), _angleSetpoint.getRadians()));
         }
 
-        if (_voltageSetpoint != null)
+        if (_upperVoltageSetpoint != null)
         {
-            _flywheelIO.setVoltage(_flywheelFeedforward.calculate(_flywheelInputs.flywheelAppliedVolts)
-                            + _flywheelFeedback.calculate(_flywheelInputs.flywheelAppliedVolts, _voltageSetpoint));
+            _flywheelIO.setVoltage(_flywheelFeedforward.calculate(_flywheelInputs.upperFlywheelAppliedVolts)
+                            + _flywheelFeedback.calculate(_flywheelInputs.upperFlywheelAppliedVolts, _upperVoltageSetpoint),(_flywheelFeedforward.calculate(_flywheelInputs.lowerFlywheelAppliedVolts)
+                            + _flywheelFeedback.calculate(_flywheelInputs.lowerFlywheelAppliedVolts, _lowerVoltageSetpoint)));
         }
     }
 
@@ -57,8 +59,9 @@ public class Shooter extends SubsystemBase
         _angleSetpoint = angleSetpoint;
     }
 
-    public void setVoltage(double voltageSetpoint)
+    public void setVoltage(double upperVoltageSetpoint, double lowerVoltageSetpoint)
     {
-        _voltageSetpoint = voltageSetpoint;
+        _upperVoltageSetpoint = upperVoltageSetpoint;
+        _lowerVoltageSetpoint = lowerVoltageSetpoint;
     }
 }
