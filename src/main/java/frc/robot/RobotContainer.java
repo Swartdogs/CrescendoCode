@@ -30,8 +30,10 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterBed;
+import frc.robot.subsystems.shooter.ShooterBedIOSim;
 import frc.robot.subsystems.shooter.ShooterBedIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -65,7 +67,7 @@ public class RobotContainer
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
 
-            _shooterBed         = new ShooterBed(new ShooterBedIOSparkMax(7, 8, 3, Constants.Shooter.BED_ANGLE_OFFSET));
+            _shooterBed         = new ShooterBed(new ShooterBedIOSparkMax(7, 8, 3, Constants.ShooterBed.BED_ANGLE_OFFSET));
             _shooterFlywheel    = new ShooterFlywheel(new ShooterFlywheelIOSparkMax(9, 10)); // FIXME: Set correct IDs
             break;
 
@@ -73,8 +75,10 @@ public class RobotContainer
         case SIM:
             _drive = new Drive(new GyroIO()
             {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-            break;
 
+            _shooterBed = new ShooterBed(new ShooterBedIOSim());
+            _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
+            break;
         // Replayed robot, disable IO implementations
         default:
             _drive = new Drive(new GyroIO()
