@@ -20,8 +20,8 @@ public class CmdShooterFlywheelStop extends Command
     @Override
     public void initialize()
     {
-        _shooterFlywheel.setUpperVoltage(0);
-        _shooterFlywheel.setLowerVoltage(0);
+        _shooterFlywheel.stopUpper();
+        _shooterFlywheel.stopLower();
     }
 
     @Override

@@ -42,4 +42,10 @@ public class ShooterBedIOSparkMax implements ShooterBedIO
     {
         _bedSparkMax.setVoltage(volts);
     }
+
+    @Override
+    public void setAngleOffset(Rotation2d bedAbsoluteEncoderOffset)
+    {
+        _bedAbsoluteEncoderOffset = bedAbsoluteEncoderOffset;
+    }
 }

@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ShooterFlywheel extends SubsystemBase
 {
@@ -18,6 +19,8 @@ public class ShooterFlywheel extends SubsystemBase
 
     private Double _upperVelocitySetpoint = null;
     private Double _lowerVelocitySetpoint = null;
+
+    private double _maxFlywheelSpeed = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
@@ -52,24 +55,38 @@ public class ShooterFlywheel extends SubsystemBase
 
     public void setUpperVelocity(double upperVelocitySetpoint)
     {
+        if (upperVelocitySetpoint > _maxFlywheelSpeed)
+        {
+            upperVelocitySetpoint = _maxFlywheelSpeed;
+        }
+        
         _upperVelocitySetpoint = upperVelocitySetpoint;
     }
 
     public void setLowerVelocity(double lowerVelocitySetpoint)
     {
+        if (lowerVelocitySetpoint > _maxFlywheelSpeed)
+        {
+            lowerVelocitySetpoint = _maxFlywheelSpeed;
+        }
+
         _lowerVelocitySetpoint = lowerVelocitySetpoint;
     }
 
-    public void setUpperVoltage(double upperVoltage)
+    public void stopUpper()
     {
         _upperVelocitySetpoint = null;
         _flywheelIO.setUpperVoltage(0);
-
     }
 
-    public void setLowerVoltage(double lowerVoltage)
+    public void stopLower()
     {
         _lowerVelocitySetpoint = null;
         _flywheelIO.setLowerVoltage(0);
+    }
+
+    public void setMaxFlywheelSpeed(double maxFlywheelSpeed)
+    {
+        _maxFlywheelSpeed = maxFlywheelSpeed;
     }
 }

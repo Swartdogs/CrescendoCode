@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ShooterBed extends SubsystemBase
 {
@@ -15,6 +16,8 @@ public class ShooterBed extends SubsystemBase
     private PIDController _bedFeedback;
  
     private Rotation2d _angleSetpoint = null;
+    private Rotation2d _minBedAngle = Constants.ShooterBed.MIN_BED_ANGLE;
+    private Rotation2d _maxBedAngle = Constants.ShooterBed.MAX_BED_ANGLE;
 
     public ShooterBed(ShooterBedIO bedIO)
     {
@@ -37,6 +40,30 @@ public class ShooterBed extends SubsystemBase
 
     public void setAngle(Rotation2d angleSetpoint)
     {
+        if (angleSetpoint.getRadians() > _maxBedAngle.getRadians())
+        {
+            angleSetpoint = _maxBedAngle;
+        }
+        else if (angleSetpoint.getRadians() < _minBedAngle.getRadians()) 
+        {
+            angleSetpoint = _minBedAngle;
+        }
+
         _angleSetpoint = angleSetpoint;
+    }
+
+    public void setAngleOffset(Rotation2d angleOffset)
+    {
+        _bedIO.setAngleOffset(angleOffset);
+    }
+
+    public void setMinAngle(Rotation2d minBedAngle)
+    {
+        _minBedAngle = minBedAngle;
+    }
+
+    public void setMaxAngle(Rotation2d maxBedAngle)
+    {
+        _maxBedAngle = maxBedAngle;
     }
 }

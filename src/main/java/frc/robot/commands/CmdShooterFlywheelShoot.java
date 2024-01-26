@@ -33,8 +33,8 @@ public class CmdShooterFlywheelShoot extends Command
     @Override
     public void end(boolean interrupted)
     {
-        _shooterFlywheel.setUpperVoltage(0);
-        _shooterFlywheel.setLowerVoltage(0);
+        _shooterFlywheel.stopUpper();
+        _shooterFlywheel.stopLower();
     }
 
     // Returns true when the command should end.
