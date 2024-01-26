@@ -14,8 +14,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdIntakeReverseIntake;
 import frc.robot.commands.CmdIntakeStartIntake;
 import frc.robot.commands.CmdIntakeStopIntake;
@@ -43,7 +43,7 @@ public class RobotContainer
     private final LoggedDashboardChooser<Command> _autoChooser;
 
     // Controls
-    private final Joystick _joystick = new Joystick(1);
+    private final CommandXboxController _controller = new CommandXboxController(1);
 
     public RobotContainer()
     {
@@ -96,10 +96,12 @@ public class RobotContainer
         CmdIntakeReverseIntake reverseIntake = new CmdIntakeReverseIntake(_intake);
         CmdIntakeStopIntake stopIntake = new CmdIntakeStopIntake(_intake);
 
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
-                        () -> -_joystick.getZ()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(),
+                        () -> -_controller.getRightX()));
 
-        
+        _controller.y().whileTrue(startIntake);
+        _controller.a().whileTrue(reverseIntake);
+        _controller.b().whileTrue(stopIntake);
     }
 
     public Command getAutonomousCommand()

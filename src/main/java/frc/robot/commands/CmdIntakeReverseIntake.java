@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.Intake.Intake;
 
 public class CmdIntakeReverseIntake extends Command
@@ -18,13 +17,13 @@ public class CmdIntakeReverseIntake extends Command
     @Override
     public void initialize()
     {
-        _intakeSubsystem.setIntakeVoltage(-Constants.Intake.INTAKE_VOLTAGE);
+        _intakeSubsystem.setIntakeReverse();
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        _intakeSubsystem.setIntakeVoltage(0);
+        _intakeSubsystem.setIntakeOff();
     }
 
     @Override
