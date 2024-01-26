@@ -35,5 +35,4 @@ public class ShooterBedIOSim implements ShooterBedIO
         _rightBedSim.setInputVoltage(volts);
         _bedAppliedVolts = volts;
     }
-
 }

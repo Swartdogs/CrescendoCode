@@ -5,22 +5,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
 
-public class CmdShooterStop extends Command
+public class CmdShooterFlywheelStop extends Command
 {
-    private Shooter _shooter;
+    private ShooterFlywheel _shooterFlywheel;
 
-    public CmdShooterStop(Shooter shooter)
+    public CmdShooterFlywheelStop(ShooterFlywheel shooterFlywheel)
     {
-        _shooter = shooter;
+        _shooterFlywheel = shooterFlywheel;
+        addRequirements(_shooterFlywheel);
     }
 
     @Override
     public void initialize()
     {
-        _shooter.setUpperVoltage(0);
-        _shooter.setLowerVoltage(0);
+        _shooterFlywheel.setUpperVoltage(0);
+        _shooterFlywheel.setLowerVoltage(0);
     }
 
     @Override

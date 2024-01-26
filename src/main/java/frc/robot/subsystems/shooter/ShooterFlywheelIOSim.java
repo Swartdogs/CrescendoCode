@@ -31,11 +31,13 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO
     public void setUpperVoltage(double upperVolts)
     {
         _upperFlywheelSim.setInputVoltage(upperVolts);
+        _upperAppliedVolts = upperVolts;
     }
 
     @Override
     public void setLowerVoltage(double lowerVolts)
     {
         _lowerFlywheelSim.setInputVoltage(lowerVolts);
+        _lowerAppliedVolts = lowerVolts;
     }
 }
