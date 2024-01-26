@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.drive;
 
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -38,15 +37,13 @@ import frc.robot.Constants;
  */
 public class ModuleIOSparkMax implements ModuleIO
 {
-    private final CANSparkMax _driveSparkMax;
-    private final CANSparkMax _turnSparkMax;
-
+    private final CANSparkMax     _driveSparkMax;
+    private final CANSparkMax     _turnSparkMax;
     private final RelativeEncoder _driveEncoder;
     private final RelativeEncoder _turnRelativeEncoder;
     private final AnalogEncoder   _turnAbsoluteEncoder;
-
-    private final boolean    _isTurnMotorInverted = true;
-    private final Rotation2d _absoluteEncoderOffset;
+    private final boolean         _isTurnMotorInverted = true;
+    private final Rotation2d      _absoluteEncoderOffset;
 
     public ModuleIOSparkMax(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
     {
@@ -92,13 +89,13 @@ public class ModuleIOSparkMax implements ModuleIO
         inputs.drivePositionRad       = Units.rotationsToRadians(_driveEncoder.getPosition()) / Constants.Drive.DRIVE_GEAR_RATIO;
         inputs.driveVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_driveEncoder.getVelocity()) / Constants.Drive.DRIVE_GEAR_RATIO;
         inputs.driveAppliedVolts      = _driveSparkMax.getAppliedOutput() * _driveSparkMax.getBusVoltage();
-        inputs.driveCurrentAmps       = new double[]{_driveSparkMax.getOutputCurrent() };
+        inputs.driveCurrentAmps       = new double[] { _driveSparkMax.getOutputCurrent() };
 
         inputs.turnAbsolutePosition  = Rotation2d.fromRotations(_turnAbsoluteEncoder.getAbsolutePosition()).minus(_absoluteEncoderOffset);
         inputs.turnPosition          = Rotation2d.fromRotations(_turnRelativeEncoder.getPosition() / Constants.Drive.TURN_GEAR_RATIO);
         inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_turnRelativeEncoder.getVelocity()) / Constants.Drive.TURN_GEAR_RATIO;
         inputs.turnAppliedVolts      = _turnSparkMax.getAppliedOutput() * _turnSparkMax.getBusVoltage();
-        inputs.turnCurrentAmps       = new double[]{_turnSparkMax.getOutputCurrent() };
+        inputs.turnCurrentAmps       = new double[] { _turnSparkMax.getOutputCurrent() };
     }
 
     @Override

@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -45,40 +44,31 @@ public class RobotContainer
     {
         switch (Constants.AdvantageKit.CURRENT_MODE)
         {
-        // Real robot, instantiate hardware IO implementations
-        case REAL:
-            _drive = new Drive(new GyroIONavX2(),
-                    new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE,
-                            Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
-                    new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE,
-                            Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
-                    new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE,
-                            Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
-                    new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
-                            Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
-            break;
+            // Real robot, instantiate hardware IO implementations
+            case REAL:
+                _drive = new Drive(
+                        new GyroIONavX2(), new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE, Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
+                );
+                break;
 
-        // Sim robot, instantiate physics sim IO implementations
-        case SIM:
-            _drive = new Drive(new GyroIO(){}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-            break;
+            // Sim robot, instantiate physics sim IO implementations
+            case SIM:
+                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                break;
 
-        // Replayed robot, disable IO implementations
-        default:
-            _drive = new Drive(new GyroIO()
-            {}, new ModuleIO()
-            {}, new ModuleIO()
-            {}, new ModuleIO()
-            {}, new ModuleIO()
-            {});
-            break;
+            // Replayed robot, disable IO implementations
+            default:
+                _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                break;
         }
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
-        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive,
-                _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
+        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();

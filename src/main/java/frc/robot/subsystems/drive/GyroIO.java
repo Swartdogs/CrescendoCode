@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,5 +24,7 @@ public interface GyroIO
         public double     yawVelocityRadPerSec = 0.0;
     }
 
-    public default void updateInputs(GyroIOInputs inputs){}
+    public default void updateInputs(GyroIOInputs inputs)
+    {
+    }
 }
