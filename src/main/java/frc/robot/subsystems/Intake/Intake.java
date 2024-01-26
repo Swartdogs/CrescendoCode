@@ -49,4 +49,9 @@ public class Intake extends SubsystemBase
     {
         _outtakeVoltage = outtakeVoltage;
     }
+
+    public double getIntakeVoltage()
+    {
+        return _inputs.appliedVolts;
+    }
 }
