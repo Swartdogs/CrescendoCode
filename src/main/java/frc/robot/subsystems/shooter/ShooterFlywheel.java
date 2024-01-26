@@ -11,7 +11,7 @@ public class ShooterFlywheel extends SubsystemBase
 {
     private ShooterFlywheelIO _flywheelIO;
 
-    private final ShooterFlywheelIOInputsAutoLogged _flywheelInputs = new ShooterFlywheelIOInputsAutoLogged();
+    private final ShooterFlywheelIOInputsAutoLogged _inputs = new ShooterFlywheelIOInputsAutoLogged();
 
     private SimpleMotorFeedforward _flywheelFeedforward;
     private PIDController _upperFlywheelFeedback;
@@ -35,21 +35,19 @@ public class ShooterFlywheel extends SubsystemBase
     @Override
     public void periodic()
     {
-        _flywheelIO.updateInputs(_flywheelInputs);
-        Logger.processInputs("Shooter/Flywheel", _flywheelInputs);
+        _flywheelIO.updateInputs(_inputs);
+        Logger.processInputs("Shooter/Flywheel", _inputs);
 
         if (_upperVelocitySetpoint != null)
         {
-            _flywheelIO.setUpperVoltage(_flywheelFeedforward.calculate(_flywheelInputs.upperFlywheelAppliedVolts)
-                            + _upperFlywheelFeedback.calculate(_flywheelInputs.upperFlywheelAppliedVolts,
-                                            _upperVelocitySetpoint));
+            _flywheelIO.setUpperVoltage(_flywheelFeedforward.calculate(_upperVelocitySetpoint)
+                            + _upperFlywheelFeedback.calculate(_inputs.upperFlywheelVelocity, _upperVelocitySetpoint));
         }
 
         if (_lowerVelocitySetpoint != null)
         {
-            _flywheelIO.setLowerVoltage(_flywheelFeedforward.calculate(_flywheelInputs.lowerFlywheelAppliedVolts)
-                            + _lowerFlywheelFeedback.calculate(_flywheelInputs.lowerFlywheelAppliedVolts,
-                                            _lowerVelocitySetpoint));
+            _flywheelIO.setLowerVoltage(_flywheelFeedforward.calculate(_lowerVelocitySetpoint)
+                            + _lowerFlywheelFeedback.calculate(_inputs.lowerFlywheelVelocity, _lowerVelocitySetpoint));
         }
     }
 
@@ -88,5 +86,15 @@ public class ShooterFlywheel extends SubsystemBase
     public void setMaxFlywheelSpeed(double maxFlywheelSpeed)
     {
         _maxFlywheelSpeed = maxFlywheelSpeed;
+    }
+
+    public double getUpperFlywheelVelocity()
+    {
+        return _inputs.upperFlywheelVelocity;
+    }
+
+    public double getLowerFlywheelVelocity()
+    {
+        return _inputs.lowerFlywheelVelocity;
     }
 }

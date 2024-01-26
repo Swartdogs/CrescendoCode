@@ -11,7 +11,7 @@ public class ShooterBed extends SubsystemBase
 {
     private ShooterBedIO _bedIO;
 
-    private final ShooterBedIOInputsAutoLogged _bedInputs = new ShooterBedIOInputsAutoLogged();
+    private final ShooterBedIOInputsAutoLogged _inputs = new ShooterBedIOInputsAutoLogged();
 
     private PIDController _bedFeedback;
  
@@ -29,12 +29,12 @@ public class ShooterBed extends SubsystemBase
     @Override
     public void periodic()
     {
-        _bedIO.updateInputs(_bedInputs);
-        Logger.processInputs("Shooter/Bed", _bedInputs);
+        _bedIO.updateInputs(_inputs);
+        Logger.processInputs("Shooter/Bed", _inputs);
 
         if (_angleSetpoint != null)
         {
-            _bedIO.setVoltage(_bedFeedback.calculate(_bedInputs.bedAngle.getRadians(), _angleSetpoint.getRadians()));
+            _bedIO.setVoltage(_bedFeedback.calculate(_inputs.bedAngle.getRadians(), _angleSetpoint.getRadians()));
         }
     }
 
@@ -65,5 +65,10 @@ public class ShooterBed extends SubsystemBase
     public void setMaxAngle(Rotation2d maxBedAngle)
     {
         _maxBedAngle = maxBedAngle;
+    }
+
+    public Rotation2d getBedAngle()
+    {
+        return _inputs.bedAngle;
     }
 }

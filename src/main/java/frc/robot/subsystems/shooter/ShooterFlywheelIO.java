@@ -7,9 +7,12 @@ public interface ShooterFlywheelIO
     @AutoLog
     public static class ShooterFlywheelIOInputs
     {
+        public double upperFlywheelVelocity = 0.0;
         public double upperFlywheelAppliedVolts = 0.0;
         public double[] upperFlywheelCurrentAmps = new double[]
         {};
+
+        public double lowerFlywheelVelocity = 0.0;
         public double lowerFlywheelAppliedVolts = 0.0;
         public double[] lowerFlywheelCurrentAmps = new double[]
         {};
