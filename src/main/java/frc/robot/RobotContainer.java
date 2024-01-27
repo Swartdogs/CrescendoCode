@@ -13,12 +13,11 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.CmdNotepathStartNotepath;
+import frc.robot.commands.CmdNotepathReverseNotepath;
+import frc.robot.commands.CmdNotepathStopNotepath;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.drive.Drive;
@@ -27,12 +26,17 @@ import frc.robot.subsystems.drive.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.notepath.Notepath;
+import frc.robot.subsystems.notepath.NotepathIOSim;
+import frc.robot.subsystems.notepath.NotepathIOSparkMax;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
     // Subsystems
     private final Drive _drive;
+    private Notepath _notepath;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -55,12 +59,14 @@ public class RobotContainer
                                             Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
-            break;
+            _notepath = new Notepath((new NotepathIOSparkMax(9, 10)));
+                                            break;
 
         // Sim robot, instantiate physics sim IO implementations
         case SIM:
             _drive = new Drive(new GyroIO()
             {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+            _notepath = new Notepath(new NotepathIOSim());
             break;
 
         // Replayed robot, disable IO implementations
@@ -86,6 +92,10 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
+        CmdNotepathStartNotepath startNotePath = new CmdNotepathStartNotepath(_notepath);
+        CmdNotepathReverseNotepath reverseNotePath = new CmdNotepathReverseNotepath(_notepath);
+        CmdNotepathStopNotepath stopNotePath = new CmdNotepathStopNotepath(_notepath);
+        
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
                         () -> -_joystick.getZ()));
     }
