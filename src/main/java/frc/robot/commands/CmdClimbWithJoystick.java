@@ -8,30 +8,33 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climb.Climb;
 import java.util.function.DoubleSupplier;
 
-public class CmdClimbWithJoystick extends Command {
-  private final Climb _climb;
+public class CmdClimbWithJoystick extends Command
+{
+    private final Climb _climb;
 
-  private final DoubleSupplier _yLeftSupplier;
-  private final DoubleSupplier _yRightSupplier;
+    private final DoubleSupplier _yLeftSupplier;
+    private final DoubleSupplier _yRightSupplier;
 
-  public CmdClimbWithJoystick(
-      Climb climb, DoubleSupplier yLeftSupplier, DoubleSupplier yRightSupplier) {
-    _climb = climb;
+    public CmdClimbWithJoystick(Climb climb, DoubleSupplier yLeftSupplier, DoubleSupplier yRightSupplier)
+    {
+	_climb = climb;
 
-    _yLeftSupplier = yLeftSupplier;
-    _yRightSupplier = yRightSupplier;
+	_yLeftSupplier = yLeftSupplier;
+	_yRightSupplier = yRightSupplier;
 
-    addRequirements(_climb);
-  }
+	addRequirements(_climb);
+    }
 
-  @Override
-  public void execute() {
-    _climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * 12);
-    _climb.setVoltageRight(_yRightSupplier.getAsDouble() * 12); // TODO add scaling
-  }
+    @Override
+    public void execute()
+    {
+	_climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * 12);
+	_climb.setVoltageRight(_yRightSupplier.getAsDouble() * 12); // TODO add scaling
+    }
 
-  @Override
-  public void end(boolean interrupted) {
-    _climb.stop();
-  }
+    @Override
+    public void end(boolean interrupted)
+    {
+	_climb.stop();
+    }
 }

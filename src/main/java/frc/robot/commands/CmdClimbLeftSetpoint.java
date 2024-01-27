@@ -7,22 +7,26 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climb.Climb;
 
-public class CmdClimbLeftSetpoint extends Command {
-  private final Climb _climb;
-  private final double _setpoint;
+public class CmdClimbLeftSetpoint extends Command
+{
+    private final Climb _climb;
+    private final double _setpoint;
 
-  public CmdClimbLeftSetpoint(Climb climb, double setpoint) {
-    _climb = climb;
-    _setpoint = setpoint;
-  }
+    public CmdClimbLeftSetpoint(Climb climb, double setpoint)
+    {
+	_climb = climb;
+	_setpoint = setpoint;
+    }
 
-  @Override
-  public void initialize() {
-    _climb.setSetpointLeft(_setpoint);
-  }
+    @Override
+    public void initialize()
+    {
+	_climb.setSetpointLeft(_setpoint);
+    }
 
-  @Override
-  public boolean isFinished() {
-    return _climb.isAtLeftSetpoint();
-  }
+    @Override
+    public boolean isFinished()
+    {
+	return _climb.isAtLeftSetpoint();
+    }
 }
