@@ -35,12 +35,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase
 {
-    private final GyroIO                 _gyroIO;
-    private final GyroIOInputsAutoLogged _gyroInputs       = new GyroIOInputsAutoLogged();
-    private final Module[]               _modules          = new Module[4]; // FL, FR, BL, BR
-    private SwerveDriveKinematics        _kinematics       = new SwerveDriveKinematics(getModuleTranslations());
-    private Pose2d                       _pose             = new Pose2d();
-    private Rotation2d                   _lastGyroRotation = new Rotation2d();
+    private final GyroIO _gyroIO;
+    private final GyroIOInputsAutoLogged _gyroInputs = new GyroIOInputsAutoLogged();
+    private final Module[] _modules = new Module[4]; // FL, FR, BL, BR
+    private SwerveDriveKinematics _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private Pose2d _pose = new Pose2d();
+    private Rotation2d _lastGyroRotation = new Rotation2d();
 
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -52,11 +52,13 @@ public class Drive extends SubsystemBase
         _modules[3] = new Module(brModuleIO, 3);
 
         // Configure AutoBuilder for PathPlanner
-        AutoBuilder.configureHolonomic(
-                this::getPose, this::setPose, () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
-                new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
-                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
-        );
+        AutoBuilder.configureHolonomic(this::getPose, this::setPose,
+                        () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
+                        new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED,
+                                        Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                        () -> DriverStation.getAlliance().isPresent()
+                                        && DriverStation.getAlliance().get() == Alliance.Red,
+                        this);
 
         Pathfinding.setPathfinder(new LocalADStarAK());
 
@@ -93,8 +95,10 @@ public class Drive extends SubsystemBase
         // Log empty setpoint states when disabled
         if (DriverStation.isDisabled())
         {
-            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
-            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
+            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[]
+            {});
+            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]
+            {});
         }
 
         // Update odometry
@@ -109,7 +113,7 @@ public class Drive extends SubsystemBase
         // loop cycle in x, y, and theta based only on the modules,
         // without the gyro. The gyro is always disconnected in simulation.
         var twist = _kinematics.toTwist2d(wheelDeltas);
-        twist             = new Twist2d(twist.dx, twist.dy, _gyroInputs.yawPosition.minus(_lastGyroRotation).getRadians());
+        twist = new Twist2d(twist.dx, twist.dy, _gyroInputs.yawPosition.minus(_lastGyroRotation).getRadians());
         _lastGyroRotation = _gyroInputs.yawPosition;
 
         // Apply the twist (change since last loop cycle) to the current pose
@@ -124,7 +128,7 @@ public class Drive extends SubsystemBase
     public void runVelocity(ChassisSpeeds speeds)
     {
         // Calculate module setpoints
-        ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drive.MAX_LINEAR_SPEED);
@@ -228,7 +232,10 @@ public class Drive extends SubsystemBase
     /** Returns an array of module translations. */
     public static Translation2d[] getModuleTranslations()
     {
-        return new Translation2d[] { new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0),
-                new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
+        return new Translation2d[]
+        { new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0),
+                new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0),
+                new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0),
+                new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
     }
 }
