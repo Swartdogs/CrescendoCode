@@ -48,4 +48,19 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static class Drive {
+    public static final double FL_OFFSET = -113.2;
+    public static final double FR_OFFSET = 26.0;
+    public static final double BL_OFFSET = -212.5;
+    public static final double BR_OFFSET = 146.2;
+    public static final double Intake_IN_SPEED = 0.8;
+    public static final double Intake_OUT_SPEED = 0.8;
+    public static final double HANGER_SPEED = 0.5;
+    public static final double HANGER_LEFT_OFFSET = 5.0;
+    public static final double HANGER_RIGHT_OFFSET = -5.0;
+    public static final double NOTE_SHOOT_SPEED = 0.6;
+    public static final double NOTE_LOAD_TIMEOUT = 10.0;
+    public static final double SHOOTER_OFFSET = 2.0;
+  }
 }

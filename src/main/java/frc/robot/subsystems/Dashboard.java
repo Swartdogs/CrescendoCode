@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.function.DoubleConsumer;
@@ -25,8 +26,10 @@ public class Dashboard {
   private GenericEntry _flAngle;
   private GenericEntry _brAngle;
   private GenericEntry _blAngle;
-  private GenericEntry _heightNumberBar;
+  private GenericEntry _Leftheight;
+  private GenericEntry _Rightheight;
   private GenericEntry _speedDial;
+  private GenericEntry _IntakeSpeed;
   private GenericEntry _autonomousSplitButton;
   private GenericEntry _autonomousComboBox;
 
@@ -34,9 +37,10 @@ public class Dashboard {
   private GenericEntry _flOffset;
   private GenericEntry _brOffset;
   private GenericEntry _blOffset;
-  private GenericEntry _pickupSpeed;
-  private GenericEntry _leftOffset;
-  private GenericEntry _rightOffset;
+  private GenericEntry _IntakeInSpeed;
+  private GenericEntry _IntakeOutSpeed;
+  private GenericEntry _HangerleftOffset;
+  private GenericEntry _HangerrightOffset;
   private GenericEntry _HangerSpeed;
   private GenericEntry _NoteShootSpeed;
   private GenericEntry _NoteloadTimeOut;
@@ -90,15 +94,6 @@ public class Dashboard {
             .withProperties(Map.of("Color when true", "green", "Color when false", "red"))
             .getEntry();
 
-    _intakeBox =
-        booleanBoxLayout
-            .add("Intake", false)
-            .withPosition(0, 2)
-            .withSize(8, 1)
-            .withWidget(BuiltInWidgets.kBooleanBox)
-            .withProperties(Map.of("Color when true", "green", "Color when false", "red"))
-            .getEntry();
-
     // Swerve Module Angles
     var driveSettingsLayout =
         tab.getLayout("Drive Subsystem", BuiltInLayouts.kGrid).withPosition(26, 4).withSize(4, 3);
@@ -131,24 +126,45 @@ public class Dashboard {
             .withWidget(BuiltInWidgets.kTextView)
             .getEntry();
 
-    // Height and Speed
-    var heightAndSpeedLayout =
-        tab.getLayout("Height and Speed", BuiltInLayouts.kGrid)
+    // Height, Intake and Speed
+    var heightAndIntakeAndSpeedLayout =
+        tab.getLayout("Height, Speed, Intake", BuiltInLayouts.kGrid)
             .withPosition(12, 8)
-            .withSize(9, 5)
-            .withProperties(Map.of("Number of columns", 2, "Number of rows", 1));
-    _heightNumberBar =
-        heightAndSpeedLayout
-            .add("Height", 0)
+            .withSize(18, 5)
+            .withProperties(Map.of("Number of columns", 4, "Number of rows", 1));
+    _Leftheight =
+        heightAndIntakeAndSpeedLayout
+            .add("Left Height", 0)
+            .withSize(5, 4)
+            .withPosition(0, 0)
             .withWidget(BuiltInWidgets.kNumberBar)
             .withProperties(Map.of("Orientation", "VERTICAL"))
             .getEntry();
-    _speedDial = heightAndSpeedLayout.add("Speed", 0).withWidget(BuiltInWidgets.kDial).getEntry();
+    _speedDial =
+        heightAndIntakeAndSpeedLayout
+            .add("Speed", 0)
+            .withWidget(BuiltInWidgets.kDial)
+            .withPosition(1, 0)
+            .getEntry();
+
+    _Rightheight =
+        heightAndIntakeAndSpeedLayout
+            .add("Right Height", 0)
+            .withWidget(BuiltInWidgets.kNumberBar)
+            .withPosition(2, 0)
+            .withProperties(Map.of("Orientation", "VERTICAL"))
+            .getEntry();
+    _IntakeSpeed =
+        heightAndIntakeAndSpeedLayout
+            .add("Intake Speed", 0)
+            .withPosition(3, 0)
+            .withWidget(BuiltInWidgets.kNumberBar)
+            .getEntry();
     // Autonomous Options
     var autonomousLayout =
         tab.getLayout("Autonomous", BuiltInLayouts.kGrid)
-            .withPosition(21, 8)
-            .withSize(9, 5)
+            .withPosition(30, 0)
+            .withSize(8, 13)
             .withProperties(
                 Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
 
@@ -202,7 +218,7 @@ public class Dashboard {
             .withSize(8, 10)
             .withProperties(Map.of("label position", "LEFT"));
 
-    _frOffset =
+    _flOffset =
         driveSettings
             .add("FL Offset", 0.0)
             .withPosition(0, 0)
@@ -230,18 +246,23 @@ public class Dashboard {
             .withWidget(BuiltInWidgets.kTextView)
             .getEntry();
 
-    var pickupSetting =
+    var IntakeSetting =
         outerLayout
-            .getLayout("Pickup", BuiltInLayouts.kList)
+            .getLayout("Intake", BuiltInLayouts.kList)
             .withPosition(1, 0)
             .withSize(7, 10)
             .withProperties(Map.of("label position", "LEFT"));
 
-    _pickupSpeed =
-        pickupSetting
-            .add("Pickup Speed", 0.0)
+    _IntakeInSpeed =
+        IntakeSetting.add("Intake In Speed", 0.0)
             .withWidget(BuiltInWidgets.kTextView)
             .withPosition(0, 0)
+            .getEntry();
+
+    _IntakeOutSpeed =
+        IntakeSetting.add("Intake Out Speed", 0.0)
+            .withWidget(BuiltInWidgets.kTextView)
+            .withPosition(0, 1)
             .getEntry();
 
     var hangerSetting =
@@ -251,10 +272,10 @@ public class Dashboard {
             .withProperties(Map.of("label position", "LEFT"))
             .withSize(7, 10);
 
-    _leftOffset =
+    _HangerleftOffset =
         hangerSetting.add("Left Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
-    _rightOffset =
+    _HangerrightOffset =
         hangerSetting.add("Right Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
     _HangerSpeed =
@@ -285,10 +306,105 @@ public class Dashboard {
             .add("Shooter Relative Offset", 0.0)
             .withWidget(BuiltInWidgets.kTextView)
             .getEntry();
+
+    initializeSetting(
+        "FL Offset",
+        Constants.Drive.FL_OFFSET,
+        _flOffset,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "FR Offset",
+        Constants.Drive.FR_OFFSET,
+        _frOffset,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "BL Offset",
+        Constants.Drive.BL_OFFSET,
+        _blOffset,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "BR Offset",
+        Constants.Drive.BR_OFFSET,
+        _brOffset,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Intake In Speed",
+        Constants.Drive.Intake_IN_SPEED,
+        _IntakeInSpeed,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Intake Out Speed",
+        Constants.Drive.Intake_OUT_SPEED,
+        _IntakeInSpeed,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Hanger Speed",
+        Constants.Drive.HANGER_SPEED,
+        _HangerSpeed,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Hanger Left Offset",
+        Constants.Drive.HANGER_LEFT_OFFSET,
+        _HangerleftOffset,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Hanger Right Offset",
+        Constants.Drive.HANGER_RIGHT_OFFSET,
+        _HangerrightOffset,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Note Shoot Speed",
+        Constants.Drive.NOTE_SHOOT_SPEED,
+        _NoteShootSpeed,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Note Load Timeout",
+        Constants.Drive.NOTE_LOAD_TIMEOUT,
+        _NoteloadTimeOut,
+        value -> {
+          // empty lambda
+        });
+
+    initializeSetting(
+        "Shooter Offset",
+        Constants.Drive.SHOOTER_OFFSET,
+        _ShooterOffset,
+        value -> {
+          // empty lambda
+        });
   }
 
-  // Method to initialize settings with default values and listen for changes
-  public void initializeOffsetSetting(
+  public void initializeSetting(
       String key, double defaultValue, GenericEntry entry, DoubleConsumer consumer) {
     NetworkTableInstance.getDefault()
         .addListener(
@@ -311,37 +427,18 @@ public class Dashboard {
     entry.setDouble(value);
   }
 
-  // Method to get the selected auto delay
-  public int getAutoDelay() {
-    return _autoDelayChooser.getSelected();
-  }
-
-  // Method to start the dashboard updates
-  public void startDashboard() {
-    Thread thread =
-        new Thread(
-            () -> {
-              while (true) periodic();
-            });
-    thread.start();
-  }
-
-  // Periodic method to update widgets
   public void periodic() {
-    // // Update the height and speed widgets
-    // _heightNumberBar.setDouble(/* Get the current height */);
-    // _speedDial.setDouble(/* Get the current speed */);
+    _allianceBox.setBoolean(false);
+    _TargetBox.setBoolean(false);
+    _intakeBox.setBoolean(false);
+    _frAngle.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+    _flAngle.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+    _brAngle.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+    _blAngle.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
 
-    // Update Alliance color
-    // _allianceBox.setBoolean(DriverStation.getAlliance() == Alliance.Blue);
-
-    // // Update Swerve Module angles
-    // _frAngle.setDouble(Drive.getInstance().getModule(Constants.FR_MODULE).getAngle());
-    // _flAngle.setDouble(Drive.getInstance().getModule(Constants.FL_MODULE).getAngle());
-    // _brAngle.setDouble(Drive.getInstance().getModule(Constants.BR_MODULE).getAngle());
-    // _blAngle.setDouble(Drive.getInstance().getModule(Constants.BL_MODULE).getAngle());
-
-    // // Update Intake state
-    // _intakeBox.setBoolean(Intake.getInstance().hasCube());
+    _Leftheight.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+    _Rightheight.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+    _speedDial.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+    _IntakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
   }
 }
