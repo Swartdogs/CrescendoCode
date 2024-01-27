@@ -9,22 +9,29 @@ import frc.robot.subsystems.climb.Climb;
 import java.util.function.DoubleSupplier;
 
 public class CmdClimbWithJoystick extends Command {
-  private Climb _climb = Climb.getInstance();
+  private final Climb _climb;
 
-  private DoubleSupplier _yLeftSupplier;
-  private DoubleSupplier _yRightSupplier;
+  private final DoubleSupplier _yLeftSupplier;
+  private final DoubleSupplier _yRightSupplier;
 
   public CmdClimbWithJoystick(
       Climb climb, DoubleSupplier yLeftSupplier, DoubleSupplier yRightSupplier) {
-    addRequirements(_climb);
+    _climb = climb;
 
     _yLeftSupplier = yLeftSupplier;
     _yRightSupplier = yRightSupplier;
+
+    addRequirements(_climb);
   }
 
   @Override
   public void execute() {
-    _climb.setVoltageLeft(_yLeftSupplier.getAsDouble());
-    _climb.setVoltageRight(_yRightSupplier.getAsDouble()); // TODO add scaling
+    _climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * 12);
+    _climb.setVoltageRight(_yRightSupplier.getAsDouble() * 12); // TODO add scaling
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    _climb.stop();
   }
 }

@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climb.Climb;
 
 public class CmdClimbRightSetpoint extends Command {
-  private Climb _climb;
-  private double _setpoint;
+  private final Climb _climb;
+  private final double _setpoint;
 
   public CmdClimbRightSetpoint(Climb climb, double setpoint) {
     _climb = climb;

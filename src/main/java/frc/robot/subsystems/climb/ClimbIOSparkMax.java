@@ -20,23 +20,17 @@ public class ClimbIOSparkMax implements ClimbIO {
   public final Solenoid _solenoidLeft;
   public final Solenoid _solenoidRight;
 
-  public ClimbIOSparkMax(
-      int climbCanIdLeft,
-      int climbCanIdRight,
-      int potentiometerChannelLeft,
-      int potentiometerChannelRight,
-      int solenoidIdLeft,
-      int solenoidIdRight) {
-    _climbSparkMaxLeft = new CANSparkMax(climbCanIdLeft, MotorType.kBrushless);
-    _climbSparkMaxRight = new CANSparkMax(climbCanIdRight, MotorType.kBrushless);
+  public ClimbIOSparkMax() {
+    _climbSparkMaxLeft = new CANSparkMax(Constants.CAN.CLIMB_LEFT, MotorType.kBrushless);
+    _climbSparkMaxRight = new CANSparkMax(Constants.CAN.CLIMB_RIGHT, MotorType.kBrushless);
 
-    _potentiometerLeft = new AnalogInput(potentiometerChannelLeft);
-    _potentiometerRight = new AnalogInput(potentiometerChannelRight);
+    _potentiometerLeft = new AnalogInput(Constants.AIO.CLIMB_LEFT_SENSOR);
+    _potentiometerRight = new AnalogInput(Constants.AIO.CLIMB_RIGHT_SENSOR);
 
     _solenoidLeft =
-        new Solenoid(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_ID_LEFT);
+        new Solenoid(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_LEFT);
     _solenoidRight =
-        new Solenoid(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_ID_RIGHT);
+        new Solenoid(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_RIGHT);
   }
 
   @Override

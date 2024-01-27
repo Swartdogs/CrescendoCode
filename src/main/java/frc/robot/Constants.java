@@ -30,6 +30,9 @@ public final class Constants {
     public static final int MODULE_BL_ROTATE = 6;
     public static final int MODULE_BR_DRIVE = 7;
     public static final int MODULE_BR_ROTATE = 8;
+
+    public static final int CLIMB_LEFT = 9;
+    public static final int CLIMB_RIGHT = 10;
   }
 
   public static class AIO {
@@ -37,6 +40,9 @@ public final class Constants {
     public static final int MODULE_FR_SENSOR = 1;
     public static final int MODULE_BL_SENSOR = 2;
     public static final int MODULE_BR_SENSOR = 3;
+
+    public static final int CLIMB_LEFT_SENSOR = 5;
+    public static final int CLIMB_RIGHT_SENSOR = 6;
   }
 
   public static class Controls {
@@ -90,7 +96,7 @@ public final class Constants {
   public static class Pnuematics {
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
-    public static final int SOLENOID_ID_LEFT = 1; // TODO: Find Ids
-    public static final int SOLENOID_ID_RIGHT = 2;
+    public static final int SOLENOID_LEFT = 1; // TODO: Find Ids
+    public static final int SOLENOID_RIGHT = 2;
   }
 }

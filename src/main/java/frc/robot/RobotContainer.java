@@ -16,10 +16,14 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.CmdClimbWithJoystick;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOSparkMax;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
@@ -38,6 +42,8 @@ public class RobotContainer {
 
   // Controls
   private final Joystick _joystick = new Joystick(1);
+  private final CommandXboxController _driveController = new CommandXboxController(0);
+  private final CommandXboxController _operatorController = new CommandXboxController(0);
 
   public RobotContainer() {
     switch (Constants.AdvantageKit.CURRENT_MODE) {
@@ -66,7 +72,7 @@ public class RobotContainer {
                     Constants.CAN.MODULE_BR_ROTATE,
                     Constants.AIO.MODULE_BR_SENSOR,
                     Constants.Drive.MODULE_BR_OFFSET));
-        _climb = new Climb(new ClimbIO() {});
+        _climb = new Climb(new ClimbIOSparkMax()); // TODO: Check
         break;
 
         // Sim robot, instantiate physics sim IO implementations
@@ -78,7 +84,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-        _climb = new Climb(new ClimbIO() {});
+        _climb = new Climb(new ClimbIOSim());
         break;
 
         // Replayed robot, disable IO implementations
@@ -109,7 +115,19 @@ public class RobotContainer {
   private void configureButtonBindings() {
     _drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            _drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+            _drive,
+            () -> -_driveController.getLeftY(),
+            () -> -_driveController.getLeftX(),
+            () -> -_driveController.getRightX()));
+
+    _operatorController
+        .rightBumper()
+        .and(_operatorController.leftBumper())
+        .whileTrue(
+            new CmdClimbWithJoystick(
+                _climb,
+                () -> -_operatorController.getLeftY(),
+                () -> -_operatorController.getRightY()));
   }
 
   public Command getAutonomousCommand() {

@@ -11,8 +11,7 @@ import org.littletonrobotics.junction.Logger;
 public class Climb extends SubsystemBase {
   private final ClimbIO _io;
 
-  private final ClimbIOInputsAutoLogged _inputs =
-      new ClimbIOInputsAutoLogged(); // Need to log any outputs?
+  private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
 
   private final PIDController _climbFeedbackLeft;
   private final PIDController _climbFeedbackRight;
@@ -87,10 +86,5 @@ public class Climb extends SubsystemBase {
 
   public boolean isAtRightSetpoint() {
     return _climbFeedbackRight.atSetpoint();
-  }
-
-  public static Climb getInstance() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getInstance'");
   }
 }
