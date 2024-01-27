@@ -67,7 +67,7 @@ public class RobotContainer
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
 
-            _shooterBed = new ShooterBed(new ShooterBedIOSparkMax(9, 10, 3, Constants.ShooterBed.BED_ANGLE_OFFSET));
+            _shooterBed = new ShooterBed(new ShooterBedIOSparkMax(9, 10, 4, Constants.ShooterBed.BED_ANGLE_OFFSET));
             _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax(11, 12)); // FIXME: Set correct IDs
             break;
 
@@ -104,11 +104,10 @@ public class RobotContainer
     {
         CmdShooterFlywheelShoot _flipShoot = new CmdShooterFlywheelShoot(_shooterFlywheel, 6, 10);
         CmdShooterFlywheelShoot _straightShoot = new CmdShooterFlywheelShoot(_shooterFlywheel, 8, 8);
-
         CmdShooterFlywheelStop _stopShooter = new CmdShooterFlywheelStop(_shooterFlywheel);
 
-        CmdShooterBedSetBedAngle _setBedLow = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(30));
-        CmdShooterBedSetBedAngle _setBedHigh = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(45));
+        CmdShooterBedSetBedAngle _setBedLow = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(Math.PI / 6));
+        CmdShooterBedSetBedAngle _setBedHigh = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(Math.PI / 4));
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(),
                         () -> -_controller.getRightX(), () -> -_controller.getRightX()));
@@ -116,8 +115,7 @@ public class RobotContainer
         _controller.rightTrigger().whileTrue(_flipShoot);
         _controller.leftBumper().whileTrue(_stopShooter);
         _controller.leftTrigger().and(_controller.rightTrigger()).whileTrue(_setBedLow);
-        _controller.leftBumper().and(_controller.rightTrigger()).whileTrue(_setBedHigh);
-
+        _controller.leftBumper().and(_controller.rightBumper()).whileTrue(_setBedHigh);
     }
 
     public Command getAutonomousCommand()

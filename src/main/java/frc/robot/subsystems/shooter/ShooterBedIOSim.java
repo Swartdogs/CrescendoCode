@@ -23,6 +23,8 @@ public class ShooterBedIOSim implements ShooterBedIO
 
     private double _bedAppliedVolts = 0.0;
 
+    private Rotation2d _angleOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
+
     private Mechanism2d _mechanism;
     private MechanismRoot2d _robot;
     private MechanismLigament2d _bed;
@@ -43,7 +45,7 @@ public class ShooterBedIOSim implements ShooterBedIO
 
         Logger.recordOutput("Shooter/Mech", _mechanism);
 
-        inputs.bedAngle = new Rotation2d(_leftBedSim.getAngularPositionRad());
+        inputs.bedAngle = new Rotation2d(_leftBedSim.getAngularPositionRad() - _angleOffset.getRadians());
         inputs.bedAppliedVolts = _bedAppliedVolts;
         inputs.bedCurrentAmps = new double[]
         { Math.abs(_leftBedSim.getCurrentDrawAmps()) };
@@ -57,5 +59,11 @@ public class ShooterBedIOSim implements ShooterBedIO
         _leftBedSim.setInputVoltage(volts);
         _rightBedSim.setInputVoltage(volts);
         _bedAppliedVolts = volts;
+    }
+
+    @Override
+    public void setAngleOffset(Rotation2d angleOffset)
+    {
+        _angleOffset = angleOffset;
     }
 }

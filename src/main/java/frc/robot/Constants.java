@@ -77,13 +77,13 @@ public final class Constants
     public static class ShooterBed // FIXME: Update all these values
     {
         public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromRadians(0);
-        public static final Rotation2d MAX_BED_ANGLE = Rotation2d.fromRadians(Math.PI / 3);
+        public static final Rotation2d MAX_BED_ANGLE = Rotation2d.fromRadians(Math.PI / 2);
         public static final Rotation2d MIN_BED_ANGLE = Rotation2d.fromRadians(0);
     }
 
     public static class ShooterFlywheel
     {
-        public static final double MAX_FLYWHEEL_SPEED = 2;
+        public static final double MAX_FLYWHEEL_SPEED = 1000000;
     }
 
     public static class General

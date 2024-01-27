@@ -24,7 +24,7 @@ public class ShooterBed extends SubsystemBase
     {
         _bedIO = bedIO;
 
-        _bedFeedback = new PIDController(0.005, 0, 0); // FIXME: Set values, calibrate
+        _bedFeedback = new PIDController(0.03, 0, 0); // FIXME: Set values, calibrate
     }
 
     @Override
@@ -43,6 +43,7 @@ public class ShooterBed extends SubsystemBase
     {
         _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle.getRadians(),
                         _maxBedAngle.getRadians()));
+        System.out.println(_angleSetpoint);
     }
 
     public void setAngleOffset(Rotation2d angleOffset)

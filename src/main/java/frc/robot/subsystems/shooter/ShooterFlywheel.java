@@ -27,9 +27,9 @@ public class ShooterFlywheel extends SubsystemBase
     {
         _flywheelIO = flywheelIO;
 
-        _flywheelFeedforward = new SimpleMotorFeedforward(0, 0);
-        _upperFlywheelFeedback = new PIDController(0, 0, 0);// FIXME: Set values, calibrate
-        _lowerFlywheelFeedback = new PIDController(0, 0, 0);
+        _flywheelFeedforward = new SimpleMotorFeedforward(0.01, 0.01);
+        _upperFlywheelFeedback = new PIDController(0.01, 0, 0);// FIXME: Set values, calibrate
+        _lowerFlywheelFeedback = new PIDController(0.01, 0, 0);
 
     }
 
@@ -54,7 +54,7 @@ public class ShooterFlywheel extends SubsystemBase
 
     public void setUpperVelocity(double upperVelocitySetpoint)
     {
-        _lowerVelocitySetpoint = MathUtil.clamp(upperVelocitySetpoint, 0, _maxFlywheelSpeed);
+        _upperVelocitySetpoint = MathUtil.clamp(upperVelocitySetpoint, 0, _maxFlywheelSpeed);
     }
 
     public void setLowerVelocity(double lowerVelocitySetpoint)
