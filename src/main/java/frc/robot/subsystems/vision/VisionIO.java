@@ -7,20 +7,15 @@ package frc.robot.subsystems.vision;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Vision subsystem hardware interface. */
-public interface VisionIO
-{
-    /** The set of loggable inputs for the vision subsystem. */
-    @AutoLog
-    public static class VisionIOInputs
-    {
-        public double captureTimestamp = 0.0;
-        public double[] cornerX = new double[]
-        {};
-        public double[] cornerY = new double[]
-        {};
-    }
+public interface VisionIO {
+  /** The set of loggable inputs for the vision subsystem. */
+  @AutoLog
+  public static class VisionIOInputs {
+    public double captureTimestamp = 0.0;
+    public double[] cornerX = new double[] {};
+    public double[] cornerY = new double[] {};
+  }
 
-    /** Updates the set of loggable inputs. */
-    public default void updateInputs(VisionIOInputs inputs)
-    {}
+  /** Updates the set of loggable inputs. */
+  public default void updateInputs(VisionIOInputs inputs) {}
 }
