@@ -115,8 +115,8 @@ public class RobotContainer
         _controller.leftTrigger().whileTrue(_straightShoot);
         _controller.rightTrigger().whileTrue(_flipShoot);
         _controller.leftBumper().whileTrue(_stopShooter);
-        _controller.povDown().whileTrue(_setBedLow);
-        _controller.povUp().whileTrue(_setBedHigh);
+        _controller.leftTrigger().and(_controller.rightTrigger()).whileTrue(_setBedLow);
+        _controller.leftBumper().and(_controller.rightTrigger()).whileTrue(_setBedHigh);
 
     }
 
