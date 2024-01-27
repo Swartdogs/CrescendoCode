@@ -67,8 +67,8 @@ public class RobotContainer
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
 
-            _shooterBed         = new ShooterBed(new ShooterBedIOSparkMax(7, 8, 3, Constants.ShooterBed.BED_ANGLE_OFFSET));
-            _shooterFlywheel    = new ShooterFlywheel(new ShooterFlywheelIOSparkMax(9, 10)); // FIXME: Set correct IDs
+            _shooterBed = new ShooterBed(new ShooterBedIOSparkMax(7, 8, 3, Constants.ShooterBed.BED_ANGLE_OFFSET));
+            _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax(9, 10)); // FIXME: Set correct IDs
             break;
 
         // Sim robot, instantiate physics sim IO implementations
@@ -110,8 +110,8 @@ public class RobotContainer
         CmdShooterBedSetBedAngle _setBedLow = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(30));
         CmdShooterBedSetBedAngle _setBedHigh = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(45));
 
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getRightX(),
-                        () -> -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(),
+                        () -> -_controller.getRightX(), () -> -_controller.getRightX()));
         _controller.leftTrigger().whileTrue(_straightShoot);
         _controller.rightTrigger().whileTrue(_flipShoot);
         _controller.leftBumper().whileTrue(_stopShooter);

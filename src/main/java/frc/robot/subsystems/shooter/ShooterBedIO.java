@@ -22,5 +22,6 @@ public interface ShooterBedIO
     public default void setVoltage(double volts)
     {}
 
-    public default void setAngleOffset(Rotation2d bedAbsoluteEncoderOffset){}
+    public default void setAngleOffset(Rotation2d bedAbsoluteEncoderOffset)
+    {}
 }

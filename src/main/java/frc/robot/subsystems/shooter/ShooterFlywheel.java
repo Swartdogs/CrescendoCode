@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -53,22 +54,12 @@ public class ShooterFlywheel extends SubsystemBase
 
     public void setUpperVelocity(double upperVelocitySetpoint)
     {
-        if (upperVelocitySetpoint > _maxFlywheelSpeed)
-        {
-            upperVelocitySetpoint = _maxFlywheelSpeed;
-        }
-        
-        _upperVelocitySetpoint = upperVelocitySetpoint;
+        _lowerVelocitySetpoint = MathUtil.clamp(upperVelocitySetpoint, 0, _maxFlywheelSpeed);
     }
 
     public void setLowerVelocity(double lowerVelocitySetpoint)
     {
-        if (lowerVelocitySetpoint > _maxFlywheelSpeed)
-        {
-            lowerVelocitySetpoint = _maxFlywheelSpeed;
-        }
-
-        _lowerVelocitySetpoint = lowerVelocitySetpoint;
+        _lowerVelocitySetpoint = MathUtil.clamp(lowerVelocitySetpoint, 0, _maxFlywheelSpeed);
     }
 
     public void stopUpper()

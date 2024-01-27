@@ -17,12 +17,12 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO
     {
         _upperFlywheelSim.update(Constants.General.LOOP_PERIOD_SECS);
         _lowerFlywheelSim.update(Constants.General.LOOP_PERIOD_SECS);
-        
+
         inputs.upperFlywheelVelocity = _upperFlywheelSim.getAngularVelocityRPM();
         inputs.upperFlywheelAppliedVolts = _upperAppliedVolts;
         inputs.upperFlywheelCurrentAmps = new double[]
         { Math.abs(_upperFlywheelSim.getCurrentDrawAmps()) };
-        
+
         inputs.lowerFlywheelVelocity = _lowerFlywheelSim.getAngularVelocityRPM();
         inputs.lowerFlywheelAppliedVolts = _lowerAppliedVolts;
         inputs.lowerFlywheelCurrentAmps = new double[]
