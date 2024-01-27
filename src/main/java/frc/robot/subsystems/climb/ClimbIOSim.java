@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.simulation.SolenoidSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants;
@@ -30,90 +31,105 @@ public class ClimbIOSim implements ClimbIO
 
     private AnalogEncoderSim _leftEncoderSim = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_LEFT_SENSOR));
     private AnalogEncoderSim _rightEncoderSim = new AnalogEncoderSim(
-            new AnalogEncoder(Constants.AIO.CLIMB_RIGHT_SENSOR));
+	    new AnalogEncoder(Constants.AIO.CLIMB_RIGHT_SENSOR));
 
     private SolenoidSim _leftSolenoidSim = new SolenoidSim(Constants.Pnuematics.MODULE_TYPE,
-            Constants.Pnuematics.SOLENOID_LEFT);
+	    Constants.Pnuematics.SOLENOID_LEFT);
     private SolenoidSim _rightSolenoidSim = new SolenoidSim(Constants.Pnuematics.MODULE_TYPE,
-            Constants.Pnuematics.SOLENOID_RIGHT);
+	    Constants.Pnuematics.SOLENOID_RIGHT);
 
     private double _leftAppliedVolts = 0.0;
     private double _rightAppliedVolts = 0.0;
 
-    private final MechanismLigament2d _climb;
+    private final MechanismLigament2d _climbLeft;
+    private final MechanismLigament2d _climbRight;
 
     public ClimbIOSim()
     {
-        Mechanism2d mechanism = new Mechanism2d(3, 3);
-        MechanismRoot2d robot = mechanism.getRoot("Climb", 2, 0);
-        MechanismLigament2d lig = robot.append(new MechanismLigament2d("lig", 1, 90, 20, new Color8Bit(Color.kOrange)));
+	Mechanism2d mechanismLeft = new Mechanism2d(3, 3);
+	Mechanism2d mechanismRight = new Mechanism2d(3, 3);
 
-        _climb = lig.append(new MechanismLigament2d("SubClimb", 0.5, 45, 10, new Color8Bit(Color.kOrange)));
+	MechanismRoot2d robotLeft = mechanismLeft.getRoot("Climb1", 1, 0);
+	MechanismRoot2d robotRight = mechanismRight.getRoot("Climb2", 2, 0);
 
-        Logger.recordOutput("ClimbMech", mechanism);
+	MechanismLigament2d ligLeft = robotLeft
+		.append(new MechanismLigament2d("lig1", 0.1, 90, 20, new Color8Bit(Color.kOrange)));
+	MechanismLigament2d ligRight = robotRight
+		.append(new MechanismLigament2d("lig2", 0.1, 90, 20, new Color8Bit(Color.kOrange)));
+
+	_climbLeft = ligLeft.append(new MechanismLigament2d("SubClimb1", 2, 20, 10, new Color8Bit(Color.kOrange)));
+	_climbRight = ligRight.append(new MechanismLigament2d("SubClimb2", 2, 20, 10, new Color8Bit(Color.kOrange)));
+
+	_climbLeft.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
+	_climbRight.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
+
+	SmartDashboard.putData("Climb1", mechanismLeft);
+	SmartDashboard.putData("Climb2", mechanismRight);
     }
 
     @Override
     public void updateInputs(ClimbIOInputs inputs)
     {
-        _leftSim.update(Constants.General.LOOP_PERIOD_SECS);
-        _rightSim.update(Constants.General.LOOP_PERIOD_SECS);
+	_leftSim.update(Constants.General.LOOP_PERIOD_SECS);
+	_rightSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        double leftDelta = CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
-                * (_leftAppliedVolts / MOTOR_VOLTAGE_LIMIT);
-        double rightDelta = CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
-                * (_rightAppliedVolts / MOTOR_VOLTAGE_LIMIT);
+	double leftDelta = CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
+		* (_leftAppliedVolts / MOTOR_VOLTAGE_LIMIT);
+	double rightDelta = CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
+		* (_rightAppliedVolts / MOTOR_VOLTAGE_LIMIT);
 
-        _leftEncoderSim.setPosition(_leftEncoderSim.getPosition().plus(Rotation2d.fromDegrees(leftDelta)));
-        _rightEncoderSim.setPosition(_rightEncoderSim.getPosition().plus(Rotation2d.fromDegrees(rightDelta)));
+	_leftEncoderSim.setPosition(_leftEncoderSim.getPosition().plus(Rotation2d.fromDegrees(leftDelta)));
+	_rightEncoderSim.setPosition(_rightEncoderSim.getPosition().plus(Rotation2d.fromDegrees(rightDelta)));
 
-        inputs.extensionLeft = _leftEncoderSim.getPosition().getDegrees() / CLIMB_SENSOR_DEG_PER_INCH;
-        inputs.extensionRight = _rightEncoderSim.getPosition().getDegrees() / CLIMB_SENSOR_DEG_PER_INCH;
+	inputs.extensionLeft = _leftEncoderSim.getPosition().getDegrees() / CLIMB_SENSOR_DEG_PER_INCH;
+	inputs.extensionRight = _rightEncoderSim.getPosition().getDegrees() / CLIMB_SENSOR_DEG_PER_INCH;
 
-        inputs.lockStateLeft = !_leftSolenoidSim.getOutput();
-        inputs.lockStateRight = !_rightSolenoidSim.getOutput();
+	inputs.lockStateLeft = !_leftSolenoidSim.getOutput();
+	inputs.lockStateRight = !_rightSolenoidSim.getOutput();
 
-        inputs.appliedVoltsLeft = _leftAppliedVolts;
-        inputs.appliedVoltsRight = _rightAppliedVolts;
+	inputs.appliedVoltsLeft = _leftAppliedVolts;
+	inputs.appliedVoltsRight = _rightAppliedVolts;
 
-        inputs.currentAmpsLeft = new double[]
-        { Math.abs(_leftSim.getCurrentDrawAmps()) };
-        inputs.currnetAmpsRight = new double[]
-        { Math.abs(_rightSim.getCurrentDrawAmps()) };
+	inputs.currentAmpsLeft = new double[]
+	{ Math.abs(_leftSim.getCurrentDrawAmps()) };
+	inputs.currnetAmpsRight = new double[]
+	{ Math.abs(_rightSim.getCurrentDrawAmps()) };
 
-        _climb.setAngle(inputs.extensionLeft);
+
+	_climbLeft.setLength(inputs.extensionLeft);
+	_climbRight.setLength(inputs.extensionRight);
     }
 
     @Override
     public void setVoltageLeft(double volts)
     {
-        _leftAppliedVolts = MathUtil.clamp(volts, -MOTOR_VOLTAGE_LIMIT, MOTOR_VOLTAGE_LIMIT); // Figure out how this
-        // // transfers to simulation
-        _leftSim.setInputVoltage(_leftAppliedVolts);
+	_leftAppliedVolts = MathUtil.clamp(volts, -MOTOR_VOLTAGE_LIMIT, MOTOR_VOLTAGE_LIMIT); // Figure out how this
+	// // transfers to simulation
+	_leftSim.setInputVoltage(_leftAppliedVolts);
     }
 
     @Override
     public void setVoltageRight(double volts)
     {
-        _rightAppliedVolts = MathUtil.clamp(volts, -MOTOR_VOLTAGE_LIMIT, MOTOR_VOLTAGE_LIMIT);
-        _rightSim.setInputVoltage(_rightAppliedVolts);
+	_rightAppliedVolts = MathUtil.clamp(volts, -MOTOR_VOLTAGE_LIMIT, MOTOR_VOLTAGE_LIMIT);
+	_rightSim.setInputVoltage(_rightAppliedVolts);
     }
 
     @Override
     public void setLockStateLeft(boolean enable, ClimbIOInputs inputs)
     {
-        if (inputs.lockStateLeft != enable)
-        {
-            _leftSolenoidSim.setOutput(!enable);
-        }
+	if (inputs.lockStateLeft != enable)
+	{
+	    _leftSolenoidSim.setOutput(!enable);
+	}
     }
 
     @Override
     public void setLockStateRight(boolean enable, ClimbIOInputs inputs)
     {
-        if (inputs.lockStateRight != enable)
-        {
-            _rightSolenoidSim.setOutput(!enable);
-        }
+	if (inputs.lockStateRight != enable)
+	{
+	    _rightSolenoidSim.setOutput(!enable);
+	}
     }
 }
