@@ -43,6 +43,7 @@ public class RobotContainer
 
     // Controls
     private final Joystick _joystick = new Joystick(1);
+    
     private final CommandXboxController _driveController = new CommandXboxController(0);
     private final CommandXboxController _operatorController = new CommandXboxController(0);
 

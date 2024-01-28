@@ -19,6 +19,7 @@ public class Climb extends SubsystemBase
 
     private Double _climbSetpointLeft = null;
     private Double _climbSetpointRight = null;
+
     private double _climbMaxExtension = 24;// TODO: tune value
     private double _climbMinExtension = 0;// TODO: tune value
 
@@ -27,7 +28,7 @@ public class Climb extends SubsystemBase
     {
 	_io = io;
 
-	_climbFeedbackLeft = new PIDController(0, 0, 0); // TODO: tune values
+	_climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
 	_climbFeedbackRight = new PIDController(0, 0, 0);
     }
 
@@ -103,18 +104,22 @@ public class Climb extends SubsystemBase
 	return _climbFeedbackRight.atSetpoint();
     }
 
-    public void setExtensionMax(double max){
+    public void setExtensionMax(double max)
+    {
         _climbMaxExtension = max;
     }
-    public void setExtensionMin(double min){
+    public void setExtensionMin(double min)
+    {
         _climbMinExtension = min;
     }
 
-    public double getExtensionLeft(){
+    public double getExtensionLeft()
+    {
         return _inputs.extensionLeft;
     }
 
-    public double getExtensionRight(){
+    public double getExtensionRight()
+    {
         return _inputs.extensionRight;
     }
 }
