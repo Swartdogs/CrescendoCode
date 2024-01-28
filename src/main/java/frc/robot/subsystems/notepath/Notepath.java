@@ -4,14 +4,53 @@
 
 package frc.robot.subsystems.notepath;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Notepath extends SubsystemBase
 {
-    public Notepath()
-    {}
+    private NotepathIO _io;
+    private NotepathInputsAutoLogged _inputs = new NotepathInputsAutoLogged();
+    private double _notepathVoltage = Constants.Notepath.NOTEPATH_SPEED;
+
+    public Notepath(NotepathIO io)
+    {
+        _io = io;
+    }
 
     @Override
     public void periodic()
-    {}
+    {
+        _io.updateInputs(_inputs);
+        Logger.processInputs("Notepath", _inputs);
+
+    }
+
+    public void setOn()
+    {
+        _io.setVoltage(_notepathVoltage);
+    }
+
+    public void setOff()
+    {
+        _io.setVoltage(0);
+    }
+
+    public void setReverse()
+    {
+        _io.setVoltage(-_notepathVoltage);
+    }
+
+    public void setNotepathVoltage(double volts)
+    {
+        _notepathVoltage = volts;
+    }
+
+    public double getVoltage()
+    {
+        return _notepathVoltage;
+    }
+
 }
