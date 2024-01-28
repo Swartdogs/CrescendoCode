@@ -50,15 +50,15 @@ public class ClimbIOSim implements ClimbIO
 	Mechanism2d mechanismRight = new Mechanism2d(3, 3);
 
 	MechanismRoot2d robotLeft = mechanismLeft.getRoot("Climb1", 1, 0);
-	MechanismRoot2d robotRight = mechanismRight.getRoot("Climb2", 2, 0);
+	MechanismRoot2d robotRight = mechanismRight.getRoot("Climb2", 1.75, 0);
 
 	MechanismLigament2d ligLeft = robotLeft
-		.append(new MechanismLigament2d("lig1", 0.1, 90, 20, new Color8Bit(Color.kOrange)));
+		.append(new MechanismLigament2d("lig1", 0.01, 90, 20, new Color8Bit(Color.kOrange)));
 	MechanismLigament2d ligRight = robotRight
-		.append(new MechanismLigament2d("lig2", 0.1, 90, 20, new Color8Bit(Color.kOrange)));
+		.append(new MechanismLigament2d("lig2", 0.01, 90, 20, new Color8Bit(Color.kOrange)));
 
-	_climbLeft = ligLeft.append(new MechanismLigament2d("SubClimb1", 2, 20, 10, new Color8Bit(Color.kOrange)));
-	_climbRight = ligRight.append(new MechanismLigament2d("SubClimb2", 2, 20, 10, new Color8Bit(Color.kOrange)));
+	_climbLeft = ligLeft.append(new MechanismLigament2d("SubClimb1", 2, 10, 10, new Color8Bit(Color.kOrange)));
+	_climbRight = ligRight.append(new MechanismLigament2d("SubClimb2", 2, 10, 10, new Color8Bit(Color.kOrange)));
 
 	_climbLeft.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
 	_climbRight.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
@@ -95,9 +95,20 @@ public class ClimbIOSim implements ClimbIO
 	inputs.currnetAmpsRight = new double[]
 	{ Math.abs(_rightSim.getCurrentDrawAmps()) };
 
-
 	_climbLeft.setLength(inputs.extensionLeft);
 	_climbRight.setLength(inputs.extensionRight);
+
+	if (inputs.extensionLeft > 1.6)
+	{
+	    inputs.extensionLeft = 1.6;
+	    _climbLeft.setLength(inputs.extensionLeft);
+	}
+
+	if (inputs.extensionRight > 1.6)
+	{
+	    inputs.extensionRight = 1.6;
+	    _climbRight.setLength(inputs.extensionRight);
+	}
     }
 
     @Override
