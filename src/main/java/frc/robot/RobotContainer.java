@@ -15,6 +15,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdNotepathStartNotepath;
 import frc.robot.commands.CmdNotepathReverseNotepath;
 import frc.robot.commands.CmdNotepathStopNotepath;
@@ -44,6 +45,7 @@ public class RobotContainer
 
     // Controls
     private final Joystick _joystick = new Joystick(1);
+    private final CommandXboxController _controller = new CommandXboxController(0);
 
     public RobotContainer()
     {
@@ -61,7 +63,7 @@ public class RobotContainer
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
             _notepath = new Notepath((new NotepathIOSparkMax(9, 10)));
-                                            break;
+            break;
 
         // Sim robot, instantiate physics sim IO implementations
         case SIM:
@@ -77,6 +79,8 @@ public class RobotContainer
             {}, new ModuleIO()
             {}, new ModuleIO()
             {}, new ModuleIO()
+            {});
+            _notepath = new Notepath(new NotepathIO()
             {});
             break;
         }
@@ -96,9 +100,12 @@ public class RobotContainer
         CmdNotepathStartNotepath startNotePath = new CmdNotepathStartNotepath(_notepath);
         CmdNotepathReverseNotepath reverseNotePath = new CmdNotepathReverseNotepath(_notepath);
         CmdNotepathStopNotepath stopNotePath = new CmdNotepathStopNotepath(_notepath);
-        
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(),
                         () -> -_joystick.getZ()));
+        _controller.y().whileTrue(startNotePath);
+        _controller.a().whileTrue(reverseNotePath);
+        _controller.b().whileTrue(stopNotePath);
     }
 
     public Command getAutonomousCommand()
