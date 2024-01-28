@@ -27,12 +27,18 @@ import frc.robot.subsystems.drive.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.notepath.Notepath;
+import frc.robot.subsystems.notepath.NotepathIO;
+import frc.robot.subsystems.notepath.NotepathIOSim;
+import frc.robot.subsystems.notepath.NotepathIOSparkMax;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
     // Subsystems
     private final Drive _drive;
+    private Notepath _notepath;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -55,12 +61,14 @@ public class RobotContainer
                                             Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                             new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
                                             Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
+            // _notepath = new Notepath(new NotepathIOSparkMax());
             break;
 
         // Sim robot, instantiate physics sim IO implementations
         case SIM:
             _drive = new Drive(new GyroIO()
             {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+            _notepath = new Notepath(new NotepathIOSim());
             break;
 
         // Replayed robot, disable IO implementations
