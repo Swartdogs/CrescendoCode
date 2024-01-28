@@ -13,7 +13,7 @@ public class Notepath extends SubsystemBase
 {
     private NotepathIO _io;
     private NotepathInputsAutoLogged _inputs = new NotepathInputsAutoLogged();
-    private double _notepathVoltage = Constants.Notepath.NOTEPATH_SPEED;
+    private double _notepathVoltage = Constants.Notepath.NOTEPATH_VOLTAGE;
 
     public Notepath(NotepathIO io)
     {
