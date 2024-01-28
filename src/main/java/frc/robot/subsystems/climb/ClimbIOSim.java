@@ -92,7 +92,7 @@ public class ClimbIOSim implements ClimbIO
 
 	inputs.currentAmpsLeft = new double[]
 	{ Math.abs(_leftSim.getCurrentDrawAmps()) };
-	inputs.currnetAmpsRight = new double[]
+	inputs.currentAmpsRight = new double[]
 	{ Math.abs(_rightSim.getCurrentDrawAmps()) };
 
 	_climbLeft.setLength(inputs.extensionLeft);

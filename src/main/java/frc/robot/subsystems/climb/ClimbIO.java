@@ -22,7 +22,7 @@ public interface ClimbIO
 
 	public double[] currentAmpsLeft = new double[]
 	{};
-	public double[] currnetAmpsRight = new double[]
+	public double[] currentAmpsRight = new double[]
 	{};
 
 	public double positionRad = 0.0;

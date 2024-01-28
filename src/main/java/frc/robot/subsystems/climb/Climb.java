@@ -19,6 +19,9 @@ public class Climb extends SubsystemBase
 
     private Double _climbSetpointLeft = null;
     private Double _climbSetpointRight = null;
+    private double _climbMaxExtension = 24;// TODO: tune value
+    private double _climbMinExtension = 0;// TODO: tune value
+
 
     public Climb(ClimbIO io)
     {
@@ -98,5 +101,20 @@ public class Climb extends SubsystemBase
     public boolean isAtRightSetpoint()
     {
 	return _climbFeedbackRight.atSetpoint();
+    }
+
+    public void setExtensionMax(double max){
+        _climbMaxExtension = max;
+    }
+    public void setExtensionMin(double min){
+        _climbMinExtension = min;
+    }
+
+    public double getExtensionLeft(){
+        return _inputs.extensionLeft;
+    }
+
+    public double getExtensionRight(){
+        return _inputs.extensionRight;
     }
 }

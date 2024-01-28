@@ -49,7 +49,7 @@ public class ClimbIOSparkMax implements ClimbIO
 
 	inputs.currentAmpsLeft = new double[]
 	{ _climbSparkMaxLeft.getOutputCurrent() };
-	inputs.currnetAmpsRight = new double[]
+	inputs.currentAmpsRight = new double[]
 	{ _climbSparkMaxRight.getOutputCurrent() };
     }
 
