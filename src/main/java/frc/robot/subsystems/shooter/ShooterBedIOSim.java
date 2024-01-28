@@ -4,14 +4,13 @@
 
 package frc.robot.subsystems.shooter;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants;
@@ -25,16 +24,15 @@ public class ShooterBedIOSim implements ShooterBedIO
 
     private Rotation2d _angleOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
 
-    private Mechanism2d _mechanism;
-    private MechanismRoot2d _robot;
-    private MechanismLigament2d _bed;
+    private MechanismLigament2d _bedSim;
+    
 
     public ShooterBedIOSim()
     {
-        _mechanism = new Mechanism2d(3, 3);
-        _robot = _mechanism.getRoot("Shooter Bed", 2, 0);
-        _bed = _robot.append(new MechanismLigament2d("Bed", 1, 90, 20, new Color8Bit(Color.kOrange)));
-
+        Mechanism2d mechanism = new Mechanism2d(3, 3);
+        MechanismRoot2d robot = mechanism.getRoot("Shooter Bed", 2, 0);
+        _bedSim = robot.append(new MechanismLigament2d("Bed", 1, 90, 20, new Color8Bit(Color.kOrange)));
+        SmartDashboard.putData("Shooter Bed", mechanism);
     }
 
     @Override
@@ -42,15 +40,13 @@ public class ShooterBedIOSim implements ShooterBedIO
     {
         _leftBedSim.update(Constants.General.LOOP_PERIOD_SECS);
         _rightBedSim.update(Constants.General.LOOP_PERIOD_SECS);
-
-        Logger.recordOutput("Shooter/Mech", _mechanism);
-
+        
         inputs.bedAngle = new Rotation2d(_leftBedSim.getAngularPositionRad() - _angleOffset.getRadians());
         inputs.bedAppliedVolts = _bedAppliedVolts;
         inputs.bedCurrentAmps = new double[]
         { Math.abs(_leftBedSim.getCurrentDrawAmps()) };
 
-        _bed.setAngle(inputs.bedAngle);
+        _bedSim.setAngle(inputs.bedAngle);
     }
 
     @Override
