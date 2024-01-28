@@ -14,19 +14,19 @@ public class CmdClimbLeftSetpoint extends Command
 
     public CmdClimbLeftSetpoint(Climb climb, double setpoint)
     {
-	_climb = climb;
-	_setpoint = setpoint;
+        _climb = climb;
+        _setpoint = setpoint;
     }
 
     @Override
     public void initialize()
     {
-	_climb.setSetpointLeft(_setpoint);
+        _climb.setSetpointLeft(_setpoint);
     }
 
     @Override
     public boolean isFinished()
     {
-	return _climb.isAtLeftSetpoint();
+        return _climb.isAtLeftSetpoint();
     }
 }

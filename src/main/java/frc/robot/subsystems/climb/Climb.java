@@ -4,8 +4,11 @@
 
 package frc.robot.subsystems.climb;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Climb extends SubsystemBase
@@ -20,94 +23,94 @@ public class Climb extends SubsystemBase
     private Double _climbSetpointLeft = null;
     private Double _climbSetpointRight = null;
 
-    private double _climbMaxExtension = 24;// TODO: tune value
-    private double _climbMinExtension = 0;// TODO: tune value
-
+    private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION;// TODO: tune value
+    private double _climbMinExtension = Constants.Climb.MIN_EXTENSION;// TODO: tune value
 
     public Climb(ClimbIO io)
     {
-	_io = io;
+        _io = io;
 
-	_climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
-	_climbFeedbackRight = new PIDController(0, 0, 0);
+        _climbFeedbackLeft = new PIDController(0, 0, 0); // TODO: tune values
+        _climbFeedbackRight = new PIDController(0, 0, 0);
     }
 
     @Override
     public void periodic()
     {
-	_io.updateInputs(_inputs);
-	Logger.processInputs("Climb", _inputs);
+        _io.updateInputs(_inputs);
+        Logger.processInputs("Climb", _inputs);
 
-	if (_climbSetpointLeft != null)
-	{
-	    _io.setVoltageLeft(_climbFeedbackLeft.calculate(_inputs.extensionLeft, _climbSetpointLeft));
-	}
+        if (_climbSetpointLeft != null)
+        {
+            _io.setVoltageLeft(_climbFeedbackLeft.calculate(_inputs.extensionLeft, _climbSetpointLeft));
+        }
 
-	if (_climbSetpointRight != null)
-	{
-	    _io.setVoltageRight(_climbFeedbackRight.calculate(_inputs.extensionRight, _climbSetpointRight));
-	}
+        if (_climbSetpointRight != null)
+        {
+            _io.setVoltageRight(_climbFeedbackRight.calculate(_inputs.extensionRight, _climbSetpointRight));
+        }
     }
 
     public void stop()
     {
-	_io.setVoltageLeft(0.0);
-	_io.setVoltageRight(0.0);
+        _io.setVoltageLeft(0.0);
+        _io.setVoltageRight(0.0);
 
-	_climbSetpointLeft = null;
-	_climbSetpointRight = null;
+        _climbSetpointLeft = null;
+        _climbSetpointRight = null;
 
-	setLockState(true);
+        setLockState(true);
     }
 
     public void setLockState(boolean enabled)
     {
-	_io.setLockStateLeft(enabled, _inputs);
-	_io.setLockStateRight(enabled, _inputs);
+        _io.setLockStateLeft(enabled, _inputs);
+        _io.setLockStateRight(enabled, _inputs);
     }
 
     public void setSetpointLeft(double setpoint)
     {
-	_climbSetpointLeft = setpoint;
+        _climbSetpointLeft = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
     }
 
     public void setSetpointRight(double setpoint)
     {
-	_climbSetpointRight = setpoint;
+        _climbSetpointRight = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
     }
 
     public void setVoltageLeft(double volts)
     {
-	_climbSetpointLeft = null;
+        _climbSetpointLeft = null;
 
-	_io.setLockStateLeft(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
+        _io.setLockStateLeft(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
 
-	_io.setVoltageLeft(volts);
+        _io.setVoltageLeft(volts);
     }
 
     public void setVoltageRight(double volts)
     {
-	_climbSetpointRight = null;
+        _climbSetpointRight = null;
 
-	_io.setLockStateRight(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
+        _io.setLockStateRight(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
 
-	_io.setVoltageRight(volts);
+        _io.setVoltageRight(volts);
     }
 
     public boolean isAtLeftSetpoint()
     {
-	return _climbFeedbackLeft.atSetpoint();
+        return _climbFeedbackLeft.atSetpoint();
     }
 
     public boolean isAtRightSetpoint()
     {
-	return _climbFeedbackRight.atSetpoint();
+        return _climbFeedbackRight.atSetpoint();
     }
 
     public void setExtensionMax(double max)
     {
         _climbMaxExtension = max;
     }
+
     public void setExtensionMin(double min)
     {
         _climbMinExtension = min;

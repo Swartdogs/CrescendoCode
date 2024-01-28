@@ -35,29 +35,30 @@ public class DriveCommands
      * angular velocities).
      */
     public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
-	    DoubleSupplier omegaSupplier)
+                    DoubleSupplier omegaSupplier)
     {
-	return Commands.run(() ->
-	{
-	    // Apply deadband
-	    double linearMagnitude = MathUtil.applyDeadband(
-		    Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()), Constants.Controls.JOYSTICK_DEADBAND);
-	    Rotation2d linearDirection = new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-	    double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.Controls.JOYSTICK_DEADBAND);
+        return Commands.run(() ->
+        {
+            // Apply deadband
+            double linearMagnitude = MathUtil.applyDeadband(
+                            Math.hypot(xSupplier.getAsDouble(), ySupplier.getAsDouble()),
+                            Constants.Controls.JOYSTICK_DEADBAND);
+            Rotation2d linearDirection = new Rotation2d(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+            double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.Controls.JOYSTICK_DEADBAND);
 
-	    // Square values
-	    linearMagnitude = linearMagnitude * linearMagnitude;
-	    omega = Math.copySign(omega * omega, omega);
+            // Square values
+            linearMagnitude = linearMagnitude * linearMagnitude;
+            omega = Math.copySign(omega * omega, omega);
 
-	    // Calcaulate new linear velocity
-	    Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection)
-		    .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
+            // Calcaulate new linear velocity
+            Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection)
+                            .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
-	    // Convert to field relative speeds & send command
-	    drive.runVelocity(
-		    ChassisSpeeds.fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED,
-			    linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED,
-			    omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation()));
-	}, drive);
+            // Convert to field relative speeds & send command
+            drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
+                            linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED,
+                            linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED,
+                            omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation()));
+        }, drive);
     }
 }

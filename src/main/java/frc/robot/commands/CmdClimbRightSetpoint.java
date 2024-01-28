@@ -14,19 +14,19 @@ public class CmdClimbRightSetpoint extends Command
 
     public CmdClimbRightSetpoint(Climb climb, double setpoint)
     {
-	_climb = climb;
-	_setpoint = setpoint;
+        _climb = climb;
+        _setpoint = setpoint;
     }
 
     @Override
     public void initialize()
     {
-	_climb.setSetpointRight(_setpoint);
+        _climb.setSetpointRight(_setpoint);
     }
 
     @Override
     public boolean isFinished()
     {
-	return _climb.isAtRightSetpoint();
+        return _climb.isAtRightSetpoint();
     }
 }

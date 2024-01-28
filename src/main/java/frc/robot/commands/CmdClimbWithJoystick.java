@@ -17,24 +17,24 @@ public class CmdClimbWithJoystick extends Command
 
     public CmdClimbWithJoystick(Climb climb, DoubleSupplier yLeftSupplier, DoubleSupplier yRightSupplier)
     {
-	_climb = climb;
+        _climb = climb;
 
-	_yLeftSupplier = yLeftSupplier;
-	_yRightSupplier = yRightSupplier;
+        _yLeftSupplier = yLeftSupplier;
+        _yRightSupplier = yRightSupplier;
 
-	addRequirements(_climb);
+        addRequirements(_climb);
     }
 
     @Override
     public void execute()
     {
-	_climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * 12);
-	_climb.setVoltageRight(_yRightSupplier.getAsDouble() * 12); // TODO add scaling
+        _climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * 12);
+        _climb.setVoltageRight(_yRightSupplier.getAsDouble() * 12); // TODO add scaling
     }
 
     @Override
     public void end(boolean interrupted)
     {
-	_climb.stop();
+        _climb.stop();
     }
 }

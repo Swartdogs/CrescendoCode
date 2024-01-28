@@ -32,34 +32,34 @@ public class ModuleIOSim implements ModuleIO
     @Override
     public void updateInputs(ModuleIOInputs inputs)
     {
-	_driveSim.update(Constants.General.LOOP_PERIOD_SECS);
-	_turnSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _driveSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _turnSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-	inputs.drivePositionRad = _driveSim.getAngularPositionRad();
-	inputs.driveVelocityRadPerSec = _driveSim.getAngularVelocityRadPerSec();
-	inputs.driveAppliedVolts = _driveAppliedVolts;
-	inputs.driveCurrentAmps = new double[]
-	{ Math.abs(_driveSim.getCurrentDrawAmps()) };
+        inputs.drivePositionRad = _driveSim.getAngularPositionRad();
+        inputs.driveVelocityRadPerSec = _driveSim.getAngularVelocityRadPerSec();
+        inputs.driveAppliedVolts = _driveAppliedVolts;
+        inputs.driveCurrentAmps = new double[]
+        { Math.abs(_driveSim.getCurrentDrawAmps()) };
 
-	inputs.turnAbsolutePosition = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
-	inputs.turnPosition = new Rotation2d(_turnSim.getAngularPositionRad());
-	inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
-	inputs.turnAppliedVolts = _turnAppliedVolts;
-	inputs.turnCurrentAmps = new double[]
-	{ Math.abs(_turnSim.getCurrentDrawAmps()) };
+        inputs.turnAbsolutePosition = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
+        inputs.turnPosition = new Rotation2d(_turnSim.getAngularPositionRad());
+        inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
+        inputs.turnAppliedVolts = _turnAppliedVolts;
+        inputs.turnCurrentAmps = new double[]
+        { Math.abs(_turnSim.getCurrentDrawAmps()) };
     }
 
     @Override
     public void setDriveVoltage(double volts)
     {
-	_driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-	_driveSim.setInputVoltage(_driveAppliedVolts);
+        _driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        _driveSim.setInputVoltage(_driveAppliedVolts);
     }
 
     @Override
     public void setTurnVoltage(double volts)
     {
-	_turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-	_turnSim.setInputVoltage(_turnAppliedVolts);
+        _turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        _turnSim.setInputVoltage(_turnAppliedVolts);
     }
 }
