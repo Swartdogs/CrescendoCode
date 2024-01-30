@@ -23,20 +23,20 @@ public class Climb extends SubsystemBase
     private final PIDController _climbFeedbackLeft;
     private final PIDController _climbFeedbackRight;
     
-    private final PIDController _tiltPID;
-    private final PIDController _leftPID;
-    private final PIDController _rightPID;
+    // private final PIDController _tiltPID;
+    // private final PIDController _leftPID;
+    // private final PIDController _rightPID;
     
-    private final AHRS _gyro;
+    // private final AHRS _gyro;
 
-    private double _currentGyroAngle;
-    private double _desiredGyroAngle = 0.0;
+    // private double _currentGyroAngle;
+    // private double _desiredGyroAngle = 0.0;
 
     private Double _climbSetpointLeft = null;
     private Double _climbSetpointRight = null;
 
-    private double _averageLeft = 10; // TODO: Change
-    private double _averageRight = 10;
+    // private double _averageLeft = 10; // TODO: Change
+    // private double _averageRight = 10;
 
     private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
     private double _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
@@ -48,14 +48,14 @@ public class Climb extends SubsystemBase
         _climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
         _climbFeedbackRight = new PIDController(0, 0, 0);
 
-        _tiltPID  = new PIDController(0, 0, 0);
-        _leftPID  = new PIDController(0, 0, 0);
-        _rightPID = new PIDController(0, 0, 0);
+        // _tiltPID  = new PIDController(0, 0, 0);
+        // _leftPID  = new PIDController(0, 0, 0);
+        // _rightPID = new PIDController(0, 0, 0);
 
-        _gyro = new AHRS(Port.kMXP);
+        // _gyro = new AHRS(Port.kMXP);
 
-        _currentGyroAngle = _gyro.getAngle();
-        _currentGyroAngle = _desiredGyroAngle;
+        // _currentGyroAngle = _gyro.getAngle();
+        // _currentGyroAngle = _desiredGyroAngle;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Climb extends SubsystemBase
             _io.setVoltageRight(_climbFeedbackRight.calculate(_inputs.extensionRight, _climbSetpointRight));
         }
 
-        _tiltPID.calculate(_currentGyroAngle);
+        // _tiltPID.calculate(_currentGyroAngle);
     }
 
     public void stop()
