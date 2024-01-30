@@ -11,7 +11,6 @@ public class NotepathIOSparkMax implements NotepathIO
     public NotepathIOSparkMax(int notePathCanId, int followerCanID)
     {
         _notepathSparkMax = new CANSparkMax(notePathCanId, MotorType.kBrushless);
-        _notepathSparkMax.burnFlash();
         CANSparkMax followerSparkMax = new CANSparkMax(followerCanID, MotorType.kBrushless);
         followerSparkMax.follow(_notepathSparkMax, true);
     }

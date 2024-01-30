@@ -24,7 +24,6 @@ public class NotepathIOSim implements NotepathIO
         inputs.notepathAppliedVolts = _voltage;
         inputs.notepathCurrentAmps = new double[]
         { Math.abs(_leftNotepathSim.getCurrentDrawAmps()) };
-
     }
 
     @Override

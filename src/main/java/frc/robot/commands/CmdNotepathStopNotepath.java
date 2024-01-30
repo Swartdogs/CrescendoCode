@@ -12,11 +12,12 @@ public class CmdNotepathStopNotepath extends Command
     private Notepath _notepath;
 
     public CmdNotepathStopNotepath(Notepath notepath)
-    {// Use addRequirements() here to declare subsystem dependencies.
+    {
         _notepath = notepath;
+
+        addRequirements(_notepath);
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize()
     {
@@ -24,7 +25,6 @@ public class CmdNotepathStopNotepath extends Command
 
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished()
     {
