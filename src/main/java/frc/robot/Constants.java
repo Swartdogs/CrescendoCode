@@ -72,7 +72,9 @@ public final class Constants
 
     public static class Notepath
     {
+        public static final double NOTEPATH_INTAKE_PICKUP_VOLTAGE = 3;
         public static final double NOTEPATH_VOLTAGE = 3;
+        public static final double NOTEPATH_SHOOTER_PICKUP_VOLTAGE = 3;        
     }
 
     public static class General

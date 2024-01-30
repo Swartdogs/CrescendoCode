@@ -7,30 +7,33 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.notepath.Notepath;
 
-public class CmdNotepathStartNotepath extends Command
+public class CmdNotepathStartFeed extends Command
 {
     private Notepath _notepath;
 
-    public CmdNotepathStartNotepath(Notepath notepath)
-    {
+    public CmdNotepathStartFeed(Notepath notepath)
+    {// Use addRequirements() here to declare subsystem dependencies.
         _notepath = notepath;
-
+        
         addRequirements(_notepath);
     }
 
+    // Called when the command is initially scheduled.
     @Override
     public void initialize()
     {
-        _notepath.setOn();
+        _notepath.setFeedOn();
 
     }
 
+    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
     {
         _notepath.setOff();
     }
 
+    // Returns true when the command should end.
     @Override
     public boolean isFinished()
     {

@@ -13,7 +13,10 @@ public class Notepath extends SubsystemBase
 {
     private NotepathIO _io;
     private NotepathInputsAutoLogged _inputs = new NotepathInputsAutoLogged();
-    private double _notepathVoltage = Constants.Notepath.NOTEPATH_VOLTAGE;
+
+    private double _intakePickupVoltage = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_VOLTAGE;
+    private double _notepathFeedVoltage = Constants.Notepath.NOTEPATH_VOLTAGE;
+    private double _shooterPickupVoltage = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_VOLTAGE;
 
     public Notepath(NotepathIO io)
     {
@@ -28,9 +31,19 @@ public class Notepath extends SubsystemBase
 
     }
 
-    public void setOn()
+    public void setNotepathIntakePickupOn()
     {
-        _io.setVoltage(_notepathVoltage);
+        _io.setVoltage(_intakePickupVoltage);
+    }
+
+    public void setFeedOn()
+    {
+        _io.setVoltage(_notepathFeedVoltage);
+    }
+
+    public void setNotepathShooterPickupOn()
+    {
+        _io.setVoltage(_shooterPickupVoltage);
     }
 
     public void setOff()
@@ -40,17 +53,27 @@ public class Notepath extends SubsystemBase
 
     public void setReverse()
     {
-        _io.setVoltage(-_notepathVoltage);
+        _io.setVoltage(-_notepathFeedVoltage);
     }
 
-    public void setNotepathVoltage(double volts)
+    public void setNotepathIntakePickupVoltage(double volts)
     {
-        _notepathVoltage = volts;
+        _intakePickupVoltage = volts;
+    }
+
+    public void setNotepathFeedVoltage(double volts)
+    {
+        _notepathFeedVoltage = volts;
+    }
+
+    public void setNotepathShooterPickupVoltage(double volts)
+    {
+        _shooterPickupVoltage = volts;
     }
 
     public double getVoltage()
     {
-        return _notepathVoltage;
+        return _notepathFeedVoltage;
     }
 
 }
