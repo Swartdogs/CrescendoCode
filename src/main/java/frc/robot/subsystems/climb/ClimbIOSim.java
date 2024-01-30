@@ -101,12 +101,26 @@ public class ClimbIOSim implements ClimbIO
         {
             inputs.extensionLeft = 1.6;
             _climbLeft.setLength(inputs.extensionLeft);
+            _leftEncoderSim.setPosition(Rotation2d.fromRadians(1.6));
+        }
+        else if (inputs.extensionLeft < 0)
+        {
+            inputs.extensionLeft = 0;
+            _climbLeft.setLength(inputs.extensionLeft);
+            _leftEncoderSim.setPosition(Rotation2d.fromRadians(0));
         }
 
         if (inputs.extensionRight > 1.6)
         {
             inputs.extensionRight = 1.6;
             _climbRight.setLength(inputs.extensionRight);
+            _rightEncoderSim.setPosition(Rotation2d.fromRadians(1.6));
+        }
+        else if (inputs.extensionRight < 0)
+        {
+            inputs.extensionRight = 0;
+            _climbRight.setLength(inputs.extensionRight);
+            _rightEncoderSim.setPosition(Rotation2d.fromRadians(0));
         }
     }
 
