@@ -29,7 +29,7 @@ public class RobotContainer
 {
     // Subsystems
     private final Drive _drive;
-    private Vision _vision;
+    private Vision      _vision;
 
     // Controls
     private final Joystick _joystick = new Joystick(1);
@@ -46,7 +46,7 @@ public class RobotContainer
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
-                _vision = new Vision(new VisionIOPhotonlib());
+                _vision = new Vision(_drive, new VisionIOPhotonlib());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -57,7 +57,7 @@ public class RobotContainer
             // Replayed robot, disable IO implementations
             default:
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                _vision = new Vision(new VisionIO() {});
+                _vision = new Vision(_drive, new VisionIO() {});
                 break;
         }
 

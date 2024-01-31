@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Drive;
+
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
@@ -19,11 +21,13 @@ public class Vision extends SubsystemBase
     private final PhotonCamera             _camera;
     private final PhotonPoseEstimator      _poseEstimator;
     private final VisionIOInputsAutoLogged _inputs = new VisionIOInputsAutoLogged();
+    private final Drive                    _drive;
     private Pose2d                         _memory = new Pose2d();
 
-    public Vision(VisionIO io)
+    public Vision(Drive drive, VisionIO io)
     {
-        _io = io;
+        _drive = drive;
+        _io    = io;
 
         AprilTagFieldLayout aprilTagFieldLayout = null;
 
@@ -55,6 +59,8 @@ public class Vision extends SubsystemBase
             _memory = estimatedPose.get().estimatedPose.toPose2d();
 
             Logger.recordOutput("Position", _memory);
+
+            _drive.addVisionMeasurement(_memory, estimatedPose.get().timestampSeconds);
         }
     }
 
