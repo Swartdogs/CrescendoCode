@@ -18,8 +18,7 @@ public class IntakeIOSparkMax implements IntakeIO
     public void updateInputs(IntakeIOInputs inputs)
     {
         inputs.appliedVolts = _intakeSparkMax.getAppliedOutput() * _intakeSparkMax.getBusVoltage();
-        inputs.currentAmps = new double[]
-        { _intakeSparkMax.getOutputCurrent() };
+        inputs.currentAmps  = new double[] { _intakeSparkMax.getOutputCurrent() };
     }
 
     @Override

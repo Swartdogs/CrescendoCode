@@ -71,7 +71,7 @@ public class RobotContainer
             // Replayed robot, disable IO implementations
             default:
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                _intake = new Intake(new IntakeIO(){});
+                _intake = new Intake(new IntakeIO() {});
                 break;
         }
 
@@ -86,12 +86,11 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        CmdIntakeStartIntake startIntake = new CmdIntakeStartIntake(_intake);
+        CmdIntakeStartIntake   startIntake   = new CmdIntakeStartIntake(_intake);
         CmdIntakeReverseIntake reverseIntake = new CmdIntakeReverseIntake(_intake);
-        CmdIntakeStopIntake stopIntake = new CmdIntakeStopIntake(_intake);
+        CmdIntakeStopIntake    stopIntake    = new CmdIntakeStopIntake(_intake);
 
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(),
-                        () -> -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getLeftX(), () -> -_controller.getRightX()));
 
         _controller.y().whileTrue(startIntake);
         _controller.a().whileTrue(reverseIntake);

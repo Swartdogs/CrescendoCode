@@ -7,10 +7,10 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase
 {
-    private IntakeIO _io;
-    private final IntakeIOInputsAutoLogged _inputs = new IntakeIOInputsAutoLogged();
-    private double _intakeVoltage = Constants.Intake.INTAKE_VOLTAGE;
-    private double _outtakeVoltage = Constants.Intake.OUTTAKE_VOLTAGE;
+    private IntakeIO                       _io;
+    private final IntakeIOInputsAutoLogged _inputs         = new IntakeIOInputsAutoLogged();
+    private double                         _intakeVoltage  = Constants.Intake.INTAKE_VOLTAGE;
+    private double                         _outtakeVoltage = Constants.Intake.OUTTAKE_VOLTAGE;
 
     public Intake(IntakeIO io)
     {
