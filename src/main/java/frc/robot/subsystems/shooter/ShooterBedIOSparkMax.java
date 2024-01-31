@@ -8,21 +8,19 @@ import edu.wpi.first.wpilibj.AnalogEncoder;
 
 public class ShooterBedIOSparkMax implements ShooterBedIO
 {
-    private CANSparkMax _bedSparkMax;
-
+    private CANSparkMax   _bedSparkMax;
     private AnalogEncoder _bedAbsoluteEncoder;
-    private Rotation2d _bedAbsoluteEncoderOffset;
+    private Rotation2d    _bedAbsoluteEncoderOffset;
 
     @SuppressWarnings("resource")
-    public ShooterBedIOSparkMax(int bedCanID, int followerBedCanID, int absoluteEncoderChannel,
-                    Rotation2d bedAbsoluteEncoderOffset)
+    public ShooterBedIOSparkMax(int bedCanID, int followerBedCanID, int absoluteEncoderChannel, Rotation2d bedAbsoluteEncoderOffset)
     {
         _bedSparkMax = new CANSparkMax(bedCanID, MotorType.kBrushless);
 
         CANSparkMax followerBedSparkMax = new CANSparkMax(followerBedCanID, MotorType.kBrushless);
         followerBedSparkMax.follow(_bedSparkMax, true);
 
-        _bedAbsoluteEncoder = new AnalogEncoder(absoluteEncoderChannel);
+        _bedAbsoluteEncoder       = new AnalogEncoder(absoluteEncoderChannel);
         _bedAbsoluteEncoderOffset = bedAbsoluteEncoderOffset;
     }
 
@@ -30,11 +28,9 @@ public class ShooterBedIOSparkMax implements ShooterBedIO
     public void updateInputs(ShooterBedIOInputs inputs)
     {
         inputs.bedAppliedVolts = _bedSparkMax.getAppliedOutput() * _bedSparkMax.getBusVoltage();
-        inputs.bedCurrentAmps = new double[]
-        { _bedSparkMax.getOutputCurrent() };
+        inputs.bedCurrentAmps  = new double[] { _bedSparkMax.getOutputCurrent() };
 
-        inputs.bedAngle = Rotation2d.fromRotations(_bedAbsoluteEncoder.getAbsolutePosition())
-                        .minus(_bedAbsoluteEncoderOffset);
+        inputs.bedAngle = Rotation2d.fromRotations(_bedAbsoluteEncoder.getAbsolutePosition()).minus(_bedAbsoluteEncoderOffset);
     }
 
     @Override

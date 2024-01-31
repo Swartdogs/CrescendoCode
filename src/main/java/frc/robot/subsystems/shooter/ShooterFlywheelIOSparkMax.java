@@ -6,9 +6,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
 {
-    private CANSparkMax _upperFlywheelSparkMax;
-    private CANSparkMax _lowerFlywheelSparkMax;
-
+    private CANSparkMax     _upperFlywheelSparkMax;
+    private CANSparkMax     _lowerFlywheelSparkMax;
     private RelativeEncoder _upperFlywheelEncoder;
     private RelativeEncoder _lowerFlywheelEncoder;
 
@@ -25,17 +24,13 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
     @Override
     public void updateInputs(ShooterFlywheelIOInputs inputs)
     {
-        inputs.upperFlywheelVelocity = _upperFlywheelEncoder.getVelocity();
-        inputs.upperFlywheelAppliedVolts = _upperFlywheelSparkMax.getAppliedOutput()
-                        * _upperFlywheelSparkMax.getBusVoltage();
-        inputs.upperFlywheelCurrentAmps = new double[]
-        { _upperFlywheelSparkMax.getOutputCurrent() };
+        inputs.upperFlywheelVelocity     = _upperFlywheelEncoder.getVelocity();
+        inputs.upperFlywheelAppliedVolts = _upperFlywheelSparkMax.getAppliedOutput() * _upperFlywheelSparkMax.getBusVoltage();
+        inputs.upperFlywheelCurrentAmps  = new double[] { _upperFlywheelSparkMax.getOutputCurrent() };
 
-        inputs.lowerFlywheelVelocity = _lowerFlywheelEncoder.getVelocity();
-        inputs.lowerFlywheelAppliedVolts = _lowerFlywheelSparkMax.getAppliedOutput()
-                        * _lowerFlywheelSparkMax.getBusVoltage();
-        inputs.lowerFlywheelCurrentAmps = new double[]
-        { _lowerFlywheelSparkMax.getOutputCurrent() };
+        inputs.lowerFlywheelVelocity     = _lowerFlywheelEncoder.getVelocity();
+        inputs.lowerFlywheelAppliedVolts = _lowerFlywheelSparkMax.getAppliedOutput() * _lowerFlywheelSparkMax.getBusVoltage();
+        inputs.lowerFlywheelCurrentAmps  = new double[] { _lowerFlywheelSparkMax.getOutputCurrent() };
     }
 
     @Override

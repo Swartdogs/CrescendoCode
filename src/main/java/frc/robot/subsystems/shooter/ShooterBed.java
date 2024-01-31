@@ -10,15 +10,12 @@ import frc.robot.Constants;
 
 public class ShooterBed extends SubsystemBase
 {
-    private ShooterBedIO _bedIO;
-
-    private final ShooterBedIOInputsAutoLogged _inputs = new ShooterBedIOInputsAutoLogged();
-
-    private PIDController _bedFeedback;
-
-    private Rotation2d _angleSetpoint = null;
-    private Rotation2d _minBedAngle = Constants.ShooterBed.MIN_BED_ANGLE;
-    private Rotation2d _maxBedAngle = Constants.ShooterBed.MAX_BED_ANGLE;
+    private ShooterBedIO                       _bedIO;
+    private final ShooterBedIOInputsAutoLogged _inputs        = new ShooterBedIOInputsAutoLogged();
+    private PIDController                      _bedFeedback;
+    private Rotation2d                         _angleSetpoint = null;
+    private Rotation2d                         _minBedAngle   = Constants.ShooterBed.MIN_BED_ANGLE;
+    private Rotation2d                         _maxBedAngle   = Constants.ShooterBed.MAX_BED_ANGLE;
 
     public ShooterBed(ShooterBedIO bedIO)
     {
@@ -41,8 +38,7 @@ public class ShooterBed extends SubsystemBase
 
     public void setAngle(Rotation2d angleSetpoint)
     {
-        _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle.getRadians(),
-                        _maxBedAngle.getRadians()));
+        _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle.getRadians(), _maxBedAngle.getRadians()));
         System.out.println(_angleSetpoint);
     }
 

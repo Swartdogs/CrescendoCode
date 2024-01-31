@@ -10,24 +10,20 @@ import frc.robot.Constants;
 
 public class ShooterFlywheel extends SubsystemBase
 {
-    private ShooterFlywheelIO _flywheelIO;
-
-    private final ShooterFlywheelIOInputsAutoLogged _inputs = new ShooterFlywheelIOInputsAutoLogged();
-
-    private SimpleMotorFeedforward _flywheelFeedforward;
-    private PIDController _upperFlywheelFeedback;
-    private PIDController _lowerFlywheelFeedback;
-
-    private Double _upperVelocitySetpoint = null;
-    private Double _lowerVelocitySetpoint = null;
-
-    private double _maxFlywheelSpeed = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED;
+    private ShooterFlywheelIO                       _flywheelIO;
+    private final ShooterFlywheelIOInputsAutoLogged _inputs                = new ShooterFlywheelIOInputsAutoLogged();
+    private SimpleMotorFeedforward                  _flywheelFeedforward;
+    private PIDController                           _upperFlywheelFeedback;
+    private PIDController                           _lowerFlywheelFeedback;
+    private Double                                  _upperVelocitySetpoint = null;
+    private Double                                  _lowerVelocitySetpoint = null;
+    private double                                  _maxFlywheelSpeed      = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
         _flywheelIO = flywheelIO;
 
-        _flywheelFeedforward = new SimpleMotorFeedforward(0.01, 0.01);
+        _flywheelFeedforward   = new SimpleMotorFeedforward(0.01, 0.01);
         _upperFlywheelFeedback = new PIDController(0.01, 0, 0);// FIXME: Set values, calibrate
         _lowerFlywheelFeedback = new PIDController(0.01, 0, 0);
 
@@ -41,14 +37,12 @@ public class ShooterFlywheel extends SubsystemBase
 
         if (_upperVelocitySetpoint != null)
         {
-            _flywheelIO.setUpperVoltage(_flywheelFeedforward.calculate(_upperVelocitySetpoint)
-                            + _upperFlywheelFeedback.calculate(_inputs.upperFlywheelVelocity, _upperVelocitySetpoint));
+            _flywheelIO.setUpperVoltage(_flywheelFeedforward.calculate(_upperVelocitySetpoint) + _upperFlywheelFeedback.calculate(_inputs.upperFlywheelVelocity, _upperVelocitySetpoint));
         }
 
         if (_lowerVelocitySetpoint != null)
         {
-            _flywheelIO.setLowerVoltage(_flywheelFeedforward.calculate(_lowerVelocitySetpoint)
-                            + _lowerFlywheelFeedback.calculate(_inputs.lowerFlywheelVelocity, _lowerVelocitySetpoint));
+            _flywheelIO.setLowerVoltage(_flywheelFeedforward.calculate(_lowerVelocitySetpoint) + _lowerFlywheelFeedback.calculate(_inputs.lowerFlywheelVelocity, _lowerVelocitySetpoint));
         }
     }
 

@@ -6,11 +6,10 @@ import frc.robot.Constants;
 
 public class ShooterFlywheelIOSim implements ShooterFlywheelIO
 {
-    private DCMotorSim _upperFlywheelSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private DCMotorSim _lowerFlywheelSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-
-    private double _upperAppliedVolts = 0;
-    private double _lowerAppliedVolts = 0;
+    private DCMotorSim _upperFlywheelSim  = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private DCMotorSim _lowerFlywheelSim  = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private double     _upperAppliedVolts = 0;
+    private double     _lowerAppliedVolts = 0;
 
     @Override
     public void updateInputs(ShooterFlywheelIOInputs inputs)
@@ -18,15 +17,13 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO
         _upperFlywheelSim.update(Constants.General.LOOP_PERIOD_SECS);
         _lowerFlywheelSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.upperFlywheelVelocity = _upperFlywheelSim.getAngularVelocityRPM();
+        inputs.upperFlywheelVelocity     = _upperFlywheelSim.getAngularVelocityRPM();
         inputs.upperFlywheelAppliedVolts = _upperAppliedVolts;
-        inputs.upperFlywheelCurrentAmps = new double[]
-        { Math.abs(_upperFlywheelSim.getCurrentDrawAmps()) };
+        inputs.upperFlywheelCurrentAmps  = new double[] { Math.abs(_upperFlywheelSim.getCurrentDrawAmps()) };
 
-        inputs.lowerFlywheelVelocity = _lowerFlywheelSim.getAngularVelocityRPM();
+        inputs.lowerFlywheelVelocity     = _lowerFlywheelSim.getAngularVelocityRPM();
         inputs.lowerFlywheelAppliedVolts = _lowerAppliedVolts;
-        inputs.lowerFlywheelCurrentAmps = new double[]
-        { Math.abs(_lowerFlywheelSim.getCurrentDrawAmps()) };
+        inputs.lowerFlywheelCurrentAmps  = new double[] { Math.abs(_lowerFlywheelSim.getCurrentDrawAmps()) };
     }
 
     @Override

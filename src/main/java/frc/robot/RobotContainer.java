@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -30,9 +29,11 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterBed;
+import frc.robot.subsystems.shooter.ShooterBedIO;
 import frc.robot.subsystems.shooter.ShooterBedIOSim;
 import frc.robot.subsystems.shooter.ShooterBedIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 
@@ -41,9 +42,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer
 {
     // Subsystems
-    private final Drive _drive;
-    private ShooterBed _shooterBed;
-    private ShooterFlywheel _shooterFlywheel;
+    private final Drive           _drive;
+    private final ShooterBed      _shooterBed;
+    private final ShooterFlywheel _shooterFlywheel;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -55,46 +56,37 @@ public class RobotContainer
     {
         switch (Constants.AdvantageKit.CURRENT_MODE)
         {
-        // Real robot, instantiate hardware IO implementations
-        case REAL:
-            _drive = new Drive(new GyroIONavX2(),
-                            new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE,
-                                            Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
-                            new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE,
-                                            Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
-                            new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE,
-                                            Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
-                            new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE,
-                                            Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET));
+            // Real robot, instantiate hardware IO implementations
+            case REAL:
+                _drive = new Drive(
+                        new GyroIONavX2(), new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE, Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
+                );
+                _shooterBed = new ShooterBed(new ShooterBedIOSparkMax(9, 10, 4, Constants.ShooterBed.BED_ANGLE_OFFSET));
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax(11, 12)); // FIXME: Set correct IDs
+                break;
 
-            _shooterBed = new ShooterBed(new ShooterBedIOSparkMax(9, 10, 4, Constants.ShooterBed.BED_ANGLE_OFFSET));
-            _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax(11, 12)); // FIXME: Set correct IDs
-            break;
+            // Sim robot, instantiate physics sim IO implementations
+            case SIM:
+                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _shooterBed = new ShooterBed(new ShooterBedIOSim());
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
+                break;
 
-        // Sim robot, instantiate physics sim IO implementations
-        case SIM:
-            _drive = new Drive(new GyroIO()
-            {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-
-            _shooterBed = new ShooterBed(new ShooterBedIOSim());
-            _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
-            break;
-        // Replayed robot, disable IO implementations
-        default:
-            _drive = new Drive(new GyroIO()
-            {}, new ModuleIO()
-            {}, new ModuleIO()
-            {}, new ModuleIO()
-            {}, new ModuleIO()
-            {});
-            break;
+            // Replayed robot, disable IO implementations
+            default:
+                _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _shooterBed = new ShooterBed(new ShooterBedIO() {});
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
+                break;
         }
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
-        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive,
-                        _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
+        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -102,15 +94,14 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        CmdShooterFlywheelShoot _flipShoot = new CmdShooterFlywheelShoot(_shooterFlywheel, 6, 10);
+        CmdShooterFlywheelShoot _flipShoot     = new CmdShooterFlywheelShoot(_shooterFlywheel, 6, 10);
         CmdShooterFlywheelShoot _straightShoot = new CmdShooterFlywheelShoot(_shooterFlywheel, 8, 8);
-        CmdShooterFlywheelStop _stopShooter = new CmdShooterFlywheelStop(_shooterFlywheel);
+        CmdShooterFlywheelStop  _stopShooter   = new CmdShooterFlywheelStop(_shooterFlywheel);
 
-        CmdShooterBedSetBedAngle _setBedLow = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(Math.PI / 6));
+        CmdShooterBedSetBedAngle _setBedLow  = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(Math.PI / 6));
         CmdShooterBedSetBedAngle _setBedHigh = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(Math.PI / 4));
 
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(),
-                        () -> -_controller.getRightX(), () -> -_controller.getRightX()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_controller.getLeftY(), () -> -_controller.getRightX(), () -> -_controller.getRightX()));
         _controller.leftTrigger().whileTrue(_straightShoot);
         _controller.rightTrigger().whileTrue(_flipShoot);
         _controller.leftBumper().whileTrue(_stopShooter);

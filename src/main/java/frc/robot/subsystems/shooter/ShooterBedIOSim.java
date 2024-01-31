@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,20 +16,16 @@ import frc.robot.Constants;
 
 public class ShooterBedIOSim implements ShooterBedIO
 {
-    private DCMotorSim _leftBedSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private DCMotorSim _rightBedSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-
-    private double _bedAppliedVolts = 0.0;
-
-    private Rotation2d _angleOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
-
+    private DCMotorSim          _leftBedSim      = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private DCMotorSim          _rightBedSim     = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private double              _bedAppliedVolts = 0.0;
+    private Rotation2d          _angleOffset     = Constants.ShooterBed.BED_ANGLE_OFFSET;
     private MechanismLigament2d _bedSim;
-    
 
     public ShooterBedIOSim()
     {
-        Mechanism2d mechanism = new Mechanism2d(3, 3);
-        MechanismRoot2d robot = mechanism.getRoot("Shooter Bed", 2, 0);
+        Mechanism2d     mechanism = new Mechanism2d(3, 3);
+        MechanismRoot2d robot     = mechanism.getRoot("Shooter Bed", 2, 0);
         _bedSim = robot.append(new MechanismLigament2d("Bed", 1, 90, 20, new Color8Bit(Color.kOrange)));
         SmartDashboard.putData("Shooter Bed", mechanism);
     }
@@ -40,11 +35,10 @@ public class ShooterBedIOSim implements ShooterBedIO
     {
         _leftBedSim.update(Constants.General.LOOP_PERIOD_SECS);
         _rightBedSim.update(Constants.General.LOOP_PERIOD_SECS);
-        
-        inputs.bedAngle = new Rotation2d(_leftBedSim.getAngularPositionRad() - _angleOffset.getRadians());
+
+        inputs.bedAngle        = new Rotation2d(_leftBedSim.getAngularPositionRad() - _angleOffset.getRadians());
         inputs.bedAppliedVolts = _bedAppliedVolts;
-        inputs.bedCurrentAmps = new double[]
-        { Math.abs(_leftBedSim.getCurrentDrawAmps()) };
+        inputs.bedCurrentAmps  = new double[] { Math.abs(_leftBedSim.getCurrentDrawAmps()) };
 
         _bedSim.setAngle(inputs.bedAngle);
     }
