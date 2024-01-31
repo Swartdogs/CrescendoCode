@@ -16,52 +16,45 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants;
 
-/**
- * Physics sim implementation of module IO.
- * <p>
- * Uses two flywheel sims for the drive and turn motors, with the absolute
- * position initialized to a random value. The flywheel sims are not physically
- * accurate, but provide a decent approximation for the behavior of the module.
- */
 public class ModuleIOSim implements ModuleIO
 {
-    private static final double LOOP_PERIOD_SECS         = 0.02;
-    private DCMotorSim          driveSim                 = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private DCMotorSim          turnSim                  = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
-    private final Rotation2d    turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
-    private double              driveAppliedVolts        = 0.0;
-    private double              turnAppliedVolts         = 0.0;
+    private final Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
+    private DCMotorSim       _driveSim                 = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private DCMotorSim       _turnSim                  = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
+    private double           _driveAppliedVolts        = 0.0;
+    private double           _turnAppliedVolts         = 0.0;
 
     @Override
     public void updateInputs(ModuleIOInputs inputs)
     {
-        driveSim.update(LOOP_PERIOD_SECS);
-        turnSim.update(LOOP_PERIOD_SECS);
+        _driveSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _turnSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.drivePositionRad       = driveSim.getAngularPositionRad();
-        inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec();
-        inputs.driveAppliedVolts      = driveAppliedVolts;
-        inputs.driveCurrentAmps       = new double[] { Math.abs(driveSim.getCurrentDrawAmps()) };
+        inputs.drivePositionRad       = _driveSim.getAngularPositionRad();
+        inputs.driveVelocityRadPerSec = _driveSim.getAngularVelocityRadPerSec();
+        inputs.driveAppliedVolts      = _driveAppliedVolts;
+        inputs.driveCurrentAmps       = new double[] { Math.abs(_driveSim.getCurrentDrawAmps()) };
 
-        inputs.turnAbsolutePosition  = new Rotation2d(turnSim.getAngularPositionRad()).plus(turnAbsoluteInitPosition);
-        inputs.turnPosition          = new Rotation2d(turnSim.getAngularPositionRad());
-        inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
-        inputs.turnAppliedVolts      = turnAppliedVolts;
-        inputs.turnCurrentAmps       = new double[] { Math.abs(turnSim.getCurrentDrawAmps()) };
+        inputs.turnAbsolutePosition  = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
+        inputs.turnPosition          = new Rotation2d(_turnSim.getAngularPositionRad());
+        inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
+        inputs.turnAppliedVolts      = _turnAppliedVolts;
+        inputs.turnCurrentAmps       = new double[] { Math.abs(_turnSim.getCurrentDrawAmps()) };
     }
 
     @Override
     public void setDriveVoltage(double volts)
     {
-        driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-        driveSim.setInputVoltage(driveAppliedVolts);
+        _driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        _driveSim.setInputVoltage(_driveAppliedVolts);
     }
 
     @Override
     public void setTurnVoltage(double volts)
     {
-        turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-        turnSim.setInputVoltage(turnAppliedVolts);
+        _turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        _turnSim.setInputVoltage(_turnAppliedVolts);
     }
 }

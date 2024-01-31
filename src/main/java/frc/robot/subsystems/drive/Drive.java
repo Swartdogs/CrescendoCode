@@ -25,46 +25,46 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase
 {
-    private static final double          MAX_LINEAR_SPEED  = Units.feetToMeters(14.5);
-    private static final double          TRACK_WIDTH_X     = Units.inchesToMeters(25.0);
-    private static final double          TRACK_WIDTH_Y     = Units.inchesToMeters(25.0);
-    private static final double          DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
-    private static final double          MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
-    private final GyroIO                 gyroIO;
-    private final GyroIOInputsAutoLogged gyroInputs        = new GyroIOInputsAutoLogged();
-    private final Module[]               modules           = new Module[4]; // FL, FR, BL, BR
-    private SwerveDriveKinematics        kinematics        = new SwerveDriveKinematics(getModuleTranslations());
-    private Pose2d                       pose              = new Pose2d();
-    private Rotation2d                   lastGyroRotation  = new Rotation2d();
+    private final GyroIO                 _gyroIO;
+    private final GyroIOInputsAutoLogged _gyroInputs       = new GyroIOInputsAutoLogged();
+    private final Module[]               _modules          = new Module[4]; // FL, FR, BL, BR
+    private SwerveDriveKinematics        _kinematics       = new SwerveDriveKinematics(getModuleTranslations());
+    private Pose2d                       _pose             = new Pose2d();
+    private Rotation2d                   _lastGyroRotation = new Rotation2d();
 
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
-        this.gyroIO = gyroIO;
-        modules[0]  = new Module(flModuleIO, 0);
-        modules[1]  = new Module(frModuleIO, 1);
-        modules[2]  = new Module(blModuleIO, 2);
-        modules[3]  = new Module(brModuleIO, 3);
+        this._gyroIO = gyroIO;
+
+        _modules[0] = new Module(flModuleIO, 0);
+        _modules[1] = new Module(frModuleIO, 1);
+        _modules[2] = new Module(blModuleIO, 2);
+        _modules[3] = new Module(brModuleIO, 3);
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
-                this::getPose, this::setPose, () -> kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity, new HolonomicPathFollowerConfig(MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                this::getPose, this::setPose, () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
+                new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
         );
+
         Pathfinding.setPathfinder(new LocalADStarAK());
+
         PathPlannerLogging.setLogActivePathCallback((activePath) ->
         {
             Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
         });
+
         PathPlannerLogging.setLogTargetPoseCallback((targetPose) ->
         {
             Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
@@ -73,9 +73,10 @@ public class Drive extends SubsystemBase
 
     public void periodic()
     {
-        gyroIO.updateInputs(gyroInputs);
-        Logger.processInputs("Drive/Gyro", gyroInputs);
-        for (var module : modules)
+        _gyroIO.updateInputs(_gyroInputs);
+        Logger.processInputs("Drive/Gyro", _gyroInputs);
+
+        for (var module : _modules)
         {
             module.periodic();
         }
@@ -83,11 +84,12 @@ public class Drive extends SubsystemBase
         // Stop moving when disabled
         if (DriverStation.isDisabled())
         {
-            for (var module : modules)
+            for (var module : _modules)
             {
                 module.stop();
             }
         }
+        
         // Log empty setpoint states when disabled
         if (DriverStation.isDisabled())
         {
@@ -97,23 +99,21 @@ public class Drive extends SubsystemBase
 
         // Update odometry
         SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
+
         for (int i = 0; i < 4; i++)
         {
-            wheelDeltas[i] = modules[i].getPositionDelta();
+            wheelDeltas[i] = _modules[i].getPositionDelta();
         }
+
         // The twist represents the motion of the robot since the last
         // loop cycle in x, y, and theta based only on the modules,
         // without the gyro. The gyro is always disconnected in simulation.
-        var twist = kinematics.toTwist2d(wheelDeltas);
-        if (gyroInputs.connected)
-        {
-            // If the gyro is connected, replace the theta component of the twist
-            // with the change in angle since the last loop cycle.
-            twist            = new Twist2d(twist.dx, twist.dy, gyroInputs.yawPosition.minus(lastGyroRotation).getRadians());
-            lastGyroRotation = gyroInputs.yawPosition;
-        }
+        var twist = _kinematics.toTwist2d(wheelDeltas);
+        twist             = new Twist2d(twist.dx, twist.dy, _gyroInputs.yawPosition.minus(_lastGyroRotation).getRadians());
+        _lastGyroRotation = _gyroInputs.yawPosition;
+
         // Apply the twist (change since last loop cycle) to the current pose
-        pose = pose.exp(twist);
+        _pose = _pose.exp(twist);
     }
 
     /**
@@ -125,15 +125,17 @@ public class Drive extends SubsystemBase
     {
         // Calculate module setpoints
         ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
-        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, MAX_LINEAR_SPEED);
+        SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Drive.MAX_LINEAR_SPEED);
 
         // Send setpoints to modules
         SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
+
         for (int i = 0; i < 4; i++)
         {
             // The module returns the optimized state, useful for logging
-            optimizedSetpointStates[i] = modules[i].runSetpoint(setpointStates[i]);
+            optimizedSetpointStates[i] = _modules[i].runSetpoint(setpointStates[i]);
         }
 
         // Log setpoint states
@@ -155,11 +157,13 @@ public class Drive extends SubsystemBase
     public void stopWithX()
     {
         Rotation2d[] headings = new Rotation2d[4];
+        
         for (int i = 0; i < 4; i++)
         {
             headings[i] = getModuleTranslations()[i].getAngle();
         }
-        kinematics.resetHeadings(headings);
+
+        _kinematics.resetHeadings(headings);
         stop();
     }
 
@@ -168,7 +172,7 @@ public class Drive extends SubsystemBase
     {
         for (int i = 0; i < 4; i++)
         {
-            modules[i].runCharacterization(volts);
+            _modules[i].runCharacterization(volts);
         }
     }
 
@@ -176,10 +180,12 @@ public class Drive extends SubsystemBase
     public double getCharacterizationVelocity()
     {
         double driveVelocityAverage = 0.0;
-        for (var module : modules)
+
+        for (var module : _modules)
         {
             driveVelocityAverage += module.getCharacterizationVelocity();
         }
+
         return driveVelocityAverage / 4.0;
     }
 
@@ -191,10 +197,12 @@ public class Drive extends SubsystemBase
     private SwerveModuleState[] getModuleStates()
     {
         SwerveModuleState[] states = new SwerveModuleState[4];
+
         for (int i = 0; i < 4; i++)
         {
-            states[i] = modules[i].getState();
+            states[i] = _modules[i].getState();
         }
+
         return states;
     }
 
@@ -202,37 +210,25 @@ public class Drive extends SubsystemBase
     @AutoLogOutput(key = "Odometry/Robot")
     public Pose2d getPose()
     {
-        return pose;
+        return _pose;
     }
 
     /** Returns the current odometry rotation. */
     public Rotation2d getRotation()
     {
-        return pose.getRotation();
+        return _pose.getRotation();
     }
 
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose)
     {
-        this.pose = pose;
-    }
-
-    /** Returns the maximum linear speed in meters per sec. */
-    public double getMaxLinearSpeedMetersPerSec()
-    {
-        return MAX_LINEAR_SPEED;
-    }
-
-    /** Returns the maximum angular speed in radians per sec. */
-    public double getMaxAngularSpeedRadPerSec()
-    {
-        return MAX_ANGULAR_SPEED;
+        _pose = pose;
     }
 
     /** Returns an array of module translations. */
     public static Translation2d[] getModuleTranslations()
     {
-        return new Translation2d[] { new Translation2d(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0), new Translation2d(TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0), new Translation2d(-TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
-                new Translation2d(-TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0) };
+        return new Translation2d[] { new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0),
+                new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
     }
 }

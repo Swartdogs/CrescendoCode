@@ -20,7 +20,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class LocalADStarAK implements Pathfinder
 {
-    private final ADStarIO io = new ADStarIO();
+    private final ADStarIO _io = new ADStarIO();
 
     /**
      * Get if a new path has been calculated since the last time a path was
@@ -33,12 +33,12 @@ public class LocalADStarAK implements Pathfinder
     {
         if (Logger.hasReplaySource())
         {
-            io.updateIsNewPathAvailable();
+            _io.updateIsNewPathAvailable();
         }
 
-        Logger.processInputs("LocalADStarAK", io);
+        Logger.processInputs("LocalADStarAK", _io);
 
-        return io.isNewPathAvailable;
+        return _io.isNewPathAvailable;
     }
 
     /**
@@ -53,19 +53,21 @@ public class LocalADStarAK implements Pathfinder
     @Override
     public PathPlannerPath getCurrentPath(PathConstraints constraints, GoalEndState goalEndState)
     {
+        PathPlannerPath path = null;
+
         if (Logger.hasReplaySource())
         {
-            io.updateCurrentPathPoints(constraints, goalEndState);
+            _io.updateCurrentPathPoints(constraints, goalEndState);
         }
 
-        Logger.processInputs("LocalADStarAK", io);
+        Logger.processInputs("LocalADStarAK", _io);
 
-        if (io.currentPathPoints.isEmpty())
+        if (!_io.currentPathPoints.isEmpty())
         {
-            return null;
+            path = PathPlannerPath.fromPathPoints(_io.currentPathPoints, constraints, goalEndState);
         }
 
-        return PathPlannerPath.fromPathPoints(io.currentPathPoints, constraints, goalEndState);
+        return path;
     }
 
     /**
@@ -80,7 +82,7 @@ public class LocalADStarAK implements Pathfinder
     {
         if (Logger.hasReplaySource())
         {
-            io.adStar.setStartPosition(startPosition);
+            _io.adStar.setStartPosition(startPosition);
         }
     }
 
@@ -95,7 +97,7 @@ public class LocalADStarAK implements Pathfinder
     {
         if (Logger.hasReplaySource())
         {
-            io.adStar.setGoalPosition(goalPosition);
+            _io.adStar.setGoalPosition(goalPosition);
         }
     }
 
@@ -112,7 +114,7 @@ public class LocalADStarAK implements Pathfinder
     @Override
     public void setDynamicObstacles(List<Pair<Translation2d, Translation2d>> obs, Translation2d currentRobotPos)
     {
-        io.adStar.setDynamicObstacles(obs, currentRobotPos);
+        _io.adStar.setDynamicObstacles(obs, currentRobotPos);
     }
 
     private static class ADStarIO implements LoggableInputs
@@ -128,11 +130,13 @@ public class LocalADStarAK implements Pathfinder
 
             double[] pointsLogged = new double[currentPathPoints.size() * 2];
             int      idx          = 0;
+
             for (PathPoint point : currentPathPoints)
             {
-                pointsLogged[idx]      = point.position.getX();
-                pointsLogged[idx + 1]  = point.position.getY();
-                idx                   += 2;
+                pointsLogged[idx]     = point.position.getX();
+                pointsLogged[idx + 1] = point.position.getY();
+
+                idx += 2;
             }
 
             table.put("CurrentPathPoints", pointsLogged);
