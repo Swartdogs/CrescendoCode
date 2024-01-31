@@ -23,7 +23,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot
 {
-    private Command _autonomousCommand;
+    private Command        _autonomousCommand;
     private RobotContainer _robotContainer;
 
     @Override
@@ -38,40 +38,40 @@ public class Robot extends LoggedRobot
 
         switch (BuildConstants.DIRTY)
         {
-        case 0:
-            Logger.recordMetadata("GitDirty", "All changes committed");
-            break;
+            case 0:
+                Logger.recordMetadata("GitDirty", "All changes committed");
+                break;
 
-        case 1:
-            Logger.recordMetadata("GitDirty", "Uncomitted changes");
-            break;
+            case 1:
+                Logger.recordMetadata("GitDirty", "Uncomitted changes");
+                break;
 
-        default:
-            Logger.recordMetadata("GitDirty", "Unknown");
-            break;
+            default:
+                Logger.recordMetadata("GitDirty", "Unknown");
+                break;
         }
 
         // Set up data receivers & replay source
         switch (Constants.AdvantageKit.CURRENT_MODE)
         {
-        case REAL:
-            // Running on a real robot, log to a USB stick ("/U/logs")
-            Logger.addDataReceiver(new WPILOGWriter("/home/lvuser"));
-            Logger.addDataReceiver(new NT4Publisher());
-            break;
+            case REAL:
+                // Running on a real robot, log to a USB stick ("/U/logs")
+                Logger.addDataReceiver(new WPILOGWriter("/home/lvuser"));
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
 
-        case SIM:
-            // Running a physics simulator, log to NT
-            Logger.addDataReceiver(new NT4Publisher());
-            break;
+            case SIM:
+                // Running a physics simulator, log to NT
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
 
-        case REPLAY:
-            // Replaying a log, set up replay source
-            setUseTiming(false); // Run as fast as possible
-            String logPath = LogFileUtil.findReplayLog();
-            Logger.setReplaySource(new WPILOGReader(logPath));
-            Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-            break;
+            case REPLAY:
+                // Replaying a log, set up replay source
+                setUseTiming(false); // Run as fast as possible
+                String logPath = LogFileUtil.findReplayLog();
+                Logger.setReplaySource(new WPILOGReader(logPath));
+                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+                break;
         }
 
         // See http://bit.ly/3YIzFZ6 for more information on timestamps in AdvantageKit.
