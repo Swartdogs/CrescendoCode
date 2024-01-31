@@ -28,10 +28,10 @@ import Jama.QRDecomposition;
 public class PolynomialRegression implements Comparable<PolynomialRegression>
 {
     private final String _variableName; // name of the predictor variable
-    private int _degree; // degree of the polynomial regression
-    private Matrix _beta; // the polynomial regression coefficients
-    private double _sse; // sum of squares due to error
-    private double _sst; // total sum of squares
+    private int          _degree; // degree of the polynomial regression
+    private Matrix       _beta; // the polynomial regression coefficients
+    private double       _sse; // sum of squares due to error
+    private double       _sst; // total sum of squares
 
     /**
      * Performs a polynomial reggression on the data points {@code (y[i], x[i])}.
@@ -65,7 +65,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
     public PolynomialRegression(double[] x, double[] y, int degree, String variableName)
     {
         _variableName = variableName;
-        _degree = degree;
+        _degree       = degree;
 
         int             n       = x.length;
         QRDecomposition qr      = null;

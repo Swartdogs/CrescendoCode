@@ -35,7 +35,7 @@ public class Module
 
     public Module(ModuleIO io, int index)
     {
-        _io = io;
+        _io    = io;
         _index = index;
 
         // Switch constants based on mode (the physics simulator is treated as a

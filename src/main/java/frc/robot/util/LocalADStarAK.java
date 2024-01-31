@@ -133,7 +133,7 @@ public class LocalADStarAK implements Pathfinder
 
             for (PathPoint point : currentPathPoints)
             {
-                pointsLogged[idx] = point.position.getX();
+                pointsLogged[idx]     = point.position.getX();
                 pointsLogged[idx + 1] = point.position.getY();
 
                 idx += 2;

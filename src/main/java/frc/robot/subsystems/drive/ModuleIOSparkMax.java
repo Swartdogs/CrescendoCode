@@ -47,9 +47,9 @@ public class ModuleIOSparkMax implements ModuleIO
 
     public ModuleIOSparkMax(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
     {
-        _driveSparkMax = new CANSparkMax(driveCanId, MotorType.kBrushless);
-        _turnSparkMax = new CANSparkMax(turnCanId, MotorType.kBrushless);
-        _turnAbsoluteEncoder = new AnalogEncoder(absoluteEncoderChannel);
+        _driveSparkMax         = new CANSparkMax(driveCanId, MotorType.kBrushless);
+        _turnSparkMax          = new CANSparkMax(turnCanId, MotorType.kBrushless);
+        _turnAbsoluteEncoder   = new AnalogEncoder(absoluteEncoderChannel);
         _absoluteEncoderOffset = absoluteEncoderOffset;
 
         _driveSparkMax.restoreFactoryDefaults();
@@ -58,7 +58,7 @@ public class ModuleIOSparkMax implements ModuleIO
         _driveSparkMax.setCANTimeout(250);
         _turnSparkMax.setCANTimeout(250);
 
-        _driveEncoder = _driveSparkMax.getEncoder();
+        _driveEncoder        = _driveSparkMax.getEncoder();
         _turnRelativeEncoder = _turnSparkMax.getEncoder();
 
         _turnSparkMax.setInverted(_isTurnMotorInverted);

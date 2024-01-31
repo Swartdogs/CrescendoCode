@@ -30,12 +30,11 @@ public class FeedForwardCharacterization extends Command
     private FeedForwardCharacterizationData _data;
 
     /** Creates a new FeedForwardCharacterization command. */
-    public FeedForwardCharacterization(Subsystem subsystem, Consumer<Double> voltageConsumer,
-                    Supplier<Double> velocitySupplier)
+    public FeedForwardCharacterization(Subsystem subsystem, Consumer<Double> voltageConsumer, Supplier<Double> velocitySupplier)
     {
         addRequirements(subsystem);
 
-        _voltageConsumer = voltageConsumer;
+        _voltageConsumer  = voltageConsumer;
         _velocitySupplier = velocitySupplier;
     }
 
@@ -59,8 +58,7 @@ public class FeedForwardCharacterization extends Command
         }
         else
         {
-            double voltage = (_timer.get() - Constants.Characterization.START_DELAY_SECS)
-                            * Constants.Characterization.RAMP_VOLTS_PER_SEC;
+            double voltage = (_timer.get() - Constants.Characterization.START_DELAY_SECS) * Constants.Characterization.RAMP_VOLTS_PER_SEC;
             _voltageConsumer.accept(voltage);
             _data.add(_velocitySupplier.get(), voltage);
         }
@@ -85,7 +83,7 @@ public class FeedForwardCharacterization extends Command
     public static class FeedForwardCharacterizationData
     {
         private final List<Double> _velocityData = new LinkedList<>();
-        private final List<Double> _voltageData = new LinkedList<>();
+        private final List<Double> _voltageData  = new LinkedList<>();
 
         public void add(double velocity, double voltage)
         {

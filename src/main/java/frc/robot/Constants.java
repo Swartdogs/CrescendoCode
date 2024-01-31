@@ -24,13 +24,13 @@ public final class Constants
 
     public static class CAN
     {
-        public static final int MODULE_FL_DRIVE = 1;
+        public static final int MODULE_FL_DRIVE  = 1;
         public static final int MODULE_FL_ROTATE = 2;
-        public static final int MODULE_FR_DRIVE = 3;
+        public static final int MODULE_FR_DRIVE  = 3;
         public static final int MODULE_FR_ROTATE = 4;
-        public static final int MODULE_BL_DRIVE = 5;
+        public static final int MODULE_BL_DRIVE  = 5;
         public static final int MODULE_BL_ROTATE = 6;
-        public static final int MODULE_BR_DRIVE = 7;
+        public static final int MODULE_BR_DRIVE  = 7;
         public static final int MODULE_BR_ROTATE = 8;
     }
 
@@ -49,13 +49,13 @@ public final class Constants
 
     public static class Characterization
     {
-        public static final double START_DELAY_SECS = 2.0;
+        public static final double START_DELAY_SECS   = 2.0;
         public static final double RAMP_VOLTS_PER_SEC = 0.1;
     }
 
     public static class Intake
     {
-        public static final double INTAKE_VOLTAGE = 10;
+        public static final double INTAKE_VOLTAGE  = 10;
         public static final double OUTTAKE_VOLTAGE = 4;
     }
 
