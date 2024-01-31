@@ -19,7 +19,7 @@ public class CmdIntakeStopIntake extends Command
     @Override
     public void initialize()
     {
-        _intakeSubsystem.setIntakeVoltage(0.0);
+        _intakeSubsystem.setIntakeOff();
     }
 
     @Override

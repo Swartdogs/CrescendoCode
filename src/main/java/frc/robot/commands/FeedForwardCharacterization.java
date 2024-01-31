@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -25,11 +24,9 @@ import java.util.function.Supplier;
 
 public class FeedForwardCharacterization extends Command
 {
-    private final Consumer<Double> _voltageConsumer;
-    private final Supplier<Double> _velocitySupplier;
-
-    private final Timer _timer = new Timer();
-
+    private final Consumer<Double>          _voltageConsumer;
+    private final Supplier<Double>          _velocitySupplier;
+    private final Timer                     _timer = new Timer();
     private FeedForwardCharacterizationData _data;
 
     /** Creates a new FeedForwardCharacterization command. */
@@ -106,9 +103,7 @@ public class FeedForwardCharacterization extends Command
                 return;
             }
 
-            PolynomialRegression regression = new PolynomialRegression(
-                            _velocityData.stream().mapToDouble(Double::doubleValue).toArray(),
-                            _voltageData.stream().mapToDouble(Double::doubleValue).toArray(), 1);
+            PolynomialRegression regression = new PolynomialRegression(_velocityData.stream().mapToDouble(Double::doubleValue).toArray(), _voltageData.stream().mapToDouble(Double::doubleValue).toArray(), 1);
 
             System.out.println("FF Characterization Results:");
             System.out.println("\tCount=" + Integer.toString(_velocityData.size()) + "");
