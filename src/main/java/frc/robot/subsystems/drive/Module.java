@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -23,49 +22,47 @@ import org.littletonrobotics.junction.Logger;
 
 public class Module
 {
-    private final ModuleIO _io;
-    private final ModuleIOInputsAutoLogged _inputs = new ModuleIOInputsAutoLogged();
-    private final int _index;
-
-    private final SimpleMotorFeedforward _driveFeedforward;
-    private final PIDController _driveFeedback;
-    private final PIDController _turnFeedback;
-
-    private Rotation2d _angleSetpoint = null;
-    private Double _speedSetpoint = null;
-    private Rotation2d _turnRelativeOffset = null;
-    private double _lastPositionMeters = 0.0;
+    private final ModuleIO                 _io;
+    private final ModuleIOInputsAutoLogged _inputs             = new ModuleIOInputsAutoLogged();
+    private final int                      _index;
+    private final SimpleMotorFeedforward   _driveFeedforward;
+    private final PIDController            _driveFeedback;
+    private final PIDController            _turnFeedback;
+    private Rotation2d                     _angleSetpoint      = null;
+    private Double                         _speedSetpoint      = null;
+    private Rotation2d                     _turnRelativeOffset = null;
+    private double                         _lastPositionMeters = 0.0;
 
     public Module(ModuleIO io, int index)
     {
-        _io = io;
+        _io    = io;
         _index = index;
 
         // Switch constants based on mode (the physics simulator is treated as a
         // separate robot with different tuning)
         switch (Constants.AdvantageKit.CURRENT_MODE)
         {
-        case REAL:
-        case REPLAY:
-            _driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+            case REAL:
+            case REPLAY:
+                _driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
 
-            _driveFeedback = new PIDController(0.05, 0.0, 0.0);
-            _turnFeedback = new PIDController(7.0, 0.0, 0.0);
-            break;
+                _driveFeedback = new PIDController(0.05, 0.0, 0.0);
+                _turnFeedback = new PIDController(7.0, 0.0, 0.0);
+                break;
 
-        case SIM:
-            _driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);
+            case SIM:
+                _driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);
 
-            _driveFeedback = new PIDController(0.1, 0.0, 0.0);
-            _turnFeedback = new PIDController(10.0, 0.0, 0.0);
-            break;
+                _driveFeedback = new PIDController(0.1, 0.0, 0.0);
+                _turnFeedback = new PIDController(10.0, 0.0, 0.0);
+                break;
 
-        default:
-            _driveFeedforward = new SimpleMotorFeedforward(0.0, 0.0);
+            default:
+                _driveFeedforward = new SimpleMotorFeedforward(0.0, 0.0);
 
-            _driveFeedback = new PIDController(0.0, 0.0, 0.0);
-            _turnFeedback = new PIDController(0.0, 0.0, 0.0);
-            break;
+                _driveFeedback = new PIDController(0.0, 0.0, 0.0);
+                _turnFeedback = new PIDController(0.0, 0.0, 0.0);
+                break;
         }
 
         _turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
@@ -102,8 +99,7 @@ public class Module
 
                 // Run drive controller
                 double velocityRadPerSec = adjustSpeedSetpoint / Constants.Drive.WHEEL_RADIUS;
-                _io.setDriveVoltage(_driveFeedforward.calculate(velocityRadPerSec)
-                                + _driveFeedback.calculate(_inputs.driveVelocityRadPerSec, velocityRadPerSec));
+                _io.setDriveVoltage(_driveFeedforward.calculate(velocityRadPerSec) + _driveFeedback.calculate(_inputs.driveVelocityRadPerSec, velocityRadPerSec));
             }
         }
     }

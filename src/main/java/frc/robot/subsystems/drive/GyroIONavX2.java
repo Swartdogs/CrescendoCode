@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.drive;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -30,7 +29,7 @@ public class GyroIONavX2 implements GyroIO
     @Override
     public void updateInputs(GyroIOInputs inputs)
     {
-        inputs.yawPosition = Rotation2d.fromDegrees(-_navx.getYaw());
+        inputs.yawPosition          = Rotation2d.fromDegrees(-_navx.getYaw());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(-_navx.getRate());
     }
 }
