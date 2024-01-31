@@ -22,23 +22,24 @@ public class Climb extends SubsystemBase
 
     private final PIDController _climbFeedbackLeft;
     private final PIDController _climbFeedbackRight;
-    
+
     // Three PID controllers for the algorithm
     private final PIDController _tiltPID;
     private final PIDController _leftPID;
     private final PIDController _rightPID;
-    
+
     // Creates the gyro to get the current tilt of the robot
     private AHRS _currentGyroAngle;
     // Sets the desired gyro angle for reference in the tilt PID controller
     private double _desiredGyroAngle;
-    // Might delete, takes the current and subtarcts from actual 
+    // Might delete, takes the current and subtarcts from actual
     private double _gyroDifference;
 
     private Double _climbSetpointLeft = null;
     private Double _climbSetpointRight = null;
 
-    // Sets the inital value for the tilt PID, based on the average point between both hooks
+    // Sets the inital value for the tilt PID, based on the average point between
+    // both hooks
     private double _averageLeft = 10; // TODO: Change
     private double _averageRight = 10;
 
@@ -49,18 +50,18 @@ public class Climb extends SubsystemBase
     {
         _io = io;
 
-        _climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
+        _climbFeedbackLeft = new PIDController(0, 0, 0); // TODO: tune values
         _climbFeedbackRight = new PIDController(0, 0, 0);
 
-        // Intilizes the PID controllers, need to set the actual values 
-        _tiltPID  = new PIDController(0, 0, 0);
-        _leftPID  = new PIDController(0, 0, 0);
+        // Intilizes the PID controllers, need to set the actual values
+        _tiltPID = new PIDController(0, 0, 0);
+        _leftPID = new PIDController(0, 0, 0);
         _rightPID = new PIDController(0, 0, 0);
 
         // Sets the current gyro to get the actual/current gyro scope angle
         _currentGyroAngle = new AHRS(Port.kMXP);
         _desiredGyroAngle = 0.0; // Might change
-        //_gyroDifference = _currentGyroAngle - _desiredGyroAngle;
+        // _gyroDifference = _currentGyroAngle - _desiredGyroAngle;
     }
 
     @Override
@@ -87,7 +88,7 @@ public class Climb extends SubsystemBase
         _io.setVoltageLeft(0.0);
         _io.setVoltageRight(0.0);
 
-        _climbSetpointLeft  = null;
+        _climbSetpointLeft = null;
         _climbSetpointRight = null;
 
         setLockState(true);

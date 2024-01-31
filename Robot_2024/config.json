@@ -1,0 +1,26 @@
+{
+    "name": "temp_1",
+    "sourceUrl": "https://cad.onshape.com/documents/63fc92d975702812ff9cf046/w/053465e70013dde197a505f6/e/09f1b1ce810efed32fdfc2f2",
+    "rotations": 
+    [
+        {
+          "axis": "x",
+          "degrees": 90
+        },
+        {
+            "axis": "y",
+            "degrees": 90
+        },
+        {
+          "axis": "z",
+          "degrees": -90
+        }
+    ],
+    "positions":  
+    [
+        1,
+        2,
+        3
+    ],
+    "cameras":
+}
