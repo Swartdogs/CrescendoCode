@@ -12,11 +12,6 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.DriveCommands;
@@ -27,16 +22,14 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
 import frc.robot.subsystems.vision.Vision;
-
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonlib;
 
 public class RobotContainer
 {
     // Subsystems
     private final Drive _drive;
-
-    // Dashboard inputs
-    private final LoggedDashboardChooser<Command> _autoChooser;
+    private Vision _vision;
 
     // Controls
     private final Joystick _joystick = new Joystick(1);
@@ -53,6 +46,7 @@ public class RobotContainer
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
+                _vision = new Vision(new VisionIOPhotonlib());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -63,13 +57,9 @@ public class RobotContainer
             // Replayed robot, disable IO implementations
             default:
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _vision = new Vision(new VisionIO() {});
                 break;
         }
-
-        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-        // Set up feedforward characterization
-        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -82,6 +72,6 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        return _autoChooser.get();
+        return null;
     }
 }

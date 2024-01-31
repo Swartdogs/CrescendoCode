@@ -89,7 +89,7 @@ public class Drive extends SubsystemBase
                 module.stop();
             }
         }
-        
+
         // Log empty setpoint states when disabled
         if (DriverStation.isDisabled())
         {
@@ -157,7 +157,7 @@ public class Drive extends SubsystemBase
     public void stopWithX()
     {
         Rotation2d[] headings = new Rotation2d[4];
-        
+
         for (int i = 0; i < 4; i++)
         {
             headings[i] = getModuleTranslations()[i].getAngle();
