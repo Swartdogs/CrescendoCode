@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.MathUtil;
@@ -16,12 +15,10 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class Climb extends SubsystemBase
 {
-    private final ClimbIO _io;
-
+    private final ClimbIO                 _io;
     private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
-
-    private final PIDController _climbFeedbackLeft;
-    private final PIDController _climbFeedbackRight;
+    private final PIDController           _climbFeedbackLeft;
+    private final PIDController           _climbFeedbackRight;
 
     // Three PID controllers for the algorithm
     private final PIDController _tiltPID;
@@ -34,15 +31,13 @@ public class Climb extends SubsystemBase
     private double _desiredGyroAngle;
     // Might delete, takes the current and subtarcts from actual
     private double _gyroDifference;
-
-    private Double _climbSetpointLeft = null;
+    private Double _climbSetpointLeft  = null;
     private Double _climbSetpointRight = null;
 
     // Sets the inital value for the tilt PID, based on the average point between
     // both hooks
-    private double _averageLeft = 10; // TODO: Change
-    private double _averageRight = 10;
-
+    private double _averageLeft       = 10; // TODO: Change
+    private double _averageRight      = 10;
     private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
     private double _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
 
@@ -50,12 +45,12 @@ public class Climb extends SubsystemBase
     {
         _io = io;
 
-        _climbFeedbackLeft = new PIDController(0, 0, 0); // TODO: tune values
+        _climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
         _climbFeedbackRight = new PIDController(0, 0, 0);
 
         // Intilizes the PID controllers, need to set the actual values
-        _tiltPID = new PIDController(0, 0, 0);
-        _leftPID = new PIDController(0, 0, 0);
+        _tiltPID  = new PIDController(0, 0, 0);
+        _leftPID  = new PIDController(0, 0, 0);
         _rightPID = new PIDController(0, 0, 0);
 
         // Sets the current gyro to get the actual/current gyro scope angle
@@ -88,7 +83,7 @@ public class Climb extends SubsystemBase
         _io.setVoltageLeft(0.0);
         _io.setVoltageRight(0.0);
 
-        _climbSetpointLeft = null;
+        _climbSetpointLeft  = null;
         _climbSetpointRight = null;
 
         setLockState(true);
