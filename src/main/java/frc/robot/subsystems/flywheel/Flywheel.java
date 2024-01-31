@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.flywheel;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -22,9 +21,9 @@ import org.littletonrobotics.junction.Logger;
 
 public class Flywheel extends SubsystemBase
 {
-    private final FlywheelIO io;
+    private final FlywheelIO                 io;
     private final FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
-    private final SimpleMotorFeedforward ffModel;
+    private final SimpleMotorFeedforward     ffModel;
 
     /** Creates a new Flywheel. */
     public Flywheel(FlywheelIO io)
@@ -35,18 +34,18 @@ public class Flywheel extends SubsystemBase
         // separate robot with different tuning)
         switch (Constants.currentMode)
         {
-        case REAL:
-        case REPLAY:
-            ffModel = new SimpleMotorFeedforward(0.1, 0.05);
-            io.configurePID(1.0, 0.0, 0.0);
-            break;
-        case SIM:
-            ffModel = new SimpleMotorFeedforward(0.0, 0.03);
-            io.configurePID(0.5, 0.0, 0.0);
-            break;
-        default:
-            ffModel = new SimpleMotorFeedforward(0.0, 0.0);
-            break;
+            case REAL:
+            case REPLAY:
+                ffModel = new SimpleMotorFeedforward(0.1, 0.05);
+                io.configurePID(1.0, 0.0, 0.0);
+                break;
+            case SIM:
+                ffModel = new SimpleMotorFeedforward(0.0, 0.03);
+                io.configurePID(0.5, 0.0, 0.0);
+                break;
+            default:
+                ffModel = new SimpleMotorFeedforward(0.0, 0.0);
+                break;
         }
     }
 

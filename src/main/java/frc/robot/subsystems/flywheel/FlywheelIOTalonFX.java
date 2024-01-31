@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.flywheel;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -26,29 +25,26 @@ import edu.wpi.first.math.util.Units;
 
 public class FlywheelIOTalonFX implements FlywheelIO
 {
-    private static final double GEAR_RATIO = 1.5;
-
-    private final TalonFX leader = new TalonFX(0);
-    private final TalonFX follower = new TalonFX(1);
-
-    private final StatusSignal<Double> leaderPosition = leader.getPosition();
-    private final StatusSignal<Double> leaderVelocity = leader.getVelocity();
+    private static final double        GEAR_RATIO         = 1.5;
+    private final TalonFX              leader             = new TalonFX(0);
+    private final TalonFX              follower           = new TalonFX(1);
+    private final StatusSignal<Double> leaderPosition     = leader.getPosition();
+    private final StatusSignal<Double> leaderVelocity     = leader.getVelocity();
     private final StatusSignal<Double> leaderAppliedVolts = leader.getMotorVoltage();
-    private final StatusSignal<Double> leaderCurrent = leader.getStatorCurrent();
-    private final StatusSignal<Double> followerCurrent = follower.getStatorCurrent();
+    private final StatusSignal<Double> leaderCurrent      = leader.getStatorCurrent();
+    private final StatusSignal<Double> followerCurrent    = follower.getStatorCurrent();
 
     public FlywheelIOTalonFX()
     {
         var config = new TalonFXConfiguration();
-        config.CurrentLimits.StatorCurrentLimit = 30.0;
+        config.CurrentLimits.StatorCurrentLimit       = 30.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.MotorOutput.NeutralMode                = NeutralModeValue.Coast;
         leader.getConfigurator().apply(config);
         follower.getConfigurator().apply(config);
         follower.setControl(new Follower(leader.getDeviceID(), false));
 
-        BaseStatusSignal.setUpdateFrequencyForAll(50.0, leaderPosition, leaderVelocity, leaderAppliedVolts,
-                        leaderCurrent, followerCurrent);
+        BaseStatusSignal.setUpdateFrequencyForAll(50.0, leaderPosition, leaderVelocity, leaderAppliedVolts, leaderCurrent, followerCurrent);
         leader.optimizeBusUtilization();
         follower.optimizeBusUtilization();
     }
@@ -57,11 +53,10 @@ public class FlywheelIOTalonFX implements FlywheelIO
     public void updateInputs(FlywheelIOInputs inputs)
     {
         BaseStatusSignal.refreshAll(leaderPosition, leaderVelocity, leaderAppliedVolts, leaderCurrent, followerCurrent);
-        inputs.positionRad = Units.rotationsToRadians(leaderPosition.getValueAsDouble()) / GEAR_RATIO;
+        inputs.positionRad       = Units.rotationsToRadians(leaderPosition.getValueAsDouble()) / GEAR_RATIO;
         inputs.velocityRadPerSec = Units.rotationsToRadians(leaderVelocity.getValueAsDouble()) / GEAR_RATIO;
-        inputs.appliedVolts = leaderAppliedVolts.getValueAsDouble();
-        inputs.currentAmps = new double[]
-        { leaderCurrent.getValueAsDouble(), followerCurrent.getValueAsDouble() };
+        inputs.appliedVolts      = leaderAppliedVolts.getValueAsDouble();
+        inputs.currentAmps       = new double[] { leaderCurrent.getValueAsDouble(), followerCurrent.getValueAsDouble() };
     }
 
     @Override
@@ -73,8 +68,7 @@ public class FlywheelIOTalonFX implements FlywheelIO
     @Override
     public void setVelocity(double velocityRadPerSec, double ffVolts)
     {
-        leader.setControl(new VelocityVoltage(Units.radiansToRotations(velocityRadPerSec), 0.0, true, ffVolts, 0, false,
-                        false, false));
+        leader.setControl(new VelocityVoltage(Units.radiansToRotations(velocityRadPerSec), 0.0, true, ffVolts, 0, false, false, false));
     }
 
     @Override

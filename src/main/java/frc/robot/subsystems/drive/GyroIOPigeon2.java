@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -24,8 +23,8 @@ import edu.wpi.first.math.util.Units;
 /** IO implementation for Pigeon2 */
 public class GyroIOPigeon2 implements GyroIO
 {
-    private final Pigeon2 pigeon = new Pigeon2(20);
-    private final StatusSignal<Double> yaw = pigeon.getYaw();
+    private final Pigeon2              pigeon      = new Pigeon2(20);
+    private final StatusSignal<Double> yaw         = pigeon.getYaw();
     private final StatusSignal<Double> yawVelocity = pigeon.getAngularVelocityZWorld();
 
     public GyroIOPigeon2()
@@ -40,8 +39,8 @@ public class GyroIOPigeon2 implements GyroIO
     @Override
     public void updateInputs(GyroIOInputs inputs)
     {
-        inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
-        inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
+        inputs.connected            = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
+        inputs.yawPosition          = Rotation2d.fromDegrees(yaw.getValueAsDouble());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
     }
 }

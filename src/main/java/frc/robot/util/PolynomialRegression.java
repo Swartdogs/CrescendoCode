@@ -28,18 +28,20 @@ import Jama.QRDecomposition;
 public class PolynomialRegression implements Comparable<PolynomialRegression>
 {
     private final String variableName; // name of the predictor variable
-    private int degree; // degree of the polynomial regression
-    private Matrix beta; // the polynomial regression coefficients
-    private double sse; // sum of squares due to error
-    private double sst; // total sum of squares
+    private int          degree; // degree of the polynomial regression
+    private Matrix       beta; // the polynomial regression coefficients
+    private double       sse; // sum of squares due to error
+    private double       sst; // total sum of squares
 
     /**
      * Performs a polynomial reggression on the data points {@code (y[i], x[i])}.
      * Uses n as the name of the predictor variable.
      *
-     * @param x      the values of the predictor variable
-     * @param y      the corresponding values of the response variable
-     * @param degree the degree of the polynomial to fit
+     * @param  x                        the values of the predictor variable
+     * @param  y                        the corresponding values of the response
+     *                                  variable
+     * @param  degree                   the degree of the polynomial to fit
+     * 
      * @throws IllegalArgumentException if the lengths of the two arrays are not
      *                                  equal
      */
@@ -51,21 +53,23 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
     /**
      * Performs a polynomial reggression on the data points {@code (y[i], x[i])}.
      *
-     * @param x            the values of the predictor variable
-     * @param y            the corresponding values of the response variable
-     * @param degree       the degree of the polynomial to fit
-     * @param variableName the name of the predictor variable
+     * @param  x                        the values of the predictor variable
+     * @param  y                        the corresponding values of the response
+     *                                  variable
+     * @param  degree                   the degree of the polynomial to fit
+     * @param  variableName             the name of the predictor variable
+     * 
      * @throws IllegalArgumentException if the lengths of the two arrays are not
      *                                  equal
      */
     public PolynomialRegression(double[] x, double[] y, int degree, String variableName)
     {
-        this.degree = degree;
+        this.degree       = degree;
         this.variableName = variableName;
 
-        int n = x.length;
-        QRDecomposition qr = null;
-        Matrix matrixX = null;
+        int             n       = x.length;
+        QRDecomposition qr      = null;
+        Matrix          matrixX = null;
 
         // in case Vandermonde matrix does not have full rank, reduce degree until it
         // does
@@ -85,8 +89,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
 
             // find least squares solution
             qr = new QRDecomposition(matrixX);
-            if (qr.isFullRank())
-                break;
+            if (qr.isFullRank()) break;
 
             // decrease degree and try again
             this.degree--;
@@ -100,8 +103,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
 
         // mean of y[] values
         double sum = 0.0;
-        for (int i = 0; i < n; i++)
-            sum += y[i];
+        for (int i = 0; i < n; i++) sum += y[i];
         double mean = sum / n;
 
         // total variation to be accounted for
@@ -119,14 +121,14 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
     /**
      * Returns the {@code j}th regression coefficient.
      *
-     * @param j the index
-     * @return the {@code j}th regression coefficient
+     * @param  j the index
+     * 
+     * @return   the {@code j}th regression coefficient
      */
     public double beta(int j)
     {
         // to make -0.0 print as 0.0
-        if (Math.abs(beta.get(j, 0)) < 1E-4)
-            return 0.0;
+        if (Math.abs(beta.get(j, 0)) < 1E-4) return 0.0;
         return beta.get(j, 0);
     }
 
@@ -148,8 +150,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
      */
     public double R2()
     {
-        if (sst == 0.0)
-            return 1.0; // constant function
+        if (sst == 0.0) return 1.0; // constant function
         return 1.0 - sse / sst;
     }
 
@@ -157,16 +158,16 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
      * Returns the expected response {@code y} given the value of the predictor
      * variable {@code x}.
      *
-     * @param x the value of the predictor variable
-     * @return the expected response {@code y} given the value of the predictor
-     *         variable {@code x}
+     * @param  x the value of the predictor variable
+     * 
+     * @return   the expected response {@code y} given the value of the predictor
+     *           variable {@code x}
      */
     public double predict(double x)
     {
         // horner's method
         double y = 0.0;
-        for (int j = degree; j >= 0; j--)
-            y = beta(j) + (x * y);
+        for (int j = degree; j >= 0; j--) y = beta(j) + (x * y);
         return y;
     }
 
@@ -180,21 +181,17 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
     public String toString()
     {
         StringBuilder s = new StringBuilder();
-        int j = degree;
+        int           j = degree;
 
         // ignoring leading zero coefficients
-        while (j >= 0 && Math.abs(beta(j)) < 1E-5)
-            j--;
+        while (j >= 0 && Math.abs(beta(j)) < 1E-5) j--;
 
         // create remaining terms
         while (j >= 0)
         {
-            if (j == 0)
-                s.append(String.format("%.10f ", beta(j)));
-            else if (j == 1)
-                s.append(String.format("%.10f %s + ", beta(j), variableName));
-            else
-                s.append(String.format("%.10f %s^%d + ", beta(j), variableName, j));
+            if (j == 0) s.append(String.format("%.10f ", beta(j)));
+            else if (j == 1) s.append(String.format("%.10f %s + ", beta(j), variableName));
+            else s.append(String.format("%.10f %s^%d + ", beta(j), variableName, j));
             j--;
         }
         s = s.append("  (R^2 = " + String.format("%.3f", R2()) + ")");
@@ -206,24 +203,18 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
     /** Compare lexicographically. */
     public int compareTo(PolynomialRegression that)
     {
-        double EPSILON = 1E-5;
-        int maxDegree = Math.max(this.degree(), that.degree());
+        double EPSILON   = 1E-5;
+        int    maxDegree = Math.max(this.degree(), that.degree());
         for (int j = maxDegree; j >= 0; j--)
         {
             double term1 = 0.0;
             double term2 = 0.0;
-            if (this.degree() >= j)
-                term1 = this.beta(j);
-            if (that.degree() >= j)
-                term2 = that.beta(j);
-            if (Math.abs(term1) < EPSILON)
-                term1 = 0.0;
-            if (Math.abs(term2) < EPSILON)
-                term2 = 0.0;
-            if (term1 < term2)
-                return -1;
-            else if (term1 > term2)
-                return +1;
+            if (this.degree() >= j) term1 = this.beta(j);
+            if (that.degree() >= j) term2 = that.beta(j);
+            if (Math.abs(term1) < EPSILON) term1 = 0.0;
+            if (Math.abs(term2) < EPSILON) term2 = 0.0;
+            if (term1 < term2) return -1;
+            else if (term1 > term2) return +1;
         }
         return 0;
     }
@@ -235,10 +226,8 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
      */
     public static void main(String[] args)
     {
-        double[] x =
-        { 10, 20, 40, 80, 160, 200 };
-        double[] y =
-        { 100, 350, 1500, 6700, 20160, 40000 };
+        double[]             x          = { 10, 20, 40, 80, 160, 200 };
+        double[]             y          = { 100, 350, 1500, 6700, 20160, 40000 };
         PolynomialRegression regression = new PolynomialRegression(x, y, 3);
 
         System.out.println(regression);

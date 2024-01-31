@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -36,35 +35,31 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase
 {
-    private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-    private static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0);
-    private static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
-    private static final double DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
-    private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
-
-    private final GyroIO gyroIO;
-    private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-    private final Module[] modules = new Module[4]; // FL, FR, BL, BR
-
-    private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
-    private Pose2d pose = new Pose2d();
-    private Rotation2d lastGyroRotation = new Rotation2d();
+    private static final double          MAX_LINEAR_SPEED  = Units.feetToMeters(14.5);
+    private static final double          TRACK_WIDTH_X     = Units.inchesToMeters(25.0);
+    private static final double          TRACK_WIDTH_Y     = Units.inchesToMeters(25.0);
+    private static final double          DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
+    private static final double          MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
+    private final GyroIO                 gyroIO;
+    private final GyroIOInputsAutoLogged gyroInputs        = new GyroIOInputsAutoLogged();
+    private final Module[]               modules           = new Module[4]; // FL, FR, BL, BR
+    private SwerveDriveKinematics        kinematics        = new SwerveDriveKinematics(getModuleTranslations());
+    private Pose2d                       pose              = new Pose2d();
+    private Rotation2d                   lastGyroRotation  = new Rotation2d();
 
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
         this.gyroIO = gyroIO;
-        modules[0] = new Module(flModuleIO, 0);
-        modules[1] = new Module(frModuleIO, 1);
-        modules[2] = new Module(blModuleIO, 2);
-        modules[3] = new Module(brModuleIO, 3);
+        modules[0]  = new Module(flModuleIO, 0);
+        modules[1]  = new Module(frModuleIO, 1);
+        modules[2]  = new Module(blModuleIO, 2);
+        modules[3]  = new Module(brModuleIO, 3);
 
         // Configure AutoBuilder for PathPlanner
-        AutoBuilder.configureHolonomic(this::getPose, this::setPose,
-                        () -> kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
-                        new HolonomicPathFollowerConfig(MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
-                        () -> DriverStation.getAlliance().isPresent()
-                                        && DriverStation.getAlliance().get() == Alliance.Red,
-                        this);
+        AutoBuilder.configureHolonomic(
+                this::getPose, this::setPose, () -> kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity, new HolonomicPathFollowerConfig(MAX_LINEAR_SPEED, DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
+        );
         Pathfinding.setPathfinder(new LocalADStarAK());
         PathPlannerLogging.setLogActivePathCallback((activePath) ->
         {
@@ -96,10 +91,8 @@ public class Drive extends SubsystemBase
         // Log empty setpoint states when disabled
         if (DriverStation.isDisabled())
         {
-            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[]
-            {});
-            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[]
-            {});
+            Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
+            Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
         }
 
         // Update odometry
@@ -116,7 +109,7 @@ public class Drive extends SubsystemBase
         {
             // If the gyro is connected, replace the theta component of the twist
             // with the change in angle since the last loop cycle.
-            twist = new Twist2d(twist.dx, twist.dy, gyroInputs.yawPosition.minus(lastGyroRotation).getRadians());
+            twist            = new Twist2d(twist.dx, twist.dy, gyroInputs.yawPosition.minus(lastGyroRotation).getRadians());
             lastGyroRotation = gyroInputs.yawPosition;
         }
         // Apply the twist (change since last loop cycle) to the current pose
@@ -131,7 +124,7 @@ public class Drive extends SubsystemBase
     public void runVelocity(ChassisSpeeds speeds)
     {
         // Calculate module setpoints
-        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+        ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, MAX_LINEAR_SPEED);
 
@@ -239,10 +232,7 @@ public class Drive extends SubsystemBase
     /** Returns an array of module translations. */
     public static Translation2d[] getModuleTranslations()
     {
-        return new Translation2d[]
-        { new Translation2d(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
-                new Translation2d(TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0),
-                new Translation2d(-TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
+        return new Translation2d[] { new Translation2d(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0), new Translation2d(TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0), new Translation2d(-TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
                 new Translation2d(-TRACK_WIDTH_X / 2.0, -TRACK_WIDTH_Y / 2.0) };
     }
 }

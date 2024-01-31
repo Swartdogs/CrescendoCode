@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -37,7 +36,7 @@ public final class Constants
         // Measurement from the camera to the side of the robot
         public static final int PARAMETER_Y = (int)Units.inchesToMeters(0);
         // Measurement from the ground to the camera's center
-        public static final double PARAMETER_Z = Units.inchesToMeters(5.25);
+        public static final double     PARAMETER_Z        = Units.inchesToMeters(5.25);
         public static final Rotation3d PARAMETER_ROTATION = new Rotation3d(0.0, 0.0, 0.0);
     }
 

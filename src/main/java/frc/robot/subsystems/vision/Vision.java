@@ -15,12 +15,11 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Vision extends SubsystemBase
 {
-
-    private final VisionIO _io;
-    private final PhotonCamera _camera;
-    private final PhotonPoseEstimator _poseEstimator;
+    private final VisionIO                 _io;
+    private final PhotonCamera             _camera;
+    private final PhotonPoseEstimator      _poseEstimator;
     private final VisionIOInputsAutoLogged _inputs = new VisionIOInputsAutoLogged();
-    private Pose2d _memory = new Pose2d();
+    private Pose2d                         _memory = new Pose2d();
 
     public Vision(VisionIO io)
     {
@@ -38,10 +37,10 @@ public class Vision extends SubsystemBase
             System.out.println("Exception encountered: " + e.getMessage());
         }
 
-        _camera = new PhotonCamera(Constants.Vision.CAMERA_NAME);
-        _poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-                        _camera, new Transform3d(Constants.Vision.PARAMETER_X, Constants.Vision.PARAMETER_Y,
-                                        Constants.Vision.PARAMETER_Z, Constants.Vision.PARAMETER_ROTATION));
+        _camera        = new PhotonCamera(Constants.Vision.CAMERA_NAME);
+        _poseEstimator = new PhotonPoseEstimator(
+                aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _camera, new Transform3d(Constants.Vision.PARAMETER_X, Constants.Vision.PARAMETER_Y, Constants.Vision.PARAMETER_Z, Constants.Vision.PARAMETER_ROTATION)
+        );
         _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
     }
 

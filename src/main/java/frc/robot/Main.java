@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
@@ -23,7 +22,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 public final class Main
 {
     private Main()
-    {}
+    {
+    }
 
     /**
      * Main initialization function. Do not perform any initialization here.

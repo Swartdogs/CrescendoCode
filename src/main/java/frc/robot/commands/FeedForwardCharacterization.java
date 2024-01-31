@@ -10,7 +10,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -24,21 +23,18 @@ import java.util.function.Supplier;
 
 public class FeedForwardCharacterization extends Command
 {
-    private static final double START_DELAY_SECS = 2.0;
-    private static final double RAMP_VOLTS_PER_SEC = 0.1;
-
+    private static final double             START_DELAY_SECS   = 2.0;
+    private static final double             RAMP_VOLTS_PER_SEC = 0.1;
     private FeedForwardCharacterizationData data;
-    private final Consumer<Double> voltageConsumer;
-    private final Supplier<Double> velocitySupplier;
-
-    private final Timer timer = new Timer();
+    private final Consumer<Double>          voltageConsumer;
+    private final Supplier<Double>          velocitySupplier;
+    private final Timer                     timer              = new Timer();
 
     /** Creates a new FeedForwardCharacterization command. */
-    public FeedForwardCharacterization(Subsystem subsystem, Consumer<Double> voltageConsumer,
-                    Supplier<Double> velocitySupplier)
+    public FeedForwardCharacterization(Subsystem subsystem, Consumer<Double> voltageConsumer, Supplier<Double> velocitySupplier)
     {
         addRequirements(subsystem);
-        this.voltageConsumer = voltageConsumer;
+        this.voltageConsumer  = voltageConsumer;
         this.velocitySupplier = velocitySupplier;
     }
 
@@ -86,7 +82,7 @@ public class FeedForwardCharacterization extends Command
     public static class FeedForwardCharacterizationData
     {
         private final List<Double> velocityData = new LinkedList<>();
-        private final List<Double> voltageData = new LinkedList<>();
+        private final List<Double> voltageData  = new LinkedList<>();
 
         public void add(double velocity, double voltage)
         {
@@ -104,9 +100,7 @@ public class FeedForwardCharacterization extends Command
                 return;
             }
 
-            PolynomialRegression regression = new PolynomialRegression(
-                            velocityData.stream().mapToDouble(Double::doubleValue).toArray(),
-                            voltageData.stream().mapToDouble(Double::doubleValue).toArray(), 1);
+            PolynomialRegression regression = new PolynomialRegression(velocityData.stream().mapToDouble(Double::doubleValue).toArray(), voltageData.stream().mapToDouble(Double::doubleValue).toArray(), 1);
 
             System.out.println("FF Characterization Results:");
             System.out.println("\tCount=" + Integer.toString(velocityData.size()) + "");
