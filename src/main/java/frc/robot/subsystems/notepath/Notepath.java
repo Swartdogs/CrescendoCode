@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.notepath;
 
 import org.littletonrobotics.junction.Logger;
@@ -11,12 +10,11 @@ import frc.robot.Constants;
 
 public class Notepath extends SubsystemBase
 {
-    private NotepathIO _io;
-    private NotepathInputsAutoLogged _inputs = new NotepathInputsAutoLogged();
-
-    private double _intakePickupVoltage = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_VOLTAGE;
-    private double _notepathFeedVoltage = Constants.Notepath.NOTEPATH_VOLTAGE;
-    private double _shooterPickupVoltage = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_VOLTAGE;
+    private NotepathIO               _io;
+    private NotepathInputsAutoLogged _inputs               = new NotepathInputsAutoLogged();
+    private double                   _intakePickupVoltage  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_VOLTAGE;
+    private double                   _notepathFeedVoltage  = Constants.Notepath.NOTEPATH_VOLTAGE;
+    private double                   _shooterPickupVoltage = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_VOLTAGE;
 
     public Notepath(NotepathIO io)
     {
@@ -75,5 +73,4 @@ public class Notepath extends SubsystemBase
     {
         return _notepathFeedVoltage;
     }
-
 }

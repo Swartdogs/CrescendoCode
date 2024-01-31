@@ -19,8 +19,7 @@ public class NotepathIOSparkMax implements NotepathIO
     public void updateInputs(NotepathInputs inputs)
     {
         inputs.notepathAppliedVolts = _notepathSparkMax.getAppliedOutput() * _notepathSparkMax.getBusVoltage();
-        inputs.notepathCurrentAmps = new double[]
-        { _notepathSparkMax.getOutputCurrent() };
+        inputs.notepathCurrentAmps  = new double[] { _notepathSparkMax.getOutputCurrent() };
     }
 
     @Override
