@@ -22,7 +22,6 @@ public class CmdNotepathReverseNotepath extends Command
     public void initialize()
     {
         _notepath.setReverse();
-
     }
 
     @Override

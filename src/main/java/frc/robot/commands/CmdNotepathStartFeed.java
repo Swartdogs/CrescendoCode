@@ -14,7 +14,7 @@ public class CmdNotepathStartFeed extends Command
     public CmdNotepathStartFeed(Notepath notepath)
     {// Use addRequirements() here to declare subsystem dependencies.
         _notepath = notepath;
-        
+
         addRequirements(_notepath);
     }
 

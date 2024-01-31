@@ -38,7 +38,7 @@ public class RobotContainer
 {
     // Subsystems
     private final Drive _drive;
-    private Notepath _notepath;
+    private final Notepath _notepath;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;

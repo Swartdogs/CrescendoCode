@@ -22,7 +22,6 @@ public class CmdNotepathShooterPickup extends Command
     public void initialize()
     {
         _notepath.setNotepathShooterPickupOn();
-
     }
 
     @Override

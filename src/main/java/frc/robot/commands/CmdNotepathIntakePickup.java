@@ -22,7 +22,6 @@ public class CmdNotepathIntakePickup extends Command
     public void initialize()
     {
         _notepath.setNotepathIntakePickupOn();
-
     }
 
     @Override
