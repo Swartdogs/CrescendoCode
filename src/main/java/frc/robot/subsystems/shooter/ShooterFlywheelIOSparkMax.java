@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import frc.robot.Constants;
+
 public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
 {
     private CANSparkMax     _upperFlywheelSparkMax;
@@ -11,10 +13,10 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
     private RelativeEncoder _upperFlywheelEncoder;
     private RelativeEncoder _lowerFlywheelEncoder;
 
-    public ShooterFlywheelIOSparkMax(int upperFlywheelCanID, int lowerFlywheelCanID)
+    public ShooterFlywheelIOSparkMax()
     {
-        _upperFlywheelSparkMax = new CANSparkMax(upperFlywheelCanID, MotorType.kBrushless);
-        _lowerFlywheelSparkMax = new CANSparkMax(lowerFlywheelCanID, MotorType.kBrushless);
+        _upperFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_UPPER, MotorType.kBrushless);
+        _lowerFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_LOWER, MotorType.kBrushless);
         _lowerFlywheelSparkMax.setInverted(true); // FIXME: Change if not correct
 
         _upperFlywheelEncoder = _upperFlywheelSparkMax.getEncoder();

@@ -37,8 +37,8 @@ public class ShooterBedIOSim implements ShooterBedIO
         _rightBedSim.update(Constants.General.LOOP_PERIOD_SECS);
 
         inputs.bedAngle        = new Rotation2d(_leftBedSim.getAngularPositionRad() - _angleOffset.getRadians());
-        inputs.bedAppliedVolts = _bedAppliedVolts;
-        inputs.bedCurrentAmps  = new double[] { Math.abs(_leftBedSim.getCurrentDrawAmps()) };
+        inputs.bedLeaderAppliedVolts = _bedAppliedVolts;
+        inputs.bedLeaderCurrentAmps  = new double[] { Math.abs(_leftBedSim.getCurrentDrawAmps()) };
 
         _bedSim.setAngle(inputs.bedAngle);
     }

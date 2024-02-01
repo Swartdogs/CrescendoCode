@@ -9,8 +9,12 @@ public interface ShooterBedIO
     @AutoLog
     public static class ShooterBedIOInputs
     {
-        public double     bedAppliedVolts = 0.0;
-        public double[]   bedCurrentAmps  = new double[] {};
+        public double     bedLeaderAppliedVolts = 0.0;
+        public double[]   bedLeaderCurrentAmps  = new double[] {};
+        
+        public double     bedFollowerAppliedVolts = 0.0;
+        public double[]   bedFollowerCurrentAmps  = new double[] {};
+
         public Rotation2d bedAngle        = new Rotation2d();
     }
 

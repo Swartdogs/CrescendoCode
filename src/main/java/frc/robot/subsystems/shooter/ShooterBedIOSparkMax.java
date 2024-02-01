@@ -5,30 +5,35 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AnalogEncoder;
+import frc.robot.Constants;
 
 public class ShooterBedIOSparkMax implements ShooterBedIO
 {
-    private CANSparkMax   _bedSparkMax;
+    private CANSparkMax   _bedLeaderSparkMax;
+    private CANSparkMax   _bedFollowerSparkMax;
     private AnalogEncoder _bedAbsoluteEncoder;
     private Rotation2d    _bedAbsoluteEncoderOffset;
 
     @SuppressWarnings("resource")
-    public ShooterBedIOSparkMax(int bedCanID, int followerBedCanID, int absoluteEncoderChannel, Rotation2d bedAbsoluteEncoderOffset)
+    public ShooterBedIOSparkMax(Rotation2d bedAbsoluteEncoderOffset)
     {
-        _bedSparkMax = new CANSparkMax(bedCanID, MotorType.kBrushless);
+        _bedLeaderSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_BED_LEADER, MotorType.kBrushless);
 
-        CANSparkMax followerBedSparkMax = new CANSparkMax(followerBedCanID, MotorType.kBrushless);
-        followerBedSparkMax.follow(_bedSparkMax, true);
+        _bedFollowerSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_BED_FOLLOWER, MotorType.kBrushless);
+        _bedFollowerSparkMax.follow(_bedLeaderSparkMax, true);
 
-        _bedAbsoluteEncoder       = new AnalogEncoder(absoluteEncoderChannel);
+        _bedAbsoluteEncoder       = new AnalogEncoder(Constants.AIO.SHOOTER_BED_SENSOR);
         _bedAbsoluteEncoderOffset = bedAbsoluteEncoderOffset;
     }
 
     @Override
     public void updateInputs(ShooterBedIOInputs inputs)
     {
-        inputs.bedAppliedVolts = _bedSparkMax.getAppliedOutput() * _bedSparkMax.getBusVoltage();
-        inputs.bedCurrentAmps  = new double[] { _bedSparkMax.getOutputCurrent() };
+        inputs.bedLeaderAppliedVolts = _bedLeaderSparkMax.getAppliedOutput() * _bedLeaderSparkMax.getBusVoltage();
+        inputs.bedLeaderCurrentAmps  = new double[] { _bedLeaderSparkMax.getOutputCurrent() };
+        
+        inputs.bedFollowerAppliedVolts = _bedFollowerSparkMax.getAppliedOutput() * _bedFollowerSparkMax.getBusVoltage();
+        inputs.bedFollowerCurrentAmps  = new double[] { _bedFollowerSparkMax.getOutputCurrent() };
 
         inputs.bedAngle = Rotation2d.fromRotations(_bedAbsoluteEncoder.getAbsolutePosition()).minus(_bedAbsoluteEncoderOffset);
     }
@@ -36,7 +41,7 @@ public class ShooterBedIOSparkMax implements ShooterBedIO
     @Override
     public void setVoltage(double volts)
     {
-        _bedSparkMax.setVoltage(volts);
+        _bedLeaderSparkMax.setVoltage(volts);
     }
 
     @Override
