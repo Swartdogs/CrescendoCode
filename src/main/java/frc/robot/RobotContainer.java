@@ -18,22 +18,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdNotepathStartFeed;
 import frc.robot.commands.CmdNotepathReverseFeed;
-import frc.robot.commands.CmdNotepathStopNotepath;
 import frc.robot.commands.CmdIntakeReverseIntake;
 import frc.robot.commands.CmdIntakeStartIntake;
-import frc.robot.commands.CmdIntakeStopIntake;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
-import frc.robot.subsystems.Intake.Intake;
-import frc.robot.subsystems.Intake.IntakeIO;
-import frc.robot.subsystems.Intake.IntakeIOSim;
-import frc.robot.subsystems.Intake.IntakeIOSparkMax;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOSparkMax;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
@@ -97,10 +95,10 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        CmdIntakeStartIntake    startIntake         = new CmdIntakeStartIntake(_intake);
-        CmdIntakeReverseIntake  reverseIntake       = new CmdIntakeReverseIntake(_intake);
-        CmdNotepathStartFeed    startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
-        CmdNotepathReverseFeed  reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
+        CmdIntakeStartIntake   startIntake         = new CmdIntakeStartIntake(_intake);
+        CmdIntakeReverseIntake reverseIntake       = new CmdIntakeReverseIntake(_intake);
+        CmdNotepathStartFeed   startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
+        CmdNotepathReverseFeed reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 

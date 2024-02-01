@@ -11,7 +11,7 @@ import frc.robot.Constants;
 public class Notepath extends SubsystemBase
 {
     private NotepathIO               _io;
-    private NotepathInputsAutoLogged _inputs               = new NotepathInputsAutoLogged();
+    private NotepathInputsAutoLogged _inputs                     = new NotepathInputsAutoLogged();
     private double                   _intakePickupPercentOutput  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT;
     private double                   _notepathFeedPercentOutput  = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT;
     private double                   _shooterPickupPercentOutput = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT;
@@ -30,17 +30,17 @@ public class Notepath extends SubsystemBase
 
     public void setNotepathIntakePickupOn()
     {
-        _io.setVoltage(_intakePickupPercentOutput * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(_intakePickupPercentOutput * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void setFeedOn()
     {
-        _io.setVoltage(_notepathFeedPercentOutput * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(_notepathFeedPercentOutput * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void setNotepathShooterPickupOn()
     {
-        _io.setVoltage(_shooterPickupPercentOutput * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(_shooterPickupPercentOutput * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void setOff()
@@ -50,7 +50,7 @@ public class Notepath extends SubsystemBase
 
     public void setReverse()
     {
-        _io.setVoltage(-_notepathFeedPercentOutput * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(-_notepathFeedPercentOutput * Constants.General.MOTOR_VOLTAGE);
     }
 
     public void setNotepathIntakePickupPercentOutput(double percentOutput)
@@ -70,6 +70,6 @@ public class Notepath extends SubsystemBase
 
     public double getPercentOutput()
     {
-        return _inputs.leaderNotepathAppliedVolts / Constants.MOTOR_VOLTAGE;
+        return _inputs.leaderNotepathAppliedVolts / Constants.General.MOTOR_VOLTAGE;
     }
 }

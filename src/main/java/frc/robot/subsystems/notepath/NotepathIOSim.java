@@ -10,7 +10,7 @@ import frc.robot.Constants;
 /** Add your docs here. */
 public class NotepathIOSim implements NotepathIO
 {
-    private DCMotorSim _leaderNotepathSim  = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private DCMotorSim _leaderNotepathSim   = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
     private DCMotorSim _followerNotepathSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
     private double     _leaderVoltage;
     private double     _followerVoltage;
@@ -31,7 +31,7 @@ public class NotepathIOSim implements NotepathIO
     @Override
     public void setVoltage(double volts)
     {
-        _leaderVoltage = volts;
+        _leaderVoltage   = volts;
         _followerVoltage = volts;
         _leaderNotepathSim.setInputVoltage(_leaderVoltage);
         _followerNotepathSim.setInputVoltage(-_followerVoltage);
