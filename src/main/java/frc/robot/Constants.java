@@ -75,9 +75,9 @@ public final class Constants
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_SPEED_PERCENT  = 3;
-        public static final double NOTEPATH_FEED_SPEED_PERCENT                = 3;
-        public static final double NOTEPATH_SHOOTER_PICKUP_SPEED_PERCENT = 3;
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 3;
+        public static final double NOTEPATH_FEED_PERCENT_OUTPUT                = 3;
+        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 3;
     }
 
     public static class General

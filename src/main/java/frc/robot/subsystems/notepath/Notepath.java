@@ -12,9 +12,9 @@ public class Notepath extends SubsystemBase
 {
     private NotepathIO               _io;
     private NotepathInputsAutoLogged _inputs               = new NotepathInputsAutoLogged();
-    private double                   _intakePickupSpeedPercent  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_SPEED_PERCENT;
-    private double                   _notepathFeedSpeedPercent  = Constants.Notepath.NOTEPATH_FEED_SPEED_PERCENT;
-    private double                   _shooterPickupSpeedPercent = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_SPEED_PERCENT;
+    private double                   _intakePickupPercentOutput  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT;
+    private double                   _notepathFeedPercentOutput  = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT;
+    private double                   _shooterPickupPercentOutput = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT;
 
     public Notepath(NotepathIO io)
     {
@@ -31,17 +31,17 @@ public class Notepath extends SubsystemBase
 
     public void setNotepathIntakePickupOn()
     {
-        _io.setVoltage(_intakePickupSpeedPercent * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(_intakePickupPercentOutput * Constants.MOTOR_VOLTAGE);
     }
 
     public void setFeedOn()
     {
-        _io.setVoltage(_notepathFeedSpeedPercent * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(_notepathFeedPercentOutput * Constants.MOTOR_VOLTAGE);
     }
 
     public void setNotepathShooterPickupOn()
     {
-        _io.setVoltage(_shooterPickupSpeedPercent * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(_shooterPickupPercentOutput * Constants.MOTOR_VOLTAGE);
     }
 
     public void setOff()
@@ -51,26 +51,26 @@ public class Notepath extends SubsystemBase
 
     public void setReverse()
     {
-        _io.setVoltage(-_notepathFeedSpeedPercent * Constants.MOTOR_VOLTAGE);
+        _io.setVoltage(-_notepathFeedPercentOutput * Constants.MOTOR_VOLTAGE);
     }
 
-    public void setNotepathIntakePickupSpeedPercent(double percent)
+    public void setNotepathIntakePickupPercentOutput(double percentOutput)
     {
-        _intakePickupSpeedPercent = percent;
+        _intakePickupPercentOutput = percentOutput;
     }
 
-    public void setNotepathFeedSpeedPercent(double percent)
+    public void setNotepathFeedPercentOutput(double percentOutput)
     {
-        _notepathFeedSpeedPercent = percent;
+        _notepathFeedPercentOutput = percentOutput;
     }
 
-    public void setNotepathShooterPickupSpeedPercent(double percent)
+    public void setNotepathShooterPickupPercentOutput(double percentOutput)
     {
-        _shooterPickupSpeedPercent = percent;
+        _shooterPickupPercentOutput = percentOutput;
     }
 
-    public double getSpeedPercent()
+    public double getPercentOutput()
     {
-        return _notepathFeedSpeedPercent;
+        return _inputs.notepathAppliedVolts / Constants.MOTOR_VOLTAGE;
     }
 }
