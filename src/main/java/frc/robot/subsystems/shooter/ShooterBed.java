@@ -39,7 +39,6 @@ public class ShooterBed extends SubsystemBase
     public void setAngle(Rotation2d angleSetpoint)
     {
         _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle.getRadians(), _maxBedAngle.getRadians()));
-        System.out.println(_angleSetpoint);
     }
 
     public void setAngleOffset(Rotation2d angleOffset)

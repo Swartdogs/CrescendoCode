@@ -26,7 +26,6 @@ public class ShooterFlywheel extends SubsystemBase
         _flywheelFeedforward   = new SimpleMotorFeedforward(0.01, 0.01);
         _upperFlywheelFeedback = new PIDController(0.01, 0, 0);// FIXME: Set values, calibrate
         _lowerFlywheelFeedback = new PIDController(0.01, 0, 0);
-
     }
 
     @Override
