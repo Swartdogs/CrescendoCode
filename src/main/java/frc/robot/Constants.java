@@ -22,6 +22,8 @@ public final class Constants
     {
     }
 
+    public static final double MOTOR_VOLTAGE  =  12.0;
+
     public static class CAN
     {
         public static final int MODULE_FL_DRIVE  = 1;
@@ -73,9 +75,9 @@ public final class Constants
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_VOLTAGE  = 3;
-        public static final double NOTEPATH_VOLTAGE                = 3;
-        public static final double NOTEPATH_SHOOTER_PICKUP_VOLTAGE = 3;
+        public static final double NOTEPATH_INTAKE_PICKUP_SPEED_PERCENT  = 3;
+        public static final double NOTEPATH_FEED_SPEED_PERCENT                = 3;
+        public static final double NOTEPATH_SHOOTER_PICKUP_SPEED_PERCENT = 3;
     }
 
     public static class General

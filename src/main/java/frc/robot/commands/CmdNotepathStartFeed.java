@@ -11,28 +11,24 @@ public class CmdNotepathStartFeed extends Command
     private Notepath _notepath;
 
     public CmdNotepathStartFeed(Notepath notepath)
-    {// Use addRequirements() here to declare subsystem dependencies.
+    {
         _notepath = notepath;
 
         addRequirements(_notepath);
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize()
     {
         _notepath.setFeedOn();
-
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted)
     {
         _notepath.setOff();
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished()
     {
