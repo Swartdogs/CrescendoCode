@@ -20,12 +20,8 @@ public interface ClimbIO
         public double appliedVoltsLeft = 0.0;
         public double appliedVoltsRight = 0.0;
 
-        public double[] currentAmpsLeft = new double[]
-        {};
-        public double[] currentAmpsRight = new double[]
-        {};
-
-        public double positionRad = 0.0;
+        public double[] currentAmpsLeft = new double[] {};
+        public double[] currentAmpsRight = new double[] {};
     }
 
     public default void updateInputs(ClimbIOInputs inputs)

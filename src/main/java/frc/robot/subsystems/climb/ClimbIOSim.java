@@ -21,10 +21,6 @@ import frc.robot.Constants;
 
 public class ClimbIOSim implements ClimbIO
 {
-    private static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
-    private static final double MOTOR_VOLTAGE_LIMIT = 12;
-    private static final double CLIMB_SENSOR_DEG_PER_INCH = 60;
-
     private DCMotorSim _leftSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
     private DCMotorSim _rightSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
 
@@ -72,16 +68,16 @@ public class ClimbIOSim implements ClimbIO
         _leftSim.update(Constants.General.LOOP_PERIOD_SECS);
         _rightSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        double leftDelta = CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
-                        * (_leftAppliedVolts / MOTOR_VOLTAGE_LIMIT);
-        double rightDelta = CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
-                        * (_rightAppliedVolts / MOTOR_VOLTAGE_LIMIT);
+        double leftDelta = Constants.Climb.CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
+                        * (_leftAppliedVolts / Constants.Climb.MOTOR_VOLTAGE_LIMIT); 
+        double rightDelta = Constants.Climb.CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS
+                        * (_rightAppliedVolts / Constants.Climb.MOTOR_VOLTAGE_LIMIT);
 
         _leftEncoderSim.setPosition(_leftEncoderSim.getPosition().plus(Rotation2d.fromDegrees(leftDelta)));
         _rightEncoderSim.setPosition(_rightEncoderSim.getPosition().plus(Rotation2d.fromDegrees(rightDelta)));
 
-        inputs.extensionLeft = _leftEncoderSim.getPosition().getDegrees() / CLIMB_SENSOR_DEG_PER_INCH;
-        inputs.extensionRight = _rightEncoderSim.getPosition().getDegrees() / CLIMB_SENSOR_DEG_PER_INCH;
+        inputs.extensionLeft = _leftEncoderSim.getPosition().getDegrees() / Constants.Climb.CLIMB_SENSOR_DEG_PER_INCH;
+        inputs.extensionRight = _rightEncoderSim.getPosition().getDegrees() / Constants.Climb.CLIMB_SENSOR_DEG_PER_INCH;
 
         inputs.lockStateLeft = !_leftSolenoidSim.getOutput();
         inputs.lockStateRight = !_rightSolenoidSim.getOutput();
@@ -127,7 +123,7 @@ public class ClimbIOSim implements ClimbIO
     @Override
     public void setVoltageLeft(double volts)
     {
-        _leftAppliedVolts = MathUtil.clamp(volts, -MOTOR_VOLTAGE_LIMIT, MOTOR_VOLTAGE_LIMIT); // Figure out how this
+        _leftAppliedVolts = MathUtil.clamp(volts, -Constants.Climb.MOTOR_VOLTAGE_LIMIT, Constants.Climb.MOTOR_VOLTAGE_LIMIT); // Figure out how this
         // // transfers to simulation
         _leftSim.setInputVoltage(_leftAppliedVolts);
     }
@@ -135,7 +131,7 @@ public class ClimbIOSim implements ClimbIO
     @Override
     public void setVoltageRight(double volts)
     {
-        _rightAppliedVolts = MathUtil.clamp(volts, -MOTOR_VOLTAGE_LIMIT, MOTOR_VOLTAGE_LIMIT);
+        _rightAppliedVolts = MathUtil.clamp(volts, -Constants.Climb.MOTOR_VOLTAGE_LIMIT, Constants.Climb.MOTOR_VOLTAGE_LIMIT);
         _rightSim.setInputVoltage(_rightAppliedVolts);
     }
 
