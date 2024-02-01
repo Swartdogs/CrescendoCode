@@ -13,6 +13,8 @@ public class CmdIntakeStopIntake extends Command
     public CmdIntakeStopIntake(Intake intakeSubsystem)
     {
         _intakeSubsystem = intakeSubsystem;
+
+        addRequirements(_intakeSubsystem);
     }
 
     @Override

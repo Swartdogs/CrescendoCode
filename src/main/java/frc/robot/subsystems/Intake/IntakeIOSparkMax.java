@@ -1,15 +1,18 @@
 package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import frc.robot.Constants;
+
 import com.revrobotics.CANSparkMax;
 
 public class IntakeIOSparkMax implements IntakeIO
 {
     private CANSparkMax _intakeSparkMax;
 
-    public IntakeIOSparkMax(int canId)
+    public IntakeIOSparkMax()
     {
-        _intakeSparkMax = new CANSparkMax(canId, MotorType.kBrushless);
+        _intakeSparkMax = new CANSparkMax(Constants.CAN.INTAKE, MotorType.kBrushless);
 
         _intakeSparkMax.setInverted(true);
     }

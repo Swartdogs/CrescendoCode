@@ -3,12 +3,13 @@ package frc.robot.subsystems.Intake;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase
 {
     private IntakeIO                       _io;
-    private final IntakeIOInputsAutoLogged _inputs         = new IntakeIOInputsAutoLogged();
+    private final IntakeIOInputsAutoLogged _inputs               = new IntakeIOInputsAutoLogged();
     private double                         _intakePercentOutput  = Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT;
     private double                         _outtakePercentOutput = Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT;
 
@@ -22,7 +23,6 @@ public class Intake extends SubsystemBase
     {
         _io.updateInputs(_inputs);
         Logger.processInputs("Intake", _inputs);
-        Logger.recordOutput("Intake/Commanded Voltage", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT);
     }
 
     public void setIntakeOn()

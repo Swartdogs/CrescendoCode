@@ -2,6 +2,7 @@ package frc.robot.subsystems.Intake;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants;
 
 public class IntakeIOSim implements IntakeIO
 {
@@ -11,6 +12,8 @@ public class IntakeIOSim implements IntakeIO
     @Override
     public void updateInputs(IntakeIOInputs inputs)
     {
+        _intakeSim.update(Constants.General.LOOP_PERIOD_SECS);
+
         inputs.appliedVolts = _voltage;
         inputs.currentAmps  = new double[] { _intakeSim.getCurrentDrawAmps() };
     }
