@@ -34,6 +34,8 @@ public final class Constants
         public static final int MODULE_BR_ROTATE = 8;
     }
 
+    public static final double MOTOR_VOLTAGE =  12.0;
+
     public static class AIO
     {
         public static final int MODULE_FL_SENSOR = 0;
@@ -55,8 +57,8 @@ public final class Constants
 
     public static class Intake
     {
-        public static final double INTAKE_VOLTAGE  = 10;
-        public static final double OUTTAKE_VOLTAGE = 4;
+        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 10;
+        public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 4;
     }
 
     public static class Drive

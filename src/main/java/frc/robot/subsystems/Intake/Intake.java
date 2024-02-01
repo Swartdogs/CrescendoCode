@@ -9,8 +9,8 @@ public class Intake extends SubsystemBase
 {
     private IntakeIO                       _io;
     private final IntakeIOInputsAutoLogged _inputs         = new IntakeIOInputsAutoLogged();
-    private double                         _intakeVoltage  = Constants.Intake.INTAKE_VOLTAGE;
-    private double                         _outtakeVoltage = Constants.Intake.OUTTAKE_VOLTAGE;
+    private double                         _intakePercentOutput  = Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT;
+    private double                         _outtakePercentOutput = Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT;
 
     public Intake(IntakeIO io)
     {
@@ -22,12 +22,12 @@ public class Intake extends SubsystemBase
     {
         _io.updateInputs(_inputs);
         Logger.processInputs("Intake", _inputs);
-        Logger.recordOutput("Intake/Commanded Voltage", Constants.Intake.INTAKE_VOLTAGE);
+        Logger.recordOutput("Intake/Commanded Voltage", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT);
     }
 
     public void setIntakeOn()
     {
-        _io.setVoltage(_intakeVoltage);
+        _io.setVoltage(_intakePercentOutput * Constants.MOTOR_VOLTAGE);
     }
 
     public void setIntakeOff()
@@ -37,21 +37,21 @@ public class Intake extends SubsystemBase
 
     public void setIntakeReverse()
     {
-        _io.setVoltage(-_outtakeVoltage);
+        _io.setVoltage(-_outtakePercentOutput * Constants.MOTOR_VOLTAGE);
     }
 
-    public void setIntakeVoltage(double intakeVoltage)
+    public void setIntakePercentOutput(double percentOutput)
     {
-        _intakeVoltage = intakeVoltage;
+        _intakePercentOutput = percentOutput;
     }
 
-    public void setOuttakeVoltage(double outtakeVoltage)
+    public void setOuttakePercentOutput(double percentOutput)
     {
-        _outtakeVoltage = outtakeVoltage;
+        _outtakePercentOutput = percentOutput;
     }
 
-    public double getIntakeVoltage()
+    public double getPercentOutput()
     {
-        return _inputs.appliedVolts;
+        return _inputs.appliedVolts / Constants.MOTOR_VOLTAGE;
     }
 }
