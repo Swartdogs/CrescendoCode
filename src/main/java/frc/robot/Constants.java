@@ -89,7 +89,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.SIM; // Change this
+        public static final Mode CURRENT_MODE = Mode.REAL; // Change this
 
         public static enum Mode
         {
