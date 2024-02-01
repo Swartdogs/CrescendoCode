@@ -9,7 +9,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.GyroIONavX2;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -33,8 +32,12 @@ public class Climb extends SubsystemBase
 
     // Average height that the two arms should be set to
     private double _desiredHeight = 5; // TODO: Create two functions for setting the heights, also change value
+
     // Finds the value that the robot needs to adjust by in order to be level, based on the gyro angle 
     private double _heightAdjustment = 0.0;
+
+    private double _leftHeight;
+    private double _rightHeight;
 
     private Double _climbSetpointLeft = null;
     private Double _climbSetpointRight = null;
@@ -52,9 +55,13 @@ public class Climb extends SubsystemBase
         _gyro = new AHRS(Port.kMXP);
 
         // Intilizes the PID controllers, need to set the actual values
-        _tiltPID = new PIDController(0, 0, 0);
-        _leftPID = new PIDController(0, 0, 0);
+        _tiltPID  = new PIDController(0, 0, 0);
+        _leftPID  = new PIDController(0, 0, 0);
         _rightPID = new PIDController(0, 0, 0);
+
+        // Takes the desired position of both arms, and takes the needed adjustment calculated from the tilt to set the position - setpoint for both arms
+        _leftHeight  = _desiredHeight + _heightAdjustment;
+        _rightHeight = _desiredHeight - _heightAdjustment;
     }
 
     @Override
@@ -75,6 +82,10 @@ public class Climb extends SubsystemBase
 
         // Takes the pid controller and gives it the current value and the setpoint
         _heightAdjustment = _tiltPID.calculate(getCurrentTilt(), 0);
+
+        // Gets the current position of the left and the right arms, and sets it to the desired position based on the tilt input, also applies this voltage
+        _io.setVoltageLeft(_leftPID.calculate(getExtensionLeft(), _leftHeight)); 
+        _io.setVoltageRight(_rightPID.calculate(getExtensionRight(), _rightHeight)); // TODO: The setHeight function would replace setVoltage
     }
 
     public void stop()
@@ -150,6 +161,11 @@ public class Climb extends SubsystemBase
     public double getExtensionRight()
     {
         return _inputs.extensionRight;
+    }
+
+    public void setHeight()
+    {
+        // TODO: Figure out this function
     }
 
     // Returns the current angle of the gyroscope

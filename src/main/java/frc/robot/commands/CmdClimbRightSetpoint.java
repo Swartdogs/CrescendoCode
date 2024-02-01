@@ -9,13 +9,15 @@ import frc.robot.subsystems.climb.Climb;
 
 public class CmdClimbRightSetpoint extends Command
 {
-    private final Climb _climb;
+    private final Climb  _climb;
     private final double _setpoint;
 
     public CmdClimbRightSetpoint(Climb climb, double setpoint)
     {
-        _climb = climb;
+        _climb    = climb;
         _setpoint = setpoint;
+
+        addRequirements(_climb);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class RobotContainer
     // Controls
     private final Joystick _joystick = new Joystick(1);
 
-    private final CommandXboxController _driveController = new CommandXboxController(0);
+    private final CommandXboxController _driveController    = new CommandXboxController(0);
     private final CommandXboxController _operatorController = new CommandXboxController(0);
 
     public RobotContainer()
@@ -67,8 +67,7 @@ public class RobotContainer
 
         // Sim robot, instantiate physics sim IO implementations
         case SIM:
-            _drive = new Drive(new GyroIO()
-            {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+            _drive = new Drive(new GyroIO(){}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
             _climb = new Climb(new ClimbIOSim());
             break;
 
@@ -80,8 +79,7 @@ public class RobotContainer
             {}, new ModuleIO()
             {}, new ModuleIO()
             {});
-            _climb = new Climb(new ClimbIO()
-            {});
+            _climb = new Climb(new ClimbIO(){});
             break;
         }
 
@@ -89,7 +87,7 @@ public class RobotContainer
 
         // Set up feedforward characterization
         _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive,
-                        _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
+                            _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();
