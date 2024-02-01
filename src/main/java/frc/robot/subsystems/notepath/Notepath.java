@@ -26,7 +26,6 @@ public class Notepath extends SubsystemBase
     {
         _io.updateInputs(_inputs);
         Logger.processInputs("Notepath", _inputs);
-
     }
 
     public void setNotepathIntakePickupOn()
@@ -71,6 +70,6 @@ public class Notepath extends SubsystemBase
 
     public double getPercentOutput()
     {
-        return _inputs.notepathAppliedVolts / Constants.MOTOR_VOLTAGE;
+        return _inputs.leaderNotepathAppliedVolts / Constants.MOTOR_VOLTAGE;
     }
 }

@@ -21,7 +21,6 @@ public class CmdNotepathStopNotepath extends Command
     public void initialize()
     {
         _notepath.setOff();
-
     }
 
     @Override

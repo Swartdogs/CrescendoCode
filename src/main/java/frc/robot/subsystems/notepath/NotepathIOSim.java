@@ -10,24 +10,30 @@ import frc.robot.Constants;
 /** Add your docs here. */
 public class NotepathIOSim implements NotepathIO
 {
-    private DCMotorSim _leftNotepathSim  = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
-    private DCMotorSim _rightNotepathSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
-    private double     _voltage;
+    private DCMotorSim _leaderNotepathSim  = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private DCMotorSim _followerNotepathSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private double     _leaderVoltage;
+    private double     _followerVoltage;
 
     @Override
     public void updateInputs(NotepathInputs inputs)
     {
-        _leftNotepathSim.update(Constants.General.LOOP_PERIOD_SECS);
-        _rightNotepathSim.update(Constants.General.LOOP_PERIOD_SECS);
-        inputs.notepathAppliedVolts = _voltage;
-        inputs.notepathCurrentAmps  = new double[] { Math.abs(_leftNotepathSim.getCurrentDrawAmps()) };
+        _leaderNotepathSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _followerNotepathSim.update(Constants.General.LOOP_PERIOD_SECS);
+
+        inputs.leaderNotepathAppliedVolts = _leaderVoltage;
+        inputs.leaderNotepathCurrentAmps  = new double[] { Math.abs(_leaderNotepathSim.getCurrentDrawAmps()) };
+
+        inputs.followerNotepathAppliedVolts = _followerVoltage;
+        inputs.followerNotepathCurrentAmps  = new double[] { Math.abs(_followerNotepathSim.getCurrentDrawAmps()) };
     }
 
     @Override
     public void setVoltage(double volts)
     {
-        _voltage = volts;
-        _leftNotepathSim.setInputVoltage(_voltage);
-        _rightNotepathSim.setInputVoltage(-_voltage);
+        _leaderVoltage = volts;
+        _followerVoltage = volts;
+        _leaderNotepathSim.setInputVoltage(_leaderVoltage);
+        _followerNotepathSim.setInputVoltage(-_followerVoltage);
     }
 }

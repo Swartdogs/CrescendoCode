@@ -59,7 +59,7 @@ public class RobotContainer
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
-                _notepath = new Notepath((new NotepathIOSparkMax(9, 10)));
+                _notepath = new Notepath((new NotepathIOSparkMax()));
                 break;
 
             // Sim robot, instantiate physics sim IO implementations

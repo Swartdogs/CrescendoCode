@@ -34,6 +34,8 @@ public final class Constants
         public static final int MODULE_BL_ROTATE = 6;
         public static final int MODULE_BR_DRIVE  = 7;
         public static final int MODULE_BR_ROTATE = 8;
+        public static final int NOTEPATH_LEADER  = 11;
+        public static final int NOTEPATH_FOLLOWER  = 12;
     }
 
     public static class AIO
@@ -75,9 +77,9 @@ public final class Constants
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 3;
-        public static final double NOTEPATH_FEED_PERCENT_OUTPUT                = 3;
-        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 3;
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
+        public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.4;
+        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.5;
     }
 
     public static class General
