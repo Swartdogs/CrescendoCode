@@ -82,13 +82,13 @@ public class ClimbIOSim implements ClimbIO
         _climbLeft.setLength(inputs.extensionLeft);
         _climbRight.setLength(inputs.extensionRight);
 
-        clamp(double inputs.extensionLeft, double 0, double 1.6);
+        inputs.extensionLeft = Math.Util.clamp(double inputs.extensionLeft, double 0, double 1.6);
         _climbLeft.setLength(inputs.extensionLeft);
-        _leftEncoderSim.setPosition(Rotation2d.fromRadians(0));
+        _leftEncoderSim.setPosition(inputs.fromRadians(inputs.extensionLeft));
 
-        clamp(double inputs.extensionRight, double 0, double 1.6);
+        inputs.extensionRight = Math.Util.clamp(double inputs.extensionRight, double 0, double 1.6);
         _climbRight.setLength(inputs.extensionRight);
-        _rightEncoderSim.setPosition(Rotation2d.fromRadians(0));
+        _rightEncoderSim.setPosition(inputs.fromRadians(inputs.extensionRight));
     }
 
     @Override
