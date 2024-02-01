@@ -22,6 +22,8 @@ public final class Constants
     {
     }
 
+    public static final double MOTOR_VOLTAGE  =  12.0;
+
     public static class CAN
     {
         public static final int MODULE_FL_DRIVE  = 1;
@@ -33,6 +35,8 @@ public final class Constants
         public static final int MODULE_BR_DRIVE  = 7;
         public static final int MODULE_BR_ROTATE = 8;
         public static final int INTAKE           = 9;
+        public static final int NOTEPATH_LEADER  = 11;
+        public static final int NOTEPATH_FOLLOWER  = 12;
     }
 
     public static final double MOTOR_VOLTAGE = 12.0;
@@ -78,6 +82,13 @@ public final class Constants
         public static final Rotation2d MODULE_FR_OFFSET   = Rotation2d.fromRadians(2.09);
         public static final Rotation2d MODULE_BL_OFFSET   = Rotation2d.fromRadians(-2.33);
         public static final Rotation2d MODULE_BR_OFFSET   = Rotation2d.fromRadians(-1.63);
+    }
+
+    public static class Notepath
+    {
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
+        public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.4;
+        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.5;
     }
 
     public static class General
