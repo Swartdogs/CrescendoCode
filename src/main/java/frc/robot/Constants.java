@@ -25,14 +25,17 @@ public final class Constants
 
     public static class CAN
     {
-        public static final int MODULE_FL_DRIVE  = 1;
-        public static final int MODULE_FL_ROTATE = 2;
-        public static final int MODULE_FR_DRIVE  = 3;
-        public static final int MODULE_FR_ROTATE = 4;
-        public static final int MODULE_BL_DRIVE  = 5;
-        public static final int MODULE_BL_ROTATE = 6;
-        public static final int MODULE_BR_DRIVE  = 7;
-        public static final int MODULE_BR_ROTATE = 8;
+        public static final int MODULE_FL_DRIVE   = 1;
+        public static final int MODULE_FL_ROTATE  = 2;
+        public static final int MODULE_FR_DRIVE   = 3;
+        public static final int MODULE_FR_ROTATE  = 4;
+        public static final int MODULE_BL_DRIVE   = 5;
+        public static final int MODULE_BL_ROTATE  = 6;
+        public static final int MODULE_BR_DRIVE   = 7;
+        public static final int MODULE_BR_ROTATE  = 8;
+        public static final int INTAKE            = 9;
+        public static final int NOTEPATH_LEADER   = 11;
+        public static final int NOTEPATH_FOLLOWER = 12;
     }
 
     public static class AIO
@@ -52,6 +55,12 @@ public final class Constants
     {
         public static final double START_DELAY_SECS   = 2.0;
         public static final double RAMP_VOLTS_PER_SEC = 0.1;
+    }
+
+    public static class Intake
+    {
+        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.8;
+        public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 0.3;
     }
 
     public static class Drive
@@ -82,11 +91,17 @@ public final class Constants
         // Measurement from the ground to the camera's center
         public static final double     PARAMETER_Z        = Units.inchesToMeters(5.25);
         public static final Rotation3d PARAMETER_ROTATION = new Rotation3d(0.0, 0.0, 0.0);
+    public static class Notepath
+    {
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
+        public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.4;
+        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.5;
     }
 
     public static class General
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
+        public static final double MOTOR_VOLTAGE    = 12.0;
     }
 
     public static class AdvantageKit
