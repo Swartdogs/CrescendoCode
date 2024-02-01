@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdNotepathStartFeed;
 import frc.robot.commands.CmdNotepathReverseFeed;
-import frc.robot.commands.CmdNotepathStopNotepath;
+import frc.robot.commands.CmdIntakeReverseIntake;
+import frc.robot.commands.CmdIntakeStartIntake;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.drive.Drive;
@@ -27,6 +28,10 @@ import frc.robot.subsystems.drive.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOSparkMax;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
@@ -38,6 +43,7 @@ public class RobotContainer
 {
     // Subsystems
     private final Drive    _drive;
+    private final Intake   _intake;
     private final Notepath _notepath;
 
     // Dashboard inputs
@@ -59,18 +65,21 @@ public class RobotContainer
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
-                _notepath = new Notepath((new NotepathIOSparkMax()));
+                _intake = new Intake(new IntakeIOSparkMax());
+                _notepath = new Notepath(new NotepathIOSparkMax());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
                 break;
 
             // Replayed robot, disable IO implementations
             default:
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _intake = new Intake(new IntakeIO() {});
                 _notepath = new Notepath(new NotepathIO() {});
                 break;
         }
@@ -86,14 +95,17 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        CmdNotepathStartFeed    startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
-        CmdNotepathReverseFeed  reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
-        CmdNotepathStopNotepath stopNotePath        = new CmdNotepathStopNotepath(_notepath);
+        CmdIntakeStartIntake   startIntake         = new CmdIntakeStartIntake(_intake);
+        CmdIntakeReverseIntake reverseIntake       = new CmdIntakeReverseIntake(_intake);
+        CmdNotepathStartFeed   startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
+        CmdNotepathReverseFeed reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+
         _controller.y().whileTrue(startNotepathFeed);
-        _controller.a().whileTrue(reverseNotepathFeed);
-        _controller.b().whileTrue(stopNotePath);
+        _controller.x().whileTrue(reverseNotepathFeed);
+        _controller.a().whileTrue(startIntake);
+        _controller.b().whileTrue(reverseIntake);
     }
 
     public Command getAutonomousCommand()

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.notepath;
 
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -23,10 +22,10 @@ public class NotepathIOSparkMax implements NotepathIO
     public void updateInputs(NotepathInputs inputs)
     {
         inputs.leaderNotepathAppliedVolts = _notepathSparkMax.getAppliedOutput() * _notepathSparkMax.getBusVoltage();
-        inputs.leaderNotepathCurrentAmps  = new double[] {_notepathSparkMax.getOutputCurrent() };
+        inputs.leaderNotepathCurrentAmps  = new double[] { _notepathSparkMax.getOutputCurrent() };
 
         inputs.followerNotepathAppliedVolts = _followerSparkMax.getAppliedOutput() * _followerSparkMax.getBusVoltage();
-        inputs.followerNotepathCurrentAmps  = new double[] {_followerSparkMax.getOutputCurrent() };
+        inputs.followerNotepathCurrentAmps  = new double[] { _followerSparkMax.getOutputCurrent() };
     }
 
     @Override
