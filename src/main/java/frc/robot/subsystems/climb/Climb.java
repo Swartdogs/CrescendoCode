@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.GyroIONavX2;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -23,25 +24,20 @@ public class Climb extends SubsystemBase
     private final PIDController _climbFeedbackLeft;
     private final PIDController _climbFeedbackRight;
 
+    private final AHRS _gyro;
+
     // Three PID controllers for the algorithm
     private final PIDController _tiltPID;
     private final PIDController _leftPID;
     private final PIDController _rightPID;
 
-    // Creates the gyro to get the current tilt of the robot
-    private AHRS _currentGyroAngle;
-    // Sets the desired gyro angle for reference in the tilt PID controller
-    private double _desiredGyroAngle;
-    // Might delete, takes the current and subtarcts from actual
-    private double _gyroDifference;
+    // Average height that the two arms should be set to
+    private double _desiredHeight = 5; // TODO: Create two functions for setting the heights, also change value
+    // Finds the value that the robot needs to adjust by in order to be level, based on the gyro angle 
+    private double _heightAdjustment = 0.0;
 
     private Double _climbSetpointLeft = null;
     private Double _climbSetpointRight = null;
-
-    // Sets the inital value for the tilt PID, based on the average point between
-    // both hooks
-    private double _averageLeft = 10; // TODO: Change
-    private double _averageRight = 10;
 
     private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
     private double _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
@@ -53,15 +49,12 @@ public class Climb extends SubsystemBase
         _climbFeedbackLeft = new PIDController(0, 0, 0); // TODO: tune values
         _climbFeedbackRight = new PIDController(0, 0, 0);
 
+        _gyro = new AHRS(Port.kMXP);
+
         // Intilizes the PID controllers, need to set the actual values
         _tiltPID = new PIDController(0, 0, 0);
         _leftPID = new PIDController(0, 0, 0);
         _rightPID = new PIDController(0, 0, 0);
-
-        // Sets the current gyro to get the actual/current gyro scope angle
-        _currentGyroAngle = new AHRS(Port.kMXP);
-        _desiredGyroAngle = 0.0; // Might change
-        // _gyroDifference = _currentGyroAngle - _desiredGyroAngle;
     }
 
     @Override
@@ -80,7 +73,8 @@ public class Climb extends SubsystemBase
             _io.setVoltageRight(_climbFeedbackRight.calculate(_inputs.extensionRight, _climbSetpointRight));
         }
 
-        // _tiltPID.calculate(_currentGyroAngle);
+        // Takes the pid controller and gives it the current value and the setpoint
+        _heightAdjustment = _tiltPID.calculate(getCurrentTilt(), 0);
     }
 
     public void stop()
@@ -156,5 +150,11 @@ public class Climb extends SubsystemBase
     public double getExtensionRight()
     {
         return _inputs.extensionRight;
+    }
+
+    // Returns the current angle of the gyroscope
+    public double getCurrentTilt()
+    {
+        return _gyro.getAngle();  
     }
 }
