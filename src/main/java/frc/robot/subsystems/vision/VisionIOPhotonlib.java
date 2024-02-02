@@ -68,12 +68,15 @@ public class VisionIOPhotonlib implements VisionIO
                     cornerYList.add(corner.y);
                 }
             }
+
             Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(_lastPose, result);
             Pose2d                       newPose       = null;
+
             if (estimatedPose.isPresent())
             {
                 newPose = estimatedPose.get().estimatedPose.toPose2d();
             }
+
             synchronized (VisionIOPhotonlib.this)
             {
                 _captureTimestamp = timestamp;
