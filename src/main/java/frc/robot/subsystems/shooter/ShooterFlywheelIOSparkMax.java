@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants;
@@ -13,6 +14,9 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
     private RelativeEncoder _upperFlywheelEncoder;
     private RelativeEncoder _lowerFlywheelEncoder;
 
+    private SparkPIDController _upperPIDController;
+    private SparkPIDController _lowerPIDController;
+
     public ShooterFlywheelIOSparkMax()
     {
         _upperFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_UPPER, MotorType.kBrushless);
@@ -21,6 +25,19 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
 
         _upperFlywheelEncoder = _upperFlywheelSparkMax.getEncoder();
         _lowerFlywheelEncoder = _lowerFlywheelSparkMax.getEncoder();
+
+        _upperPIDController = _upperFlywheelSparkMax.getPIDController();
+        _lowerPIDController = _lowerFlywheelSparkMax.getPIDController();
+
+        for (var pid : new SparkPIDController[] { _upperPIDController, _lowerPIDController })
+        {
+            pid.setP(6e-5);
+            pid.setI(0);
+            pid.setD(0);
+            pid.setIZone(0);
+            pid.setFF(0.000015);
+            pid.setOutputRange(-1, 1);
+        }
     }
 
     @Override
@@ -38,13 +55,13 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
     @Override
     public void setUpperVelocity(double upperVelocity)
     {
-        _upperFlywheelSparkMax.set(upperVelocity);
+        _upperPIDController.setReference(upperVelocity, CANSparkMax.ControlType.kVelocity);
     }
 
     @Override
     public void setLowerVelocity(double lowerVelocity)
     {
-        _lowerFlywheelSparkMax.set(lowerVelocity);
+        _lowerPIDController.setReference(lowerVelocity, CANSparkMax.ControlType.kVelocity);
     }
 
     @Override

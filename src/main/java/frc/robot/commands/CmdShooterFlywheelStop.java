@@ -19,8 +19,7 @@ public class CmdShooterFlywheelStop extends Command
     @Override
     public void initialize()
     {
-        _shooterFlywheel.stopUpper();
-        _shooterFlywheel.stopLower();
+        _shooterFlywheel.stop();
     }
 
     @Override

@@ -46,6 +46,11 @@ public class ShooterBed extends SubsystemBase
         _io.setAngleOffset(angleOffset);
     }
 
+    public boolean isAtSetpoint()
+    {
+        return _bedFeedback.atSetpoint();
+    }
+
     public void setMinAngle(Rotation2d minBedAngle)
     {
         _minBedAngle = minBedAngle;

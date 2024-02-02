@@ -12,10 +12,10 @@ public class CmdShooterBedSetBedAngle extends Command
     private ShooterBed _shooterBed;
     private Rotation2d _bedAngle;
 
-    public CmdShooterBedSetBedAngle(ShooterBed shooterBed, Rotation2d bedAngle)
+    public CmdShooterBedSetBedAngle(ShooterBed shooterBed, double bedAngle)
     {
         _shooterBed = shooterBed;
-        _bedAngle   = bedAngle;
+        _bedAngle   = new Rotation2d(bedAngle);
         addRequirements(_shooterBed);
     }
 
@@ -28,6 +28,6 @@ public class CmdShooterBedSetBedAngle extends Command
     @Override
     public boolean isFinished()
     {
-        return true;
+        return _shooterBed.isAtSetpoint();
     }
 }

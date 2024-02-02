@@ -44,7 +44,7 @@ import frc.robot.subsystems.notepath.NotepathIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterBedIO;
 import frc.robot.subsystems.shooter.ShooterBedIOSim;
-import frc.robot.subsystems.shooter.ShooterBedIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterBedIOVictorSPX;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
@@ -82,7 +82,7 @@ public class RobotContainer
                 );
                 _intake = new Intake(new IntakeIOSparkMax());
                 _notepath = new Notepath(new NotepathIOSparkMax());
-                _shooterBed = new ShooterBed(new ShooterBedIOSparkMax(Constants.ShooterBed.BED_ANGLE_OFFSET));
+                _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 break;
 
@@ -122,8 +122,8 @@ public class RobotContainer
         CmdNotepathReverseFeed   reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
         CmdShooterFlywheelShoot  flipShoot           = new CmdShooterFlywheelShoot(_shooterFlywheel, 6, 10);
         CmdShooterFlywheelShoot  straightShoot       = new CmdShooterFlywheelShoot(_shooterFlywheel, 8, 8);
-        CmdShooterBedSetBedAngle setBedLow           = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(Math.PI / 6));
-        CmdShooterBedSetBedAngle setBedHigh          = new CmdShooterBedSetBedAngle(_shooterBed, new Rotation2d(Math.PI / 4));
+        CmdShooterBedSetBedAngle setBedLow           = new CmdShooterBedSetBedAngle(_shooterBed, 30);
+        CmdShooterBedSetBedAngle setBedHigh          = new CmdShooterBedSetBedAngle(_shooterBed, 45);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
