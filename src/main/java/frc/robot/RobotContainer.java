@@ -90,12 +90,12 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIO() {});
                 break;
         }
-         
+
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
         _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
-        
+
         // Configure the button bindings
         configureButtonBindings();
     }
