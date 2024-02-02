@@ -16,11 +16,11 @@ import frc.robot.Constants;
 
 public class ShooterBedIOSim implements ShooterBedIO
 {
-    private DCMotorSim          _leftBedSim      = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private DCMotorSim          _rightBedSim     = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private double              _leftBedAppliedVolts = 0.0;
+    private DCMotorSim          _leftBedSim           = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private DCMotorSim          _rightBedSim          = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private double              _leftBedAppliedVolts  = 0.0;
     private double              _rightBedAppliedVolts = 0.0;
-    private Rotation2d          _angleOffset     = Constants.ShooterBed.BED_ANGLE_OFFSET;
+    private Rotation2d          _angleOffset          = Constants.ShooterBed.BED_ANGLE_OFFSET;
     private MechanismLigament2d _bedSim;
 
     public ShooterBedIOSim()
@@ -37,20 +37,20 @@ public class ShooterBedIOSim implements ShooterBedIO
         _leftBedSim.update(Constants.General.LOOP_PERIOD_SECS);
         _rightBedSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.bedAngle        = new Rotation2d(_leftBedSim.getAngularPositionRad() - _angleOffset.getRadians());
+        inputs.bedAngle              = new Rotation2d(_leftBedSim.getAngularPositionRad() - _angleOffset.getRadians());
         inputs.bedLeaderAppliedVolts = _leftBedAppliedVolts;
         inputs.bedLeaderCurrentAmps  = new double[] { Math.abs(_leftBedSim.getCurrentDrawAmps()) };
 
         inputs.bedFollowerAppliedVolts = _rightBedAppliedVolts;
         inputs.bedFollowerCurrentAmps  = new double[] { Math.abs(_rightBedSim.getCurrentDrawAmps()) };
-        
+
         _bedSim.setAngle(inputs.bedAngle);
     }
 
     @Override
     public void setVoltage(double volts)
     {
-        _leftBedAppliedVolts = volts;
+        _leftBedAppliedVolts  = volts;
         _rightBedAppliedVolts = -volts;
         _leftBedSim.setInputVoltage(_leftBedAppliedVolts);
         _rightBedSim.setInputVoltage(_rightBedAppliedVolts);

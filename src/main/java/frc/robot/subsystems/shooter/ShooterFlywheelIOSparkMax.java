@@ -9,11 +9,10 @@ import frc.robot.Constants;
 
 public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
 {
-    private CANSparkMax     _upperFlywheelSparkMax;
-    private CANSparkMax     _lowerFlywheelSparkMax;
-    private RelativeEncoder _upperFlywheelEncoder;
-    private RelativeEncoder _lowerFlywheelEncoder;
-
+    private CANSparkMax        _upperFlywheelSparkMax;
+    private CANSparkMax        _lowerFlywheelSparkMax;
+    private RelativeEncoder    _upperFlywheelEncoder;
+    private RelativeEncoder    _lowerFlywheelEncoder;
     private SparkPIDController _upperPIDController;
     private SparkPIDController _lowerPIDController;
 

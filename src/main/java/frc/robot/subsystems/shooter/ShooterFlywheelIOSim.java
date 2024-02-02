@@ -9,18 +9,17 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO
 {
     private final double UPPER_MOTOR_MAX_VOLTAGE;
     private final double LOWER_MOTOR_MAX_VOLTAGE;
-
-    private DCMotor    _upperMotor        = DCMotor.getNEO(1);
-    private DCMotor    _lowerMotor        = DCMotor.getNEO(1);
-    private DCMotorSim _upperFlywheelSim  = new DCMotorSim(_upperMotor, 6.75, 0.025);
-    private DCMotorSim _lowerFlywheelSim  = new DCMotorSim(_lowerMotor, 6.75, 0.025);
-
-    private double     _upperAppliedVolts = 0;
-    private double     _lowerAppliedVolts = 0;
+    private DCMotor      _upperMotor        = DCMotor.getNEO(1);
+    private DCMotor      _lowerMotor        = DCMotor.getNEO(1);
+    private DCMotorSim   _upperFlywheelSim  = new DCMotorSim(_upperMotor, 6.75, 0.025);
+    private DCMotorSim   _lowerFlywheelSim  = new DCMotorSim(_lowerMotor, 6.75, 0.025);
+    private double       _upperAppliedVolts = 0;
+    private double       _lowerAppliedVolts = 0;
 
     public ShooterFlywheelIOSim()
     {
-        // getVoltage() calculates voltage needed for a given torque at a given speed. Torque at max speed is 0
+        // getVoltage() calculates voltage needed for a given torque at a given speed.
+        // Torque at max speed is 0
         UPPER_MOTOR_MAX_VOLTAGE = _upperMotor.getVoltage(0, _upperMotor.freeSpeedRadPerSec);
         LOWER_MOTOR_MAX_VOLTAGE = _lowerMotor.getVoltage(0, _lowerMotor.freeSpeedRadPerSec);
     }
@@ -46,7 +45,7 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO
         _upperAppliedVolts = UPPER_MOTOR_MAX_VOLTAGE * velocity / Units.radiansPerSecondToRotationsPerMinute(_upperMotor.freeSpeedRadPerSec);
         _upperFlywheelSim.setInputVoltage(_upperAppliedVolts);
     }
-    
+
     @Override
     public void setLowerVelocity(double velocity)
     {

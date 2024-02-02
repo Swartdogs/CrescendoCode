@@ -9,8 +9,8 @@ import frc.robot.Constants;
 public class ShooterFlywheel extends SubsystemBase
 {
     private ShooterFlywheelIO                       _flywheelIO;
-    private final ShooterFlywheelIOInputsAutoLogged _inputs                = new ShooterFlywheelIOInputsAutoLogged();
-    private double                                  _maxFlywheelSpeed      = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED;
+    private final ShooterFlywheelIOInputsAutoLogged _inputs           = new ShooterFlywheelIOInputsAutoLogged();
+    private double                                  _maxFlywheelSpeed = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
