@@ -49,7 +49,7 @@ public class VisionIOPhotonlib implements VisionIO
         }
 
         _poseEstimator = new PhotonPoseEstimator(
-                aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _camera, new Transform3d(Constants.Vision.PARAMETER_X, Constants.Vision.PARAMETER_Y, Constants.Vision.PARAMETER_Z, Constants.Vision.PARAMETER_ROTATION)
+                aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _camera, new Transform3d(Constants.Vision.CAMERA_X, Constants.Vision.CAMERA_Y, Constants.Vision.CAMERA_Z, Constants.Vision.CAMERA_ROTATION)
         );
         _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
@@ -68,15 +68,12 @@ public class VisionIOPhotonlib implements VisionIO
                     cornerYList.add(corner.y);
                 }
             }
-
             Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(_lastPose, result);
             Pose2d                       newPose       = null;
-
             if (estimatedPose.isPresent())
             {
                 newPose = estimatedPose.get().estimatedPose.toPose2d();
             }
-
             synchronized (VisionIOPhotonlib.this)
             {
                 _captureTimestamp = timestamp;
