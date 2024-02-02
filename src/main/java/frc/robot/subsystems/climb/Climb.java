@@ -166,6 +166,7 @@ public class Climb extends SubsystemBase
     public void setHeight()
     {
         // TODO: Figure out this function
+       
     }
 
     // Returns the current angle of the gyroscope
