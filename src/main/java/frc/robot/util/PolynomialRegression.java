@@ -85,6 +85,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
                     vandermonde[i][j] = Math.pow(x[i], j);
                 }
             }
+
             matrixX = new Matrix(vandermonde);
 
             // find least squares solution
@@ -241,6 +242,7 @@ public class PolynomialRegression implements Comparable<PolynomialRegression>
     {
         double EPSILON   = 1E-5;
         int    maxDegree = Math.max(this.degree(), that.degree());
+
         for (int j = maxDegree; j >= 0; j--)
         {
             double term1 = 0.0;

@@ -150,6 +150,7 @@ public class LocalADStarAK implements Pathfinder
             double[] pointsLogged = table.get("CurrentPathPoints", new double[0]);
 
             List<PathPoint> pathPoints = new ArrayList<>();
+
             for (int i = 0; i < pointsLogged.length; i += 2)
             {
                 pathPoints.add(new PathPoint(new Translation2d(pointsLogged[i], pointsLogged[i + 1]), null));
