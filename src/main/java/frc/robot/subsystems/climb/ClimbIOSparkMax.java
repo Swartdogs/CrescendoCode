@@ -46,7 +46,7 @@ public class ClimbIOSparkMax implements ClimbIO
         inputs.appliedVoltsLeft  = _climbSparkMaxLeft.getAppliedOutput() * _climbSparkMaxLeft.getBusVoltage();
         inputs.appliedVoltsRight = _climbSparkMaxRight.getAppliedOutput() * _climbSparkMaxRight.getBusVoltage();
 
-        inputs.currentAmpsLeft = new double[] { _climbSparkMaxLeft.getOutputCurrent() };
+        inputs.currentAmpsLeft  = new double[] { _climbSparkMaxLeft.getOutputCurrent() };
         inputs.currentAmpsRight = new double[] { _climbSparkMaxRight.getOutputCurrent() };
     }
 
@@ -58,6 +58,18 @@ public class ClimbIOSparkMax implements ClimbIO
 
     @Override
     public void setVoltageRight(double volts)
+    {
+        _climbSparkMaxRight.setVoltage(volts);
+    }
+
+    @Override
+    public void setAlgorithmVoltageLeft(double volts)
+    {
+        _climbSparkMaxLeft.setVoltage(volts);
+    }
+
+    @Override
+    public void setAlgorithmVoltageRight(double volts)
     {
         _climbSparkMaxRight.setVoltage(volts);
     }

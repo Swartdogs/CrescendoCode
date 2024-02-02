@@ -33,6 +33,12 @@ public interface ClimbIO
     public default void setVoltageRight(double volts)
     {}
 
+    public default void setAlgorithmVoltageLeft(double volts)
+    {}
+
+    public default void setAlgorithmVoltageRight(double volts)
+    {}
+
     public default void setLockStateLeft(boolean enable, ClimbIOInputs inputs)
     {}
 

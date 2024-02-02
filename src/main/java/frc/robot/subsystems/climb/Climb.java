@@ -23,15 +23,14 @@ public class Climb extends SubsystemBase
     private final PIDController _climbFeedbackLeft;
     private final PIDController _climbFeedbackRight;
 
-    private final AHRS _gyro;
-
-    // Three PID controllers for the algorithm
     private final PIDController _tiltPID;
     private final PIDController _leftPID;
     private final PIDController _rightPID;
 
+    private final AHRS _gyro;
+
     // Average height that the two arms should be set to
-    private double _desiredHeight = 5; // TODO: Create two functions for setting the heights, also change value
+    private double _desiredHeight;
 
     // Finds the value that the robot needs to adjust by in order to be level, based on the gyro angle 
     private double _heightAdjustment = 0.0;
@@ -49,15 +48,15 @@ public class Climb extends SubsystemBase
     {
         _io = io;
 
-        _climbFeedbackLeft = new PIDController(0, 0, 0); // TODO: tune values
+        _climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
         _climbFeedbackRight = new PIDController(0, 0, 0);
 
-        _gyro = new AHRS(Port.kMXP);
-
         // Intilizes the PID controllers, need to set the actual values
-        _tiltPID  = new PIDController(0, 0, 0);
+        _tiltPID  = new PIDController(0, 0, 0); //TODO: Set values
         _leftPID  = new PIDController(0, 0, 0);
         _rightPID = new PIDController(0, 0, 0);
+
+        _gyro = new AHRS(Port.kMXP);
 
         // Takes the desired position of both arms, and takes the needed adjustment calculated from the tilt to set the position - setpoint for both arms
         _leftHeight  = _desiredHeight + _heightAdjustment;
@@ -84,8 +83,8 @@ public class Climb extends SubsystemBase
         _heightAdjustment = _tiltPID.calculate(getCurrentTilt(), 0);
 
         // Gets the current position of the left and the right arms, and sets it to the desired position based on the tilt input, also applies this voltage
-        _io.setVoltageLeft(_leftPID.calculate(getExtensionLeft(), _leftHeight)); 
-        _io.setVoltageRight(_rightPID.calculate(getExtensionRight(), _rightHeight)); // TODO: The setHeight function would replace setVoltage
+        _io.setAlgorithmVoltageLeft(_leftPID.calculate(getExtensionLeft(), _leftHeight)); 
+        _io.setAlgorithmVoltageRight(_rightPID.calculate(getExtensionRight(), _rightHeight)); // TODO: Check if it actually runs it
     }
 
     public void stop()
@@ -163,15 +162,14 @@ public class Climb extends SubsystemBase
         return _inputs.extensionRight;
     }
 
-    public void setHeight()
+    public void setHeight(double x)
     {
-        // TODO: Figure out this function
-       
+        _desiredHeight = x;
     }
 
     // Returns the current angle of the gyroscope
     public double getCurrentTilt()
     {
-        return _gyro.getAngle();  
+        return _gyro.getAngle(); // TODO: Check if this needs to be somewhere in IO 
     }
 }
