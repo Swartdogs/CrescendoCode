@@ -21,6 +21,7 @@ import frc.robot.commands.CmdNotepathReverseFeed;
 import frc.robot.commands.CmdIntakeReverseIntake;
 import frc.robot.commands.CmdIntakeStartIntake;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
@@ -38,6 +39,7 @@ import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
 import frc.robot.subsystems.notepath.NotepathIOSparkMax;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
@@ -47,6 +49,9 @@ public class RobotContainer
     private final Drive    _drive;
     private final Intake   _intake;
     private final Notepath _notepath;
+
+    // Dashboard inputs
+    private final LoggedDashboardChooser<Command> _autoChooser;
 
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
@@ -72,6 +77,7 @@ public class RobotContainer
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
                 break;
@@ -84,7 +90,12 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIO() {});
                 break;
         }
+         
+        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
+        // Set up feedforward characterization
+        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
+        
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -106,6 +117,6 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        return null;
+        return _autoChooser.get();
     }
 }
