@@ -48,9 +48,6 @@ public class RobotContainer
     private final Intake   _intake;
     private final Notepath _notepath;
 
-    // Dashboard inputs
-    private final LoggedDashboardChooser<Command> _autoChooser;
-
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
     private final CommandXboxController _controller = new CommandXboxController(0);

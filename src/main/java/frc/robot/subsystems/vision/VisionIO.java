@@ -5,6 +5,8 @@ package frc.robot.subsystems.vision;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 /** Vision subsystem hardware interface. */
 public interface VisionIO
 {
@@ -15,6 +17,7 @@ public interface VisionIO
         public double   captureTimestamp = 0.0;
         public double[] cornerX          = new double[] {};
         public double[] cornerY          = new double[] {};
+        public Pose2d   pose             = new Pose2d();
     }
 
     /** Updates the set of loggable inputs. */

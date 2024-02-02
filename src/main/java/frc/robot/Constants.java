@@ -91,6 +91,8 @@ public final class Constants
         // Measurement from the ground to the camera's center
         public static final double     PARAMETER_Z        = Units.inchesToMeters(5.25);
         public static final Rotation3d PARAMETER_ROTATION = new Rotation3d(0.0, 0.0, 0.0);
+    }
+
     public static class Notepath
     {
         public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
