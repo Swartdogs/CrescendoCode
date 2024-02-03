@@ -33,6 +33,7 @@ public class VisionIOPhotonlib implements VisionIO
     private double[]            _cornerY          = new double[] {};
     private PhotonPoseEstimator _poseEstimator;
     private Pose2d              _lastPose;
+    private boolean             _hasPose          = false;
 
     public VisionIOPhotonlib()
     {
@@ -69,10 +70,12 @@ public class VisionIOPhotonlib implements VisionIO
                 }
             }
             Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(_lastPose, result);
-            Pose2d                       newPose       = null;
+            Pose2d                       newPose       = new Pose2d();
+            _hasPose = false;
             if (estimatedPose.isPresent())
             {
-                newPose = estimatedPose.get().estimatedPose.toPose2d();
+                newPose  = estimatedPose.get().estimatedPose.toPose2d();
+                _hasPose = true;
             }
             synchronized (VisionIOPhotonlib.this)
             {
@@ -91,6 +94,7 @@ public class VisionIOPhotonlib implements VisionIO
         inputs.cornerX          = _cornerX;
         inputs.cornerY          = _cornerY;
         inputs.pose             = _lastPose;
+        inputs.hasPose          = _hasPose;
     }
 
     private Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult result)

@@ -18,6 +18,7 @@ public interface VisionIO
         public double[] cornerX          = new double[] {};
         public double[] cornerY          = new double[] {};
         public Pose2d   pose             = new Pose2d();
+        public boolean  hasPose          = false;
     }
 
     /** Updates the set of loggable inputs. */
