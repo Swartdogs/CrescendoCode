@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdClimbWithJoystick;
+import frc.robot.commands.CmdClimberDriveManual;
+import frc.robot.commands.CmdSetHeight;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.climb.Climb;
@@ -42,8 +44,7 @@ public class RobotContainer
     private final LoggedDashboardChooser<Command> _autoChooser;
 
     // Controls
-    private final Joystick _joystick = new Joystick(1);
-
+    private final Joystick              _joystick           = new Joystick(1);
     private final CommandXboxController _driveController    = new CommandXboxController(0);
     private final CommandXboxController _operatorController = new CommandXboxController(0);
 
@@ -89,6 +90,8 @@ public class RobotContainer
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_driveController.getLeftY(), () -> -_driveController.getLeftX(), () -> -_driveController.getRightX()));
 
         _operatorController.rightBumper().and(_operatorController.leftBumper()).whileTrue(new CmdClimbWithJoystick(_climb, () -> -_operatorController.getLeftY(), () -> -_operatorController.getRightY()));
+        _operatorController.y().whileTrue(new CmdClimberDriveManual(_climb, () -> -_operatorController.getLeftY(), () -> -_operatorController.getRightY()));
+        _operatorController.x().whileTrue(new CmdSetHeight(_climb, 5)); // TODO: Change value!!
     }
 
     public Command getAutonomousCommand()

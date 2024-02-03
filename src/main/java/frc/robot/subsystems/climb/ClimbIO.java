@@ -10,37 +10,41 @@ public interface ClimbIO
     @AutoLog
     public static class ClimbIOInputs
     {
-        public double extensionLeft  = 0.0;
-        public double extensionRight = 0.0;
-
-        public boolean lockStateLeft  = false;
-        public boolean lockStateRight = false;
-
-        public double appliedVoltsLeft  = 0.0;
-        public double appliedVoltsRight = 0.0;
-
-        public double[] currentAmpsLeft  = new double[] {};
-        public double[] currentAmpsRight = new double[] {};
+        public double   extensionLeft     = 0.0;
+        public double   extensionRight    = 0.0;
+        public boolean  lockStateLeft     = false;
+        public boolean  lockStateRight    = false;
+        public double   appliedVoltsLeft  = 0.0;
+        public double   appliedVoltsRight = 0.0;
+        public double[] currentAmpsLeft   = new double[] {};
+        public double[] currentAmpsRight  = new double[] {};
     }
 
     public default void updateInputs(ClimbIOInputs inputs)
-    {}
+    {
+    }
 
     public default void setVoltageLeft(double volts)
-    {}
+    {
+    }
 
     public default void setVoltageRight(double volts)
-    {}
+    {
+    }
 
     public default void setAlgorithmVoltageLeft(double volts)
-    {}
+    {
+    }
 
     public default void setAlgorithmVoltageRight(double volts)
-    {}
+    {
+    }
 
     public default void setLockStateLeft(boolean enable, ClimbIOInputs inputs)
-    {}
+    {
+    }
 
     public default void setLockStateRight(boolean enable, ClimbIOInputs inputs)
-    {}
+    {
+    }
 }

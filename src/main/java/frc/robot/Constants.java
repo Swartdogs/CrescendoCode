@@ -60,8 +60,8 @@ public final class Constants
 
     public static class Climb
     {
-        public static final double MAX_EXTENSION                 = 24.0;
         public static final double MIN_EXTENSION                 = 0.0;
+        public static final double MAX_EXTENSION                 = 24.0;
         public static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
         public static final double MOTOR_VOLTAGE_LIMIT           = 12;
         public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
@@ -109,9 +109,8 @@ public final class Constants
 
     public static class Pnuematics
     {
-        public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-
-        public static final int SOLENOID_LEFT = 1; // TODO: Find Ids
-        public static final int SOLENOID_RIGHT = 2;
+        public static final PneumaticsModuleType MODULE_TYPE    = PneumaticsModuleType.CTREPCM;
+        public static final int                  SOLENOID_LEFT  = 1; // TODO: Find Ids
+        public static final int                  SOLENOID_RIGHT = 2;
     }
 }

@@ -44,10 +44,11 @@ public class LocalADStarAK implements Pathfinder
     /**
      * Get the most recently calculated path
      *
-     * @param constraints  The path constraints to use when creating the path
-     * @param goalEndState The goal end state to use when creating the path
-     * @return The PathPlannerPath created from the points calculated by the
-     *         pathfinder
+     * @param  constraints  The path constraints to use when creating the path
+     * @param  goalEndState The goal end state to use when creating the path
+     * 
+     * @return              The PathPlannerPath created from the points calculated
+     *                      by the pathfinder
      */
     @Override
     public PathPlannerPath getCurrentPath(PathConstraints constraints, GoalEndState goalEndState)
@@ -118,9 +119,9 @@ public class LocalADStarAK implements Pathfinder
 
     private static class ADStarIO implements LoggableInputs
     {
-        public LocalADStar adStar = new LocalADStar();
-        public boolean isNewPathAvailable = false;
-        public List<PathPoint> currentPathPoints = Collections.emptyList();
+        public LocalADStar     adStar             = new LocalADStar();
+        public boolean         isNewPathAvailable = false;
+        public List<PathPoint> currentPathPoints  = Collections.emptyList();
 
         @Override
         public void toLog(LogTable table)
@@ -128,11 +129,11 @@ public class LocalADStarAK implements Pathfinder
             table.put("IsNewPathAvailable", isNewPathAvailable);
 
             double[] pointsLogged = new double[currentPathPoints.size() * 2];
-            int idx = 0;
+            int      idx          = 0;
 
             for (PathPoint point : currentPathPoints)
             {
-                pointsLogged[idx] = point.position.getX();
+                pointsLogged[idx]     = point.position.getX();
                 pointsLogged[idx + 1] = point.position.getY();
 
                 idx += 2;

@@ -14,8 +14,10 @@ public class ClimbIOSparkMax implements ClimbIO
 {
     public final CANSparkMax _climbSparkMaxLeft;
     public final CANSparkMax _climbSparkMaxRight;
+
     public final AnalogInput _potentiometerLeft;
     public final AnalogInput _potentiometerRight;
+    
     public final Solenoid    _solenoidLeft;
     public final Solenoid    _solenoidRight;
 
