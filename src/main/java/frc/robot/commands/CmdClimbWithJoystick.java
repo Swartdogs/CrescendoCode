@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,8 +9,7 @@ import java.util.function.DoubleSupplier;
 
 public class CmdClimbWithJoystick extends Command
 {
-    private final Climb _climb;
-
+    private final Climb          _climb;
     private final DoubleSupplier _yLeftSupplier;
     private final DoubleSupplier _yRightSupplier;
 
@@ -19,7 +17,7 @@ public class CmdClimbWithJoystick extends Command
     {
         _climb = climb;
 
-        _yLeftSupplier = yLeftSupplier;
+        _yLeftSupplier  = yLeftSupplier;
         _yRightSupplier = yRightSupplier;
 
         addRequirements(_climb);

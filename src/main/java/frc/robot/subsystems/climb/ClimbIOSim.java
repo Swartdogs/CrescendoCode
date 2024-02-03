@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.MathUtil;
@@ -83,7 +82,7 @@ public class ClimbIOSim implements ClimbIO
 
         _climbLeft.setLength(inputs.extensionLeft);
         _climbRight.setLength(inputs.extensionRight);
-
+        
         if (inputs.extensionLeft > 1.6)
         {
             inputs.extensionLeft = 1.6;

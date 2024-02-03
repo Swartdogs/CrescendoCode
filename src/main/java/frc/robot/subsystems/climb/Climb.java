@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.MathUtil;
@@ -16,12 +15,11 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class Climb extends SubsystemBase
 {
-    private final ClimbIO _io;
-
+    private final ClimbIO                 _io;
     private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
-
-    private final PIDController _climbFeedbackLeft;
-    private final PIDController _climbFeedbackRight;
+    
+    private final PIDController           _climbFeedbackLeft;
+    private final PIDController           _climbFeedbackRight;
 
     private final PIDController _tiltPID;
     private final PIDController _leftPID;
@@ -92,7 +90,7 @@ public class Climb extends SubsystemBase
         _io.setVoltageLeft(0.0);
         _io.setVoltageRight(0.0);
 
-        _climbSetpointLeft = null;
+        _climbSetpointLeft  = null;
         _climbSetpointRight = null;
 
         setLockState(true);

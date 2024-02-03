@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.climb;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -15,12 +14,10 @@ public class ClimbIOSparkMax implements ClimbIO
 {
     public final CANSparkMax _climbSparkMaxLeft;
     public final CANSparkMax _climbSparkMaxRight;
-
     public final AnalogInput _potentiometerLeft;
     public final AnalogInput _potentiometerRight;
-
-    public final Solenoid _solenoidLeft;
-    public final Solenoid _solenoidRight;
+    public final Solenoid    _solenoidLeft;
+    public final Solenoid    _solenoidRight;
 
     public ClimbIOSparkMax()
     {
