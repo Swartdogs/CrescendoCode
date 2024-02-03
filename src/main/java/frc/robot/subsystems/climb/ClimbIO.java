@@ -12,10 +12,13 @@ public interface ClimbIO
     {
         public double   extensionLeft     = 0.0;
         public double   extensionRight    = 0.0;
+
         public boolean  lockStateLeft     = false;
         public boolean  lockStateRight    = false;
+
         public double   appliedVoltsLeft  = 0.0;
         public double   appliedVoltsRight = 0.0;
+        
         public double[] currentAmpsLeft   = new double[] {};
         public double[] currentAmpsRight  = new double[] {};
     }

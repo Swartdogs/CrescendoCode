@@ -50,15 +50,13 @@ public class Climb extends SubsystemBase
         _climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
         _climbFeedbackRight = new PIDController(0, 0, 0);
 
-        // Intilizes the PID controllers, need to set the actual values
-        _tiltPID  = new PIDController(0, 0, 0); // TODO: Set values
+        _tiltPID  = new PIDController(0, 0, 0); // TODO: tune values
         _leftPID  = new PIDController(0, 0, 0);
         _rightPID = new PIDController(0, 0, 0);
 
         _gyro = new AHRS(Port.kMXP);
 
-        // Takes the desired position of both arms, and takes the needed adjustment
-        // calculated from the tilt to set the position - setpoint for both arms
+        // Takes the desired position of both arms, and takes the needed adjustment calculated from the tilt to set the position - setpoint(?) for both arms
         _leftHeight  = _desiredHeight + _heightAdjustment;
         _rightHeight = _desiredHeight - _heightAdjustment;
     }
@@ -79,7 +77,6 @@ public class Climb extends SubsystemBase
             _io.setVoltageRight(_climbFeedbackRight.calculate(getExtensionRight(), _climbSetpointRight));
         }
 
-        // Takes the pid controller and gives it the current value and the setpoint
         _heightAdjustment = _tiltPID.calculate(getCurrentTilt(), 0);
 
         // Gets the current position of the left and the right arms, and sets it to the desired position based on the tilt input, also applies this voltage
@@ -94,7 +91,6 @@ public class Climb extends SubsystemBase
         }
     }
 
-    //SUBSYSTEM
     public void stop()
     {
         _io.setVoltageLeft(0.0);
@@ -106,26 +102,22 @@ public class Climb extends SubsystemBase
         setLockState(true);
     }
 
-    //SUBSYSTEM
     public void setLockState(boolean enabled)
     {
         _io.setLockStateLeft(enabled, _inputs);
         _io.setLockStateRight(enabled, _inputs);
     }
-    
-    //SUBSYSTEM
+
     public void setSetpointLeft(double setpoint)
     {
         _climbSetpointLeft = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
     }
     
-    //SUBSYSTEM
     public void setSetpointRight(double setpoint)
     {
         _climbSetpointRight = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
     }
-    
-    //SUBSYSTEM
+
     public void setVoltageLeft(double volts)
     {
         _climbSetpointLeft = null;
@@ -134,8 +126,7 @@ public class Climb extends SubsystemBase
         
         _io.setVoltageLeft(volts);
     }
-    
-    //SUBSYSTEM
+
     public void setVoltageRight(double volts)
     {
         _climbSetpointRight = null;
@@ -145,37 +136,33 @@ public class Climb extends SubsystemBase
         _io.setVoltageRight(volts);
     }
     
-    //SUBSYSTEM
     public boolean isAtLeftSetpoint()
     {
         return _climbFeedbackLeft.atSetpoint();
     }
     
-    //SUBSYSTEM
     public boolean isAtRightSetpoint()
     {
         return _climbFeedbackRight.atSetpoint();
     }
-    
-    //SUBSYSTEM
+
     public void setExtensionMax(double max)
     {
         _climbMaxExtension = max;
     }
-    
-    //SUBSYSTEM
+
     public void setExtensionMin(double min)
     {
         _climbMinExtension = min;
     }
     
-    //SUBSYSTEM - for dashboard
+    // Mainly for dashboard
     public double getExtensionLeft()
     {
         return _inputs.extensionLeft;
     }
     
-    //SUBSYSTEM - for dashboard
+    // Mainly for dashboard
     public double getExtensionRight()
     {
         return _inputs.extensionRight;
@@ -197,7 +184,7 @@ public class Climb extends SubsystemBase
         _rightHeight = rightHeight;
     }
     
-    public void setAlgorithmVoltageLeft(double volts)
+    public void setAlgorithmVoltageLeft(double volts) //Seperate function for this algorithm needed?
     {
         _leftHeight = null;
         
@@ -221,7 +208,7 @@ public class Climb extends SubsystemBase
         return _rightPID.atSetpoint();
     }
 
-    public void setHeight(double x)
+    public void setHeight(double x) //does this need to be used in set height cmd instead?
     {
         _desiredHeight = x;
     }
