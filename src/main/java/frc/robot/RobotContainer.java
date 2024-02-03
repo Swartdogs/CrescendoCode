@@ -120,8 +120,8 @@ public class RobotContainer
         CmdIntakeReverseIntake   reverseIntake       = new CmdIntakeReverseIntake(_intake);
         CmdNotepathStartFeed     startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
         CmdNotepathReverseFeed   reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
-        CmdShooterFlywheelShoot  flipShoot           = new CmdShooterFlywheelShoot(_shooterFlywheel, 6, 10);
-        CmdShooterFlywheelShoot  straightShoot       = new CmdShooterFlywheelShoot(_shooterFlywheel, 8, 8);
+        CmdShooterFlywheelShoot  flipShoot           = new CmdShooterFlywheelShoot(_shooterFlywheel, 4000, 2000);
+        CmdShooterFlywheelShoot  straightShoot       = new CmdShooterFlywheelShoot(_shooterFlywheel, 3000, 3000);
         CmdShooterBedSetBedAngle setBedLow           = new CmdShooterBedSetBedAngle(_shooterBed, 30);
         CmdShooterBedSetBedAngle setBedHigh          = new CmdShooterBedSetBedAngle(_shooterBed, 45);
 
