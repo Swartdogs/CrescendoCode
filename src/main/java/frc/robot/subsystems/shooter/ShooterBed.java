@@ -10,7 +10,7 @@ import frc.robot.Constants;
 
 public class ShooterBed extends SubsystemBase
 {
-    private ShooterBedIO                       _io;
+    private final ShooterBedIO                 _io;
     private final ShooterBedIOInputsAutoLogged _inputs        = new ShooterBedIOInputsAutoLogged();
     private PIDController                      _bedFeedback;
     private Rotation2d                         _angleSetpoint = null;
@@ -21,7 +21,7 @@ public class ShooterBed extends SubsystemBase
     {
         _io = io;
 
-        _bedFeedback = new PIDController(0.03, 0, 0); // FIXME: Set values, calibrate
+        _bedFeedback = new PIDController(34.4, 0, 0); // FIXME: Set values, calibrate
     }
 
     @Override

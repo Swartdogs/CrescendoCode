@@ -31,8 +31,7 @@ public class CmdShooterFlywheelShoot extends Command
     @Override
     public void end(boolean interrupted)
     {
-        _shooterFlywheel.setUpperVelocity(0);
-        _shooterFlywheel.setLowerVelocity(0);
+        _shooterFlywheel.stop();
     }
 
     // Returns true when the command should end.

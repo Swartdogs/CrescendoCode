@@ -15,7 +15,7 @@ public class CmdShooterBedSetBedAngle extends Command
     public CmdShooterBedSetBedAngle(ShooterBed shooterBed, double bedAngle)
     {
         _shooterBed = shooterBed;
-        _bedAngle   = new Rotation2d(bedAngle);
+        _bedAngle   = Rotation2d.fromDegrees(bedAngle);
         addRequirements(_shooterBed);
     }
 

@@ -10,9 +10,7 @@ public interface ShooterBedIO
     public static class ShooterBedIOInputs
     {
         public double     bedLeaderAppliedVolts   = 0.0;
-        public double[]   bedLeaderCurrentAmps    = new double[] {};
         public double     bedFollowerAppliedVolts = 0.0;
-        public double[]   bedFollowerCurrentAmps  = new double[] {};
         public Rotation2d bedAngle                = new Rotation2d();
     }
 

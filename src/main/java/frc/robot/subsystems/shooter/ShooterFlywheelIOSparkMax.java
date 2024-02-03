@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants;
@@ -27,6 +28,9 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
 
         _upperPIDController = _upperFlywheelSparkMax.getPIDController();
         _lowerPIDController = _lowerFlywheelSparkMax.getPIDController();
+
+        _upperFlywheelSparkMax.setIdleMode(IdleMode.kCoast);
+        _lowerFlywheelSparkMax.setIdleMode(IdleMode.kCoast);
 
         for (var pid : new SparkPIDController[] { _upperPIDController, _lowerPIDController })
         {

@@ -22,24 +22,16 @@ public class ShooterBedIOVictorSPX implements ShooterBedIO
         _bedFollowerVictorSPX.follow(_bedLeaderVictorSPX);
         _bedFollowerVictorSPX.setInverted(true);
 
-        _bedAbsoluteEncoder       = new DutyCycleEncoder(Constants.AIO.SHOOTER_BED_SENSOR);
+        _bedAbsoluteEncoder       = new DutyCycleEncoder(Constants.DIO.SHOOTER_BED_SENSOR);
         _bedAbsoluteEncoderOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
     }
 
     @Override
     public void updateInputs(ShooterBedIOInputs inputs)
     {
-        inputs.bedLeaderAppliedVolts = _bedLeaderVictorSPX.getMotorOutputVoltage();
-        // inputs.bedLeaderCurrentAmps = new double[] {
-        // _bedLeaderVictorSPX.getSupplyCurrent() };
-        inputs.bedLeaderCurrentAmps = new double[] { 0 };
-
+        inputs.bedLeaderAppliedVolts   = _bedLeaderVictorSPX.getMotorOutputVoltage();
         inputs.bedFollowerAppliedVolts = _bedFollowerVictorSPX.getMotorOutputVoltage();
-        // inputs.bedFollowerCurrentAmps = new double[] {
-        // _bedFollowerVictorSPX.getOutputCurrent() };
-        inputs.bedFollowerCurrentAmps = new double[] { 0 };
-
-        inputs.bedAngle = Rotation2d.fromRotations(_bedAbsoluteEncoder.getAbsolutePosition()).minus(_bedAbsoluteEncoderOffset);
+        inputs.bedAngle                = Rotation2d.fromRotations(_bedAbsoluteEncoder.getAbsolutePosition()).minus(_bedAbsoluteEncoderOffset);
     }
 
     @Override

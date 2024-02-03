@@ -43,11 +43,15 @@ public final class Constants
 
     public static class AIO
     {
-        public static final int MODULE_FL_SENSOR   = 0;
-        public static final int MODULE_FR_SENSOR   = 1;
-        public static final int MODULE_BL_SENSOR   = 2;
-        public static final int MODULE_BR_SENSOR   = 3;
-        public static final int SHOOTER_BED_SENSOR = 4;
+        public static final int MODULE_FL_SENSOR = 0;
+        public static final int MODULE_FR_SENSOR = 1;
+        public static final int MODULE_BL_SENSOR = 2;
+        public static final int MODULE_BR_SENSOR = 3;
+    }
+
+    public static class DIO
+    {
+        public static final int SHOOTER_BED_SENSOR = 0;
     }
 
     public static class Controls
@@ -112,7 +116,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {
