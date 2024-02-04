@@ -26,7 +26,6 @@ import frc.robot.commands.CmdIntakeStartIntake;
 import frc.robot.commands.CmdShooterBedSetBedAngle;
 import frc.robot.commands.CmdShooterFlywheelShoot;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
@@ -36,6 +35,7 @@ import frc.robot.subsystems.drive.ModuleIOSparkMax;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonlib;
+import frc.robot.util.FeedForwardCharacterization;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -63,9 +63,8 @@ public class RobotContainer
     private final Notepath        _notepath;
     private final ShooterBed      _shooterBed;
     private final ShooterFlywheel _shooterFlywheel;
-    
     @SuppressWarnings("unused")
-    private final Vision   _vision;
+    private final Vision          _vision;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
