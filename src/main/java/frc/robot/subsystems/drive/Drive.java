@@ -70,7 +70,7 @@ public class Drive extends SubsystemBase
             Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
 
-        _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, getRotation(), getModulePositions(), new Pose2d());
+        _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
     }
 
     public void periodic()
@@ -208,13 +208,13 @@ public class Drive extends SubsystemBase
     /** Returns the current odometry rotation. */
     public Rotation2d getRotation()
     {
-        return _gyroInputs.yawPosition;
+        return _poseEstimator.getEstimatedPosition().getRotation();
     }
 
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose)
     {
-        _poseEstimator.resetPosition(getRotation(), getModulePositions(), pose);
+        _poseEstimator.resetPosition(_gyroInputs.yawPosition, getModulePositions(), pose);
     }
 
     public SwerveModulePosition[] getModulePositions()
