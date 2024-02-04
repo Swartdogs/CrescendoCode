@@ -14,18 +14,15 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-import frc.robot.commands.CmdNotepathStartFeed;
-import frc.robot.commands.CmdNotepathReverseFeed;
-import frc.robot.commands.CmdIntakeReverseIntake;
-import frc.robot.commands.CmdIntakeStartIntake;
-import frc.robot.commands.CmdShooterBedSetBedAngle;
-import frc.robot.commands.CmdShooterFlywheelShoot;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.NotepathCommands;
+import frc.robot.commands.ShooterBedCommands;
+import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
@@ -124,25 +121,18 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        CmdIntakeStartIntake     startIntake         = new CmdIntakeStartIntake(_intake);
-        CmdIntakeReverseIntake   reverseIntake       = new CmdIntakeReverseIntake(_intake);
-        CmdNotepathStartFeed     startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
-        CmdNotepathReverseFeed   reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
-        CmdShooterFlywheelShoot  flipShoot           = new CmdShooterFlywheelShoot(_shooterFlywheel, 4000, 2000);
-        CmdShooterFlywheelShoot  straightShoot       = new CmdShooterFlywheelShoot(_shooterFlywheel, 3000, 3000);
-        CmdShooterBedSetBedAngle setBedLow           = new CmdShooterBedSetBedAngle(_shooterBed, 30);
-        CmdShooterBedSetBedAngle setBedHigh          = new CmdShooterBedSetBedAngle(_shooterBed, 45);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().whileTrue(startNotepathFeed);
-        _controller.x().whileTrue(reverseNotepathFeed);
-        _controller.a().whileTrue(startIntake);
-        _controller.b().whileTrue(reverseIntake);
-        _controller.leftBumper().onTrue(setBedLow);
-        _controller.rightBumper().onTrue(setBedHigh);
-        _controller.back().whileTrue(flipShoot);
-        _controller.start().whileTrue(straightShoot);
+        _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(_controller.y()::getAsBoolean).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(_controller.x()::getAsBoolean).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.a().onTrue(IntakeCommands.startIntake(_intake).until(_controller.a()::getAsBoolean).andThen(IntakeCommands.stopIntake(_intake)));
+        _controller.b().onTrue(IntakeCommands.reverseIntake(_intake).until(_controller.b()::getAsBoolean).andThen(IntakeCommands.stopIntake(_intake)));
+
+        _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
+        _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
+        _controller.back().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).until(_controller.back()::getAsBoolean).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+        _controller.start().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).until(_controller.start()::getAsBoolean).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
     }
 
     public Command getAutonomousCommand()
