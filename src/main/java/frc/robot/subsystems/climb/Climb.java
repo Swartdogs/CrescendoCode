@@ -87,7 +87,7 @@ public class Climb extends SubsystemBase
 
         if(_rightHeight != null)
         {
-            _io.setAlgorithmVoltageRight(_rightPID.calculate(getExtensionRight(), _rightHeight)); // TODO: Check if it actually runs it
+            _io.setAlgorithmVoltageRight(_rightPID.calculate(getExtensionRight(), _rightHeight));
         }
     }
 
@@ -184,7 +184,7 @@ public class Climb extends SubsystemBase
         _rightHeight = rightHeight;
     }
     
-    public void setAlgorithmVoltageLeft(double volts) //Seperate function for this algorithm needed?
+    public void setAlgorithmVoltageLeft(double volts)
     {
         _leftHeight = null;
         
@@ -208,7 +208,7 @@ public class Climb extends SubsystemBase
         return _rightPID.atSetpoint();
     }
 
-    public void setHeight(double x) //does this need to be used in set height cmd instead?
+    public void setHeight(double x)
     {
         _desiredHeight = x;
     }
