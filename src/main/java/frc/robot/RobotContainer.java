@@ -45,10 +45,12 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer
 {
     // Subsystems
-    private final Vision   _vision;
     private final Drive    _drive;
     private final Intake   _intake;
     private final Notepath _notepath;
+    
+    @SuppressWarnings("unused")
+    private final Vision   _vision;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
