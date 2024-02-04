@@ -25,17 +25,21 @@ public final class Constants
 
     public static class CAN
     {
-        public static final int MODULE_FL_DRIVE   = 1;
-        public static final int MODULE_FL_ROTATE  = 2;
-        public static final int MODULE_FR_DRIVE   = 3;
-        public static final int MODULE_FR_ROTATE  = 4;
-        public static final int MODULE_BL_DRIVE   = 5;
-        public static final int MODULE_BL_ROTATE  = 6;
-        public static final int MODULE_BR_DRIVE   = 7;
-        public static final int MODULE_BR_ROTATE  = 8;
-        public static final int INTAKE            = 9;
-        public static final int NOTEPATH_LEADER   = 11;
-        public static final int NOTEPATH_FOLLOWER = 12;
+        public static final int MODULE_FL_DRIVE        = 1;
+        public static final int MODULE_FL_ROTATE       = 2;
+        public static final int MODULE_FR_DRIVE        = 3;
+        public static final int MODULE_FR_ROTATE       = 4;
+        public static final int MODULE_BL_DRIVE        = 5;
+        public static final int MODULE_BL_ROTATE       = 6;
+        public static final int MODULE_BR_DRIVE        = 7;
+        public static final int MODULE_BR_ROTATE       = 8;
+        public static final int INTAKE                 = 9;
+        public static final int NOTEPATH_LEADER        = 11;
+        public static final int NOTEPATH_FOLLOWER      = 12;
+        public static final int SHOOTER_BED_LEADER     = 13;
+        public static final int SHOOTER_BED_FOLLOWER   = 14;
+        public static final int SHOOTER_FLYWHEEL_UPPER = 15;
+        public static final int SHOOTER_FLYWHEEL_LOWER = 16;
     }
 
     public static class AIO
@@ -44,6 +48,11 @@ public final class Constants
         public static final int MODULE_FR_SENSOR = 1;
         public static final int MODULE_BL_SENSOR = 2;
         public static final int MODULE_BR_SENSOR = 3;
+    }
+
+    public static class DIO
+    {
+        public static final int SHOOTER_BED_SENSOR = 0;
     }
 
     public static class Controls
@@ -81,6 +90,18 @@ public final class Constants
         public static final Rotation2d MODULE_BR_OFFSET   = Rotation2d.fromRadians(-1.63);
     }
 
+    public static class ShooterBed // FIXME: Update all these values
+    {
+        public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromDegrees(0);
+        public static final Rotation2d MAX_BED_ANGLE    = Rotation2d.fromDegrees(90);
+        public static final Rotation2d MIN_BED_ANGLE    = Rotation2d.fromDegrees(0);
+    }
+
+    public static class ShooterFlywheel
+    {
+        public static final double MAX_FLYWHEEL_SPEED = 5874;
+    }
+
     public static class Vision
     {
         public static final String CAMERA_NAME = "frontCam";
@@ -108,7 +129,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {
