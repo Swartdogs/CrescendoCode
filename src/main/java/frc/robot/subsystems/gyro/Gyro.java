@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.gyro;
 
 import org.littletonrobotics.junction.Logger;
@@ -11,17 +10,17 @@ import frc.robot.subsystems.drive.GyroIOInputsAutoLogged;
 
 public class Gyro extends SubsystemBase
 {
-    private final GyroIO                 _gyroIO;
-    private final GyroIOInputsAutoLogged _gyroInputs = new GyroIOInputsAutoLogged();
+    private final GyroIO                 _io;
+    private final GyroIOInputsAutoLogged _inputs = new GyroIOInputsAutoLogged();
 
-    public Gyro(GyroIO gyroIO)
+    public Gyro(GyroIO io)
     {
-        _gyroIO = gyroIO;
+        _io = io;
     }
 
     public void periodic()
     {
-        _gyroIO.updateInputs(_gyroInputs);
-        Logger.processInputs("Gyro", _gyroInputs);
+        _io.updateInputs(_inputs);
+        Logger.processInputs("Gyro", _inputs);
     }
 }

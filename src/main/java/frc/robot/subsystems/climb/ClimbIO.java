@@ -10,11 +10,10 @@ public interface ClimbIO
     @AutoLog
     public static class ClimbIOInputs
     {
-        public double   extensionLeft     = 0.0;
-        public double   extensionRight    = 0.0;
-
-        public double   appliedVoltsLeft  = 0.0;
-        public double   appliedVoltsRight = 0.0;
+        public double extensionLeft     = 0.0;
+        public double extensionRight    = 0.0;
+        public double appliedVoltsLeft  = 0.0;
+        public double appliedVoltsRight = 0.0;
     }
 
     public default void updateInputs(ClimbIOInputs inputs)
@@ -26,14 +25,6 @@ public interface ClimbIO
     }
 
     public default void setVoltageRight(double volts)
-    {
-    }
-
-    public default void setAlgorithmVoltageLeft(double volts)
-    {
-    }
-
-    public default void setAlgorithmVoltageRight(double volts)
     {
     }
 }

@@ -29,22 +29,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase
 {
-    private final GyroIO                 _gyroIO;
-    private final GyroIOInputsAutoLogged _gyroInputs       = new GyroIOInputsAutoLogged();
+    private final Gyro _gyro;
     private final Module[]               _modules          = new Module[4]; // FL, FR, BL, BR
     private SwerveDriveKinematics        _kinematics       = new SwerveDriveKinematics(getModuleTranslations());
     private Pose2d                       _pose             = new Pose2d();
     private Rotation2d                   _lastGyroRotation = new Rotation2d();
 
-    public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
+    public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
-        this._gyroIO = gyroIO;
+        _gyro = gyro;
 
         _modules[0] = new Module(flModuleIO, 0);
         _modules[1] = new Module(frModuleIO, 1);
@@ -73,9 +73,6 @@ public class Drive extends SubsystemBase
 
     public void periodic()
     {
-        _gyroIO.updateInputs(_gyroInputs);
-        Logger.processInputs("Drive/Gyro", _gyroInputs);
-
         for (var module : _modules)
         {
             module.periodic();
@@ -109,7 +106,7 @@ public class Drive extends SubsystemBase
         // loop cycle in x, y, and theta based only on the modules,
         // without the gyro. The gyro is always disconnected in simulation.
         var twist = _kinematics.toTwist2d(wheelDeltas);
-        twist             = new Twist2d(twist.dx, twist.dy, _gyroInputs.yawPosition.minus(_lastGyroRotation).getRadians());
+        twist             = new Twist2d(twist.dx, twist.dy, _gyro.yawPosition.minus(_lastGyroRotation).getRadians());
         _lastGyroRotation = _gyroInputs.yawPosition;
 
         // Apply the twist (change since last loop cycle) to the current pose

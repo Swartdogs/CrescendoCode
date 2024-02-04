@@ -19,15 +19,12 @@ import frc.robot.Constants;
 
 public class ClimbIOSim implements ClimbIO
 {
-    private DCMotorSim _leftSim  = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
-    private DCMotorSim _rightSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
-    
-    private AnalogEncoderSim _leftEncoderSim  = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_LEFT_SENSOR));
-    private AnalogEncoderSim _rightEncoderSim = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_RIGHT_SENSOR));
-    
-    private double _leftAppliedVolts  = 0.0;
-    private double _rightAppliedVolts = 0.0;
-    
+    private DCMotorSim                _leftSim           = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
+    private DCMotorSim                _rightSim          = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
+    private AnalogEncoderSim          _leftEncoderSim    = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_LEFT_SENSOR));
+    private AnalogEncoderSim          _rightEncoderSim   = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_RIGHT_SENSOR));
+    private double                    _leftAppliedVolts  = 0.0;
+    private double                    _rightAppliedVolts = 0.0;
     private final MechanismLigament2d _climbLeft;
     private final MechanismLigament2d _climbRight;
 
@@ -73,31 +70,13 @@ public class ClimbIOSim implements ClimbIO
         _climbLeft.setLength(inputs.extensionLeft);
         _climbRight.setLength(inputs.extensionRight);
 
-        if (inputs.extensionLeft > 1.6)
-        {
-            inputs.extensionLeft = 1.6;
-            _climbLeft.setLength(inputs.extensionLeft);
-            _leftEncoderSim.setPosition(Rotation2d.fromRadians(1.6));
-        }
-        else if (inputs.extensionLeft < 0)
-        {
-            inputs.extensionLeft = 0;
-            _climbLeft.setLength(inputs.extensionLeft);
-            _leftEncoderSim.setPosition(Rotation2d.fromRadians(0));
-        }
+        inputs.extensionLeft = MathUtil.clamp(inputs.extensionLeft, 0, 1.6);
+        _climbLeft.setLength(inputs.extensionLeft);
+        _leftEncoderSim.setPosition(Rotation2d.fromRadians(inputs.extensionLeft));
 
-        if (inputs.extensionRight > 1.6)
-        {
-            inputs.extensionRight = 1.6;
-            _climbRight.setLength(inputs.extensionRight);
-            _rightEncoderSim.setPosition(Rotation2d.fromRadians(1.6));
-        }
-        else if (inputs.extensionRight < 0)
-        {
-            inputs.extensionRight = 0;
-            _climbRight.setLength(inputs.extensionRight);
-            _rightEncoderSim.setPosition(Rotation2d.fromRadians(0));
-        }
+        inputs.extensionRight = MathUtil.clamp(inputs.extensionRight, 0, 1.6);
+        _climbRight.setLength(inputs.extensionRight);
+        _rightEncoderSim.setPosition(Rotation2d.fromRadians(inputs.extensionRight));
     }
 
     @Override

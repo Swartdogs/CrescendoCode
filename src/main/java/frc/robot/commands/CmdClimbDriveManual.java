@@ -3,18 +3,19 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
-import java.util.function.DoubleSupplier;
 
-public class CmdClimbWithJoystick extends Command
+public class CmdClimbDriveManual extends Command
 {
     private final Climb          _climb;
     private final DoubleSupplier _yLeftSupplier;
     private final DoubleSupplier _yRightSupplier;
 
-    public CmdClimbWithJoystick(Climb climb, DoubleSupplier yLeftSupplier, DoubleSupplier yRightSupplier)
+    public CmdClimbDriveManual(Climb climb, DoubleSupplier yLeftSupplier, DoubleSupplier yRightSupplier)
     {
         _climb = climb;
 
@@ -25,7 +26,7 @@ public class CmdClimbWithJoystick extends Command
     }
 
     @Override
-    public void execute()
+    public void initialize()
     {
         _climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
         _climb.setVoltageRight(_yRightSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE); // TODO add scaling
@@ -35,5 +36,11 @@ public class CmdClimbWithJoystick extends Command
     public void end(boolean interrupted)
     {
         _climb.stop();
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        return false;
     }
 }

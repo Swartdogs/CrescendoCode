@@ -9,13 +9,13 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import frc.robot.Constants;
 
 public class ClimbIOSparkMax implements ClimbIO
 {
-    public final CANSparkMax _climbSparkMaxLeft;
-    public final CANSparkMax _climbSparkMaxRight;
-
+    public final CANSparkMax         _climbSparkMaxLeft;
+    public final CANSparkMax         _climbSparkMaxRight;
     public final AnalogPotentiometer _potentiometerLeft;
     public final AnalogPotentiometer _potentiometerRight;
 
@@ -46,18 +46,6 @@ public class ClimbIOSparkMax implements ClimbIO
 
     @Override
     public void setVoltageRight(double volts)
-    {
-        _climbSparkMaxRight.setVoltage(volts);
-    }
-
-    @Override
-    public void setAlgorithmVoltageLeft(double volts)
-    {
-        _climbSparkMaxLeft.setVoltage(volts);
-    }
-
-    @Override
-    public void setAlgorithmVoltageRight(double volts)
     {
         _climbSparkMaxRight.setVoltage(volts);
     }

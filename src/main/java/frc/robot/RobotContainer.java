@@ -17,7 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.CmdClimberDriveManual;
+import frc.robot.commands.CmdClimbDriveManual;
 import frc.robot.commands.CmdSetHeight;
 import frc.robot.commands.CmdNotepathStartFeed;
 import frc.robot.commands.CmdNotepathReverseFeed;
@@ -30,11 +30,12 @@ import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOSparkMax;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIONavX2;
+import frc.robot.subsystems.gyro.GyroIO;
+import frc.robot.subsystems.gyro.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -53,6 +54,7 @@ public class RobotContainer
     private final Intake   _intake;
     private final Notepath _notepath;
     private final Climb    _climb;
+    private final Gyro     _gyro;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -68,7 +70,8 @@ public class RobotContainer
             // Real robot, instantiate hardware IO implementations
             case REAL:
                 _drive = new Drive(
-                        new GyroIONavX2(), new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
+                        new GyroIO() {},
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE, Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
@@ -76,11 +79,12 @@ public class RobotContainer
                 _intake = new Intake(new IntakeIOSparkMax());
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _climb = new Climb(new ClimbIOSparkMax());
+                _gyro  = new Gyro(new GyroIONavX2());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
-                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
                 _climb = new Climb(new ClimbIOSim());
@@ -88,10 +92,11 @@ public class RobotContainer
 
             // Replayed robot, disable IO implementations
             default:
-                _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _drive = new Drive(_gyro, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 _intake = new Intake(new IntakeIO() {});
                 _notepath = new Notepath(new NotepathIO() {});
                 _climb = new Climb(new ClimbIO() {});
+                _gyro = new Gyro(new GyroIO() {});
                 break;
         }
 
@@ -110,7 +115,7 @@ public class RobotContainer
         CmdIntakeReverseIntake reverseIntake       = new CmdIntakeReverseIntake(_intake);
         CmdNotepathStartFeed   startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
         CmdNotepathReverseFeed reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
-        CmdClimberDriveManual  climbManual         = new CmdClimberDriveManual(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY());
+        CmdClimbDriveManual  climbManual         = new CmdClimbDriveManual(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY());
         CmdSetHeight           climbSetHeight      = new CmdSetHeight(_climb, 5);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
