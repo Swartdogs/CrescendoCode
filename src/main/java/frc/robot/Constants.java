@@ -85,7 +85,7 @@ public final class Constants
     {
         public static final String CAMERA_NAME = "frontCam";
         // Measurement from the camera to the center of the robot
-        public static final double CAMERA_X = Units.inchesToMeters(12);
+        public static final double CAMERA_X = Units.inchesToMeters(12); // FIXME: change these numbers with the actual numbers!
         // Measurement from the camera to the side of the robot
         public static final double CAMERA_Y = Units.inchesToMeters(0);
         // Measurement from the ground to the camera's center
@@ -108,7 +108,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {

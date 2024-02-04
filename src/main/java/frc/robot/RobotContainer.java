@@ -45,7 +45,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer
 {
     // Subsystems
-    private Vision         _vision;
+    private final Vision   _vision;
     private final Drive    _drive;
     private final Intake   _intake;
     private final Notepath _notepath;

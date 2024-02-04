@@ -32,7 +32,7 @@ public class VisionIOPhotonlib implements VisionIO
     private double[]            _cornerX          = new double[] {};
     private double[]            _cornerY          = new double[] {};
     private PhotonPoseEstimator _poseEstimator;
-    private Pose2d              _lastPose;
+    private Pose2d              _lastPose         = new Pose2d();
     private boolean             _hasPose          = false;
 
     public VisionIOPhotonlib()
@@ -61,6 +61,7 @@ public class VisionIOPhotonlib implements VisionIO
 
             List<Double> cornerXList = new ArrayList<>();
             List<Double> cornerYList = new ArrayList<>();
+
             for (PhotonTrackedTarget target : result.getTargets())
             {
                 for (TargetCorner corner : target.getDetectedCorners())
@@ -69,20 +70,24 @@ public class VisionIOPhotonlib implements VisionIO
                     cornerYList.add(corner.y);
                 }
             }
+
             Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(_lastPose, result);
             Pose2d                       newPose       = new Pose2d();
-            _hasPose = false;
+            boolean                      hasPose       = false;
+
             if (estimatedPose.isPresent())
             {
-                newPose  = estimatedPose.get().estimatedPose.toPose2d();
-                _hasPose = true;
+                newPose = estimatedPose.get().estimatedPose.toPose2d();
+                hasPose = true;
             }
+
             synchronized (VisionIOPhotonlib.this)
             {
                 _captureTimestamp = timestamp;
                 _cornerX          = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
                 _cornerY          = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
                 _lastPose         = newPose;
+                _hasPose          = hasPose;
             }
         });
     }
