@@ -21,7 +21,6 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
     {
         _upperFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_UPPER, MotorType.kBrushless);
         _lowerFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_LOWER, MotorType.kBrushless);
-        _lowerFlywheelSparkMax.setInverted(true); // FIXME: Change if not correct
 
         _upperFlywheelEncoder = _upperFlywheelSparkMax.getEncoder();
         _lowerFlywheelEncoder = _lowerFlywheelSparkMax.getEncoder();

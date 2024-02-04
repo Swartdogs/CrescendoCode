@@ -11,8 +11,8 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO
     private final double LOWER_MOTOR_MAX_VOLTAGE;
     private DCMotor      _upperMotor        = DCMotor.getNEO(1);
     private DCMotor      _lowerMotor        = DCMotor.getNEO(1);
-    private DCMotorSim   _upperFlywheelSim  = new DCMotorSim(_upperMotor, 1, 0.025);
-    private DCMotorSim   _lowerFlywheelSim  = new DCMotorSim(_lowerMotor, 1, 0.025);
+    private DCMotorSim   _upperFlywheelSim  = new DCMotorSim(_upperMotor, 1, 0.001);
+    private DCMotorSim   _lowerFlywheelSim  = new DCMotorSim(_lowerMotor, 1, 0.001);
     private double       _upperAppliedVolts = 0;
     private double       _lowerAppliedVolts = 0;
 
