@@ -19,9 +19,6 @@ public class Climb extends SubsystemBase
 
     private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
 
-    private final PIDController           _climbFeedbackLeft;
-    private final PIDController           _climbFeedbackRight;
-
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
@@ -47,18 +44,11 @@ public class Climb extends SubsystemBase
     {
         _io = io;
 
-        _climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
-        _climbFeedbackRight = new PIDController(0, 0, 0);
-
         _tiltPID  = new PIDController(0, 0, 0); // TODO: tune values
         _leftPID  = new PIDController(0, 0, 0);
         _rightPID = new PIDController(0, 0, 0);
 
         _gyro = new AHRS(Port.kMXP);
-
-        // Takes the desired position of both arms, and takes the needed adjustment calculated from the tilt to set the position - setpoint(?) for both arms
-        _leftHeight  = _desiredHeight + _heightAdjustment;
-        _rightHeight = _desiredHeight - _heightAdjustment;
     }
 
     @Override
@@ -69,15 +59,19 @@ public class Climb extends SubsystemBase
 
         if (_climbSetpointLeft != null)
         {
-            _io.setVoltageLeft(_climbFeedbackLeft.calculate(getExtensionLeft(), _climbSetpointLeft));
+            _io.setVoltageLeft(_leftPID.calculate(getExtensionLeft(), _climbSetpointLeft));
         }
 
         if (_climbSetpointRight != null)
         {
-            _io.setVoltageRight(_climbFeedbackRight.calculate(getExtensionRight(), _climbSetpointRight));
+            _io.setVoltageRight(_rightPID.calculate(getExtensionRight(), _climbSetpointRight));
         }
 
         _heightAdjustment = _tiltPID.calculate(getCurrentTilt(), 0);
+
+        // Takes the desired position of both arms, and takes the needed adjustment calculated from the tilt to set the position - setpoint(?) for both arms
+        _leftHeight  = _desiredHeight + _heightAdjustment;
+        _rightHeight = _desiredHeight - _heightAdjustment;
 
         // Gets the current position of the left and the right arms, and sets it to the desired position based on the tilt input, also applies this voltage
         if(_leftHeight != null)
@@ -96,16 +90,7 @@ public class Climb extends SubsystemBase
         _io.setVoltageLeft(0.0);
         _io.setVoltageRight(0.0);
 
-        _climbSetpointLeft  = null;
-        _climbSetpointRight = null;
-
-        setLockState(true);
-    }
-
-    public void setLockState(boolean enabled)
-    {
-        _io.setLockStateLeft(enabled, _inputs);
-        _io.setLockStateRight(enabled, _inputs);
+        _desiredHeight = 0.0;
     }
 
     public void setSetpointLeft(double setpoint)
@@ -122,8 +107,6 @@ public class Climb extends SubsystemBase
     {
         _climbSetpointLeft = null;
         
-        _io.setLockStateLeft(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
-        
         _io.setVoltageLeft(volts);
     }
 
@@ -131,19 +114,17 @@ public class Climb extends SubsystemBase
     {
         _climbSetpointRight = null;
         
-        _io.setLockStateRight(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
-        
         _io.setVoltageRight(volts);
     }
     
     public boolean isAtLeftSetpoint()
     {
-        return _climbFeedbackLeft.atSetpoint();
+        return _leftPID.atSetpoint();
     }
     
     public boolean isAtRightSetpoint()
     {
-        return _climbFeedbackRight.atSetpoint();
+        return _rightPID.atSetpoint();
     }
 
     public void setExtensionMax(double max)

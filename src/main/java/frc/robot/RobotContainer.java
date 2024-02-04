@@ -75,7 +75,7 @@ public class RobotContainer
                 );
                 _intake = new Intake(new IntakeIOSparkMax());
                 _notepath = new Notepath(new NotepathIOSparkMax());
-                _climb = new Climb(new ClimbIOSparkMax()); // TODO: Check
+                _climb = new Climb(new ClimbIOSparkMax());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations

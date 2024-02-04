@@ -6,6 +6,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
 
 public class CmdClimberDriveManual extends Command
@@ -28,8 +29,8 @@ public class CmdClimberDriveManual extends Command
     @Override
     public void initialize()
     {
-        _climb.setAlgorithmVoltageLeft(_yLeftSupplier.getAsDouble() * 12);
-        _climb.setAlgorithmVoltageRight(_yRightSupplier.getAsDouble() * 12); // TODO add scaling
+        _climb.setAlgorithmVoltageLeft(_yLeftSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
+        _climb.setAlgorithmVoltageRight(_yRightSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE); // TODO add scaling
     }
 
     @Override

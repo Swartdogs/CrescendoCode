@@ -4,6 +4,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
 import java.util.function.DoubleSupplier;
 
@@ -26,8 +27,8 @@ public class CmdClimbWithJoystick extends Command
     @Override
     public void execute()
     {
-        _climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * 12);
-        _climb.setVoltageRight(_yRightSupplier.getAsDouble() * 12); // TODO add scaling
+        _climb.setVoltageLeft(_yLeftSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
+        _climb.setVoltageRight(_yRightSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE); // TODO add scaling
     }
 
     @Override
