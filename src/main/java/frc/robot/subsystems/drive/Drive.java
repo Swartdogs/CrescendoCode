@@ -17,10 +17,11 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -37,10 +38,9 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase
 {
     private final Gyro _gyro;
-    private final Module[]               _modules          = new Module[4]; // FL, FR, BL, BR
-    private SwerveDriveKinematics        _kinematics       = new SwerveDriveKinematics(getModuleTranslations());
-    private Pose2d                       _pose             = new Pose2d();
-    private Rotation2d                   _lastGyroRotation = new Rotation2d();
+    private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
+    private final SwerveDrivePoseEstimator _poseEstimator;
+    private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
     public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -69,6 +69,8 @@ public class Drive extends SubsystemBase
         {
             Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
+
+        _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
     }
 
     public void periodic()
@@ -95,22 +97,7 @@ public class Drive extends SubsystemBase
         }
 
         // Update odometry
-        SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
-
-        for (int i = 0; i < 4; i++)
-        {
-            wheelDeltas[i] = _modules[i].getPositionDelta();
-        }
-
-        // The twist represents the motion of the robot since the last
-        // loop cycle in x, y, and theta based only on the modules,
-        // without the gyro. The gyro is always disconnected in simulation.
-        var twist = _kinematics.toTwist2d(wheelDeltas);
-        twist             = new Twist2d(twist.dx, twist.dy, _gyro.yawPosition.minus(_lastGyroRotation).getRadians());
-        _lastGyroRotation = _gyroInputs.yawPosition;
-
-        // Apply the twist (change since last loop cycle) to the current pose
-        _pose = _pose.exp(twist);
+        _poseEstimator.update(_gyroInputs.yawPosition, getModulePositions());
     }
 
     /**
@@ -186,6 +173,11 @@ public class Drive extends SubsystemBase
         return driveVelocityAverage / 4.0;
     }
 
+    public void addVisionMeasurement(Pose2d pose, double timestamp)
+    {
+        _poseEstimator.addVisionMeasurement(pose, timestamp);
+    }
+
     /**
      * Returns the module states (turn angles and drive velocities) for all of the
      * modules.
@@ -207,19 +199,31 @@ public class Drive extends SubsystemBase
     @AutoLogOutput(key = "Odometry/Robot")
     public Pose2d getPose()
     {
-        return _pose;
+        return _poseEstimator.getEstimatedPosition();
     }
 
     /** Returns the current odometry rotation. */
     public Rotation2d getRotation()
     {
-        return _pose.getRotation();
+        return _poseEstimator.getEstimatedPosition().getRotation();
     }
 
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose)
     {
-        _pose = pose;
+        _poseEstimator.resetPosition(_gyroInputs.yawPosition, getModulePositions(), pose);
+    }
+
+    public SwerveModulePosition[] getModulePositions()
+    {
+        SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            wheelPositions[i] = _modules[i].getPosition();
+        }
+
+        return wheelPositions;
     }
 
     /** Returns an array of module translations. */
