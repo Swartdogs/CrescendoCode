@@ -13,6 +13,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants
@@ -99,6 +100,18 @@ public final class Constants
     public static class ShooterFlywheel
     {
         public static final double MAX_FLYWHEEL_SPEED = 5874;
+    }
+
+    public static class Vision
+    {
+        public static final String CAMERA_NAME = "frontCam";
+        // Measurement from the camera to the center of the robot
+        public static final double CAMERA_X = Units.inchesToMeters(12); // FIXME: change these numbers with the actual numbers!
+        // Measurement from the camera to the side of the robot
+        public static final double CAMERA_Y = Units.inchesToMeters(0);
+        // Measurement from the ground to the camera's center
+        public static final double     CAMERA_Z        = Units.inchesToMeters(5.25);
+        public static final Rotation3d CAMERA_ROTATION = new Rotation3d(0.0, 0.0, 0.0);
     }
 
     public static class Notepath
