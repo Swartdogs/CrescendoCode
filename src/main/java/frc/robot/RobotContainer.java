@@ -19,22 +19,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdClimberDriveManual;
 import frc.robot.commands.CmdSetHeight;
-import frc.robot.commands.CmdNotepathStartFeed;
-import frc.robot.commands.CmdNotepathReverseFeed;
-import frc.robot.commands.CmdIntakeReverseIntake;
-import frc.robot.commands.CmdIntakeStartIntake;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOSparkMax;
+import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.NotepathCommands;
+import frc.robot.commands.ShooterBedCommands;
+import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonlib;
+import frc.robot.util.FeedForwardCharacterization;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -43,16 +46,29 @@ import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
 import frc.robot.subsystems.notepath.NotepathIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterBed;
+import frc.robot.subsystems.shooter.ShooterBedIO;
+import frc.robot.subsystems.shooter.ShooterBedIOSim;
+import frc.robot.subsystems.shooter.ShooterBedIOVictorSPX;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.subsystems.shooter.ShooterFlywheelIO;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
     // Subsystems
-    private final Drive    _drive;
-    private final Intake   _intake;
-    private final Notepath _notepath;
+    private final Drive           _drive;
+    private final Intake          _intake;
+    private final Notepath        _notepath;
+    private final ShooterBed      _shooterBed;
+    private final ShooterFlywheel _shooterFlywheel;
     private final Climb    _climb;
+    
+    @SuppressWarnings("unused")
+    private final Vision          _vision;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -73,24 +89,33 @@ public class RobotContainer
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
+                _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSparkMax());
                 _notepath = new Notepath(new NotepathIOSparkMax());
+                _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new Climb(new ClimbIOSparkMax()); // TODO: Check
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
                 _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
+                _shooterBed = new ShooterBed(new ShooterBedIOSim());
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
                 _climb = new Climb(new ClimbIOSim());
                 break;
 
             // Replayed robot, disable IO implementations
             default:
                 _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _vision = new Vision(_drive, new VisionIO() {});
                 _intake = new Intake(new IntakeIO() {});
                 _notepath = new Notepath(new NotepathIO() {});
+                _shooterBed = new ShooterBed(new ShooterBedIO() {});
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
                 _climb = new Climb(new ClimbIO() {});
                 break;
         }
@@ -106,20 +131,21 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-        CmdIntakeStartIntake   startIntake         = new CmdIntakeStartIntake(_intake);
-        CmdIntakeReverseIntake reverseIntake       = new CmdIntakeReverseIntake(_intake);
-        CmdNotepathStartFeed   startNotepathFeed   = new CmdNotepathStartFeed(_notepath);
-        CmdNotepathReverseFeed reverseNotepathFeed = new CmdNotepathReverseFeed(_notepath);
-        CmdClimberDriveManual  climbManual         = new CmdClimberDriveManual(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY());
-        CmdSetHeight           climbSetHeight      = new CmdSetHeight(_climb, 5);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().whileTrue(startNotepathFeed);
-        _controller.x().whileTrue(reverseNotepathFeed);
-        _controller.a().whileTrue(startIntake);
-        _controller.b().whileTrue(reverseIntake);
-        _controller.leftBumper().whileTrue(climbManual);
+        _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(() -> !_controller.y().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(() -> !_controller.x().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.a().onTrue(IntakeCommands.startIntake(_intake).until(() -> !_controller.a().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
+        _controller.b().onTrue(IntakeCommands.reverseIntake(_intake).until(() -> !_controller.b().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
+                CmdClimberDriveManual  climbManual         = new CmdClimberDriveManual(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY());
+        CmdSetHeight           climbSetHeight      = new CmdSetHeight(_climb, 5);
+
+        _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
+        _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
+        _controller.back().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).until(() -> !_controller.back().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+        _controller.start().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).until(() -> !_controller.start().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+                _controller.leftBumper().whileTrue(climbManual);
         _controller.rightBumper().whileTrue(climbSetHeight);
     }
 
