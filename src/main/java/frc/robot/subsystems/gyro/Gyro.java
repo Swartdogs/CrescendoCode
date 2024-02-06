@@ -6,11 +6,10 @@ package frc.robot.subsystems.gyro;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.drive.GyroIOInputsAutoLogged;
 
 public class Gyro extends SubsystemBase
 {
-    private final GyroIO                 _io;
+    private final GyroIO                _io;
     public final GyroIOInputsAutoLogged _inputs = new GyroIOInputsAutoLogged();
 
     public Gyro(GyroIO io)

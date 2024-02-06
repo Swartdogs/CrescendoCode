@@ -37,7 +37,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase
 {
-    Gyro _gyro; //TODO: Check implementation
+    Gyro                                   _gyro; // TODO: Check implementation
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());

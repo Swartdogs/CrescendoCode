@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdClimbDriveManual;
 import frc.robot.commands.CmdSetHeight;
-import edu.wpi.first.math.geometry.Rotation2d;
 
 import frc.robot.commands.CmdNotepathStartFeed;
 import frc.robot.commands.CmdNotepathReverseFeed;
@@ -71,10 +70,9 @@ public class RobotContainer
     private final ShooterBed      _shooterBed;
     private final ShooterFlywheel _shooterFlywheel;
     private final Climb           _climb;
-    private Gyro            _gyro;
-    
+    private Gyro                  _gyro;
     @SuppressWarnings("unused")
-    private final Vision   _vision;
+    private final Vision          _vision;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -101,7 +99,7 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new Climb(new ClimbIOVictorSPX());
-                _gyro  = new Gyro(new GyroIONavX2());
+                _gyro = new Gyro(new GyroIONavX2());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -147,8 +145,8 @@ public class RobotContainer
         CmdShooterFlywheelShoot  straightShoot       = new CmdShooterFlywheelShoot(_shooterFlywheel, 3000, 3000);
         CmdShooterBedSetBedAngle setBedLow           = new CmdShooterBedSetBedAngle(_shooterBed, 30);
         CmdShooterBedSetBedAngle setBedHigh          = new CmdShooterBedSetBedAngle(_shooterBed, 45);
-        CmdClimbDriveManual     climbManual         = new CmdClimbDriveManual(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY());
-        CmdSetHeight            climbSetHeight      = new CmdSetHeight(_climb, 5);
+        CmdClimbDriveManual      climbManual         = new CmdClimbDriveManual(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY());
+        CmdSetHeight             climbSetHeight      = new CmdSetHeight(_climb, 5);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 

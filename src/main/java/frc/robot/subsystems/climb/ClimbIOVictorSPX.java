@@ -13,12 +13,10 @@ public class ClimbIOVictorSPX implements ClimbIO
 {
     public final VictorSPX           _climbVictorSPXLeft;
     public final VictorSPX           _climbVictorSPXRight;
-
     public final AnalogPotentiometer _potentiometerLeft;
     public final AnalogPotentiometer _potentiometerRight;
-
-    public final double _leftOffset = Constants.Climb.LEFT_ZERO_OFFSET;
-    public final double _rightOffset = Constants.Climb.RIGHT_ZERO_OFFSET;
+    public final double              _leftOffset  = Constants.Climb.LEFT_ZERO_OFFSET;
+    public final double              _rightOffset = Constants.Climb.RIGHT_ZERO_OFFSET;
 
     public ClimbIOVictorSPX()
     {

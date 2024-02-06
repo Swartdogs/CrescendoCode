@@ -17,15 +17,13 @@ public class Climb extends SubsystemBase
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
-    
+
     // Average height that the two arms should be set to
     private Double _desiredHeight;
-    
-    private double _climbMinExtension  = Constants.Climb.MIN_EXTENSION; // TODO: tune value
-    private double _climbMaxExtension  = Constants.Climb.MAX_EXTENSION; // TODO: tune value
-    
-    GyroIONavX2 _gyroIONavX2;
-    
+    private double _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
+    private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
+    GyroIONavX2    _gyroIONavX2;
+
     public Climb(ClimbIO io)
     {
         _io = io;
@@ -44,8 +42,8 @@ public class Climb extends SubsystemBase
         if (_desiredHeight != null)
         {
             double heightAdjustment = _tiltPID.calculate(_gyroIONavX2.getCurrentTilt(), 0);
-            double leftSetpoint  = _desiredHeight + heightAdjustment;
-            double rightSetpoint = _desiredHeight - heightAdjustment;
+            double leftSetpoint     = _desiredHeight + heightAdjustment;
+            double rightSetpoint    = _desiredHeight - heightAdjustment;
 
             _io.setVoltageLeft(_leftPID.calculate(getExtensionLeft(), leftSetpoint));
             _io.setVoltageRight(_rightPID.calculate(getExtensionRight(), rightSetpoint));
@@ -60,9 +58,9 @@ public class Climb extends SubsystemBase
         _desiredHeight = 0.0;
     }
 
-    public void setVoltageLeft(double volts)  //TODO: Check understanding
+    public void setVoltageLeft(double volts)
     {
-        if(_desiredHeight != null)
+        if (_desiredHeight != null)
         {
             _desiredHeight = null;
             _io.setVoltageRight(0.0);
@@ -73,7 +71,7 @@ public class Climb extends SubsystemBase
 
     public void setVoltageRight(double volts)
     {
-        if(_desiredHeight != null)
+        if (_desiredHeight != null)
         {
             _desiredHeight = null;
             _io.setVoltageLeft(0.0);
@@ -112,13 +110,11 @@ public class Climb extends SubsystemBase
         _io.setRightAngleOffset(angleOffset);
     }
 
-    // Mainly for dashboard
     public double getExtensionLeft()
     {
         return _inputs.extensionLeft;
     }
 
-    // Mainly for dashboard
     public double getExtensionRight()
     {
         return _inputs.extensionRight;
