@@ -124,15 +124,15 @@ public class RobotContainer
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(_controller.y()::getAsBoolean).andThen(NotepathCommands.stopFeed(_notepath)));
-        _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(_controller.x()::getAsBoolean).andThen(NotepathCommands.stopFeed(_notepath)));
-        _controller.a().onTrue(IntakeCommands.startIntake(_intake).until(_controller.a()::getAsBoolean).andThen(IntakeCommands.stopIntake(_intake)));
-        _controller.b().onTrue(IntakeCommands.reverseIntake(_intake).until(_controller.b()::getAsBoolean).andThen(IntakeCommands.stopIntake(_intake)));
+        _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(() -> !_controller.y().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(() -> !_controller.x().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.a().onTrue(IntakeCommands.startIntake(_intake).until(() -> !_controller.a().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
+        _controller.b().onTrue(IntakeCommands.reverseIntake(_intake).until(() -> !_controller.b().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
-        _controller.back().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).until(_controller.back()::getAsBoolean).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
-        _controller.start().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).until(_controller.start()::getAsBoolean).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+        _controller.back().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).until(() -> !_controller.back().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+        _controller.start().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).until(() -> !_controller.start().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
     }
 
     public Command getAutonomousCommand()
