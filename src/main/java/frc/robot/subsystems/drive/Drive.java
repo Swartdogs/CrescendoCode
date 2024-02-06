@@ -18,6 +18,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -41,6 +42,12 @@ public class Drive extends SubsystemBase
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+
+    private double _targetPosition;
+    private double _targetHeading;
+    private Pose2d _odometry;
+    private Module _module;
+    private PIDController _odometryPID = new PIDController(0, 0, 0);
 
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -234,5 +241,17 @@ public class Drive extends SubsystemBase
     {
         return new Translation2d[] { new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0),
                 new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
+    }
+
+    // Gets current odometry
+    public void getOdmetry(double currentX, double currentY)
+    {
+        _odometry = new Pose2d(currentX, currentY, getRotation());
+    }
+
+    public void setPID(double targetPosition)
+    {
+        _targetPosition = targetPosition;
+        _odometryPID.calculate(, targetPosition);
     }
 }

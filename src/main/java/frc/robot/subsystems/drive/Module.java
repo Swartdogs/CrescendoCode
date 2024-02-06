@@ -12,7 +12,6 @@
 // GNU General Public License for more details.
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,9 +32,6 @@ public class Module
     private Double                         _speedSetpoint      = null;
     private Rotation2d                     _turnRelativeOffset = null;
     private double                         _lastPositionMeters = 0.0;
-    private double _targetPosition;
-    private double _targetHeading;
-    private double _maxSpeed;
 
     public Module(ModuleIO io, int index)
     {
@@ -205,14 +201,5 @@ public class Module
     public double getCharacterizationVelocity()
     {
         return _inputs.driveVelocityRadPerSec;
-    }
-
-    public void setPID(double targetPosition, double targetHeading)
-    {
-        _targetPosition = targetPosition;
-        _targetHeading = targetHeading;
-
-        _driveFeedback.setSetpoint(targetPosition);
-        _turnFeedback.setSetpoint(targetHeading);
     }
 }
