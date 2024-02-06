@@ -1,10 +1,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.notepath.Notepath;
 
-public class NotepathCommands extends Command
+public class NotepathCommands 
 {
     private NotepathCommands()
     {
@@ -12,51 +11,26 @@ public class NotepathCommands extends Command
 
     public static Command intakePickup(Notepath notepath)
     {
-        return Commands.run(() ->
-        {
-            notepath.setNotepathIntakePickupOn();
-        }, 
-        
-        notepath);
+        return notepath.runOnce(notepath::setNotepathIntakePickupOn);
     }
 
     public static Command shooterPickup(Notepath notepath)
     {
-        return Commands.run(() ->
-        {
-            notepath.setNotepathShooterPickupOn();
-        }, 
-        
-        notepath);
+        return notepath.runOnce(notepath::setNotepathShooterPickupOn);
     }
 
     public static Command startFeed(Notepath notepath)
     {
-        return Commands.run(() ->
-        {
-            notepath.setFeedOn();
-        }, 
-        
-        notepath);
+        return notepath.run(notepath::setFeedOn);
     }
 
     public static Command stopFeed(Notepath notepath)
     {
-        return Commands.run(() ->
-        {
-            notepath.setOff();
-        }, 
-        
-        notepath);
+        return notepath.run(notepath::setOff);
     }
 
     public static Command reverseFeed(Notepath notepath)
     {
-        return Commands.run(() ->
-        {
-            notepath.setReverse();
-        }, 
-        
-        notepath);
+        return notepath.run(notepath::setReverse);
     }
 }    

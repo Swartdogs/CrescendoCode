@@ -1,10 +1,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.intake.Intake;
 
-public class IntakeCommands extends Command
+public class IntakeCommands
 {
     private IntakeCommands()
     {
@@ -12,31 +11,16 @@ public class IntakeCommands extends Command
 
     public static Command startIntake(Intake intake)
     {
-        return Commands.run(() ->
-        {
-            intake.setIntakeOn();
-        }, 
-        
-        intake);
+        return intake.runOnce(intake::setIntakeOn);
     }
 
     public static Command stopIntake(Intake intake)
     {
-        return Commands.run(() ->
-        {
-            intake.setIntakeOff();
-        }, 
-
-        intake);
+        return intake.runOnce(intake::setIntakeOff);
     }
 
     public static Command reverseIntake(Intake intake)
     {
-        return Commands.run(() ->
-        {
-            intake.setIntakeReverse();
-        }, 
-        
-        intake);
+        return intake.runOnce(intake::setIntakeReverse);
     }
 }    
