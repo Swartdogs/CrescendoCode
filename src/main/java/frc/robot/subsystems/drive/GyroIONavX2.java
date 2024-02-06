@@ -12,19 +12,24 @@
 // GNU General Public License for more details.
 package frc.robot.subsystems.drive;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
-import org.littletonrobotics.junction.AutoLog;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.SPI.Port;
 
-public interface GyroIO
+public class GyroIONavX2 implements GyroIO
 {
-    @AutoLog
-    public static class GyroIOInputs
+    private final AHRS _navx = new AHRS(Port.kMXP);
+
+    public GyroIONavX2()
     {
-        public Rotation2d yawPosition          = new Rotation2d();
-        public double     yawVelocityRadPerSec = 0.0;
+        _navx.reset();
     }
 
-    public default void updateInputs(GyroIOInputs inputs)
+    @Override
+    public void updateInputs(GyroIOInputs inputs)
     {
+        inputs.yawPosition          = Rotation2d.fromDegrees(-_navx.getYaw());
+        inputs.yawVelocityRadPerSec = Units.degreesToRadians(-_navx.getRate());
     }
 }

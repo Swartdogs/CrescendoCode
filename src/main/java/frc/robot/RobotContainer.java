@@ -10,141 +10,133 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Dashboard;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
-public class RobotContainer {
-  // Subsystems
-  // private final Drive drive;
-  // private final Flywheel flywheel;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.NotepathCommands;
+import frc.robot.commands.ShooterBedCommands;
+import frc.robot.commands.ShooterFlywheelCommands;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.GyroIO;
+import frc.robot.subsystems.drive.GyroIONavX2;
+import frc.robot.subsystems.drive.ModuleIO;
+import frc.robot.subsystems.drive.ModuleIOSim;
+import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonlib;
+import frc.robot.util.FeedForwardCharacterization;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOSparkMax;
+import frc.robot.subsystems.notepath.Notepath;
+import frc.robot.subsystems.notepath.NotepathIO;
+import frc.robot.subsystems.notepath.NotepathIOSim;
+import frc.robot.subsystems.notepath.NotepathIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterBed;
+import frc.robot.subsystems.shooter.ShooterBedIO;
+import frc.robot.subsystems.shooter.ShooterBedIOSim;
+import frc.robot.subsystems.shooter.ShooterBedIOVictorSPX;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.subsystems.shooter.ShooterFlywheelIO;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 
-  // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-  // Dashboard inputs
-  // private final LoggedDashboardChooser<Command> autoChooser;
-  private final LoggedDashboardNumber flywheelSpeedInput =
-      new LoggedDashboardNumber("Flywheel Speed", 1500.0);
+public class RobotContainer
+{
+    // Subsystems
+    private final Drive           _drive;
+    private final Intake          _intake;
+    private final Notepath        _notepath;
+    private final ShooterBed      _shooterBed;
+    private final ShooterFlywheel _shooterFlywheel;
+    @SuppressWarnings("unused")
+    private final Vision          _vision;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // switch (Constants.currentMode) {
-    //   case REAL:
-    //     // Real robot, instantiate hardware IO implementations
-    //     drive =
-    //         new Drive(
-    //             new GyroIOPigeon2(),
-    //             new ModuleIOSparkMax(0),
-    //             new ModuleIOSparkMax(1),
-    //             new ModuleIOSparkMax(2),
-    //             new ModuleIOSparkMax(3));
-    //     flywheel = new Flywheel(new FlywheelIOSparkMax());
-    //     // drive = new Drive(
-    //     // new GyroIOPigeon2(),
-    //     // new ModuleIOTalonFX(0),
-    //     // new ModuleIOTalonFX(1),
-    //     // new ModuleIOTalonFX(2),
-    //     // new ModuleIOTalonFX(3));
-    //     // flywheel = new Flywheel(new FlywheelIOTalonFX());
-    //     break;
+    // Dashboard inputs
+    private final LoggedDashboardChooser<Command> _autoChooser;
 
-    //   case SIM:
-    //     // Sim robot, instantiate physics sim IO implementations
-    //     drive =
-    //         new Drive(
-    //             new GyroIO() {},
-    //             new ModuleIOSim(),
-    //             new ModuleIOSim(),
-    //             new ModuleIOSim(),
-    //             new ModuleIOSim());
-    //     flywheel = new Flywheel(new FlywheelIOSim());
-    //     break;
+    // Controls
+    private final Joystick              _joystick   = new Joystick(1);
+    private final CommandXboxController _controller = new CommandXboxController(0);
 
-    //   default:
-    //     // Replayed robot, disable IO implementations
-    //     drive =
-    //         new Drive(
-    //             new GyroIO() {},
-    //             new ModuleIO() {},
-    //             new ModuleIO() {},
-    //             new ModuleIO() {},
-    //             new ModuleIO() {});
-    //     flywheel = new Flywheel(new FlywheelIO() {});
-    //     break;
-    // }
+    public RobotContainer()
+    {
+        switch (Constants.AdvantageKit.CURRENT_MODE)
+        {
+            // Real robot, instantiate hardware IO implementations
+            case REAL:
+                _drive = new Drive(
+                        new GyroIONavX2(), new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE, Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
+                        new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
+                );
+                _vision = new Vision(_drive, new VisionIOPhotonlib());
+                _intake = new Intake(new IntakeIOSparkMax());
+                _notepath = new Notepath(new NotepathIOSparkMax());
+                _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
+                break;
 
-    // Set up auto routines
-    // NamedCommands.registerCommand(
-    //     "Run Flywheel",
-    //     Commands.startEnd(
-    //             () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop, flywheel)
-    //         .withTimeout(5.0));
-    // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+            // Sim robot, instantiate physics sim IO implementations
+            case SIM:
+                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _vision = new Vision(_drive, new VisionIOPhotonlib());
+                _intake = new Intake(new IntakeIOSim());
+                _notepath = new Notepath(new NotepathIOSim());
+                _shooterBed = new ShooterBed(new ShooterBedIOSim());
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
+                break;
 
-    // // Set up feedforward characterization
-    // autoChooser.addOption(
-    //     "Drive FF Characterization",
-    //     new FeedForwardCharacterization(
-    //         drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
-    // autoChooser.addOption(
-    //     "Flywheel FF Characterization",
-    //     new FeedForwardCharacterization(
-    //         flywheel, flywheel::runVolts, flywheel::getCharacterizationVelocity));
+            // Replayed robot, disable IO implementations
+            default:
+                _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _vision = new Vision(_drive, new VisionIO() {});
+                _intake = new Intake(new IntakeIO() {});
+                _notepath = new Notepath(new NotepathIO() {});
+                _shooterBed = new ShooterBed(new ShooterBedIO() {});
+                _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
+                break;
+        }
 
-    // // Configure the button bindings
-    // configureButtonBindings();
-    new Dashboard();
-  }
+        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  //   private void configureButtonBindings() {
-  //     drive.setDefaultCommand(
-  //         DriveCommands.joystickDrive(
-  //             drive,
-  //             () -> -controller.getLeftY(),
-  //             () -> -controller.getLeftX(),
-  //             () -> -controller.getRightX()));
-  //     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-  //     controller
-  //         .b()
-  //         .onTrue(
-  //             Commands.runOnce(
-  //                     () ->
-  //                         drive.setPose(
-  //                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-  //                     drive)
-  //                 .ignoringDisable(true));
-  //     controller
-  //         .a()
-  //         .whileTrue(
-  //             Commands.startEnd(
-  //                 () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
-  // flywheel));
-  //   }
+        // Set up feedforward characterization
+        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // return autoChooser.get();
-    return null;
-  }
+        // Configure the button bindings
+        configureButtonBindings();
+    }
+
+    private void configureButtonBindings()
+    {
+
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+
+        _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(() -> !_controller.y().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(() -> !_controller.x().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
+        _controller.a().onTrue(IntakeCommands.startIntake(_intake).until(() -> !_controller.a().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
+        _controller.b().onTrue(IntakeCommands.reverseIntake(_intake).until(() -> !_controller.b().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
+
+        _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
+        _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
+        _controller.back().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).until(() -> !_controller.back().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+        _controller.start().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).until(() -> !_controller.start().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+    }
+
+    public Command getAutonomousCommand()
+    {
+        return _autoChooser.get();
+    }
 }

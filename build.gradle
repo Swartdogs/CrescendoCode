@@ -148,11 +148,8 @@ spotless {
             include "**/*.java"
             exclude "**/build/**", "**/build-*/**"
         }
-        toggleOffOn()
-        googleJavaFormat()
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        endWithNewline()
+        indentWithSpaces(4)
+        eclipse().configFile(".vscode/java-formatter.xml")
     }
     groovyGradle {
         target fileTree(".") {
