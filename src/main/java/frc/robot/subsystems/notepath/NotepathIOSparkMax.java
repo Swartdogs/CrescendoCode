@@ -1,14 +1,18 @@
 package frc.robot.subsystems.notepath;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants;
 
 public class NotepathIOSparkMax implements NotepathIO
 {
-    private CANSparkMax _notepathSparkMax;
-    private CANSparkMax _followerSparkMax;
+    private CANSparkMax  _notepathSparkMax;
+    private CANSparkMax  _followerSparkMax;
+    private DigitalInput _noteSensor;
 
     @SuppressWarnings("resource")
     public NotepathIOSparkMax()
@@ -16,6 +20,8 @@ public class NotepathIOSparkMax implements NotepathIO
         _notepathSparkMax = new CANSparkMax(Constants.CAN.NOTEPATH_LEADER, MotorType.kBrushless);
         _followerSparkMax = new CANSparkMax(Constants.CAN.NOTEPATH_FOLLOWER, MotorType.kBrushless);
         _followerSparkMax.follow(_notepathSparkMax, true);
+
+        _noteSensor = new DigitalInput(Constants.DIO.NOTE_SENSOR);
     }
 
     @Override
@@ -26,6 +32,8 @@ public class NotepathIOSparkMax implements NotepathIO
 
         inputs.followerNotepathAppliedVolts = _followerSparkMax.getAppliedOutput() * _followerSparkMax.getBusVoltage();
         inputs.followerNotepathCurrentAmps  = new double[] { _followerSparkMax.getOutputCurrent() };
+
+        inputs.hasNote = !_noteSensor.get();
     }
 
     @Override

@@ -53,6 +53,7 @@ public final class Constants
     public static class DIO
     {
         public static final int SHOOTER_BED_SENSOR = 0;
+        public static final int NOTE_SENSOR        = 1;
     }
 
     public static class Controls

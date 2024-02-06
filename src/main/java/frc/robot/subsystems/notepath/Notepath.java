@@ -72,4 +72,9 @@ public class Notepath extends SubsystemBase
     {
         return _inputs.leaderNotepathAppliedVolts / Constants.General.MOTOR_VOLTAGE;
     }
+
+    public boolean hasNote()
+    {
+        return _inputs.hasNote;
+    }
 }
