@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class IntakeCommands
+public final class IntakeCommands
 {
     private IntakeCommands()
     {
@@ -23,4 +23,4 @@ public class IntakeCommands
     {
         return intake.runOnce(intake::setIntakeReverse);
     }
-}    
+}

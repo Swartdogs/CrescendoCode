@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 
-public class ShooterFlywheelCommands
+public final class ShooterFlywheelCommands
 {
     private ShooterFlywheelCommands()
     {
@@ -22,4 +22,4 @@ public class ShooterFlywheelCommands
     {
         return shooterFlywheel.runOnce(shooterFlywheel::stop);
     }
-}    
+}

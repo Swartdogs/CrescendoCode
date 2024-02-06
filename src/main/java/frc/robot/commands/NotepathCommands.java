@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.notepath.Notepath;
 
-public class NotepathCommands 
+public final class NotepathCommands
 {
     private NotepathCommands()
     {
@@ -33,4 +33,4 @@ public class NotepathCommands
     {
         return notepath.run(notepath::setReverse);
     }
-}    
+}
