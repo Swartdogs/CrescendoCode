@@ -11,7 +11,7 @@ import frc.robot.subsystems.drive.GyroIOInputsAutoLogged;
 public class Gyro extends SubsystemBase
 {
     private final GyroIO                 _io;
-    private final GyroIOInputsAutoLogged _inputs = new GyroIOInputsAutoLogged();
+    public final GyroIOInputsAutoLogged _inputs = new GyroIOInputsAutoLogged();
 
     public Gyro(GyroIO io)
     {

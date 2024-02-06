@@ -27,4 +27,12 @@ public interface ClimbIO
     public default void setVoltageRight(double volts)
     {
     }
+
+    public default void setLeftAngleOffset(double leftAbsoluteEncoderOffset)
+    {
+    }
+
+    public default void setRightAngleOffset(double rightAbsoluteEncoderOffset)
+    {
+    }
 }

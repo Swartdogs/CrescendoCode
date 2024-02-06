@@ -14,19 +14,13 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CmdClimbDriveManual;
 import frc.robot.commands.CmdSetHeight;
-=======
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
->>>>>>> origin/main
 import frc.robot.commands.CmdNotepathStartFeed;
 import frc.robot.commands.CmdNotepathReverseFeed;
 import frc.robot.commands.CmdIntakeReverseIntake;
@@ -38,20 +32,17 @@ import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
-import frc.robot.subsystems.climb.ClimbIOSparkMax;
+import frc.robot.subsystems.climb.ClimbIOVictorSPX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
-<<<<<<< HEAD
 import frc.robot.subsystems.gyro.Gyro;
-=======
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonlib;
->>>>>>> origin/main
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -80,7 +71,7 @@ public class RobotContainer
     private final ShooterBed      _shooterBed;
     private final ShooterFlywheel _shooterFlywheel;
     private final Climb           _climb;
-    private final Gyro            _gyro;
+    private Gyro            _gyro;
     
     @SuppressWarnings("unused")
     private final Vision   _vision;
@@ -99,7 +90,6 @@ public class RobotContainer
             // Real robot, instantiate hardware IO implementations
             case REAL:
                 _drive = new Drive(
-                        new GyroIO() {},
                         new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE, Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
@@ -110,13 +100,13 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
-                _climb = new Climb(new ClimbIOSparkMax());
+                _climb = new Climb(new ClimbIOVictorSPX());
                 _gyro  = new Gyro(new GyroIONavX2());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
-                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _drive = new Drive(new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
@@ -127,7 +117,7 @@ public class RobotContainer
 
             // Replayed robot, disable IO implementations
             default:
-                _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _drive = new Drive(new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 _vision = new Vision(_drive, new VisionIO() {});
                 _intake = new Intake(new IntakeIO() {});
                 _notepath = new Notepath(new NotepathIO() {});
