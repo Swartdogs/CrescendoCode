@@ -17,8 +17,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.CmdClimbDriveManual;
-import frc.robot.commands.CmdSetHeight;
 
 import frc.robot.commands.CmdNotepathStartFeed;
 import frc.robot.commands.CmdNotepathReverseFeed;
@@ -146,8 +144,6 @@ public class RobotContainer
         CmdShooterFlywheelShoot  straightShoot       = new CmdShooterFlywheelShoot(_shooterFlywheel, 3000, 3000);
         CmdShooterBedSetBedAngle setBedLow           = new CmdShooterBedSetBedAngle(_shooterBed, 30);
         CmdShooterBedSetBedAngle setBedHigh          = new CmdShooterBedSetBedAngle(_shooterBed, 45);
-        CmdClimbDriveManual      climbManual         = new CmdClimbDriveManual(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY());
-        CmdSetHeight             climbSetHeight      = new CmdSetHeight(_climb, 5);
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
@@ -159,8 +155,7 @@ public class RobotContainer
         _controller.rightBumper().onTrue(setBedHigh);
         _controller.back().whileTrue(flipShoot);
         _controller.start().whileTrue(straightShoot);
-        _controller.leftTrigger().whileTrue(climbManual);
-        _controller.rightTrigger().whileTrue(climbSetHeight);
+        
     }
 
     public Command getAutonomousCommand()
