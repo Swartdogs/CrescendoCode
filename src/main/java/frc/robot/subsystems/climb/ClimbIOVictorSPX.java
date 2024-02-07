@@ -11,27 +11,27 @@ import frc.robot.Constants;
 
 public class ClimbIOVictorSPX implements ClimbIO
 {
-    public final VictorSPX           _climbVictorSPXLeft;
-    public final VictorSPX           _climbVictorSPXRight;
-    public final AnalogPotentiometer _potentiometerLeft;
-    public final AnalogPotentiometer _potentiometerRight;
-    public final double              _leftOffset  = Constants.Climb.LEFT_ZERO_OFFSET;
-    public final double              _rightOffset = Constants.Climb.RIGHT_ZERO_OFFSET;
+    private final VictorSPX           _climbVictorSPXLeft;
+    private final VictorSPX           _climbVictorSPXRight;
+    private final AnalogPotentiometer _potentiometerLeft;
+    private final AnalogPotentiometer _potentiometerRight;
+    private double                    _leftOffset  = Constants.Climb.LEFT_ZERO_OFFSET;
+    private double                    _rightOffset = Constants.Climb.RIGHT_ZERO_OFFSET;
 
     public ClimbIOVictorSPX()
     {
         _climbVictorSPXLeft  = new VictorSPX(Constants.CAN.CLIMB_LEFT);
         _climbVictorSPXRight = new VictorSPX(Constants.CAN.CLIMB_RIGHT);
 
-        _potentiometerLeft  = new AnalogPotentiometer(Constants.AIO.CLIMB_LEFT_SENSOR);
-        _potentiometerRight = new AnalogPotentiometer(Constants.AIO.CLIMB_RIGHT_SENSOR);
+        _potentiometerLeft  = new AnalogPotentiometer(Constants.AIO.CLIMB_LEFT_SENSOR, Constants.Climb.SENSOR_SCALE);
+        _potentiometerRight = new AnalogPotentiometer(Constants.AIO.CLIMB_RIGHT_SENSOR, Constants.Climb.SENSOR_SCALE);
     }
 
     @Override
     public void updateInputs(ClimbIOInputs inputs)
     {
-        inputs.extensionLeft  = _potentiometerLeft.get(); // TODO, scaling factor work
-        inputs.extensionRight = _potentiometerRight.get();
+        inputs.extensionLeft  = _potentiometerLeft.get() - _leftOffset;
+        inputs.extensionRight = _potentiometerRight.get() - _rightOffset;
 
         inputs.appliedVoltsLeft  = _climbVictorSPXLeft.getMotorOutputVoltage();
         inputs.appliedVoltsRight = _climbVictorSPXRight.getMotorOutputVoltage();
@@ -47,5 +47,17 @@ public class ClimbIOVictorSPX implements ClimbIO
     public void setVoltageRight(double volts)
     {
         _climbVictorSPXRight.set(VictorSPXControlMode.PercentOutput, volts / Constants.General.MOTOR_VOLTAGE);
+    }
+
+    @Override
+    public void setLeftAngleOffset(double leftAbsoluteEncoderOffset)
+    {
+        _leftOffset = leftAbsoluteEncoderOffset;
+    }
+
+    @Override
+    public void setRightAngleOffset(double rightAbsoluteEncoderOffset)
+    {
+        _rightOffset = rightAbsoluteEncoderOffset;
     }
 }

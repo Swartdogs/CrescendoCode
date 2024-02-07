@@ -22,7 +22,7 @@ public class CmdSetHeight extends Command
     @Override
     public void initialize()
     {
-        _climb.setHeight(_setpoint); // TODO: Look into how this works
+        _climb.setHeight(_setpoint);
     }
 
     @Override

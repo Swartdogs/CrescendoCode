@@ -6,27 +6,31 @@ package frc.robot.subsystems.climb;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.gyro.GyroIONavX2;
+import frc.robot.subsystems.gyro.Gyro;
 
 import org.littletonrobotics.junction.Logger;
 
 public class Climb extends SubsystemBase
 {
+    private final Gyro                    _gyro;
+    
     private final ClimbIO                 _io;
     private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
+    
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
-
-    // Average height that the two arms should be set to
+    
     private Double _desiredHeight;
+    
     private double _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
     private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
-    GyroIONavX2    _gyroIONavX2;
 
-    public Climb(ClimbIO io)
+    public Climb(Gyro gyro, ClimbIO io)
     {
-        _io = io;
+        _gyro = gyro;
+        
+        _io   = io;
 
         _tiltPID  = new PIDController(0, 0, 0); // TODO: tune values
         _leftPID  = new PIDController(0, 0, 0);
@@ -41,7 +45,7 @@ public class Climb extends SubsystemBase
 
         if (_desiredHeight != null)
         {
-            double heightAdjustment = _tiltPID.calculate(_gyroIONavX2.getCurrentTilt(), 0);
+            double heightAdjustment = _tiltPID.calculate(_gyro.getRollPosition().getDegrees(), 0);
             double leftSetpoint     = _desiredHeight + heightAdjustment;
             double rightSetpoint    = _desiredHeight - heightAdjustment;
 
@@ -55,7 +59,7 @@ public class Climb extends SubsystemBase
         _io.setVoltageLeft(0.0);
         _io.setVoltageRight(0.0);
 
-        _desiredHeight = 0.0;
+        _desiredHeight = null;
     }
 
     public void setVoltageLeft(double volts)
@@ -120,8 +124,8 @@ public class Climb extends SubsystemBase
         return _inputs.extensionRight;
     }
 
-    public void setHeight(double x)
+    public void setHeight(double height)
     {
-        _desiredHeight = x;
+        _desiredHeight = height;
     }
 }

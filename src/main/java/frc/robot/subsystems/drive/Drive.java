@@ -37,13 +37,15 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase
 {
-    Gyro                                   _gyro; // TODO: Check implementation
+    private final Gyro                     _gyro;
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
-    public Drive(ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
+    public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
+        _gyro = gyro;
+
         _modules[0] = new Module(flModuleIO, 0);
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
@@ -95,7 +97,7 @@ public class Drive extends SubsystemBase
         }
 
         // Update odometry
-        _poseEstimator.update(_gyro._inputs.yawPosition, getModulePositions());
+        _poseEstimator.update(_gyro.getYawPosition(), getModulePositions());
     }
 
     /**
@@ -209,7 +211,7 @@ public class Drive extends SubsystemBase
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose)
     {
-        _poseEstimator.resetPosition(_gyro._inputs.yawPosition, getModulePositions(), pose);
+        _poseEstimator.resetPosition(_gyro.getYawPosition(), getModulePositions(), pose);
     }
 
     public SwerveModulePosition[] getModulePositions()
