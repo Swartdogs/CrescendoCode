@@ -12,6 +12,7 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
@@ -163,5 +164,11 @@ public final class Constants
         public static final PneumaticsModuleType MODULE_TYPE    = PneumaticsModuleType.CTREPCM;
         public static final int                  SOLENOID_LEFT  = 1; // TODO: Find Ids
         public static final int                  SOLENOID_RIGHT = 2;
+    }
+
+    public static class Field
+    {
+        public static final Pose2d SPEAKER = new Pose2d(); //TODO: Add blue and red constants
+        public static final Pose2d AMP     = new Pose2d();
     }
 }

@@ -134,6 +134,7 @@ public class RobotContainer
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
         new JoystickButton(_joystick, 4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90, 1)); //TODO: test values
+        new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); //TODO: test values
 
         _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(() -> !_controller.y().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
         _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(() -> !_controller.x().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));

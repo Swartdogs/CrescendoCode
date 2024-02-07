@@ -61,4 +61,17 @@ public final class DriveCommands
     {
         return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute()));
     }
+
+    public static Command aimAtSpeaker(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    {
+        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.SPEAKER), maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.SPEAKER))));
+    }
+
+    private static double getHeadingToPose(Drive drive, Pose2d pose)
+    {
+        double deltaY = pose.getY() - drive.getPose().getY();
+        double deltaX = pose.getX() - drive.getPose().getX();
+
+        return Math.atan2(deltaY, deltaX) / Math.PI * 180;
+    }
 }
