@@ -10,8 +10,7 @@ import frc.robot.subsystems.climb.Climb;
 
 public class CmdClimberDriveManual extends Command
 {
-    private final Climb _climb;
-
+    private final Climb          _climb;
     private final DoubleSupplier _yLeftSupplier;
     private final DoubleSupplier _yRightSupplier;
 
@@ -19,7 +18,7 @@ public class CmdClimberDriveManual extends Command
     {
         _climb = climb;
 
-        _yLeftSupplier = yLeftSupplier;
+        _yLeftSupplier  = yLeftSupplier;
         _yRightSupplier = yRightSupplier;
 
         addRequirements(_climb);

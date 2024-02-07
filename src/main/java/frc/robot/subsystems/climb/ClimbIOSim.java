@@ -20,18 +20,14 @@ import frc.robot.Constants;
 
 public class ClimbIOSim implements ClimbIO
 {
-    private DCMotorSim _leftSim  = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
-    private DCMotorSim _rightSim = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
-    
-    private AnalogEncoderSim _leftEncoderSim  = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_LEFT_SENSOR));
-    private AnalogEncoderSim _rightEncoderSim = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_RIGHT_SENSOR));
-    
-    private SolenoidSim _leftSolenoidSim  = new SolenoidSim(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_LEFT);
-    private SolenoidSim _rightSolenoidSim = new SolenoidSim(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_RIGHT);
-    
-    private double _leftAppliedVolts  = 0.0;
-    private double _rightAppliedVolts = 0.0;
-    
+    private DCMotorSim                _leftSim           = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
+    private DCMotorSim                _rightSim          = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
+    private AnalogEncoderSim          _leftEncoderSim    = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_LEFT_SENSOR));
+    private AnalogEncoderSim          _rightEncoderSim   = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_RIGHT_SENSOR));
+    private SolenoidSim               _leftSolenoidSim   = new SolenoidSim(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_LEFT);
+    private SolenoidSim               _rightSolenoidSim  = new SolenoidSim(Constants.Pnuematics.MODULE_TYPE, Constants.Pnuematics.SOLENOID_RIGHT);
+    private double                    _leftAppliedVolts  = 0.0;
+    private double                    _rightAppliedVolts = 0.0;
     private final MechanismLigament2d _climbLeft;
     private final MechanismLigament2d _climbRight;
 

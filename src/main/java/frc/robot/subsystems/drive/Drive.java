@@ -18,6 +18,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -43,11 +44,8 @@ public class Drive extends SubsystemBase
     private final SwerveDrivePoseEstimator _poseEstimator;
     private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
-    private double _targetPosition;
-    private double _targetHeading;
-    private Pose2d _odometry;
-    private Module _module;
-    private PIDController _odometryPID = new PIDController(0, 0, 0);
+    public PIDController _rotatePID;
+    private double _maxSpeed;
 
     public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -57,6 +55,9 @@ public class Drive extends SubsystemBase
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
+
+        _rotatePID = new PIDController(0, 0, 0); //TODO: tune
+        _rotatePID.enableContinuousInput(-180, 180);
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
@@ -243,15 +244,25 @@ public class Drive extends SubsystemBase
                 new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
     }
 
-    // Gets current odometry
-    public void getOdmetry(double currentX, double currentY)
+    public void rotateInit(double setpoint, double maxSpeed)
     {
-        _odometry = new Pose2d(currentX, currentY, getRotation());
+        _maxSpeed = Math.abs(maxSpeed);
+
+        _rotatePID.setSetpoint(setpoint);
     }
 
-    public void setPID(double targetPosition)
+    public double rotateExecute()
     {
-        _targetPosition = targetPosition;
-        _odometryPID.calculate(, targetPosition);
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees()), -_maxSpeed, _maxSpeed);
+    }
+
+    public double rotateExecute(double setpoint)
+    {
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees(), setpoint), -_maxSpeed, _maxSpeed);
+    }
+
+    public boolean rotateIsFinished()
+    {
+        return _rotatePID.atSetpoint();
     }
 }

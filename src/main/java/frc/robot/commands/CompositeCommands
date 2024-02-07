@@ -1,8 +1,0 @@
-package frc.robot.commands;
-
-public final class CompositeCommands
-{
-    private CompositeCommands()
-    {
-    }
-}

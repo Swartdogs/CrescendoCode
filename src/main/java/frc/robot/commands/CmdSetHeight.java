@@ -8,19 +8,19 @@ import frc.robot.subsystems.climb.Climb;
 
 public class CmdSetHeight extends Command
 {
-    private final Climb _climb;
+    private final Climb  _climb;
     private final double _setpoint;
 
     public CmdSetHeight(Climb climb, double setpoint)
     {
-        _climb = climb;
+        _climb    = climb;
         _setpoint = setpoint;
-        
+
         addRequirements(_climb);
     }
 
     @Override
-    public void initialize()  
+    public void initialize()
     {
         _climb.setAlgorithmSetpointLeft(_setpoint);
         _climb.setAlgorithmSetpointRight(_setpoint);

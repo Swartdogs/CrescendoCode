@@ -16,30 +16,24 @@ import com.kauailabs.navx.frc.AHRS;
 public class Climb extends SubsystemBase
 {
     private final ClimbIO                 _io;
-
     private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
-
     private final PIDController           _climbFeedbackLeft;
     private final PIDController           _climbFeedbackRight;
-
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
-
     private final AHRS                    _gyro;
 
     // Average height that the two arms should be set to
     private double _desiredHeight;
 
-    // Finds the value that the robot needs to adjust by in order to be level, based on the gyro angle
-    private double _heightAdjustment = 0.0;
-
+    // Finds the value that the robot needs to adjust by in order to be level, based
+    // on the gyro angle
+    private double _heightAdjustment   = 0.0;
     private Double _leftHeight;
     private Double _rightHeight;
-
     private Double _climbSetpointLeft  = null;
     private Double _climbSetpointRight = null;
-
     private double _climbMinExtension  = Constants.Climb.MIN_EXTENSION; // TODO: tune value
     private double _climbMaxExtension  = Constants.Climb.MAX_EXTENSION; // TODO: tune value
 
@@ -56,7 +50,8 @@ public class Climb extends SubsystemBase
 
         _gyro = new AHRS(Port.kMXP);
 
-        // Takes the desired position of both arms, and takes the needed adjustment calculated from the tilt to set the position - setpoint(?) for both arms
+        // Takes the desired position of both arms, and takes the needed adjustment
+        // calculated from the tilt to set the position - setpoint(?) for both arms
         _leftHeight  = _desiredHeight + _heightAdjustment;
         _rightHeight = _desiredHeight - _heightAdjustment;
     }
@@ -79,13 +74,14 @@ public class Climb extends SubsystemBase
 
         _heightAdjustment = _tiltPID.calculate(getCurrentTilt(), 0);
 
-        // Gets the current position of the left and the right arms, and sets it to the desired position based on the tilt input, also applies this voltage
-        if(_leftHeight != null)
+        // Gets the current position of the left and the right arms, and sets it to the
+        // desired position based on the tilt input, also applies this voltage
+        if (_leftHeight != null)
         {
             _io.setAlgorithmVoltageLeft(_leftPID.calculate(getExtensionLeft(), _leftHeight));
         }
 
-        if(_rightHeight != null)
+        if (_rightHeight != null)
         {
             _io.setAlgorithmVoltageRight(_rightPID.calculate(getExtensionRight(), _rightHeight));
         }
@@ -112,7 +108,7 @@ public class Climb extends SubsystemBase
     {
         _climbSetpointLeft = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
     }
-    
+
     public void setSetpointRight(double setpoint)
     {
         _climbSetpointRight = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
@@ -121,26 +117,26 @@ public class Climb extends SubsystemBase
     public void setVoltageLeft(double volts)
     {
         _climbSetpointLeft = null;
-        
+
         _io.setLockStateLeft(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
-        
+
         _io.setVoltageLeft(volts);
     }
 
     public void setVoltageRight(double volts)
     {
         _climbSetpointRight = null;
-        
+
         _io.setLockStateRight(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
-        
+
         _io.setVoltageRight(volts);
     }
-    
+
     public boolean isAtLeftSetpoint()
     {
         return _climbFeedbackLeft.atSetpoint();
     }
-    
+
     public boolean isAtRightSetpoint()
     {
         return _climbFeedbackRight.atSetpoint();
@@ -155,13 +151,13 @@ public class Climb extends SubsystemBase
     {
         _climbMinExtension = min;
     }
-    
+
     // Mainly for dashboard
     public double getExtensionLeft()
     {
         return _inputs.extensionLeft;
     }
-    
+
     // Mainly for dashboard
     public double getExtensionRight()
     {
@@ -173,28 +169,28 @@ public class Climb extends SubsystemBase
         _io.setAlgorithmVoltageLeft(0.0);
         _io.setAlgorithmVoltageRight(0.0);
     }
-    
+
     public void setAlgorithmSetpointLeft(double leftHeight)
     {
         _leftHeight = leftHeight;
     }
-    
+
     public void setAlgorithmSetpointRight(double rightHeight)
     {
         _rightHeight = rightHeight;
     }
-    
+
     public void setAlgorithmVoltageLeft(double volts)
     {
         _leftHeight = null;
-        
+
         _io.setAlgorithmVoltageLeft(volts);
     }
-    
+
     public void setAlgorithmVoltageRight(double volts)
     {
         _leftHeight = null;
-        
+
         _io.setAlgorithmVoltageRight(volts);
     }
 
@@ -212,7 +208,7 @@ public class Climb extends SubsystemBase
     {
         _desiredHeight = x;
     }
-    
+
     public double getCurrentTilt()
     {
         return _gyro.getAngle();
