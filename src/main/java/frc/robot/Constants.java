@@ -96,6 +96,7 @@ public final class Constants
         public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromDegrees(0);
         public static final Rotation2d MAX_BED_ANGLE    = Rotation2d.fromDegrees(90);
         public static final Rotation2d MIN_BED_ANGLE    = Rotation2d.fromDegrees(0);
+        public static final double BED_PICKUP_ANGLE = 60;
     }
 
     public static class ShooterFlywheel
