@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.commands.CmdNotepathStartFeed;
 import frc.robot.commands.CmdNotepathReverseFeed;
+import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CmdIntakeReverseIntake;
 import frc.robot.commands.CmdIntakeStartIntake;
 import frc.robot.commands.CmdShooterBedSetBedAngle;
@@ -103,6 +104,7 @@ public class RobotContainer
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
+                _gyro = new Gyro(new GyroIO() {});
                 _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
@@ -156,6 +158,8 @@ public class RobotContainer
         _controller.back().whileTrue(flipShoot);
         _controller.start().whileTrue(straightShoot);
         
+        _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
+        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 0)); //TODO: set setpoint
     }
 
     public Command getAutonomousCommand()
