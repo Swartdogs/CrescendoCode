@@ -76,7 +76,7 @@ public final class Constants
         public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
         public static final double LEFT_ZERO_OFFSET              = 0.0;
         public static final double RIGHT_ZERO_OFFSET             = 0.0;
-        public static final double SENSOR_SCALE                  = 0.0; // TODO: Find values (Lines 81 - 79)
+        public static final double SENSOR_SCALE                  = 1.0; // TODO: Find values (Lines 81 - 79)
     }
 
     public static class Intake
@@ -142,7 +142,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.SIM;
+        public static final Mode CURRENT_MODE = Mode.REAL;
 
         public static enum Mode
         {
