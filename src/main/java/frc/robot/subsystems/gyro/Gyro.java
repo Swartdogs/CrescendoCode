@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gyro extends SubsystemBase
 {
-    private final GyroIO                _io;
+    private final GyroIO                 _io;
     private final GyroIOInputsAutoLogged _inputs = new GyroIOInputsAutoLogged();
 
     public Gyro(GyroIO io)
@@ -33,7 +33,7 @@ public class Gyro extends SubsystemBase
     {
         return _inputs.yawVelocityRadPerSec;
     }
-    
+
     public Rotation2d getRollPosition()
     {
         return _inputs.rollPosition;

@@ -88,8 +88,7 @@ public class RobotContainer
             case REAL:
                 _gyro = new Gyro(new GyroIONavX2());
                 _drive = new Drive(
-                        _gyro, 
-                        new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
+                        _gyro, new ModuleIOSparkMax(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE, Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOSparkMax(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
@@ -157,9 +156,9 @@ public class RobotContainer
         _controller.rightBumper().onTrue(setBedHigh);
         _controller.back().whileTrue(flipShoot);
         _controller.start().whileTrue(straightShoot);
-        
+
         _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
-        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 0)); //TODO: set setpoint
+        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
     }
 
     public Command getAutonomousCommand()

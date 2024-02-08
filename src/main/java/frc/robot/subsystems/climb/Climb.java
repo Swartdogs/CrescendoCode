@@ -13,24 +13,20 @@ import org.littletonrobotics.junction.Logger;
 public class Climb extends SubsystemBase
 {
     private final Gyro                    _gyro;
-    
     private final ClimbIO                 _io;
-    private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
-    
+    private final ClimbIOInputsAutoLogged _inputs            = new ClimbIOInputsAutoLogged();
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
-    
-    private Double _desiredHeight;
-    
-    private double _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
-    private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
+    private Double                        _desiredHeight;
+    private double                        _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
+    private double                        _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
 
     public Climb(Gyro gyro, ClimbIO io)
     {
         _gyro = gyro;
-        
-        _io   = io;
+
+        _io = io;
 
         _tiltPID  = new PIDController(0, 0, 0); // TODO: tune values
         _leftPID  = new PIDController(0, 0, 0);
