@@ -72,8 +72,6 @@ public final class Constants
 
     public static class Climb
     {
-        public static final double MIN_EXTENSION                 = 0.0;
-        public static final double MAX_EXTENSION                 = 24.0;
         public static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
         public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
         public static final double LEFT_ZERO_OFFSET              = 0.0;
@@ -144,7 +142,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {

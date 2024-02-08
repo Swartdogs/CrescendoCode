@@ -5,7 +5,6 @@ package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.gyro.Gyro;
 
 import org.littletonrobotics.junction.Logger;
@@ -19,8 +18,6 @@ public class Climb extends SubsystemBase
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
     private Double                        _desiredHeight;
-    private double                        _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
-    private double                        _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
 
     public Climb(Gyro gyro, ClimbIO io)
     {
@@ -28,9 +25,9 @@ public class Climb extends SubsystemBase
 
         _io = io;
 
-        _tiltPID  = new PIDController(0, 0, 0); // TODO: tune values
-        _leftPID  = new PIDController(0, 0, 0);
-        _rightPID = new PIDController(0, 0, 0);
+        _tiltPID  = new PIDController(0.05, 0, 0); // TODO: tune values
+        _leftPID  = new PIDController(0.05, 0, 0);
+        _rightPID = new PIDController(0.05, 0, 0);
     }
 
     @Override
@@ -88,16 +85,6 @@ public class Climb extends SubsystemBase
     public boolean isAtRightSetpoint()
     {
         return _rightPID.atSetpoint();
-    }
-
-    public void setExtensionMax(double max)
-    {
-        _climbMaxExtension = max;
-    }
-
-    public void setExtensionMin(double min)
-    {
-        _climbMinExtension = min;
     }
 
     public void setLeftAngleOffset(double angleOffset)
