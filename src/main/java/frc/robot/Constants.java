@@ -101,7 +101,8 @@ public final class Constants
 
     public static class ShooterFlywheel
     {
-        public static final double MAX_FLYWHEEL_SPEED = 5874;
+        public static final double MAX_FLYWHEEL_SPEED    = 5874;
+        public static final double FLYWHEEL_INTAKE_SPEED = 2000;
     }
 
     public static class Vision
