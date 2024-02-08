@@ -14,6 +14,7 @@ package frc.robot.subsystems.drive;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,20 +36,20 @@ import frc.robot.Constants;
  * copy the reported values from the absolute encoders using AdvantageScope.
  * These values are logged under "/Drive/ModuleX/TurnAbsolutePositionRad"
  */
-public class ModuleIOSparkMax implements ModuleIO
+public class ModuleTalonFX implements ModuleIO
 {
-    private final CANSparkMax     _driveSparkMax;
-    private final CANSparkMax     _turnSparkMax;
+    private final TalonFX         _driveSparkMax;
+    private final TalonFX         _turnSparkMax;
     private final RelativeEncoder _driveEncoder;
     private final RelativeEncoder _turnRelativeEncoder;
     private final AnalogEncoder   _turnAbsoluteEncoder;
     private final boolean         _isTurnMotorInverted = true;
     private final Rotation2d      _absoluteEncoderOffset;
 
-    public ModuleIOSparkMax(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
+    public ModuleTalonFX(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
     {
-        _driveSparkMax         = new CANSparkMax(driveCanId, MotorType.kBrushless);
-        _turnSparkMax          = new CANSparkMax(turnCanId, MotorType.kBrushless);
+        _driveSparkMax         = new TalonFX(driveCanId);
+        _turnSparkMax          = new TalonFX(turnCanId);
         _turnAbsoluteEncoder   = new AnalogEncoder(absoluteEncoderChannel);
         _absoluteEncoderOffset = absoluteEncoderOffset;
 
@@ -88,13 +89,13 @@ public class ModuleIOSparkMax implements ModuleIO
     {
         inputs.drivePositionRad       = Units.rotationsToRadians(_driveEncoder.getPosition()) / Constants.Drive.DRIVE_GEAR_RATIO;
         inputs.driveVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_driveEncoder.getVelocity()) / Constants.Drive.DRIVE_GEAR_RATIO;
-        inputs.driveAppliedVolts      = _driveSparkMax.getAppliedOutput() * _driveSparkMax.getBusVoltage();
-        inputs.driveCurrentAmps       = new double[] { _driveSparkMax.getOutputCurrent() };
+        inputs.driveAppliedVolts      = _driveSparkMax.getAppliedOutput() * _driveSparkMax.getMotorVoltage();
+        inputs.driveCurrentAmps       = new double[] { _driveSparkMax.getValueAsDouble };
 
         inputs.turnAbsolutePosition  = Rotation2d.fromRotations(_turnAbsoluteEncoder.getAbsolutePosition()).minus(_absoluteEncoderOffset);
         inputs.turnPosition          = Rotation2d.fromRotations(_turnRelativeEncoder.getPosition() / Constants.Drive.TURN_GEAR_RATIO);
         inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_turnRelativeEncoder.getVelocity()) / Constants.Drive.TURN_GEAR_RATIO;
-        inputs.turnAppliedVolts      = _turnSparkMax.getAppliedOutput() * _turnSparkMax.getBusVoltage();
+        inputs.turnAppliedVolts      = _turnSparkMax.getAppliedOutput() * _turnSparkMax.getMotorVoltage();
         inputs.turnCurrentAmps       = new double[] { _turnSparkMax.getOutputCurrent() };
     }
 
