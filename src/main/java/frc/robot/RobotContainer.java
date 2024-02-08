@@ -14,15 +14,18 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIONavX2;
@@ -117,12 +120,16 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
+        new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake);
     }
 
     private void configureButtonBindings()
     {
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+
+        new JoystickButton(_joystick, 4).onTrue(NotepathCommands.startFeed(_notepath));
+        new JoystickButton(_joystick, 5).onTrue(NotepathCommands.stopFeed(_notepath));
 
         _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(() -> !_controller.y().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
         _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(() -> !_controller.x().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));

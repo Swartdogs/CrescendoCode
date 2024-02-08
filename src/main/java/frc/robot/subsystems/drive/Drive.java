@@ -186,7 +186,7 @@ public class Drive extends SubsystemBase
      * modules.
      */
     @AutoLogOutput(key = "SwerveStates/Measured")
-    private SwerveModuleState[] getModuleStates()
+    public SwerveModuleState[] getModuleStates()
     {
         SwerveModuleState[] states = new SwerveModuleState[4];
 

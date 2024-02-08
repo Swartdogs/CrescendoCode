@@ -74,7 +74,7 @@
   {
     "name": "/Preferences/Note Shoot Speed",
     "type": "double",
-    "value": 0.6,
+    "value": 0.4,
     "properties": {
       "persistent": true
     }
@@ -91,6 +91,78 @@
     "name": "/Preferences/Shooter Offset",
     "type": "double",
     "value": 2.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Bed Offset",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Climber Speed",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Climber Left Offset",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Climber Right Offset",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Max Flywheel Velocity",
+    "type": "double",
+    "value": 5874.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Pickup Intake Speed",
+    "type": "double",
+    "value": 0.8,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Intake Speed",
+    "type": "double",
+    "value": 0.8,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Bed Minimum Angle",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Bed Maximum Angle",
+    "type": "double",
+    "value": 0.0,
     "properties": {
       "persistent": true
     }
