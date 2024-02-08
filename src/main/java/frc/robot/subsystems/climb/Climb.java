@@ -13,7 +13,7 @@ public class Climb extends SubsystemBase
 {
     private final Gyro                    _gyro;
     private final ClimbIO                 _io;
-    private final ClimbIOInputsAutoLogged _inputs            = new ClimbIOInputsAutoLogged();
+    private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
@@ -89,12 +89,12 @@ public class Climb extends SubsystemBase
 
     public void setLeftAngleOffset(double angleOffset)
     {
-        _io.setLeftAngleOffset(angleOffset);
+        _io.setLeftOffset(angleOffset);
     }
 
     public void setRightAngleOffset(double angleOffset)
     {
-        _io.setRightAngleOffset(angleOffset);
+        _io.setRightOffset(angleOffset);
     }
 
     public double getExtensionLeft()

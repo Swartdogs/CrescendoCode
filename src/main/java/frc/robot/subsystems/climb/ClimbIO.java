@@ -28,11 +28,11 @@ public interface ClimbIO
     {
     }
 
-    public default void setLeftAngleOffset(double leftAbsoluteEncoderOffset)
+    public default void setLeftOffset(double leftAbsoluteEncoderOffset)
     {
     }
 
-    public default void setRightAngleOffset(double rightAbsoluteEncoderOffset)
+    public default void setRightOffset(double rightAbsoluteEncoderOffset)
     {
     }
 }

@@ -25,9 +25,4 @@ public final class ClimbCommands
     {
         return climb.runOnce(() -> climb.setHeight(setpoint));
     }
-
-    public static Command climbStop(Climb climb)
-    {
-        return climb.runOnce(climb::stop);
-    }
 }

@@ -148,7 +148,7 @@ public class RobotContainer
         _controller.back().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).until(() -> !_controller.back().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
         _controller.start().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).until(() -> !_controller.start().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
 
-        _controller.leftBumper().onTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).until(() -> !_controller.leftBumper().getAsBoolean()).andThen(ClimbCommands.climbStop(_climb)));
+        _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
     }
 
