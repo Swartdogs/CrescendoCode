@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import javax.naming.PartialResultException;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -17,27 +15,11 @@ public final class CompositeCommands
 
     public static Command intakePickup(Intake intake, Notepath notepath)
     {
-        // return Commands.startEnd(
-        //     () -> 
-        //     {
-        //         intake.setIntakeOn();
-        //         notepath.setNotepathIntakePickupOn();
-        //     }, 
-        //     () -> 
-        //     {
-        //         intake.setIntakeOff();
-        //         notepath.setOff();
-        //     }, 
-        //     intake, notepath).until(() -> !notepath.hasNote());
-
-        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath)). //TODO: TEST THIS :D
-        andThen(Commands.waitUntil(()-> !notepath.hasNote())).
-        finallyDo(
-            () -> 
-            {
-                intake.setIntakeOff();
-                notepath.setOff();
-            });
+        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath)).andThen(Commands.waitUntil(() -> !notepath.hasNote())).finallyDo(() ->
+        {
+            intake.setIntakeOff();
+            notepath.setOff();
+        });
     }
 
     public static Command stopIntaking(Intake intake, Notepath notepath)
@@ -47,8 +29,6 @@ public final class CompositeCommands
 
     public static Command shooterPickup(ShooterBed shooterBed, Notepath notepath)
     {
-        return Commands.parallel(ShooterBedCommands.setBedAngle(shooterBed, Constants.ShooterBed.BED_PICKUP_ANGLE)).
-        andThen(Commands.waitUntil(() -> !notepath.hasNote())).
-        finallyDo(() ->  notepath.setOff());
+        return Commands.parallel(ShooterBedCommands.setBedAngle(shooterBed, Constants.ShooterBed.BED_PICKUP_ANGLE)).andThen(Commands.waitUntil(() -> !notepath.hasNote())).finallyDo(() -> notepath.setOff());
     }
 }
