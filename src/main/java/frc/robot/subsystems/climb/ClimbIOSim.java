@@ -4,10 +4,8 @@
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.simulation.AnalogEncoderSim;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -19,10 +17,10 @@ import frc.robot.Constants;
 
 public class ClimbIOSim implements ClimbIO
 {
-    private DCMotorSim                _leftSim           = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
-    private DCMotorSim                _rightSim          = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.003); // Find values
-    private AnalogEncoderSim          _leftEncoderSim    = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_LEFT_SENSOR));
-    private AnalogEncoderSim          _rightEncoderSim   = new AnalogEncoderSim(new AnalogEncoder(Constants.AIO.CLIMB_RIGHT_SENSOR));
+    private DCMotor                   _leftArm           = new DCMotor(12, 9.2, 16.3, 1.6, Units.rotationsPerMinuteToRadiansPerSecond(90), 1);
+    private DCMotor                   _rightArm          = new DCMotor(12, 9.2, 16.3, 1.6, Units.rotationsPerMinuteToRadiansPerSecond(90), 1);
+    private DCMotorSim                _leftSim           = new DCMotorSim(_leftArm, 2.5, 0.003); // Find values
+    private DCMotorSim                _rightSim          = new DCMotorSim(_rightArm, 2.5, 0.003); // Find values
     private double                    _leftAppliedVolts  = 0.0;
     private double                    _rightAppliedVolts = 0.0;
     private final MechanismLigament2d _climbLeft;
@@ -30,23 +28,18 @@ public class ClimbIOSim implements ClimbIO
 
     public ClimbIOSim()
     {
-        Mechanism2d mechanismLeft  = new Mechanism2d(3, 3);
-        Mechanism2d mechanismRight = new Mechanism2d(3, 3);
+        Mechanism2d mechanism = new Mechanism2d(30, 33);
 
-        MechanismRoot2d robotLeft  = mechanismLeft.getRoot("Climb1", 1, 0);
-        MechanismRoot2d robotRight = mechanismRight.getRoot("Climb2", 1.75, 0);
+        MechanismRoot2d robotLeft  = mechanism.getRoot("Climb1", 10, 0);
+        MechanismRoot2d robotRight = mechanism.getRoot("Climb2", 20, 0);
 
-        MechanismLigament2d ligLeft  = robotLeft.append(new MechanismLigament2d("lig1", 0.01, 90, 20, new Color8Bit(Color.kOrange)));
-        MechanismLigament2d ligRight = robotRight.append(new MechanismLigament2d("lig2", 0.01, 90, 20, new Color8Bit(Color.kOrange)));
+        _climbLeft  = robotLeft.append(new MechanismLigament2d("lig1", 2, 90, 15, new Color8Bit(Color.kOrange)));
+        _climbRight = robotRight.append(new MechanismLigament2d("lig2", 2, 90, 15, new Color8Bit(Color.kOrange)));
 
-        _climbLeft  = ligLeft.append(new MechanismLigament2d("SubClimb1", 2, 10, 10, new Color8Bit(Color.kOrange)));
-        _climbRight = ligRight.append(new MechanismLigament2d("SubClimb2", 2, 10, 10, new Color8Bit(Color.kOrange)));
+        _climbLeft.append(new MechanismLigament2d("HookLeft", 4, 20, 15, new Color8Bit(Color.kOrange)));
+        _climbRight.append(new MechanismLigament2d("HookLeft", 4, 20, 15, new Color8Bit(Color.kOrange)));
 
-        _climbLeft.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
-        _climbRight.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
-
-        SmartDashboard.putData("Climb1", mechanismLeft);
-        SmartDashboard.putData("Climb2", mechanismRight);
+        SmartDashboard.putData("Climb", mechanism);
     }
 
     @Override
@@ -55,14 +48,8 @@ public class ClimbIOSim implements ClimbIO
         _leftSim.update(Constants.General.LOOP_PERIOD_SECS);
         _rightSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        double leftDelta  = Constants.Climb.CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS * (_leftAppliedVolts / Constants.General.MOTOR_VOLTAGE);
-        double rightDelta = Constants.Climb.CLIMB_SENSOR_RATE_DEG_PER_SEC * Constants.General.LOOP_PERIOD_SECS * (_rightAppliedVolts / Constants.General.MOTOR_VOLTAGE);
-
-        _leftEncoderSim.setPosition(_leftEncoderSim.getPosition().plus(Rotation2d.fromDegrees(leftDelta)));
-        _rightEncoderSim.setPosition(_rightEncoderSim.getPosition().plus(Rotation2d.fromDegrees(rightDelta)));
-
-        inputs.extensionLeft  = _leftEncoderSim.getPosition().getDegrees() / Constants.Climb.CLIMB_SENSOR_DEG_PER_INCH;
-        inputs.extensionRight = _rightEncoderSim.getPosition().getDegrees() / Constants.Climb.CLIMB_SENSOR_DEG_PER_INCH;
+        inputs.extensionLeft  = _leftSim.getAngularPositionRad(); // in per rad = 1
+        inputs.extensionRight = _rightSim.getAngularPositionRad(); // in per rad = 1
 
         inputs.appliedVoltsLeft  = _leftAppliedVolts;
         inputs.appliedVoltsRight = _rightAppliedVolts;

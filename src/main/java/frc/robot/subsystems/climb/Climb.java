@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.climb;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,13 +15,13 @@ public class Climb extends SubsystemBase
 {
     private final Gyro                    _gyro;
     private final ClimbIO                 _io;
-    private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
+    private final ClimbIOInputsAutoLogged _inputs            = new ClimbIOInputsAutoLogged();
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
     private Double                        _desiredHeight;
-    private double _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
-    private double _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
+    private double                        _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
+    private double                        _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
 
     public Climb(Gyro gyro, ClimbIO io)
     {
@@ -42,8 +43,8 @@ public class Climb extends SubsystemBase
         if (_desiredHeight != null)
         {
             double heightAdjustment = _tiltPID.calculate(_gyro.getRollPosition().getDegrees(), 0);
-            double leftSetpoint     = _desiredHeight + heightAdjustment;
-            double rightSetpoint    = _desiredHeight - heightAdjustment;
+            double leftSetpoint     = MathUtil.clamp(_desiredHeight + heightAdjustment, _climbMinExtension, _climbMaxExtension);
+            double rightSetpoint    = MathUtil.clamp(_desiredHeight - heightAdjustment, _climbMinExtension, _climbMaxExtension);
 
             _io.setVoltageLeft(_leftPID.calculate(getExtensionLeft(), leftSetpoint));
             _io.setVoltageRight(_rightPID.calculate(getExtensionRight(), rightSetpoint));
@@ -76,6 +77,11 @@ public class Climb extends SubsystemBase
             _io.setVoltageRight(0.0);
         }
 
+        if ((_inputs.extensionLeft >= _climbMaxExtension && volts > 0) || (_inputs.extensionLeft <= _climbMinExtension && volts < 0))
+        {
+            volts = 0;
+        }
+
         _io.setVoltageLeft(volts);
     }
 
@@ -85,6 +91,11 @@ public class Climb extends SubsystemBase
         {
             _desiredHeight = null;
             _io.setVoltageLeft(0.0);
+        }
+
+        if ((_inputs.extensionRight >= _climbMaxExtension && volts > 0) || (_inputs.extensionRight <= _climbMinExtension && volts < 0))
+        {
+            volts = 0;
         }
 
         _io.setVoltageRight(volts);
