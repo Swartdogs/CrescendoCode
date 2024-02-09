@@ -119,11 +119,11 @@ public class Dashboard extends SubsystemBase
         _notepathOutput = tab.add("Notepath output", 0).withSize(6, 5).withPosition(24, 7).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         _bedAngle       = tab.add("Bed angle", 0).withSize(3, 5).withPosition(30, 7).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL")).getEntry();
 
-        var shooterFlywheel = tab.getLayout("Shooter flywheel", BuiltInLayouts.kGrid).withPosition(33, 7).withSize(7, 5).withProperties(Map.of("Number of columns", 1, "Number of rows", 2, "Label position", "HIDDEN"));;
+        var shooterFlywheel = tab.getLayout("Shooter flywheel", BuiltInLayouts.kGrid).withPosition(33, 7).withSize(6, 5).withProperties(Map.of("Number of columns", 1, "Number of rows", 2, "Label position", "HIDDEN"));;
         _upperVelocity = shooterFlywheel.add("Upper Velocity", 0).withPosition(0, 0).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         _lowerVelocity = shooterFlywheel.add("Lower Velocity", 0).withPosition(0, 1).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         // Autonomous Options
-        var autonomousLayout = tab.getLayout("Autonomous", BuiltInLayouts.kGrid).withPosition(29, 0).withSize(11, 7).withProperties(Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
+        var autonomousLayout = tab.getLayout("Autonomous", BuiltInLayouts.kGrid).withPosition(29, 0).withSize(10, 7).withProperties(Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
 
         // Autonomous delay chooser setup
         _autoDelayChooser = new SendableChooser<>();
