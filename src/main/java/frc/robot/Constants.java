@@ -168,7 +168,19 @@ public final class Constants
 
     public static class Field
     {
-        public static final Pose2d SPEAKER = new Pose2d(); //TODO: Add blue and red constants
-        public static final Pose2d AMP     = new Pose2d();
+        public static final Pose2d BLUE_SPEAKER = new Pose2d(-1.5, 218.42, new Rotation2d());
+        public static final Pose2d BLUE_AMP     = new Pose2d(72.5, 323.0, Rotation2d.fromDegrees(270));
+        public static final Pose2d RED_SPEAKER = new Pose2d(652.73, 218.42, new Rotation2d());
+        public static final Pose2d RED_AMP     = new Pose2d(578.77, 323.0, Rotation2d.fromDegrees(270));
+
+        public static final Rotation2d BLUE_SOURCE = Rotation2d.fromDegrees(120);
+        public static final Rotation2d BLUE_STAGE_ONE = Rotation2d.fromDegrees(120);
+        public static final Rotation2d BLUE_STAGE_TWO = Rotation2d.fromDegrees(240);
+        public static final Rotation2d BLUE_STAGE_THREE = Rotation2d.fromDegrees(0);
+        
+        public static final Rotation2d RED_SOURCE = Rotation2d.fromDegrees(60);
+        public static final Rotation2d RED_STAGE_ONE = Rotation2d.fromDegrees(300);
+        public static final Rotation2d RED_STAGE_TWO = Rotation2d.fromDegrees(60);
+        public static final Rotation2d RED_STAGE_THREE = Rotation2d.fromDegrees(180);
     }
 }
