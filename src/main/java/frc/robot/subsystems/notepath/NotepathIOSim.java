@@ -11,11 +11,11 @@ import frc.robot.Constants;
 /** Add your docs here. */
 public class NotepathIOSim implements NotepathIO
 {
-    private DCMotorSim _leaderNotepathSim   = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
-    private DCMotorSim _followerNotepathSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
-    private DigitalInput _noteSensorSim = new DigitalInput(Constants.DIO.NOTE_SENSOR);
-    private double     _leaderVoltage;
-    private double     _followerVoltage;
+    private DCMotorSim   _leaderNotepathSim   = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private DCMotorSim   _followerNotepathSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private DigitalInput _noteSensorSim       = new DigitalInput(Constants.DIO.NOTE_SENSOR);
+    private double       _leaderVoltage;
+    private double       _followerVoltage;
 
     @Override
     public void updateInputs(NotepathInputs inputs)
@@ -28,7 +28,7 @@ public class NotepathIOSim implements NotepathIO
 
         inputs.followerNotepathAppliedVolts = _followerVoltage;
         inputs.followerNotepathCurrentAmps  = new double[] { Math.abs(_followerNotepathSim.getCurrentDrawAmps()) };
-        inputs.hasNote = !_noteSensorSim.get();
+        inputs.hasNote                      = !_noteSensorSim.get();
     }
 
     @Override
