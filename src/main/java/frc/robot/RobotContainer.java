@@ -137,10 +137,10 @@ public class RobotContainer
     {
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath).andThen(CompositeCommands.stopIntaking(_intake, _notepath)));
+        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
-        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath).andThen(IntakeCommands.stopIntake(_intake)));
-        _controller.b().onTrue(IntakeCommands.reverseIntake(_intake).until(() -> !_controller.b().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
+        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle()).finallyDo(()-> _intake.setIntakeOff()));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));

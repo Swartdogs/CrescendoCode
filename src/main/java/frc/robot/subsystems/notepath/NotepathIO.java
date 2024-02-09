@@ -11,7 +11,7 @@ public interface NotepathIO
         public double[] leaderNotepathCurrentAmps    = new double[] {};
         public double   followerNotepathAppliedVolts = 0.0;
         public double[] followerNotepathCurrentAmps  = new double[] {};
-        public boolean  hasNote                      = true;
+        public boolean  hasNote                      = false;
     }
 
     public default void updateInputs(NotepathInputs inputs)

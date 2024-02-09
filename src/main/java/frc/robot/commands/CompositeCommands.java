@@ -14,13 +14,13 @@ public final class CompositeCommands
     {
     }
 
-    public static Command intakePickup(Intake intake, Notepath notepath)
+    public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
     {
-        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath)).andThen(Commands.waitUntil(() -> notepath.hasNote())).finallyDo(() ->
+        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedAngle(shooterBed, Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE)).andThen(Commands.waitUntil(() -> notepath.hasNote())).finallyDo(() ->
         {
             intake.setIntakeOff();
             notepath.setOff();
-        });
+        }).unless(() -> notepath.hasNote());
     }
 
     public static Command stopIntaking(Intake intake, Notepath notepath)
@@ -31,12 +31,11 @@ public final class CompositeCommands
     public static Command shooterPickup(ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, Notepath notepath)
     {
         return Commands.parallel(
-                ShooterBedCommands.setBedAngle(shooterBed, Constants.ShooterBed.BED_PICKUP_ANGLE),
-                ShooterFlywheelCommands.shooterFlywheelShoot(shooterFlywheel, -Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED, -Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED), NotepathCommands.reverseFeed(notepath)
+                ShooterBedCommands.setBedAngle(shooterBed, Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE),
+                ShooterFlywheelCommands.shooterFlywheelIntake(shooterFlywheel), NotepathCommands.reverseFeed(notepath)
         ).andThen(Commands.waitUntil(() -> notepath.hasNote())).finallyDo(() ->
         {
-            shooterFlywheel.setUpperVelocity(0);
-            shooterFlywheel.setLowerVelocity(0);
+            shooterFlywheel.stop();
             notepath.setOff();
         });
     }

@@ -111,13 +111,14 @@ public final class Constants
         public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromDegrees(0);
         public static final Rotation2d MAX_BED_ANGLE    = Rotation2d.fromDegrees(90);
         public static final Rotation2d MIN_BED_ANGLE    = Rotation2d.fromDegrees(0);
-        public static final double     BED_PICKUP_ANGLE = 60;
+        public static final double     BED_INTAKE_PICKUP_ANGLE = 30;
+        public static final double     BED_SHOOTER_PICKUP_ANGLE = 60;
     }
 
     public static class ShooterFlywheel
     {
-        public static final double MAX_FLYWHEEL_SPEED    = 5874;
-        public static final double FLYWHEEL_INTAKE_SPEED = 2000;
+        public static final double MAX_FLYWHEEL_SPEED    = 1.0;
+        public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
     }
 
     public static class Vision
@@ -143,6 +144,7 @@ public final class Constants
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MOTOR_VOLTAGE    = 12.0;
+        public static final double MAX_MOTOR_SPEED    = 5874;
     }
 
     public static class AdvantageKit
