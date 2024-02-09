@@ -152,7 +152,8 @@ public class RobotContainer
 
         _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
-        _controller.rightTrigger().onTrue(CompositeCommands.start(_shooterFlywheel, _notepath, 1, 1));
+        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 1, 1));
+        _controller.leftTrigger().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
     }
 
     public Command getAutonomousCommand()

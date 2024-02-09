@@ -14,7 +14,7 @@ public final class CompositeCommands
     {
     }
 
-    public static Command start(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
+    public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
     {
         return Commands.parallel(NotepathCommands.startFeed(notepath), ShooterFlywheelCommands.shooterFlywheelShoot(shooterFlywheel, lowerVelocity, upperVelocity)).finallyDo(() ->
         {
@@ -22,5 +22,10 @@ public final class CompositeCommands
             shooterFlywheel.setUpperVelocity(0);
             notepath.setOff();
         });
+    }
+
+    public static Command stopShooter(ShooterFlywheel shooterFlywheel, Notepath notepath)
+    {
+        return Commands.parallel(ShooterFlywheelCommands.shooterFlywheelStop(shooterFlywheel), NotepathCommands.stopFeed(notepath));
     }
 }
