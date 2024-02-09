@@ -90,34 +90,34 @@ public class Dashboard extends SubsystemBase
         var SettingsTab = Shuffleboard.getTab("Settings");
 
         // Camera Stream
-        tab.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, "mjpg:http://10.5.25.12:1181/?action=stream").withWidget("Camera Stream").withPosition(0, 0).withSize(11, 12)
+        tab.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, "mjpg:http://10.5.25.12:1181/?action=stream").withWidget("Camera Stream").withPosition(0, 0).withSize(15, 10)
                 .withProperties(Map.of("Show crosshair", true, "Show controls", true));
         // Field
         _field = new Field2d();
-        tab.add("field", _field).withPosition(11, 0).withSize(13, 7);
+        tab.add("field", _field).withPosition(15, 0).withSize(14, 8);
 
         // Alliance, Note, and Intake boxes
-        var booleanBoxLayout = tab.getLayout("Color Box", BuiltInLayouts.kGrid).withPosition(24, 0).withSize(5, 3).withProperties(Map.of("Number of columns", 1, "Number of rows", 3, "Label position", "LEFT"));
+        var booleanBoxLayout = tab.getLayout("Color Box", BuiltInLayouts.kGrid).withPosition(15, 12).withSize(5, 3).withProperties(Map.of("Number of columns", 1, "Number of rows", 3, "Label position", "LEFT"));
         _allianceBox = booleanBoxLayout.add("Alliance", false).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "blue", "Color when false", "red")).getEntry();
         _HasNote     = booleanBoxLayout.add("Has Note", false).withPosition(0, 1).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "green", "Color when false", "red")).getEntry();
 
         // Swerve Module Angles
-        var driveSettingsLayout = tab.getLayout("Drive Subsystem", BuiltInLayouts.kGrid).withPosition(24, 3).withSize(5, 3);
+        var driveSettingsLayout = tab.getLayout("Drive Subsystem", BuiltInLayouts.kGrid).withPosition(15, 8).withSize(5, 4);
         _flAngle = driveSettingsLayout.add("FL Angle", 0.0).withPosition(0, 0).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
         _frAngle = driveSettingsLayout.add("FR Angle", 0.0).withPosition(2, 0).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
         _blAngle = driveSettingsLayout.add("BL Angle", 0.0).withPosition(0, 2).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
         _brAngle = driveSettingsLayout.add("BR Angle", 0.0).withPosition(2, 2).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
 
         // Height, Intake and Speed
-        var heightAndIntakeLayout = tab.getLayout("Height and Intake", BuiltInLayouts.kGrid).withPosition(11, 7).withSize(13, 5).withProperties(Map.of("Number of columns", 3, "Number of rows", 1));
+        var heightAndIntakeLayout = tab.getLayout("Height and Intake", BuiltInLayouts.kGrid).withPosition(0, 10).withSize(15, 5).withProperties(Map.of("Number of columns", 3, "Number of rows", 1));
         _LeftHeight  = heightAndIntakeLayout.add("Left Height", 0).withSize(5, 4).withPosition(0, 0).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL")).getEntry();
         _Rightheight = heightAndIntakeLayout.add("Right Height", 0).withWidget(BuiltInWidgets.kNumberBar).withPosition(2, 0).withProperties(Map.of("Orientation", "VERTICAL")).getEntry();
         _IntakeSpeed = heightAndIntakeLayout.add("Intake Speed", 0).withPosition(1, 0).withWidget(BuiltInWidgets.kNumberBar).getEntry();
 
-        _notepathOutput = tab.add("Notepath output", 0).withSize(6, 5).withPosition(24, 7).withWidget(BuiltInWidgets.kNumberBar).getEntry();
-        _bedAngle       = tab.add("Bed angle", 0).withSize(3, 5).withPosition(30, 7).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL")).getEntry();
+        _notepathOutput = tab.add("Notepath output", 0).withSize(6, 7).withPosition(26, 8).withWidget(BuiltInWidgets.kNumberBar).getEntry();
+        _bedAngle       = tab.add("Bed angle", 0).withSize(3, 7).withPosition(32, 8).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL")).getEntry();
 
-        var shooterFlywheel = tab.getLayout("Shooter flywheel", BuiltInLayouts.kGrid).withPosition(33, 7).withSize(6, 5).withProperties(Map.of("Number of columns", 1, "Number of rows", 2, "Label position", "HIDDEN"));;
+        var shooterFlywheel = tab.getLayout("Shooter flywheel", BuiltInLayouts.kGrid).withPosition(20, 8).withSize(6, 7).withProperties(Map.of("Number of columns", 1, "Number of rows", 2, "Label position", "HIDDEN"));;
         _upperVelocity = shooterFlywheel.add("Upper Velocity", 0).withPosition(0, 0).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         _lowerVelocity = shooterFlywheel.add("Lower Velocity", 0).withPosition(0, 1).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         // Autonomous Options
