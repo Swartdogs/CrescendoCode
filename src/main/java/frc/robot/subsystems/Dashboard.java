@@ -79,6 +79,7 @@ public class Dashboard extends SubsystemBase
 
     public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel ShooterFlywheel, Drive drive, Intake intake)
     {
+        CameraServer.startAutomaticCapture();
         _drive           = drive;
         _ShooterBed      = shooterBed;
         _notepath        = notepath;
@@ -92,7 +93,11 @@ public class Dashboard extends SubsystemBase
 
         // Camera Stream
         _cameraServer = CameraServer.startAutomaticCapture();
-        tab.add("Camera Stream", m_camera).withPosition(0, 0).withSize(11, 12).withProperties(Map.of());
+        tab.add("Camera Stream", CameraServer.getServer())
+        .withWidget("Camera Stream")
+        .withPosition(0, 0)
+        .withSize(11, 12)
+        .withProperties(Map.of("Show crosshair", true, "Show controls", true));
         Shuffleboard.getTab("Camera Stream").add(m_camera);
         // Field
         _field = new Field2d();
