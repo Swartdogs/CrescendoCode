@@ -14,8 +14,10 @@ public class ShooterBed extends SubsystemBase
     private final ShooterBedIOInputsAutoLogged _inputs        = new ShooterBedIOInputsAutoLogged();
     private PIDController                      _bedFeedback;
     private Rotation2d                         _angleSetpoint = null;
-    private Rotation2d                         _minBedAngle   = Constants.ShooterBed.MIN_BED_ANGLE;
-    private Rotation2d                         _maxBedAngle   = Constants.ShooterBed.MAX_BED_ANGLE;
+    private double                         _minBedAngle   = Constants.ShooterBed.MIN_BED_ANGLE;
+    private double                         _maxBedAngle   = Constants.ShooterBed.MAX_BED_ANGLE;
+    private double                             _bedIntakePickupAngle = Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE;
+    private double                             _bedShooterPickupAngle = Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE;
 
     public ShooterBed(ShooterBedIO io)
     {
@@ -38,7 +40,17 @@ public class ShooterBed extends SubsystemBase
 
     public void setAngle(Rotation2d angleSetpoint)
     {
-        _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle.getRadians(), _maxBedAngle.getRadians()));
+        _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle*Math.PI/180, _maxBedAngle*Math.PI/180));
+    }
+
+    public void setIntakePickupAngle()
+    {
+        setAngle(Rotation2d.fromDegrees(_bedIntakePickupAngle));
+    }
+
+    public void setShooterPickupAngle()
+    {
+        setAngle(Rotation2d.fromDegrees(_bedShooterPickupAngle));
     }
 
     public void setAngleOffset(Rotation2d angleOffset)
@@ -51,14 +63,24 @@ public class ShooterBed extends SubsystemBase
         return _bedFeedback.atSetpoint();
     }
 
-    public void setMinAngle(Rotation2d minBedAngle)
+    public void setMinAngle(double minBedAngle)
     {
         _minBedAngle = minBedAngle;
     }
 
-    public void setMaxAngle(Rotation2d maxBedAngle)
+    public void setMaxAngle(double maxBedAngle)
     {
         _maxBedAngle = maxBedAngle;
+    }
+
+    public void setBedIntakePickupAngle(double bedIntakePickupAngle)
+    {
+        _bedIntakePickupAngle = bedIntakePickupAngle;
+    }
+
+    public void setBedShooterPickupAngle(double bedShooterPickupAngle)
+    {
+        _bedShooterPickupAngle = bedShooterPickupAngle;
     }
 
     public Rotation2d getBedAngle()
