@@ -4,6 +4,7 @@
 package frc.robot.subsystems.notepath;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
 
@@ -12,6 +13,7 @@ public class NotepathIOSim implements NotepathIO
 {
     private DCMotorSim _leaderNotepathSim   = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
     private DCMotorSim _followerNotepathSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private DigitalInput _noteSensorSim = new DigitalInput(Constants.DIO.NOTE_SENSOR);
     private double     _leaderVoltage;
     private double     _followerVoltage;
 
@@ -26,6 +28,7 @@ public class NotepathIOSim implements NotepathIO
 
         inputs.followerNotepathAppliedVolts = _followerVoltage;
         inputs.followerNotepathCurrentAmps  = new double[] { Math.abs(_followerNotepathSim.getCurrentDrawAmps()) };
+        inputs.hasNote = !_noteSensorSim.get();
     }
 
     @Override
