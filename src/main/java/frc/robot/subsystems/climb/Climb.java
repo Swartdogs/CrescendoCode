@@ -29,9 +29,9 @@ public class Climb extends SubsystemBase
 
         _io = io;
 
-        _tiltPID  = new PIDController(0.05, 0, 0); // TODO: tune values
-        _leftPID  = new PIDController(0.05, 0, 0);
-        _rightPID = new PIDController(0.05, 0, 0);
+        _tiltPID  = new PIDController(12, 0, 0); // TODO: tune values
+        _leftPID  = new PIDController(12, 0, 0);
+        _rightPID = new PIDController(12, 0, 0);
     }
 
     @Override
