@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.function.DoubleConsumer;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
@@ -92,7 +90,7 @@ public class Dashboard extends SubsystemBase
                 .withProperties(Map.of("Show crosshair", false, "Show controls", false));
         // Field
         _field = new Field2d();
-        tab.add("field", _field).withPosition(15, 0).withSize(14, 8);
+        tab.add("field", _field).withPosition(15, 0).withSize(15, 8);
 
         // Alliance, Note, and Intake boxes
         var booleanBoxLayout = tab.getLayout("Color Box", BuiltInLayouts.kGrid).withPosition(15, 12).withSize(5, 3).withProperties(Map.of("Number of columns", 1, "Number of rows", 3, "Label position", "LEFT"));
@@ -119,7 +117,7 @@ public class Dashboard extends SubsystemBase
         _upperVelocity = shooterFlywheel.add("Upper Velocity", 0).withPosition(0, 0).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         _lowerVelocity = shooterFlywheel.add("Lower Velocity", 0).withPosition(0, 1).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         // Autonomous Options
-        var autonomousLayout = tab.getLayout("Autonomous", BuiltInLayouts.kGrid).withPosition(29, 0).withSize(10, 7).withProperties(Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
+        var autonomousLayout = tab.getLayout("Autonomous", BuiltInLayouts.kGrid).withPosition(30, 0).withSize(10, 8).withProperties(Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
 
         // Autonomous delay chooser setup
         _autoDelayChooser = new SendableChooser<>();
