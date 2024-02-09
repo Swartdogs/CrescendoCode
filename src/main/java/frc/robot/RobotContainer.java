@@ -16,6 +16,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -121,6 +122,8 @@ public class RobotContainer
         // Configure the button bindings
         configureButtonBindings();
         new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake);
+
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     private void configureButtonBindings()

@@ -31,7 +31,6 @@ public class Dashboard extends SubsystemBase
 {
     private static Dashboard _instance;
     private Field2d          _field;
-    private UsbCamera        _cameraServer;
 
     // Widgets for the dashboard
     private GenericEntry          _allianceBox;
@@ -79,7 +78,6 @@ public class Dashboard extends SubsystemBase
 
     public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel ShooterFlywheel, Drive drive, Intake intake)
     {
-        CameraServer.startAutomaticCapture();
         _drive           = drive;
         _ShooterBed      = shooterBed;
         _notepath        = notepath;
@@ -91,7 +89,7 @@ public class Dashboard extends SubsystemBase
 
         // Camera Stream
         tab.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, "mjpg:http://10.5.25.12:1181/?action=stream").withWidget("Camera Stream").withPosition(0, 0).withSize(15, 10)
-                .withProperties(Map.of("Show crosshair", true, "Show controls", true));
+                .withProperties(Map.of("Show crosshair", false, "Show controls", false));
         // Field
         _field = new Field2d();
         tab.add("field", _field).withPosition(15, 0).withSize(14, 8);
