@@ -86,22 +86,15 @@ public class Dashboard extends SubsystemBase
         _ShooterFlywheel = ShooterFlywheel;
         _Intake          = intake;
 
-        HttpCamera m_camera = new HttpCamera("PhotonVisionCamera", "https://Photonvision.local:1181");
-
         var tab         = Shuffleboard.getTab("Dashboard");
         var SettingsTab = Shuffleboard.getTab("Settings");
 
         // Camera Stream
-        _cameraServer = CameraServer.startAutomaticCapture();
-        tab.add("Camera Stream", CameraServer.getServer())
-        .withWidget("Camera Stream")
-        .withPosition(0, 0)
-        .withSize(11, 12)
-        .withProperties(Map.of("Show crosshair", true, "Show controls", true));
-        Shuffleboard.getTab("Camera Stream").add(m_camera);
+        tab.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, "mjpg:http://10.5.25.12:1181/?action=stream").withWidget("Camera Stream").withPosition(0, 0).withSize(11, 12)
+                .withProperties(Map.of("Show crosshair", true, "Show controls", true));
         // Field
         _field = new Field2d();
-        tab.add("field", _field).withPosition(11, 0).withSize(13, 7).withProperties(Map.of());
+        tab.add("field", _field).withPosition(11, 0).withSize(13, 7);
 
         // Alliance, Note, and Intake boxes
         var booleanBoxLayout = tab.getLayout("Color Box", BuiltInLayouts.kGrid).withPosition(24, 0).withSize(5, 3).withProperties(Map.of("Number of columns", 1, "Number of rows", 3, "Label position", "LEFT"));
