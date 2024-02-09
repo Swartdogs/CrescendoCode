@@ -21,16 +21,16 @@ public final class NotepathCommands
 
     public static Command startFeed(Notepath notepath)
     {
-        return notepath.run(notepath::setFeedOn);
+        return notepath.runOnce(notepath::setFeedOn);
     }
 
     public static Command stopFeed(Notepath notepath)
     {
-        return notepath.run(notepath::setOff);
+        return notepath.runOnce(notepath::setOff);
     }
 
     public static Command reverseFeed(Notepath notepath)
     {
-        return notepath.run(notepath::setReverse);
+        return notepath.runOnce(notepath::setReverse);
     }
 }

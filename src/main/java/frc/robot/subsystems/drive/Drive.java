@@ -30,21 +30,21 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase
 {
-    private final GyroIO                   _gyroIO;
-    private final GyroIOInputsAutoLogged   _gyroInputs = new GyroIOInputsAutoLogged();
+    private final Gyro                     _gyro;
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
-    public Drive(GyroIO gyroIO, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
+    public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
-        this._gyroIO = gyroIO;
+        _gyro = gyro;
 
         _modules[0] = new Module(flModuleIO, 0);
         _modules[1] = new Module(frModuleIO, 1);
@@ -75,9 +75,6 @@ public class Drive extends SubsystemBase
 
     public void periodic()
     {
-        _gyroIO.updateInputs(_gyroInputs);
-        Logger.processInputs("Drive/Gyro", _gyroInputs);
-
         for (var module : _modules)
         {
             module.periodic();
@@ -100,7 +97,7 @@ public class Drive extends SubsystemBase
         }
 
         // Update odometry
-        _poseEstimator.update(_gyroInputs.yawPosition, getModulePositions());
+        _poseEstimator.update(_gyro.getYawPosition(), getModulePositions());
     }
 
     /**
@@ -214,7 +211,7 @@ public class Drive extends SubsystemBase
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose)
     {
-        _poseEstimator.resetPosition(_gyroInputs.yawPosition, getModulePositions(), pose);
+        _poseEstimator.resetPosition(_gyro.getYawPosition(), getModulePositions(), pose);
     }
 
     public SwerveModulePosition[] getModulePositions()

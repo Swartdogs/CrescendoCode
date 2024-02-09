@@ -117,7 +117,7 @@ public class Dashboard extends SubsystemBase
         _upperVelocity = shooterFlywheel.add("Upper Velocity", 0).withPosition(0, 0).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         _lowerVelocity = shooterFlywheel.add("Lower Velocity", 0).withPosition(0, 1).withSize(1, 1).withWidget(BuiltInWidgets.kNumberBar).getEntry();
         // Autonomous Options
-        var autonomousLayout = tab.getLayout("Autonomous", BuiltInLayouts.kGrid).withPosition(30, 0).withSize(10, 8).withProperties(Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
+        var autonomousLayout = tab.getLayout("Autonomous", BuiltInLayouts.kGrid).withPosition(30, 0).withSize(9, 8).withProperties(Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
 
         // Autonomous delay chooser setup
         _autoDelayChooser = new SendableChooser<>();
