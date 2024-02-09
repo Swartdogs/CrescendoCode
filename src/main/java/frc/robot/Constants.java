@@ -135,12 +135,6 @@ public final class Constants
         public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
         public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.4;
         public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.5;
-
-        public Command run(Object object)
-        {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'run'");
-        }
     }
 
     public static class General

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 
-public class CompositeCommands extends Command
+public final class CompositeCommands 
 {
     private CompositeCommands()
     {
