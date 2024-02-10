@@ -40,19 +40,24 @@ public final class Constants
         public static final int SHOOTER_BED_FOLLOWER   = 14;
         public static final int SHOOTER_FLYWHEEL_UPPER = 15;
         public static final int SHOOTER_FLYWHEEL_LOWER = 16;
+        public static final int CLIMB_LEFT             = 17;
+        public static final int CLIMB_RIGHT            = 18;
     }
 
     public static class AIO
     {
-        public static final int MODULE_FL_SENSOR = 0;
-        public static final int MODULE_FR_SENSOR = 1;
-        public static final int MODULE_BL_SENSOR = 2;
-        public static final int MODULE_BR_SENSOR = 3;
+        public static final int MODULE_FL_SENSOR   = 0;
+        public static final int MODULE_FR_SENSOR   = 1;
+        public static final int MODULE_BL_SENSOR   = 2;
+        public static final int MODULE_BR_SENSOR   = 3;
+        public static final int CLIMB_LEFT_SENSOR  = 5;
+        public static final int CLIMB_RIGHT_SENSOR = 6;
     }
 
     public static class DIO
     {
         public static final int SHOOTER_BED_SENSOR = 0;
+        public static final int NOTE_SENSOR        = 1;
     }
 
     public static class Controls
@@ -64,6 +69,17 @@ public final class Constants
     {
         public static final double START_DELAY_SECS   = 2.0;
         public static final double RAMP_VOLTS_PER_SEC = 0.1;
+    }
+
+    public static class Climb
+    {
+        public static final double MIN_EXTENSION                 = 0.0;
+        public static final double MAX_EXTENSION                 = 24.0;
+        public static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
+        public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
+        public static final double LEFT_ZERO_OFFSET              = 0.0;
+        public static final double RIGHT_ZERO_OFFSET             = 0.0;
+        public static final double SENSOR_SCALE                  = 1.0; // TODO: Find values (Lines 81 - 79)
     }
 
     public static class Intake
@@ -92,14 +108,17 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromDegrees(0);
-        public static final Rotation2d MAX_BED_ANGLE    = Rotation2d.fromDegrees(90);
-        public static final Rotation2d MIN_BED_ANGLE    = Rotation2d.fromDegrees(0);
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(0);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(90);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(0);
+        public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(30);
+        public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(60);
     }
 
     public static class ShooterFlywheel
     {
-        public static final double MAX_FLYWHEEL_SPEED = 5874;
+        public static final double MAX_FLYWHEEL_SPEED    = 1.0;
+        public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
     }
 
     public static class Vision
@@ -125,11 +144,13 @@ public final class Constants
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MOTOR_VOLTAGE    = 12.0;
+        public static final double MAX_NEO_SPEED    = 5874;
+        public static final double MAX_KRAKEN_SPEED = 6000;
     }
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.SIM;
+        public static final Mode CURRENT_MODE = Mode.REAL;
 
         public static enum Mode
         {

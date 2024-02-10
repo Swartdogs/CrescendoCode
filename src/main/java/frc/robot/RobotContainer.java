@@ -16,19 +16,25 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import frc.robot.commands.CompositeCommands;
+import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIO;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOVictorSPX;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIONavX2;
+import frc.robot.subsystems.gyro.GyroIO;
+import frc.robot.subsystems.gyro.GyroIONavX2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleTalonFX;
+import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonlib;
@@ -60,6 +66,8 @@ public class RobotContainer
     private final Notepath        _notepath;
     private final ShooterBed      _shooterBed;
     private final ShooterFlywheel _shooterFlywheel;
+    private final Climb           _climb;
+    private final Gyro            _gyro;
     @SuppressWarnings("unused")
     private final Vision          _vision;
 
@@ -76,8 +84,9 @@ public class RobotContainer
         {
             // Real robot, instantiate hardware IO implementations
             case REAL:
+                _gyro = new Gyro(new GyroIONavX2());
                 _drive = new Drive(
-                        new GyroIONavX2(), new ModuleTalonFX(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
+                        _gyro, new ModuleTalonFX(Constants.CAN.MODULE_FL_DRIVE, Constants.CAN.MODULE_FL_ROTATE, Constants.AIO.MODULE_FL_SENSOR, Constants.Drive.MODULE_FL_OFFSET),
                         new ModuleTalonFX(Constants.CAN.MODULE_FR_DRIVE, Constants.CAN.MODULE_FR_ROTATE, Constants.AIO.MODULE_FR_SENSOR, Constants.Drive.MODULE_FR_OFFSET),
                         new ModuleTalonFX(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleTalonFX(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
@@ -87,26 +96,31 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
+                _climb = new Climb(_gyro, new ClimbIOVictorSPX());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
-                _drive = new Drive(new GyroIO() {}, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
+                _gyro = new Gyro(new GyroIO() {});
+                _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
+                _climb = new Climb(_gyro, new ClimbIOSim());
                 break;
 
             // Replayed robot, disable IO implementations
             default:
-                _drive = new Drive(new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                _gyro = new Gyro(new GyroIO() {});
+                _drive = new Drive(_gyro, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 _vision = new Vision(_drive, new VisionIO() {});
                 _intake = new Intake(new IntakeIO() {});
                 _notepath = new Notepath(new NotepathIO() {});
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
+                _climb = new Climb(_gyro, new ClimbIO() {});
                 break;
         }
 
@@ -121,18 +135,21 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
-
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().onTrue(NotepathCommands.startFeed(_notepath).until(() -> !_controller.y().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
-        _controller.x().onTrue(NotepathCommands.reverseFeed(_notepath).until(() -> !_controller.x().getAsBoolean()).andThen(NotepathCommands.stopFeed(_notepath)));
-        _controller.a().onTrue(IntakeCommands.startIntake(_intake).until(() -> !_controller.a().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
-        _controller.b().onTrue(IntakeCommands.reverseIntake(_intake).until(() -> !_controller.b().getAsBoolean()).andThen(IntakeCommands.stopIntake(_intake)));
+        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
+        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
-        _controller.back().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).until(() -> !_controller.back().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
-        _controller.start().onTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).until(() -> !_controller.start().getAsBoolean()).andThen(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel)));
+
+        _controller.back().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        _controller.start().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+
+        _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
+        _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
     }
 
     public Command getAutonomousCommand()
