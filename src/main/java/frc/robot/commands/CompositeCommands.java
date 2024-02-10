@@ -18,18 +18,26 @@ public final class CompositeCommands
 
     public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
     {
-        return Commands.parallel(NotepathCommands.startFeed(notepath), ShooterFlywheelCommands.shooterFlywheelShoot(shooterFlywheel, lowerVelocity, upperVelocity)).finallyDo(() ->
+        return ShooterFlywheelCommands.shooterFlywheelShoot(shooterFlywheel, lowerVelocity, upperVelocity).andThen(Commands.waitUntil(() -> !notepath.hasNote())).finallyDo(() ->
         {
-            shooterFlywheel.setLowerVelocity(0);
-            shooterFlywheel.setUpperVelocity(0);
-            notepath.setOff();
+            shooterFlywheel.stop();
         });
+    }
+
+    public static Command startNotepath(Notepath notepath, ShooterFlywheel shooterFlywheel)
+    {
+        return Commands.waitUntil(() -> shooterFlywheel.atSpeed()).andThen(NotepathCommands.startFeed(notepath)).andThen(Commands.waitUntil(() -> notepath.sensorTripped())).andThen(Commands.waitUntil(() -> !notepath.sensorTripped()))
+                .andThen(Commands.runOnce(() -> notepath.setHasNote(false))).finallyDo(() ->
+                {
+                    notepath.setOff();
+                }).onlyIf(() -> shooterFlywheel.isShooting());
     }
 
     public static Command stopShooter(ShooterFlywheel shooterFlywheel, Notepath notepath)
     {
         return Commands.parallel(ShooterFlywheelCommands.shooterFlywheelStop(shooterFlywheel), NotepathCommands.stopFeed(notepath));
     }
+
     public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
     {
         return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed)).andThen(Commands.waitUntil(() -> notepath.sensorTripped()))

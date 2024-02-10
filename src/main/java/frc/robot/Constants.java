@@ -16,8 +16,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
-
-
 public final class Constants
 {
     // Private constructor to prevent instantiation
@@ -121,6 +119,7 @@ public final class Constants
     {
         public static final double MAX_FLYWHEEL_SPEED    = 1.0;
         public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
+        public static final double VELOCITY_RANGE        = 0.05;
     }
 
     public static class Vision
