@@ -4,13 +4,9 @@
 package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.climb.ClimbIO;
 
 public class LED extends SubsystemBase
 {
-    private final LEDIO                 _io;
-    private final LEDIOInputsAutoLogged _inputs = new LEDInputsAutoLogged();
-
     public LED()
     {
 

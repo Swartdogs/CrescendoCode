@@ -140,6 +140,11 @@ public final class Constants
         public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.5;
     }
 
+    public static class LED
+    {
+        public static final int NUM_LEDS = 1; //TODO: Change value
+    }
+
     public static class General
     {
         public static final double LOOP_PERIOD_SECS = 0.02;

@@ -3,12 +3,16 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.leds;
 
-import org.littletonrobotics.junction.AutoLog;
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.wpi.first.wpilibj.util.Color;
 
 public interface LEDIO
 {
-    @AutoLog
-    public static class ClimbIOInputs
+    public ArrayList<Color> _pattern;
+
+    public default void setLEDs()//Array list of colors
     {
 
     }
