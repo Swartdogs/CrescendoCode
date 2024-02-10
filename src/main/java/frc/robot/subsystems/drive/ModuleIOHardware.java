@@ -42,7 +42,7 @@ import frc.robot.Constants;
  * copy the reported values from the absolute encoders using AdvantageScope.
  * These values are logged under "/Drive/ModuleX/TurnAbsolutePositionRad"
  */
-public class ModuleTalonFX implements ModuleIO
+public class ModuleIOHardware implements ModuleIO
 {
     private final TalonFX              _driveTalonFX;
     private final CANSparkMax          _turnSparkMax;
@@ -55,7 +55,7 @@ public class ModuleTalonFX implements ModuleIO
     private final StatusSignal<Double> _driveAppliedVolts;
     private final StatusSignal<Double> _driveCurrent;
 
-    public ModuleTalonFX(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
+    public ModuleIOHardware(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
     {
         _driveTalonFX          = new TalonFX(driveCanId);
         _turnSparkMax          = new CANSparkMax(turnCanId, MotorType.kBrushless);
