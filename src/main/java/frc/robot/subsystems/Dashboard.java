@@ -66,6 +66,8 @@ public class Dashboard extends SubsystemBase
     private GenericEntry          _bedMaximumAngle;
     private GenericEntry          _maxFlywheelVelocity;
     private GenericEntry          _climberMaxHeight;
+    private GenericEntry          _maxFlywheelSpeed;
+    private GenericEntry          _FlywheelIntakeSpeed;
     private final ShooterBed      _ShooterBed;
     private final Notepath        _notepath;
     private final Intake          _Intake;
@@ -189,6 +191,8 @@ public class Dashboard extends SubsystemBase
         var shooterFlywheelSetting = outerLayout.getLayout("Shooter Flywheel", BuiltInLayouts.kList).withPosition(5, 0).withSize(7, 10).withProperties(Map.of("label position", "LEFT"));
 
         _maxFlywheelVelocity = shooterFlywheelSetting.add("Max Flywheel Velocity ", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _maxFlywheelSpeed    = shooterFlywheelSetting.add("Max Flywheel Speed ", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _FlywheelIntakeSpeed = shooterFlywheelSetting.add("Flywheel Intake Speed ", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
         initializeSetting("FL Offset", Constants.Drive.MODULE_FL_OFFSET.getDegrees(), _flOffset, value ->
         {
@@ -263,6 +267,16 @@ public class Dashboard extends SubsystemBase
         initializeSetting("Bed Maximum Angle", 0, _bedMaximumAngle, value ->
         {
             shooterBed.setMaxAngle(Rotation2d.fromDegrees(value));
+        });
+
+        initializeSetting("Max Flywheel Speed", Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED, _maxFlywheelSpeed, value ->
+        {
+            ShooterFlywheel.setMaxFlywheelSpeed(value);
+        });
+
+        initializeSetting("Flywheel Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _FlywheelIntakeSpeed, value ->
+        {
+            ShooterFlywheel.setFlywheelIntakeSpeed(value);
         });
 
     }

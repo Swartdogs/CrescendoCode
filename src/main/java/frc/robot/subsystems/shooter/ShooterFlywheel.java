@@ -52,7 +52,7 @@ public class ShooterFlywheel extends SubsystemBase
         _maxFlywheelSpeed = maxFlywheelSpeed * Constants.General.MAX_NEO_SPEED;
     }
 
-    public void setFlywheelIntakeVoltage(double flywheelIntakeSpeed)
+    public void setFlywheelIntakeSpeed(double flywheelIntakeSpeed)
     {
         _flywheelIntakeVoltage = flywheelIntakeSpeed * Constants.General.MOTOR_VOLTAGE;
     }
