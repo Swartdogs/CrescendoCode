@@ -98,7 +98,7 @@ public class Dashboard extends SubsystemBase
         tab.add("field", _field).withPosition(15, 0).withSize(15, 8);
 
         // Alliance, Note, and Intake boxes
-        var booleanBoxLayout = tab.getLayout("Color Box", BuiltInLayouts.kGrid).withPosition(15, 12).withSize(5, 3).withProperties(Map.of("Number of columns", 1, "Number of rows", 3, "Label position", "LEFT"));
+        var booleanBoxLayout = tab.getLayout("Color Box", BuiltInLayouts.kGrid).withPosition(15, 12).withSize(5, 3).withProperties(Map.of("Number of columns", 1, "Number of rows", 2, "Label position", "LEFT"));
         _allianceBox = booleanBoxLayout.add("Alliance", false).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "blue", "Color when false", "red")).getEntry();
         _HasNote     = booleanBoxLayout.add("Has Note", false).withPosition(0, 1).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "green", "Color when false", "red")).getEntry();
 
