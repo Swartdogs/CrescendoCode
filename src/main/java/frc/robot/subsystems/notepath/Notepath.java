@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.notepath;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -84,6 +85,7 @@ public class Notepath extends SubsystemBase
         _hasNote = hasNote;
     }
 
+    @AutoLogOutput(key = "Notepath/HasNote")
     public boolean hasNote()
     {
         return _hasNote;
