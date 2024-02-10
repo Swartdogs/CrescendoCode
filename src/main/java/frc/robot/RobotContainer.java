@@ -23,13 +23,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimbCommands;
+import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.Dashboard;
@@ -145,12 +145,9 @@ public class RobotContainer
     {
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        new JoystickButton(_joystick, 4).onTrue(NotepathCommands.startFeed(_notepath));
-        new JoystickButton(_joystick, 5).onTrue(NotepathCommands.stopFeed(_notepath));
-
-        _controller.y().whileTrue(NotepathCommands.startFeed(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
-        _controller.x().whileTrue(NotepathCommands.reverseFeed(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
-        _controller.a().whileTrue(IntakeCommands.startIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
+        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
+        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
         _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));

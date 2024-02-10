@@ -18,6 +18,11 @@ public final class ShooterFlywheelCommands
         });
     }
 
+    public static Command shooterFlywheelIntake(ShooterFlywheel shooterFlywheel)
+    {
+        return shooterFlywheel.runOnce(shooterFlywheel::flywheelIntakeOn);
+    }
+
     public static Command shooterFlywheelStop(ShooterFlywheel shooterFlywheel)
     {
         return shooterFlywheel.runOnce(shooterFlywheel::stop);
