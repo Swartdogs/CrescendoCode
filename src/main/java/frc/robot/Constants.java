@@ -108,11 +108,11 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromDegrees(0);
-        public static final double MAX_BED_ANGLE    = 90;
-        public static final double MIN_BED_ANGLE    = 0;
-        public static final double     BED_INTAKE_PICKUP_ANGLE = 30;
-        public static final double     BED_SHOOTER_PICKUP_ANGLE = 60;
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(0);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(90);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(0);
+        public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(30);
+        public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(60);
     }
 
     public static class ShooterFlywheel
@@ -144,7 +144,8 @@ public final class Constants
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MOTOR_VOLTAGE    = 12.0;
-        public static final double MAX_MOTOR_SPEED    = 5874;
+        public static final double MAX_NEO_SPEED    = 5874;
+        public static final double MAX_KRAKEN_SPEED = 6000;
     }
 
     public static class AdvantageKit

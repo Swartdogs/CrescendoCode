@@ -28,7 +28,7 @@ public class NotepathIOSim implements NotepathIO
 
         inputs.followerNotepathAppliedVolts = _followerVoltage;
         inputs.followerNotepathCurrentAmps  = new double[] { Math.abs(_followerNotepathSim.getCurrentDrawAmps()) };
-        inputs.hasNote                      = !_noteSensorSim.get();
+        inputs.sensorTripped                = !_noteSensorSim.get();
     }
 
     @Override

@@ -17,7 +17,7 @@ public final class ShooterFlywheelCommands
             shooterFlywheel.setLowerVelocity(lowerVelocity);
         });
     }
-    
+
     public static Command shooterFlywheelIntake(ShooterFlywheel shooterFlywheel)
     {
         return shooterFlywheel.runOnce(shooterFlywheel::flywheelIntakeOn);

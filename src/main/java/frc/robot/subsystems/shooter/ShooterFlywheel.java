@@ -9,9 +9,9 @@ import frc.robot.Constants;
 public class ShooterFlywheel extends SubsystemBase
 {
     private final ShooterFlywheelIO                 _flywheelIO;
-    private final ShooterFlywheelIOInputsAutoLogged _inputs           = new ShooterFlywheelIOInputsAutoLogged();
-    private double                                  _maxFlywheelSpeed = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED;
-    private double                                  _flywheelIntakeVoltage = Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED;
+    private final ShooterFlywheelIOInputsAutoLogged _inputs                = new ShooterFlywheelIOInputsAutoLogged();
+    private double                                  _maxFlywheelSpeed      = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED * Constants.General.MAX_NEO_SPEED;
+    private double                                  _flywheelIntakeVoltage = Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
@@ -27,12 +27,12 @@ public class ShooterFlywheel extends SubsystemBase
 
     public void setUpperVelocity(double upperVelocitySetpoint)
     {
-        _flywheelIO.setUpperVelocity(MathUtil.clamp(upperVelocitySetpoint, 0, _maxFlywheelSpeed*Constants.General.MAX_MOTOR_SPEED));
+        _flywheelIO.setUpperVelocity(MathUtil.clamp(upperVelocitySetpoint, 0, _maxFlywheelSpeed));
     }
 
     public void setLowerVelocity(double lowerVelocitySetpoint)
     {
-        _flywheelIO.setLowerVelocity(MathUtil.clamp(lowerVelocitySetpoint, 0, _maxFlywheelSpeed*Constants.General.MAX_MOTOR_SPEED));
+        _flywheelIO.setLowerVelocity(MathUtil.clamp(lowerVelocitySetpoint, 0, _maxFlywheelSpeed));
     }
 
     public void stop()
@@ -43,18 +43,18 @@ public class ShooterFlywheel extends SubsystemBase
 
     public void flywheelIntakeOn()
     {
-        setUpperVelocity(-_flywheelIntakeVoltage * Constants.General.MAX_MOTOR_SPEED);
-        setLowerVelocity(-_flywheelIntakeVoltage * Constants.General.MAX_MOTOR_SPEED);
+        _flywheelIO.setUpperVoltage(-_flywheelIntakeVoltage);
+        _flywheelIO.setLowerVoltage(-_flywheelIntakeVoltage);
     }
 
     public void setMaxFlywheelSpeed(double maxFlywheelSpeed)
     {
-        _maxFlywheelSpeed = maxFlywheelSpeed;
+        _maxFlywheelSpeed = maxFlywheelSpeed * Constants.General.MAX_NEO_SPEED;
     }
 
-    public void setFlywheelIntakeVoltage(double flywheelIntakeVoltage)
+    public void setFlywheelIntakeVoltage(double flywheelIntakeSpeed)
     {
-        _flywheelIntakeVoltage = flywheelIntakeVoltage;
+        _flywheelIntakeVoltage = flywheelIntakeSpeed * Constants.General.MOTOR_VOLTAGE;
     }
 
     public double getUpperFlywheelVelocity()

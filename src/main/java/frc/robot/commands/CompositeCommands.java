@@ -15,11 +15,13 @@ public final class CompositeCommands
 
     public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
     {
-        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed)).andThen(Commands.waitUntil(() -> notepath.hasNote())).finallyDo(() ->
-        {
-            intake.setIntakeOff();
-            notepath.setOff();
-        }).unless(() -> notepath.hasNote());
+        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed)).andThen(Commands.waitUntil(() -> notepath.sensorTripped()))
+                .finallyDo(interrupted ->
+                {
+                    intake.setIntakeOff();
+                    notepath.setOff();
+                    notepath.setHasNote(!interrupted);
+                }).unless(() -> notepath.hasNote());
     }
 
     public static Command stopIntaking(Intake intake, Notepath notepath)
@@ -29,13 +31,12 @@ public final class CompositeCommands
 
     public static Command shooterPickup(ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, Notepath notepath)
     {
-        return Commands.parallel(
-                ShooterBedCommands.setBedShooterPickupAngle(shooterBed),
-                ShooterFlywheelCommands.shooterFlywheelIntake(shooterFlywheel), NotepathCommands.reverseFeed(notepath)
-        ).andThen(Commands.waitUntil(() -> notepath.hasNote())).finallyDo(() ->
-        {
-            shooterFlywheel.stop();
-            notepath.setOff();
-        });
+        return Commands.parallel(ShooterBedCommands.setBedShooterPickupAngle(shooterBed), ShooterFlywheelCommands.shooterFlywheelIntake(shooterFlywheel), NotepathCommands.reverseFeed(notepath))
+                .andThen(Commands.waitUntil(() -> notepath.sensorTripped())).andThen(Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(interrupted ->
+                {
+                    shooterFlywheel.stop();
+                    notepath.setOff();
+                    notepath.setHasNote(!interrupted);
+                }).unless(() -> notepath.hasNote());
     }
 }

@@ -15,6 +15,7 @@ public class Notepath extends SubsystemBase
     private double                   _intakePickupPercentOutput  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT;
     private double                   _notepathFeedPercentOutput  = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT;
     private double                   _shooterPickupPercentOutput = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT;
+    private boolean                  _hasNote                    = false;
 
     public Notepath(NotepathIO io)
     {
@@ -73,8 +74,18 @@ public class Notepath extends SubsystemBase
         return _inputs.leaderNotepathAppliedVolts / Constants.General.MOTOR_VOLTAGE;
     }
 
+    public boolean sensorTripped()
+    {
+        return _inputs.sensorTripped;
+    }
+
+    public void setHasNote(boolean hasNote)
+    {
+        _hasNote = hasNote;
+    }
+
     public boolean hasNote()
     {
-        return _inputs.hasNote;
+        return _hasNote;
     }
 }

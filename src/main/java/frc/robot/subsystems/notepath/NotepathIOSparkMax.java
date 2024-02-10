@@ -32,7 +32,7 @@ public class NotepathIOSparkMax implements NotepathIO
         inputs.followerNotepathAppliedVolts = _followerSparkMax.getAppliedOutput() * _followerSparkMax.getBusVoltage();
         inputs.followerNotepathCurrentAmps  = new double[] { _followerSparkMax.getOutputCurrent() };
 
-        inputs.hasNote = !_noteSensor.get();
+        inputs.sensorTripped = !_noteSensor.get();
     }
 
     @Override
