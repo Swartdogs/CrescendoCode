@@ -5,60 +5,33 @@ package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.gyro.Gyro;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.kauailabs.navx.frc.AHRS;
-
 public class Climb extends SubsystemBase
 {
+    private final Gyro                    _gyro;
     private final ClimbIO                 _io;
-
-    private final ClimbIOInputsAutoLogged _inputs = new ClimbIOInputsAutoLogged();
-
-    private final PIDController           _climbFeedbackLeft;
-    private final PIDController           _climbFeedbackRight;
-
+    private final ClimbIOInputsAutoLogged _inputs            = new ClimbIOInputsAutoLogged();
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
+    private Double                        _desiredHeight;
+    private double                        _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
+    private double                        _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
 
-    private final AHRS                    _gyro;
-
-    // Average height that the two arms should be set to
-    private double _desiredHeight;
-
-    // Finds the value that the robot needs to adjust by in order to be level, based on the gyro angle
-    private double _heightAdjustment = 0.0;
-
-    private Double _leftHeight;
-    private Double _rightHeight;
-
-    private Double _climbSetpointLeft  = null;
-    private Double _climbSetpointRight = null;
-
-    private double _climbMinExtension  = Constants.Climb.MIN_EXTENSION; // TODO: tune value
-    private double _climbMaxExtension  = Constants.Climb.MAX_EXTENSION; // TODO: tune value
-
-    public Climb(ClimbIO io)
+    public Climb(Gyro gyro, ClimbIO io)
     {
+        _gyro = gyro;
+
         _io = io;
 
-        _climbFeedbackLeft  = new PIDController(0, 0, 0); // TODO: tune values
-        _climbFeedbackRight = new PIDController(0, 0, 0);
-
-        _tiltPID  = new PIDController(0, 0, 0); // TODO: tune values
-        _leftPID  = new PIDController(0, 0, 0);
-        _rightPID = new PIDController(0, 0, 0);
-
-        _gyro = new AHRS(Port.kMXP);
-
-        // Takes the desired position of both arms, and takes the needed adjustment calculated from the tilt to set the position - setpoint(?) for both arms
-        _leftHeight  = _desiredHeight + _heightAdjustment;
-        _rightHeight = _desiredHeight - _heightAdjustment;
+        _tiltPID  = new PIDController(12, 0, 0); // TODO: tune values
+        _leftPID  = new PIDController(12, 0, 0);
+        _rightPID = new PIDController(12, 0, 0);
     }
 
     @Override
@@ -67,27 +40,14 @@ public class Climb extends SubsystemBase
         _io.updateInputs(_inputs);
         Logger.processInputs("Climb", _inputs);
 
-        if (_climbSetpointLeft != null)
+        if (_desiredHeight != null)
         {
-            _io.setVoltageLeft(_climbFeedbackLeft.calculate(getExtensionLeft(), _climbSetpointLeft));
-        }
+            double heightAdjustment = _tiltPID.calculate(_gyro.getRollPosition().getDegrees(), 0);
+            double leftSetpoint     = MathUtil.clamp(_desiredHeight + heightAdjustment, _climbMinExtension, _climbMaxExtension);
+            double rightSetpoint    = MathUtil.clamp(_desiredHeight - heightAdjustment, _climbMinExtension, _climbMaxExtension);
 
-        if (_climbSetpointRight != null)
-        {
-            _io.setVoltageRight(_climbFeedbackRight.calculate(getExtensionRight(), _climbSetpointRight));
-        }
-
-        _heightAdjustment = _tiltPID.calculate(getCurrentTilt(), 0);
-
-        // Gets the current position of the left and the right arms, and sets it to the desired position based on the tilt input, also applies this voltage
-        if(_leftHeight != null)
-        {
-            _io.setAlgorithmVoltageLeft(_leftPID.calculate(getExtensionLeft(), _leftHeight));
-        }
-
-        if(_rightHeight != null)
-        {
-            _io.setAlgorithmVoltageRight(_rightPID.calculate(getExtensionRight(), _rightHeight));
+            _io.setVoltageLeft(_leftPID.calculate(getExtensionLeft(), leftSetpoint));
+            _io.setVoltageRight(_rightPID.calculate(getExtensionRight(), rightSetpoint));
         }
     }
 
@@ -96,54 +56,7 @@ public class Climb extends SubsystemBase
         _io.setVoltageLeft(0.0);
         _io.setVoltageRight(0.0);
 
-        _climbSetpointLeft  = null;
-        _climbSetpointRight = null;
-
-        setLockState(true);
-    }
-
-    public void setLockState(boolean enabled)
-    {
-        _io.setLockStateLeft(enabled, _inputs);
-        _io.setLockStateRight(enabled, _inputs);
-    }
-
-    public void setSetpointLeft(double setpoint)
-    {
-        _climbSetpointLeft = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
-    }
-    
-    public void setSetpointRight(double setpoint)
-    {
-        _climbSetpointRight = MathUtil.clamp(setpoint, _climbMinExtension, _climbMaxExtension);
-    }
-
-    public void setVoltageLeft(double volts)
-    {
-        _climbSetpointLeft = null;
-        
-        _io.setLockStateLeft(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
-        
-        _io.setVoltageLeft(volts);
-    }
-
-    public void setVoltageRight(double volts)
-    {
-        _climbSetpointRight = null;
-        
-        _io.setLockStateRight(Math.abs(volts) <= 0.12, _inputs); // TODO: Change number to constants
-        
-        _io.setVoltageRight(volts);
-    }
-    
-    public boolean isAtLeftSetpoint()
-    {
-        return _climbFeedbackLeft.atSetpoint();
-    }
-    
-    public boolean isAtRightSetpoint()
-    {
-        return _climbFeedbackRight.atSetpoint();
+        _desiredHeight = null;
     }
 
     public void setExtensionMax(double max)
@@ -155,66 +68,71 @@ public class Climb extends SubsystemBase
     {
         _climbMinExtension = min;
     }
-    
-    // Mainly for dashboard
+
+    public void setVoltageLeft(double volts)
+    {
+        if (_desiredHeight != null)
+        {
+            _desiredHeight = null;
+            _io.setVoltageRight(0.0);
+        }
+
+        if ((_inputs.extensionLeft >= _climbMaxExtension && volts > 0) || (_inputs.extensionLeft <= _climbMinExtension && volts < 0))
+        {
+            volts = 0;
+        }
+
+        _io.setVoltageLeft(volts);
+    }
+
+    public void setVoltageRight(double volts)
+    {
+        if (_desiredHeight != null)
+        {
+            _desiredHeight = null;
+            _io.setVoltageLeft(0.0);
+        }
+
+        if ((_inputs.extensionRight >= _climbMaxExtension && volts > 0) || (_inputs.extensionRight <= _climbMinExtension && volts < 0))
+        {
+            volts = 0;
+        }
+
+        _io.setVoltageRight(volts);
+    }
+
+    public boolean isAtLeftSetpoint()
+    {
+        return _leftPID.atSetpoint();
+    }
+
+    public boolean isAtRightSetpoint()
+    {
+        return _rightPID.atSetpoint();
+    }
+
+    public void setLeftAngleOffset(double angleOffset)
+    {
+        _io.setLeftOffset(angleOffset);
+    }
+
+    public void setRightAngleOffset(double angleOffset)
+    {
+        _io.setRightOffset(angleOffset);
+    }
+
     public double getExtensionLeft()
     {
         return _inputs.extensionLeft;
     }
     
-    // Mainly for dashboard
     public double getExtensionRight()
     {
         return _inputs.extensionRight;
     }
 
-    public void algorithmStop()
+    public void setHeight(double height)
     {
-        _io.setAlgorithmVoltageLeft(0.0);
-        _io.setAlgorithmVoltageRight(0.0);
-    }
-    
-    public void setAlgorithmSetpointLeft(double leftHeight)
-    {
-        _leftHeight = leftHeight;
-    }
-    
-    public void setAlgorithmSetpointRight(double rightHeight)
-    {
-        _rightHeight = rightHeight;
-    }
-    
-    public void setAlgorithmVoltageLeft(double volts)
-    {
-        _leftHeight = null;
-        
-        _io.setAlgorithmVoltageLeft(volts);
-    }
-    
-    public void setAlgorithmVoltageRight(double volts)
-    {
-        _leftHeight = null;
-        
-        _io.setAlgorithmVoltageRight(volts);
-    }
-
-    public boolean isAtLeftSetpointAlgorithm()
-    {
-        return _leftPID.atSetpoint();
-    }
-
-    public boolean isAtRightSetpointAlgorithm()
-    {
-        return _rightPID.atSetpoint();
-    }
-
-    public void setHeight(double x)
-    {
-        _desiredHeight = x;
-    }
-    
-    public double getCurrentTilt()
-    {
-        return _gyro.getAngle();
+        _desiredHeight = height;
     }
 }

@@ -10,13 +10,13 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
-package frc.robot.commands;
+package frc.robot.util;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
-import frc.robot.util.PolynomialRegression;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;

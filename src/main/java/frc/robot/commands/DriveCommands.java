@@ -24,7 +24,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.DoubleSupplier;
 
-public class DriveCommands
+public final class DriveCommands
 {
     private DriveCommands()
     {

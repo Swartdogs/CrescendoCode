@@ -13,6 +13,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
@@ -25,19 +26,23 @@ public final class Constants
 
     public static class CAN
     {
-        public static final int MODULE_FL_DRIVE   = 1;
-        public static final int MODULE_FL_ROTATE  = 2;
-        public static final int MODULE_FR_DRIVE   = 3;
-        public static final int MODULE_FR_ROTATE  = 4;
-        public static final int MODULE_BL_DRIVE   = 5;
-        public static final int MODULE_BL_ROTATE  = 6;
-        public static final int MODULE_BR_DRIVE   = 7;
-        public static final int MODULE_BR_ROTATE  = 8;
-        public static final int INTAKE            = 9;
-        public static final int NOTEPATH_LEADER   = 11;
-        public static final int NOTEPATH_FOLLOWER = 12;
-        public static final int CLIMB_LEFT        = 13;
-        public static final int CLIMB_RIGHT       = 14;
+        public static final int MODULE_FL_DRIVE        = 1;
+        public static final int MODULE_FL_ROTATE       = 2;
+        public static final int MODULE_FR_DRIVE        = 3;
+        public static final int MODULE_FR_ROTATE       = 4;
+        public static final int MODULE_BL_DRIVE        = 5;
+        public static final int MODULE_BL_ROTATE       = 6;
+        public static final int MODULE_BR_DRIVE        = 7;
+        public static final int MODULE_BR_ROTATE       = 8;
+        public static final int INTAKE                 = 9;
+        public static final int NOTEPATH_LEADER        = 11;
+        public static final int NOTEPATH_FOLLOWER      = 12;
+        public static final int SHOOTER_BED_LEADER     = 13;
+        public static final int SHOOTER_BED_FOLLOWER   = 14;
+        public static final int SHOOTER_FLYWHEEL_UPPER = 15;
+        public static final int SHOOTER_FLYWHEEL_LOWER = 16;
+        public static final int CLIMB_LEFT             = 17;
+        public static final int CLIMB_RIGHT            = 18;
     }
 
     public static class AIO
@@ -48,6 +53,12 @@ public final class Constants
         public static final int MODULE_BR_SENSOR   = 3;
         public static final int CLIMB_LEFT_SENSOR  = 5;
         public static final int CLIMB_RIGHT_SENSOR = 6;
+    }
+
+    public static class DIO
+    {
+        public static final int SHOOTER_BED_SENSOR = 0;
+        public static final int NOTE_SENSOR        = 1;
     }
 
     public static class Controls
@@ -66,8 +77,10 @@ public final class Constants
         public static final double MIN_EXTENSION                 = 0.0;
         public static final double MAX_EXTENSION                 = 24.0;
         public static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
-        public static final double MOTOR_VOLTAGE_LIMIT           = 12;
         public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
+        public static final double LEFT_ZERO_OFFSET              = 0.0;
+        public static final double RIGHT_ZERO_OFFSET             = 0.0;
+        public static final double SENSOR_SCALE                  = 1.0; // TODO: Find values (Lines 81 - 79)
     }
 
     public static class Intake
@@ -94,6 +107,33 @@ public final class Constants
         public static final Rotation2d MODULE_BR_OFFSET   = Rotation2d.fromRadians(-1.63);
     }
 
+    public static class ShooterBed // FIXME: Update all these values
+    {
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(0);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(90);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(0);
+        public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(30);
+        public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(60);
+    }
+
+    public static class ShooterFlywheel
+    {
+        public static final double MAX_FLYWHEEL_SPEED    = 1.0;
+        public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
+    }
+
+    public static class Vision
+    {
+        public static final String CAMERA_NAME = "frontCam";
+        // Measurement from the camera to the center of the robot
+        public static final double CAMERA_X = Units.inchesToMeters(12); // FIXME: change these numbers with the actual numbers!
+        // Measurement from the camera to the side of the robot
+        public static final double CAMERA_Y = Units.inchesToMeters(0);
+        // Measurement from the ground to the camera's center
+        public static final double     CAMERA_Z        = Units.inchesToMeters(5.25);
+        public static final Rotation3d CAMERA_ROTATION = new Rotation3d(0.0, 0.0, 0.0);
+    }
+
     public static class Notepath
     {
         public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
@@ -105,6 +145,8 @@ public final class Constants
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MOTOR_VOLTAGE    = 12.0;
+        public static final double MAX_NEO_SPEED    = 5874;
+        public static final double MAX_KRAKEN_SPEED = 6000;
     }
 
     public static class AdvantageKit
