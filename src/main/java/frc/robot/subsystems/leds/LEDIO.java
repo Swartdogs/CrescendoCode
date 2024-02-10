@@ -4,13 +4,12 @@
 package frc.robot.subsystems.leds;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.wpi.first.wpilibj.util.Color;
 
 public interface LEDIO
 {
-    public ArrayList<Color> _pattern;
+    private ArrayList<Color> _pattern;
 
     public default void setLEDs()//Array list of colors
     {
