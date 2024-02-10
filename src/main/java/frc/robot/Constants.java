@@ -16,9 +16,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
-public final class Constants
+public final class Constants 
 {
     // Private constructor to prevent instantiation
     private Constants()
@@ -42,8 +41,8 @@ public final class Constants
         public static final int SHOOTER_BED_FOLLOWER   = 14;
         public static final int SHOOTER_FLYWHEEL_UPPER = 15;
         public static final int SHOOTER_FLYWHEEL_LOWER = 16;
-                public static final int CLIMB_LEFT        = 17;
-        public static final int CLIMB_RIGHT       = 18;
+        public static final int CLIMB_LEFT             = 17;
+        public static final int CLIMB_RIGHT            = 18;
     }
 
     public static class AIO
@@ -59,6 +58,7 @@ public final class Constants
     public static class DIO
     {
         public static final int SHOOTER_BED_SENSOR = 0;
+        public static final int NOTE_SENSOR        = 1;
     }
 
     public static class Controls
@@ -77,8 +77,10 @@ public final class Constants
         public static final double MIN_EXTENSION                 = 0.0;
         public static final double MAX_EXTENSION                 = 24.0;
         public static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
-        public static final double MOTOR_VOLTAGE_LIMIT           = 12;
         public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
+        public static final double LEFT_ZERO_OFFSET              = 0.0;
+        public static final double RIGHT_ZERO_OFFSET             = 0.0;
+        public static final double SENSOR_SCALE                  = 1.0; // TODO: Find values (Lines 81 - 79)
     }
 
     public static class Intake
@@ -107,14 +109,17 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final Rotation2d BED_ANGLE_OFFSET = Rotation2d.fromDegrees(0);
-        public static final Rotation2d MAX_BED_ANGLE    = Rotation2d.fromDegrees(90);
-        public static final Rotation2d MIN_BED_ANGLE    = Rotation2d.fromDegrees(0);
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(0);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(90);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(0);
+        public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(30);
+        public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(60);
     }
 
     public static class ShooterFlywheel
     {
-        public static final double MAX_FLYWHEEL_SPEED = 5874;
+        public static final double MAX_FLYWHEEL_SPEED    = 1.0;
+        public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
     }
 
     public static class Vision
@@ -140,11 +145,13 @@ public final class Constants
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MOTOR_VOLTAGE    = 12.0;
+        public static final double MAX_NEO_SPEED    = 5874;
+        public static final double MAX_KRAKEN_SPEED = 6000;
     }
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.SIM;
+        public static final Mode CURRENT_MODE = Mode.REAL;
 
         public static enum Mode
         {
@@ -159,16 +166,21 @@ public final class Constants
         }
     }
 
-    public static class Pnuematics
-    {
-        public static final PneumaticsModuleType MODULE_TYPE    = PneumaticsModuleType.CTREPCM;
-        public static final int                  SOLENOID_LEFT  = 1; // TODO: Find Ids
-        public static final int                  SOLENOID_RIGHT = 2;
-    }
-
     public static class Field
     {
-        public static final Pose2d SPEAKER = new Pose2d(); //TODO: Add blue and red constants
-        public static final Pose2d AMP     = new Pose2d();
+        public static final Pose2d BLUE_SPEAKER = new Pose2d(Units.inchesToMeters(-1.5) , Units.inchesToMeters(218.42), new Rotation2d());
+        public static final Pose2d BLUE_AMP     = new Pose2d(Units.inchesToMeters(72.5), Units.inchesToMeters(323.0), Rotation2d.fromDegrees(270));
+        public static final Pose2d RED_SPEAKER = new Pose2d(Units.inchesToMeters(625.7), Units.inchesToMeters(218.42), new Rotation2d());
+        public static final Pose2d RED_AMP     = new Pose2d(Units.inchesToMeters(578.77), Units.inchesToMeters(323.0), Rotation2d.fromDegrees(270));
+
+        public static final Pose2d BLUE_SOURCE = new Pose2d(Units.inchesToMeters(615.445), Units.inchesToMeters(22.235), Rotation2d.fromDegrees(120));
+        public static final Pose2d BLUE_STAGE_ONE = new Pose2d(Units.inchesToMeters(173.73), Units.inchesToMeters(192.69), Rotation2d.fromDegrees(120));
+        public static final Pose2d BLUE_STAGE_TWO = new Pose2d(Units.inchesToMeters(173.73), Units.inchesToMeters(130.6), Rotation2d.fromDegrees(240));
+        public static final Pose2d BLUE_STAGE_THREE = new Pose2d(Units.inchesToMeters(227.48), Units.inchesToMeters(161.62), Rotation2d.fromDegrees(0));
+        
+        public static final Pose2d RED_SOURCE = new Pose2d(Units.inchesToMeters(35.78), Units.inchesToMeters(22.235),Rotation2d.fromDegrees(60));
+        public static final Pose2d RED_STAGE_ONE = new Pose2d(Units.inchesToMeters(477.69), Units.inchesToMeters(130.6), Rotation2d.fromDegrees(300));
+        public static final Pose2d RED_STAGE_TWO = new Pose2d(Units.inchesToMeters(477.69), Units.inchesToMeters(192.69), Rotation2d.fromDegrees(60));
+        public static final Pose2d RED_STAGE_THREE = new Pose2d(Units.inchesToMeters(423.74), Units.inchesToMeters(161.62), Rotation2d.fromDegrees(180));
     }
 }

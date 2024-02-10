@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.notepath;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +16,7 @@ public class Notepath extends SubsystemBase
     private double                   _intakePickupPercentOutput  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT;
     private double                   _notepathFeedPercentOutput  = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT;
     private double                   _shooterPickupPercentOutput = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT;
+    private boolean                  _hasNote                    = false;
 
     public Notepath(NotepathIO io)
     {
@@ -71,5 +73,21 @@ public class Notepath extends SubsystemBase
     public double getPercentOutput()
     {
         return _inputs.leaderNotepathAppliedVolts / Constants.General.MOTOR_VOLTAGE;
+    }
+
+    public boolean sensorTripped()
+    {
+        return _inputs.sensorTripped;
+    }
+
+    public void setHasNote(boolean hasNote)
+    {
+        _hasNote = hasNote;
+    }
+
+    @AutoLogOutput(key = "Notepath/HasNote")
+    public boolean hasNote()
+    {
+        return _hasNote;
     }
 }
