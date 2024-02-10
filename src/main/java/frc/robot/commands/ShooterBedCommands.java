@@ -14,4 +14,14 @@ public final class ShooterBedCommands
     {
         return shooterBed.runOnce(() -> shooterBed.setAngle(Rotation2d.fromDegrees(bedAngle)));
     }
+
+    public static Command setBedIntakePickupAngle(ShooterBed shooterBed)
+    {
+        return shooterBed.runOnce(shooterBed::setIntakePickupAngle);
+    }
+
+    public static Command setBedShooterPickupAngle(ShooterBed shooterBed)
+    {
+        return shooterBed.runOnce(shooterBed::setShooterPickupAngle);
+    }
 }
