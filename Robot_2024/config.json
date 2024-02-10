@@ -7,49 +7,21 @@
       "degrees": 90
     },
     {
+      "axis": "y",
+      "degrees": 0
+    },
+    {
       "axis": "z",
-      "degrees": -90
+      "degrees": 0
     }
   ],
   "position": [
-    0.41021,
-    -0.3429,
-    0.12
+    0,
+    0.3,
+    0.1
   ],
   "cameras": [
-    {
-      "name": "Front Camera",
-      "rotations": [],
-      "position": [
-        0.35,
-        0,
-        0.5
-      ],
-      "resolution": [
-        960,
-        720
-      ],
-      "fov": 90
-    },
-    {
-      "name": "Back Camera",
-      "rotations": [
-        {
-          "axis": "z",
-          "degrees": 180
-        }
-      ],
-      "position": [
-        -0.35,
-        0,
-        0.5
-      ],
-      "resolution": [
-        960,
-        720
-      ],
-      "fov": 90
-    }
+    {}
   ],
   "components": []
 }
