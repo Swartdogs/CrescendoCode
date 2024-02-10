@@ -42,8 +42,8 @@ import frc.robot.Constants;
  */
 public class ModuleTalonFX implements ModuleIO
 {
-    private final TalonFX              _driveSparkMax;
-    private final TalonFX              _turnSparkMax;
+    private final TalonFX              _driveTalonFX;
+    private final TalonFX              _turnTalonFX;
     private final RelativeEncoder      _driveEncoder;
     private final RelativeEncoder      _turnRelativeEncoder;
     private final AnalogEncoder        _turnAbsoluteEncoder;
@@ -56,31 +56,31 @@ public class ModuleTalonFX implements ModuleIO
 
     public ModuleTalonFX(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
     {
-        _driveSparkMax         = new TalonFX(driveCanId);
-        _turnSparkMax          = new TalonFX(turnCanId);
+        _driveTalonFX         = new TalonFX(driveCanId);
+        _turnTalonFX          = new TalonFX(turnCanId);
         _turnAbsoluteEncoder   = new AnalogEncoder(absoluteEncoderChannel);
         _absoluteEncoderOffset = absoluteEncoderOffset;
 
-        _driveAppliedVolts = _driveSparkMax.getMotorVoltage();
-        _turnAppliedVolts  = _turnSparkMax.getMotorVoltage();
-        _driveCurrent      = _driveSparkMax.getStatorCurrent();
-        _turnCurrent       = _turnSparkMax.getStatorCurrent();
+        _driveAppliedVolts = _driveTalonFX.getMotorVoltage();
+        _turnAppliedVolts  = _turnTalonFX.getMotorVoltage();
+        _driveCurrent      = _driveTalonFX.getStatorCurrent();
+        _turnCurrent       = _turnTalonFX.getStatorCurrent();
 
-        _driveSparkMax.restoreFactoryDefaults();
-        _turnSparkMax.restoreFactoryDefaults();
+        _driveTalonFX.restoreFactoryDefaults();
+        _turnTalonFX.restoreFactoryDefaults();
 
-        _driveSparkMax.setCANTimeout(250);
-        _turnSparkMax.setCANTimeout(250);
+        _driveTalonFX.setCANTimeout(250);
+        _turnTalonFX.setCANTimeout(250);
 
-        _driveEncoder        = _driveSparkMax.getEncoder();
-        _turnRelativeEncoder = _turnSparkMax.getEncoder();
+        _driveEncoder        = _driveTalonFX.getEncoder();
+        _turnRelativeEncoder = _turnTalonFX.getEncoder();
 
-        _turnSparkMax.setInverted(_isTurnMotorInverted);
-        _driveSparkMax.setInverted(true);
-        _driveSparkMax.setSmartCurrentLimit(40);
-        _turnSparkMax.setSmartCurrentLimit(30);
-        _driveSparkMax.enableVoltageCompensation(12.0);
-        _turnSparkMax.enableVoltageCompensation(12.0);
+        _turnTalonFX.setInverted(_isTurnMotorInverted);
+        _driveTalonFX.setInverted(true);
+        _driveTalonFX.setSmartCurrentLimit(40); //TODO: The way that they set limits is depracated, find different method
+        _turnTalonFX.setSmartCurrentLimit(30);
+        _driveTalonFX.enableVoltageCompensation(12.0);
+        _turnTalonFX.enableVoltageCompensation(12.0);
 
         _driveEncoder.setPosition(0.0);
         _driveEncoder.setMeasurementPeriod(10);
@@ -90,11 +90,11 @@ public class ModuleTalonFX implements ModuleIO
         _turnRelativeEncoder.setMeasurementPeriod(10);
         _turnRelativeEncoder.setAverageDepth(2);
 
-        _driveSparkMax.setCANTimeout(0);
-        _turnSparkMax.setCANTimeout(0);
+        _driveTalonFX.setCANTimeout(0);
+        _turnTalonFX.setCANTimeout(0);
 
-        _driveSparkMax.burnFlash();
-        _turnSparkMax.burnFlash();
+        _driveTalonFX.burnFlash();
+        _turnTalonFX.burnFlash();
     }
 
     @Override
@@ -115,13 +115,13 @@ public class ModuleTalonFX implements ModuleIO
     @Override
     public void setDriveVoltage(double volts)
     {
-        _driveSparkMax.setVoltage(volts);
+        _driveTalonFX.setVoltage(volts);
     }
 
     @Override
     public void setTurnVoltage(double volts)
     {
-        _turnSparkMax.setVoltage(volts);
+        _turnTalonFX.setVoltage(volts);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class ModuleTalonFX implements ModuleIO
         var config = new MotorOutputConfigs();
         config.Inverted    = InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-        _driveSparkMax.getConfigurator().apply(config);
+        _driveTalonFX.getConfigurator().apply(config);
     }
 
     @Override
@@ -139,6 +139,6 @@ public class ModuleTalonFX implements ModuleIO
         var config = new MotorOutputConfigs();
         config.Inverted    = _isTurnMotorInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-        _turnSparkMax.getConfigurator().apply(config);
+        _turnTalonFX.getConfigurator().apply(config);
     }
 }
