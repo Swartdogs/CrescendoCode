@@ -9,8 +9,9 @@ import frc.robot.Constants;
 public class ShooterFlywheel extends SubsystemBase
 {
     private final ShooterFlywheelIO                 _flywheelIO;
-    private final ShooterFlywheelIOInputsAutoLogged _inputs           = new ShooterFlywheelIOInputsAutoLogged();
-    private double                                  _maxFlywheelSpeed = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED;
+    private final ShooterFlywheelIOInputsAutoLogged _inputs                = new ShooterFlywheelIOInputsAutoLogged();
+    private double                                  _maxFlywheelSpeed      = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED * Constants.General.MAX_NEO_SPEED;
+    private double                                  _flywheelIntakeVoltage = Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
@@ -40,9 +41,20 @@ public class ShooterFlywheel extends SubsystemBase
         _flywheelIO.setLowerVoltage(0);
     }
 
+    public void flywheelIntakeOn()
+    {
+        _flywheelIO.setUpperVoltage(-_flywheelIntakeVoltage);
+        _flywheelIO.setLowerVoltage(-_flywheelIntakeVoltage);
+    }
+
     public void setMaxFlywheelSpeed(double maxFlywheelSpeed)
     {
-        _maxFlywheelSpeed = maxFlywheelSpeed;
+        _maxFlywheelSpeed = maxFlywheelSpeed * Constants.General.MAX_NEO_SPEED;
+    }
+
+    public void setFlywheelIntakeVoltage(double flywheelIntakeSpeed)
+    {
+        _flywheelIntakeVoltage = flywheelIntakeSpeed * Constants.General.MOTOR_VOLTAGE;
     }
 
     public double getUpperFlywheelVelocity()
