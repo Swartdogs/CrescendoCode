@@ -323,7 +323,7 @@ public class Dashboard extends SubsystemBase
         SwerveModuleState[] moduleStates = _drive.getModuleStates();
 
         _allianceBox.setBoolean(isBlue);
-        _HasNote.setBoolean(false);
+        _HasNote.setBoolean(_notepath.hasNote());
         _flAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[0].angle.getDegrees())));
         _frAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[1].angle.getDegrees())));
         _brAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[2].angle.getDegrees())));
