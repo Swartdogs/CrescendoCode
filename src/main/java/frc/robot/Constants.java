@@ -15,7 +15,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public final class Constants
 {
@@ -151,7 +150,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.SIM;
+        public static final Mode CURRENT_MODE = Mode.REAL;
 
         public static enum Mode
         {
@@ -164,12 +163,5 @@ public final class Constants
             /** Replaying from a log file. */
             REPLAY
         }
-    }
-
-    public static class Pnuematics
-    {
-        public static final PneumaticsModuleType MODULE_TYPE    = PneumaticsModuleType.CTREPCM;
-        public static final int                  SOLENOID_LEFT  = 1; // TODO: Find Ids
-        public static final int                  SOLENOID_RIGHT = 2;
     }
 }

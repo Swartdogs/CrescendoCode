@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants;
@@ -27,20 +28,18 @@ public class ClimbIOSim implements ClimbIO
 
     public ClimbIOSim()
     {
-        Mechanism2d mechanismLeft  = new Mechanism2d(3, 3);
-        Mechanism2d mechanismRight = new Mechanism2d(3, 3);
+        Mechanism2d mechanism = new Mechanism2d(30, 33);
 
-        MechanismRoot2d robotLeft  = mechanismLeft.getRoot("Climb1", 1, 0);
-        MechanismRoot2d robotRight = mechanismRight.getRoot("Climb2", 1.75, 0);
+        MechanismRoot2d robotLeft  = mechanism.getRoot("Climb1", 10, 0);
+        MechanismRoot2d robotRight = mechanism.getRoot("Climb2", 20, 0);
 
-        MechanismLigament2d ligLeft  = robotLeft.append(new MechanismLigament2d("lig1", 0.01, 90, 20, new Color8Bit(Color.kOrange)));
-        MechanismLigament2d ligRight = robotRight.append(new MechanismLigament2d("lig2", 0.01, 90, 20, new Color8Bit(Color.kOrange)));
+        _climbLeft  = robotLeft.append(new MechanismLigament2d("lig1", 2, 90, 15, new Color8Bit(Color.kOrange)));
+        _climbRight = robotRight.append(new MechanismLigament2d("lig2", 2, 90, 15, new Color8Bit(Color.kOrange)));
 
-        _climbLeft  = ligLeft.append(new MechanismLigament2d("SubClimb1", 2, 10, 10, new Color8Bit(Color.kOrange)));
-        _climbRight = ligRight.append(new MechanismLigament2d("SubClimb2", 2, 10, 10, new Color8Bit(Color.kOrange)));
+        _climbLeft.append(new MechanismLigament2d("HookLeft", 4, 20, 15, new Color8Bit(Color.kOrange)));
+        _climbRight.append(new MechanismLigament2d("HookLeft", 4, 20, 15, new Color8Bit(Color.kOrange)));
 
-        _climbLeft.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
-        _climbRight.append(new MechanismLigament2d("HookLeft", 0.4, 20, 10, new Color8Bit(Color.kOrange)));
+        SmartDashboard.putData("Climb", mechanism);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class ClimbIOSim implements ClimbIO
     @Override
     public void setVoltageRight(double volts)
     {
-        _rightAppliedVolts = MathUtil.clamp(volts, -Constants.Climb.MOTOR_VOLTAGE_LIMIT, Constants.Climb.MOTOR_VOLTAGE_LIMIT);
+        _rightAppliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
         _rightSim.setInputVoltage(_rightAppliedVolts);
     }
 }

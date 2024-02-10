@@ -125,7 +125,7 @@ public class Climb extends SubsystemBase
     {
         return _inputs.extensionLeft;
     }
-    
+
     public double getExtensionRight()
     {
         return _inputs.extensionRight;
