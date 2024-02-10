@@ -202,4 +202,9 @@ public class Module
     {
         return _inputs.driveVelocityRadPerSec;
     }
+
+    public void setAbsoluteEncoderOffset(Rotation2d ModuleOffset)
+    {
+        _io.setAngleOffset(ModuleOffset);
+    }
 }

@@ -136,7 +136,7 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
-        new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake);
+        new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
 
         DriverStation.silenceJoystickConnectionWarning(true);
     }

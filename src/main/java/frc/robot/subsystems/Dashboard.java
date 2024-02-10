@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterBed;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
@@ -70,17 +71,19 @@ public class Dashboard extends SubsystemBase
     private final Intake          _Intake;
     private final ShooterFlywheel _ShooterFlywheel;
     private final Drive           _drive;
+    private final Climb           _climb;
 
     // SendableChoosers for Autonomous options
     private SendableChooser<Integer> _autoDelayChooser;
 
-    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel ShooterFlywheel, Drive drive, Intake intake)
+    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel ShooterFlywheel, Drive drive, Intake intake, Climb climb)
     {
         _drive           = drive;
         _ShooterBed      = shooterBed;
         _notepath        = notepath;
         _ShooterFlywheel = ShooterFlywheel;
         _Intake          = intake;
+        _climb           = climb;
 
         var tab         = Shuffleboard.getTab("Dashboard");
         var SettingsTab = Shuffleboard.getTab("Settings");
@@ -189,22 +192,22 @@ public class Dashboard extends SubsystemBase
 
         initializeSetting("FL Offset", Constants.Drive.MODULE_FL_OFFSET.getDegrees(), _flOffset, value ->
         {
-            // empty lambda
+            drive.setModuleAbsoluteEncoderOffset(0, Rotation2d.fromDegrees(value));
         });
 
         initializeSetting("FR Offset", Constants.Drive.MODULE_FR_OFFSET.getDegrees(), _frOffset, value ->
         {
-            // empty lambda
+            drive.setModuleAbsoluteEncoderOffset(1, Rotation2d.fromDegrees(value));
         });
 
         initializeSetting("BL Offset", Constants.Drive.MODULE_BL_OFFSET.getDegrees(), _blOffset, value ->
         {
-            // empty lambda
+            drive.setModuleAbsoluteEncoderOffset(2, Rotation2d.fromDegrees(value));
         });
 
         initializeSetting("BR Offset", Constants.Drive.MODULE_BR_OFFSET.getDegrees(), _brOffset, value ->
         {
-            // empty lambda
+            drive.setModuleAbsoluteEncoderOffset(3, Rotation2d.fromDegrees(value));
         });
 
         initializeSetting("Intake In Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _IntakeInSpeed, value ->
@@ -217,19 +220,14 @@ public class Dashboard extends SubsystemBase
             intake.setOuttakePercentOutput(value);
         });
 
-        initializeSetting("Climber Speed", 0, _climberMinHeight, value ->
-        {
-            // empty lambda
-        });
-
         initializeSetting("Climber Left Offset", 0, _climberleftOffset, value ->
         {
-            // empty lambda
+            climb.getExtensionLeft();
         });
 
         initializeSetting("Climber Right Offset", 0, _climberRightOffset, value ->
         {
-            // empty lambda
+            climb.getExtensionRight();
         });
 
         initializeSetting("Note Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT, _NoteShootSpeed, value ->
@@ -312,15 +310,15 @@ public class Dashboard extends SubsystemBase
 
         _allianceBox.setBoolean(isBlue);
         _HasNote.setBoolean(false);
-        _frAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[0].angle.getDegrees())));
-        _flAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[1].angle.getDegrees())));
+        _flAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[0].angle.getDegrees())));
+        _frAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[1].angle.getDegrees())));
         _brAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[2].angle.getDegrees())));
         _blAngle.setDouble(Double.parseDouble(String.format("%6.2f", moduleStates[3].angle.getDegrees())));
         _field.setRobotPose(_drive.getPose());
 
-        _LeftHeight.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+        _LeftHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getExtensionLeft())));
         _IntakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", _Intake.getPercentOutput())));
-        _Rightheight.setDouble(Double.parseDouble(String.format("%6.2f", 0.0)));
+        _Rightheight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getExtensionRight())));
 
         _notepathOutput.setDouble(Double.parseDouble(String.format("%6.2f", _notepath.getPercentOutput())));
         _bedAngle.setDouble(Double.parseDouble(String.format("%6.2f", _ShooterBed.getBedAngle().getDegrees())));

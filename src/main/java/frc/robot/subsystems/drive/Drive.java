@@ -226,6 +226,11 @@ public class Drive extends SubsystemBase
         return wheelPositions;
     }
 
+    public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
+    {
+        _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
+    }
+
     /** Returns an array of module translations. */
     public static Translation2d[] getModuleTranslations()
     {

@@ -2,7 +2,7 @@
   {
     "name": "/Preferences/FL Offset",
     "type": "double",
-    "value": -113.2,
+    "value": -100.0,
     "properties": {
       "persistent": true
     }
@@ -10,7 +10,7 @@
   {
     "name": "/Preferences/FR Offset",
     "type": "double",
-    "value": 26.0,
+    "value": 36.0,
     "properties": {
       "persistent": true
     }
