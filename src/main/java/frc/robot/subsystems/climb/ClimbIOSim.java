@@ -1,11 +1,6 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -14,30 +9,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants;
+import frc.robot.util.Simulation;
 
 public class ClimbIOSim implements ClimbIO
 {
-    private DCMotor                   _leftArm           = new DCMotor(12, 9.2, 16.3, 1.6, Units.rotationsPerMinuteToRadiansPerSecond(90), 1);
-    private DCMotor                   _rightArm          = new DCMotor(12, 9.2, 16.3, 1.6, Units.rotationsPerMinuteToRadiansPerSecond(90), 1);
-    private DCMotorSim                _leftSim           = new DCMotorSim(_leftArm, 2.5, 0.003); // Find values
-    private DCMotorSim                _rightSim          = new DCMotorSim(_rightArm, 2.5, 0.003); // Find values
-    private double                    _leftAppliedVolts  = 0.0;
-    private double                    _rightAppliedVolts = 0.0;
-    private final MechanismLigament2d _climbLeft;
-    private final MechanismLigament2d _climbRight;
+    private final DCMotorSim          _leftArmSim  = new DCMotorSim(Simulation.windowMotor(), 2.5, 0.003); // Find values
+    private final DCMotorSim          _rightArmSim = new DCMotorSim(Simulation.windowMotor(), 2.5, 0.003); // Find values
+    private final MechanismLigament2d _leftArmLigament;
+    private final MechanismLigament2d _rightArmLigament;
+    private double                    _leftVolts   = 0.0;
+    private double                    _rightVolts  = 0.0;
 
     public ClimbIOSim()
     {
         Mechanism2d mechanism = new Mechanism2d(30, 33);
 
-        MechanismRoot2d robotLeft  = mechanism.getRoot("Climb1", 10, 0);
-        MechanismRoot2d robotRight = mechanism.getRoot("Climb2", 20, 0);
+        MechanismRoot2d robotLeft  = mechanism.getRoot("LeftArmRoot", 10, 0);
+        MechanismRoot2d robotRight = mechanism.getRoot("RightArmRoot", 20, 0);
 
-        _climbLeft  = robotLeft.append(new MechanismLigament2d("lig1", 2, 90, 15, new Color8Bit(Color.kOrange)));
-        _climbRight = robotRight.append(new MechanismLigament2d("lig2", 2, 90, 15, new Color8Bit(Color.kOrange)));
+        _leftArmLigament  = robotLeft.append(new MechanismLigament2d("LeftArm", 2, 90, 15, new Color8Bit(Color.kOrange)));
+        _rightArmLigament = robotRight.append(new MechanismLigament2d("RightArm", 2, 90, 15, new Color8Bit(Color.kOrange)));
 
-        _climbLeft.append(new MechanismLigament2d("HookLeft", 4, 20, 15, new Color8Bit(Color.kOrange)));
-        _climbRight.append(new MechanismLigament2d("HookLeft", 4, 20, 15, new Color8Bit(Color.kOrange)));
+        _leftArmLigament.append(new MechanismLigament2d("LeftHook", 4, 20, 15, new Color8Bit(Color.kOrange)));
+        _rightArmLigament.append(new MechanismLigament2d("RightHook", 4, 20, 15, new Color8Bit(Color.kOrange)));
 
         SmartDashboard.putData("Climb", mechanism);
     }
@@ -45,30 +39,30 @@ public class ClimbIOSim implements ClimbIO
     @Override
     public void updateInputs(ClimbIOInputs inputs)
     {
-        _leftSim.update(Constants.General.LOOP_PERIOD_SECS);
-        _rightSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _leftArmSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _rightArmSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.extensionLeft  = _leftSim.getAngularPositionRad(); // in per rad = 1
-        inputs.extensionRight = _rightSim.getAngularPositionRad(); // in per rad = 1
+        inputs.leftExtension  = _leftArmSim.getAngularPositionRad(); // in per rad = 1
+        inputs.rightExtension = _rightArmSim.getAngularPositionRad(); // in per rad = 1
 
-        inputs.appliedVoltsLeft  = _leftAppliedVolts;
-        inputs.appliedVoltsRight = _rightAppliedVolts;
+        inputs.leftVolts  = _leftVolts;
+        inputs.rightVolts = _rightVolts;
 
-        _climbLeft.setLength(inputs.extensionLeft);
-        _climbRight.setLength(inputs.extensionRight);
+        _leftArmLigament.setLength(inputs.leftExtension);
+        _rightArmLigament.setLength(inputs.rightExtension);
     }
 
     @Override
-    public void setVoltageLeft(double volts)
+    public void setLeftVolts(double volts)
     {
-        _leftAppliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
-        _leftSim.setInputVoltage(_leftAppliedVolts);
+        _leftVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+        _leftArmSim.setInputVoltage(_leftVolts);
     }
 
     @Override
-    public void setVoltageRight(double volts)
+    public void setRightVolts(double volts)
     {
-        _rightAppliedVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
-        _rightSim.setInputVoltage(_rightAppliedVolts);
+        _rightVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+        _rightArmSim.setInputVoltage(_rightVolts);
     }
 }

@@ -2,13 +2,14 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase
 {
-    private IntakeIO                       _io;
+    private final IntakeIO                 _io;
     private final IntakeIOInputsAutoLogged _inputs               = new IntakeIOInputsAutoLogged();
     private double                         _intakePercentOutput  = Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT;
     private double                         _outtakePercentOutput = Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT;
@@ -25,19 +26,28 @@ public class Intake extends SubsystemBase
         Logger.processInputs("Intake", _inputs);
     }
 
-    public void setIntakeOn()
+    public void set(Value value)
     {
-        _io.setVoltage(_intakePercentOutput * Constants.General.MOTOR_VOLTAGE);
-    }
+        double voltage = Constants.General.MOTOR_VOLTAGE;
 
-    public void setIntakeOff()
-    {
-        _io.setVoltage(0.0);
-    }
+        switch (value)
+        {
+            case kOn:
+            case kForward:
+                voltage *= _intakePercentOutput;
+                break;
 
-    public void setIntakeReverse()
-    {
-        _io.setVoltage(-_outtakePercentOutput * Constants.General.MOTOR_VOLTAGE);
+            case kReverse:
+                voltage *= -_outtakePercentOutput;
+                break;
+
+            case kOff:
+            default:
+                voltage = 0;
+                break;
+        }
+
+        _io.setVoltage(voltage);
     }
 
     public void setIntakePercentOutput(double percentOutput)
@@ -52,6 +62,6 @@ public class Intake extends SubsystemBase
 
     public double getPercentOutput()
     {
-        return _inputs.appliedVolts / Constants.General.MOTOR_VOLTAGE;
+        return _inputs.motorVolts / Constants.General.MOTOR_VOLTAGE;
     }
 }

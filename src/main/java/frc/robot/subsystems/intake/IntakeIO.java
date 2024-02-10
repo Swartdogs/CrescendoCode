@@ -7,8 +7,8 @@ public interface IntakeIO
     @AutoLog
     public static class IntakeIOInputs
     {
-        public double   appliedVolts = 0.0;
-        public double[] currentAmps  = new double[] {};
+        public double   motorVolts = 0.0;
+        public double[] motorCurrent  = new double[] {};
     }
 
     public default void updateInputs(IntakeIOInputs inputs)

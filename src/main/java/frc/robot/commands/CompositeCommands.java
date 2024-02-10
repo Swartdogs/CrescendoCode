@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.intake.Intake;
@@ -18,7 +19,7 @@ public final class CompositeCommands
         return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed)).andThen(Commands.waitUntil(() -> notepath.sensorTripped()))
                 .finallyDo(interrupted ->
                 {
-                    intake.setIntakeOff();
+                    intake.set(Value.kOff);
                     notepath.setOff();
                     notepath.setHasNote(!interrupted);
                 }).unless(() -> notepath.hasNote());

@@ -16,8 +16,8 @@ public final class ClimbCommands
     {
         return climb.run(() ->
         {
-            climb.setVoltageLeft(leftSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
-            climb.setVoltageRight(rightSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
+            climb.setLeftVolts(leftSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
+            climb.setRightVolts(rightSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
         });
     }
 
