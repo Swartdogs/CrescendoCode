@@ -2,17 +2,21 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase
 {
+    public enum IntakeState
+    {
+        On, Off, Reverse
+    }
+
     private final IntakeIO                 _io;
-    private final IntakeIOInputsAutoLogged _inputs               = new IntakeIOInputsAutoLogged();
-    private double                         _intakePercentOutput  = Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT;
-    private double                         _outtakePercentOutput = Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT;
+    private final IntakeIOInputsAutoLogged _inputs   = new IntakeIOInputsAutoLogged();
+    private double                         _inVolts  = Constants.General.MOTOR_VOLTAGE * Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT;
+    private double                         _outVolts = Constants.General.MOTOR_VOLTAGE * Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT;
 
     public Intake(IntakeIO io)
     {
@@ -26,41 +30,28 @@ public class Intake extends SubsystemBase
         Logger.processInputs("Intake", _inputs);
     }
 
-    public void set(Value value)
+    public void set(IntakeState state)
     {
-        double voltage = Constants.General.MOTOR_VOLTAGE;
-
-        switch (value)
+        _io.setVolts(switch (state)
         {
-            case kOn:
-            case kForward:
-                voltage *= _intakePercentOutput;
-                break;
-
-            case kReverse:
-                voltage *= -_outtakePercentOutput;
-                break;
-
-            case kOff:
-            default:
-                voltage = 0;
-                break;
-        }
-
-        _io.setVoltage(voltage);
+            case On -> _inVolts;
+            case Reverse -> _outVolts;
+            case Off -> 0;
+            default -> 0;
+        });
     }
 
-    public void setIntakePercentOutput(double percentOutput)
+    public void setInSpeed(double speed)
     {
-        _intakePercentOutput = percentOutput;
+        _inVolts = Constants.General.MOTOR_VOLTAGE * speed;
     }
 
-    public void setOuttakePercentOutput(double percentOutput)
+    public void setOutSpeed(double speed)
     {
-        _outtakePercentOutput = percentOutput;
+        _outVolts = -Constants.General.MOTOR_VOLTAGE * speed;
     }
 
-    public double getPercentOutput()
+    public double getSpeed()
     {
         return _inputs.motorVolts / Constants.General.MOTOR_VOLTAGE;
     }

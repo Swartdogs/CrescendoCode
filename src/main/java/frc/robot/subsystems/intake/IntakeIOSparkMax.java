@@ -8,34 +8,34 @@ import com.revrobotics.CANSparkMax;
 
 public class IntakeIOSparkMax implements IntakeIO
 {
-    private final CANSparkMax _intakeMotor;
+    private final CANSparkMax _motor;
 
     public IntakeIOSparkMax()
     {
-        _intakeMotor = new CANSparkMax(Constants.CAN.INTAKE, MotorType.kBrushless);
+        _motor = new CANSparkMax(Constants.CAN.INTAKE, MotorType.kBrushless);
 
-        _intakeMotor.restoreFactoryDefaults();
+        _motor.restoreFactoryDefaults();
 
-        _intakeMotor.setCANTimeout(250);
+        _motor.setCANTimeout(250);
 
-        _intakeMotor.setInverted(true);
-        _intakeMotor.setSmartCurrentLimit(20);
+        _motor.setInverted(true);
+        _motor.setSmartCurrentLimit(20);
 
-        _intakeMotor.setCANTimeout(0);
+        _motor.setCANTimeout(0);
 
-        _intakeMotor.burnFlash();
+        _motor.burnFlash();
     }
 
     @Override
     public void updateInputs(IntakeIOInputs inputs)
     {
-        inputs.motorVolts = _intakeMotor.getAppliedOutput() * _intakeMotor.getBusVoltage();
-        inputs.motorCurrent  = new double[] { _intakeMotor.getOutputCurrent() };
+        inputs.motorVolts = _motor.getAppliedOutput() * _motor.getBusVoltage();
+        inputs.motorCurrent  = new double[] { _motor.getOutputCurrent() };
     }
 
     @Override
-    public void setVoltage(double volts)
+    public void setVolts(double volts)
     {
-        _intakeMotor.setVoltage(volts);
+        _motor.setVoltage(volts);
     }
 }

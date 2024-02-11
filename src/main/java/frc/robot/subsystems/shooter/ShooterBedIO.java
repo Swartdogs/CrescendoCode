@@ -9,20 +9,20 @@ public interface ShooterBedIO
     @AutoLog
     public static class ShooterBedIOInputs
     {
-        public double     bedLeaderAppliedVolts   = 0.0;
-        public double     bedFollowerAppliedVolts = 0.0;
-        public Rotation2d bedAngle                = new Rotation2d();
+        public double     leaderVolts   = 0.0;
+        public double     followerVolts = 0.0;
+        public Rotation2d bedAngle      = new Rotation2d();
     }
 
     public default void updateInputs(ShooterBedIOInputs inputs)
     {
     }
 
-    public default void setVoltage(double volts)
+    public default void setVolts(double volts)
     {
     }
 
-    public default void setAngleOffset(Rotation2d bedAbsoluteEncoderOffset)
+    public default void setOffset(Rotation2d offset)
     {
     }
 }
