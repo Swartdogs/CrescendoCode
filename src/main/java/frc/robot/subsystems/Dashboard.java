@@ -27,7 +27,6 @@ import frc.robot.subsystems.shooter.ShooterFlywheel;
 
 public class Dashboard extends SubsystemBase
 {
-    private static Dashboard _instance;
    /*
     * Dashboard
     */
@@ -91,8 +90,6 @@ public class Dashboard extends SubsystemBase
    private final GenericEntry _shooterOffset;
    private final GenericEntry _bedMinimumAngle;
    private final GenericEntry _bedMaximumAngle;
-   private final GenericEntry _bedPickupIntakeAngle;
-   private final GenericEntry _bedPickupShooterAngle;
 
    // Shooter Flywheel
    private final GenericEntry _flywheelVelocityRange;
@@ -141,7 +138,7 @@ public class Dashboard extends SubsystemBase
         // Height, Intake and Speed
         var heightAndIntakeLayout = tab.getLayout("Height and Intake", BuiltInLayouts.kGrid).withPosition(0, 10).withSize(15, 5).withProperties(Map.of("Number of columns", 3, "Number of rows", 1));
         _leftHeight  = heightAndIntakeLayout.add("Left Height", 0).withSize(5, 4).withPosition(0, 0).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL", "Min", 0, "Max", 25)).getEntry();
-        _rightheight = heightAndIntakeLayout.add("Right Height", 0).withWidget(BuiltInWidgets.kNumberBar).withPosition(2, 0).withProperties(Map.of("Orientation", "VERTICAL", "Min", 0, "Max", 25)).getEntry();
+        _rightHeight = heightAndIntakeLayout.add("Right Height", 0).withWidget(BuiltInWidgets.kNumberBar).withPosition(2, 0).withProperties(Map.of("Orientation", "VERTICAL", "Min", 0, "Max", 25)).getEntry();
         _intakeSpeed = heightAndIntakeLayout.add("Intake Speed", 0).withPosition(1, 0).withWidget(BuiltInWidgets.kNumberBar).getEntry();
 
         _notepathOutput = tab.add("Notepath Speed", 0).withSize(6, 7).withPosition(26, 8).withWidget(BuiltInWidgets.kNumberBar).getEntry();
@@ -190,13 +187,13 @@ public class Dashboard extends SubsystemBase
         _intakeOutSpeed = IntakeSetting.add("Intake Out Speed", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(0, 1).getEntry();
 
         var climbSetting = outerLayout.getLayout("Climber", BuiltInLayouts.kList).withPosition(2, 0).withProperties(Map.of("label position", "LEFT")).withSize(7, 10);
-        _climberleftOffset  = climbSetting.add("Left Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _climberRightOffset = climbSetting.add("Right Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _climberMinHeight   = climbSetting.add("Arm Minimum Height", 0.0).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _climberMaxHeight   = climbSetting.add("Arm Maximum Height", 0.0).withPosition(2, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _climbLeftOffset  = climbSetting.add("Left Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _climbRightOffset = climbSetting.add("Right Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _climbMinHeight   = climbSetting.add("Arm Minimum Height", 0.0).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _climbMaxHeight   = climbSetting.add("Arm Maximum Height", 0.0).withPosition(2, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
         var noteSetting = outerLayout.getLayout("Notepath", BuiltInLayouts.kList).withPosition(3, 0).withSize(8, 10).withProperties(Map.of("label position", "LEFT"));
-        _noteShootSpeed     = noteSetting.add("Note Shoot Speed", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _notepathShootSpeed     = noteSetting.add("Note Shoot Speed", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
         _pickupIntakeSpeed  = noteSetting.add("Pickup Intake Speed", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
         _shooterIntakeSpeed = noteSetting.add("Shooter Intake Speed", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
@@ -206,7 +203,7 @@ public class Dashboard extends SubsystemBase
         _shooterOffset   = shooterBedSetting.add("Shooter Relative Offset", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
         var shooterFlywheelSetting = outerLayout.getLayout("Shooter Flywheel", BuiltInLayouts.kList).withPosition(5, 0).withSize(7, 10).withProperties(Map.of("label position", "LEFT"));
-        _maxFlywheelVelocity = shooterFlywheelSetting.add("Max Flywheel Velocity ", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _flywheelVelocityRange = shooterFlywheelSetting.add("Max Flywheel Velocity ", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
         _maxFlywheelSpeed    = shooterFlywheelSetting.add("Max Flywheel Speed ", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
         _flywheelIntakeSpeed = shooterFlywheelSetting.add("Flywheel Intake Speed ", 0.0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
@@ -240,27 +237,27 @@ public class Dashboard extends SubsystemBase
             intake.setOuttakePercentOutput(value);
         });
 
-        initializeSetting("Climber Left Offset", Constants.Climb.LEFT_ZERO_OFFSET, _climberleftOffset, value ->
+        initializeSetting("Climber Left Offset", Constants.Climb.LEFT_ZERO_OFFSET, _climbLeftOffset, value ->
         {
             climb.getExtensionLeft();
         });
 
-        initializeSetting("Climber Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET, _climberRightOffset, value ->
+        initializeSetting("Climber Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET, _climbRightOffset, value ->
         {
             climb.getExtensionRight();
         });
 
-        initializeSetting("Climber Minimum Height", Constants.Climb.MIN_EXTENSION, _climberMinHeight, value ->
+        initializeSetting("Climber Minimum Height", Constants.Climb.MIN_EXTENSION, _climbMinHeight, value ->
         {
             climb.setExtensionMin(value);
         });
 
-        initializeSetting("Climber Maximum Height", Constants.Climb.MAX_EXTENSION, _climberMaxHeight, value ->
+        initializeSetting("Climber Maximum Height", Constants.Climb.MAX_EXTENSION, _climbMaxHeight, value ->
         {
             climb.setExtensionMax(value);
         });
 
-        initializeSetting("Note Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT, _noteShootSpeed, value ->
+        initializeSetting("Note Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT, _notepathShootSpeed, value ->
         {
             notepath.setNotepathFeedPercentOutput(value);
         });
@@ -270,7 +267,7 @@ public class Dashboard extends SubsystemBase
             shooterBed.setAngleOffset(Rotation2d.fromDegrees(value));
         });
 
-        initializeSetting("Max Flywheel Velocity", Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED, _maxFlywheelVelocity, value ->
+        initializeSetting("Max Flywheel Velocity", Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED, _flywheelVelocityRange, value ->
         {
             ShooterFlywheel.setMaxFlywheelSpeed(value);
         });
@@ -358,7 +355,7 @@ public class Dashboard extends SubsystemBase
 
         _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getExtensionLeft())));
         _intakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", _Intake.getPercentOutput())));
-        _rightheight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getExtensionRight())));
+        _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getExtensionRight())));
 
         _notepathOutput.setDouble(Double.parseDouble(String.format("%6.2f", _notepath.getPercentOutput())));
         _bedAngle.setDouble(Double.parseDouble(String.format("%6.2f", _ShooterBed.getBedAngle().getDegrees())));
