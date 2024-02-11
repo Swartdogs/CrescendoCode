@@ -14,14 +14,10 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
@@ -74,6 +70,8 @@ public class RobotContainer
     private final Gyro            _gyro;
     @SuppressWarnings("unused")
     private final Vision          _vision;
+    @SuppressWarnings("unused")
+    private final Dashboard       _dashboard;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -135,9 +133,7 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
-        new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
-
-        DriverStation.silenceJoystickConnectionWarning(true);
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
     }
 
     private void configureButtonBindings()
