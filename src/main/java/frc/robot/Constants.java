@@ -142,7 +142,7 @@ public final class Constants
 
     public static class LED
     {
-        public static final int NUM_LEDS = 1; //TODO: Change value
+        public static final int NUM_LEDS = 1; // TODO: Change value
     }
 
     public static class General

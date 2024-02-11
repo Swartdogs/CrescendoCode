@@ -3,10 +3,25 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.leds;
 
+import java.util.ArrayList;
+
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
+
 public interface LEDIO
 {
-    public default void setLEDs()//Array list of colors
+    public default void applyAnimationFrame(ArrayList<Color> colorArray)
     {
 
+    }
+
+    public default void setLEDs(AddressableLEDBuffer buffer)// Array list of colors
+    {
+
+    }
+
+    public default AddressableLEDBuffer getLEDs()
+    {
+        return null;
     }
 }
