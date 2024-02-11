@@ -14,6 +14,7 @@ public class ShooterFlywheel extends SubsystemBase
     private double                                  _flywheelIntakeVoltage = Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE;
     private Double                                  _upperVelocitySetpoint = null;
     private Double                                  _lowerVelocitySetpoint = null;
+    private double _velocityRange = Constants.ShooterFlywheel.VELOCITY_RANGE;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
@@ -83,18 +84,18 @@ public class ShooterFlywheel extends SubsystemBase
         {
             return false;
         }
-
-        return Math.abs(_upperVelocitySetpoint - getUpperFlywheelVelocity()) <= _upperVelocitySetpoint * Constants.ShooterFlywheel.VELOCITY_RANGE;
+    
+        return Math.abs(_upperVelocitySetpoint - getUpperFlywheelVelocity()) <= _upperVelocitySetpoint * _velocityRange;
     }
-
+    
     public boolean lowerAtSpeed()
     {
         if (_lowerVelocitySetpoint == null)
         {
             return false;
         }
-
-        return Math.abs(_lowerVelocitySetpoint - getLowerFlywheelVelocity()) <= _lowerVelocitySetpoint * Constants.ShooterFlywheel.VELOCITY_RANGE;
+    
+        return Math.abs(_lowerVelocitySetpoint - getLowerFlywheelVelocity()) <= _lowerVelocitySetpoint * _velocityRange;
     }
 
     public boolean atSpeed()
@@ -106,4 +107,9 @@ public class ShooterFlywheel extends SubsystemBase
     {
         return _upperVelocitySetpoint != null && _lowerVelocitySetpoint != null && _upperVelocitySetpoint > 0 && _lowerVelocitySetpoint > 0;
     }
+
+    public void setVelocityRange(double velocityRange)
+{
+    _velocityRange = velocityRange;
+}
 }
