@@ -27,41 +27,77 @@ import frc.robot.subsystems.shooter.ShooterFlywheel;
 
 public class Dashboard extends SubsystemBase
 {
-    private Field2d _field;
+    private static Dashboard _instance;
+   /*
+    * Dashboard
+    */
 
-    // Widgets for the dashboard
-    private GenericEntry          _allianceBox;
-    private GenericEntry          _hasNote;
-    private GenericEntry          _frAngle;
-    private GenericEntry          _flAngle;
-    private GenericEntry          _brAngle;
-    private GenericEntry          _blAngle;
-    private GenericEntry          _leftHeight;
-    private GenericEntry          _rightheight;
-    private GenericEntry          _intakeSpeed;
-    private GenericEntry          _notepathOutput;
-    private GenericEntry          _bedAngle;
-    private GenericEntry          _upperVelocity;
-    private GenericEntry          _lowerVelocity;
-    private GenericEntry          _frOffset;
-    private GenericEntry          _flOffset;
-    private GenericEntry          _brOffset;
-    private GenericEntry          _blOffset;
-    private GenericEntry          _intakeInSpeed;
-    private GenericEntry          _climberleftOffset;
-    private GenericEntry          _climberRightOffset;
-    private GenericEntry          _climberMinHeight;
-    private GenericEntry          _noteShootSpeed;
-    private GenericEntry          _pickupIntakeSpeed;
-    private GenericEntry          _shooterIntakeSpeed;
-    private GenericEntry          _shooterOffset;
-    private GenericEntry          _intakeOutSpeed;
-    private GenericEntry          _bedMinimumAngle;
-    private GenericEntry          _bedMaximumAngle;
-    private GenericEntry          _maxFlywheelVelocity;
-    private GenericEntry          _climberMaxHeight;
-    private GenericEntry          _maxFlywheelSpeed;
-    private GenericEntry          _flywheelIntakeSpeed;
+   // Field
+   private final Field2d _field;
+
+   // Color Box
+   private final GenericEntry _allianceBox;
+   private final GenericEntry _hasNote;
+
+   // Swerve angles
+   private final GenericEntry _frAngle;
+   private final GenericEntry _flAngle;
+   private final GenericEntry _brAngle;
+   private final GenericEntry _blAngle;
+
+   // Climb
+   private final GenericEntry _leftHeight;
+   private final GenericEntry _rightHeight;
+
+   // Intake
+   private final GenericEntry _intakeSpeed;
+
+   // Notepath
+   private final GenericEntry _notepathOutput;
+
+   // Shooter bed
+   private final GenericEntry _bedAngle;
+
+   // Shooter flywheel
+   private final GenericEntry _upperVelocity;
+   private final GenericEntry _lowerVelocity;
+
+   /*
+    * Settings
+    */
+
+   // Drive
+   private final GenericEntry _frOffset;
+   private final GenericEntry _flOffset;
+   private final GenericEntry _brOffset;
+   private final GenericEntry _blOffset;
+
+   // Intake
+   private final GenericEntry _intakeInSpeed;
+   private final GenericEntry _intakeOutSpeed;
+
+   // Climb
+   private final GenericEntry _climbLeftOffset;
+   private final GenericEntry _climbRightOffset;
+   private final GenericEntry _climbMinHeight;
+   private final GenericEntry _climbMaxHeight;
+
+   // Notepath
+   private final GenericEntry _notepathShootSpeed;
+   private final GenericEntry _pickupIntakeSpeed;
+   private final GenericEntry _shooterIntakeSpeed;
+
+   // Shooter Bed
+   private final GenericEntry _shooterOffset;
+   private final GenericEntry _bedMinimumAngle;
+   private final GenericEntry _bedMaximumAngle;
+   private final GenericEntry _bedPickupIntakeAngle;
+   private final GenericEntry _bedPickupShooterAngle;
+
+   // Shooter Flywheel
+   private final GenericEntry _flywheelVelocityRange;
+   private final GenericEntry _maxFlywheelSpeed;
+   private final GenericEntry _flywheelIntakeSpeed;
     private final ShooterBed      _ShooterBed;
     private final Notepath        _notepath;
     private final Intake          _Intake;
