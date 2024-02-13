@@ -42,7 +42,7 @@ public class Drive extends SubsystemBase
     private final Gyro                     _gyro;
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
-    private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
     private PIDController _rotatePID;
     private double _maxSpeed;
@@ -61,8 +61,7 @@ public class Drive extends SubsystemBase
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
-                this::getPose, this::setPose, () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
-                new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                this::getPose, this::setPose, this::getChassisSpeeds, this::runVelocity, new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
         );
 
@@ -232,6 +231,11 @@ public class Drive extends SubsystemBase
         }
 
         return wheelPositions;
+    }
+
+    public ChassisSpeeds getChassisSpeeds()
+    {
+        return _kinematics.toChassisSpeeds(getModuleStates());
     }
 
     /** Returns an array of module translations. */

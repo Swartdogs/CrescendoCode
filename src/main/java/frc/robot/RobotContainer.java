@@ -13,7 +13,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -26,12 +28,12 @@ import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
+import frc.robot.subsystems.gyro.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
@@ -102,7 +104,7 @@ public class RobotContainer
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
-                _gyro = new Gyro(new GyroIO() {});
+                _gyro = new Gyro(new GyroIOSim(this::getChassisSpeeds));
                 _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
@@ -144,7 +146,7 @@ public class RobotContainer
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
-        _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
+        _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
@@ -154,10 +156,19 @@ public class RobotContainer
 
         _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
+        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
+        _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+    }
+
+    private ChassisSpeeds getChassisSpeeds()
+    {
+        return _drive.getChassisSpeeds();
     }
 
     public Command getAutonomousCommand()
     {
-        return _autoChooser.get();
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+
+        return AutoBuilder.followPath(path);
     }
 }

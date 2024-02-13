@@ -120,6 +120,7 @@ public final class Constants
     {
         public static final double MAX_FLYWHEEL_SPEED    = 1.0;
         public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
+        public static final double VELOCITY_RANGE        = 0.05;
     }
 
     public static class Vision
@@ -151,7 +152,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {
