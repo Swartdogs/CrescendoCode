@@ -43,9 +43,8 @@ public class Drive extends SubsystemBase
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
-
-    private PIDController _rotatePID;
-    private double _maxSpeed;
+    private PIDController                  _rotatePID;
+    private double                         _maxSpeed;
 
     public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -56,7 +55,7 @@ public class Drive extends SubsystemBase
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
 
-        _rotatePID = new PIDController(0, 0, 0); //TODO: tune
+        _rotatePID = new PIDController(0.02, 0, 0); // TODO: tune
         _rotatePID.enableContinuousInput(-180, 180);
 
         // Configure AutoBuilder for PathPlanner

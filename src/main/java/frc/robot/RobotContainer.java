@@ -13,7 +13,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
@@ -83,6 +84,7 @@ public class RobotContainer
 
     public RobotContainer()
     {
+
         switch (Constants.AdvantageKit.CURRENT_MODE)
         {
             // Real robot, instantiate hardware IO implementations
@@ -127,6 +129,9 @@ public class RobotContainer
                 break;
         }
 
+        NamedCommands.registerCommand("Start Shooter", IntakeCommands.startIntake(_intake));
+        // AutoBuilder.buildAuto("Test Auto");
+        // AutoBuilder.buildAuto("Old Auto");
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
@@ -139,9 +144,9 @@ public class RobotContainer
     private void configureButtonBindings()
     {
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
-        new JoystickButton(_joystick, 4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90, 1)); //TODO: test values
-        new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); //TODO: test values
-        new JoystickButton(_joystick, 2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); //TODO: test values
+        new JoystickButton(_joystick, 4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1)); // TODO: test values
+        new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
+        new JoystickButton(_joystick, 2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
 
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
@@ -167,8 +172,6 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
-
-        return AutoBuilder.followPath(path);
+        return _autoChooser.get();
     }
 }
