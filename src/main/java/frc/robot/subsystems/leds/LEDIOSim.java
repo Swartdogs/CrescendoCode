@@ -13,6 +13,7 @@ public class LEDIOSim implements LEDIO
     private AddressableLED       _led;
     private AddressableLEDBuffer _ledBuffer;
     private AddressableLEDSim    _ledSim;
+    private ArrayList<Color>     _pattern;
 
     public LEDIOSim()
     {
@@ -26,11 +27,11 @@ public class LEDIOSim implements LEDIO
     }
 
     @Override
-    public void applyAnimationFrame(ArrayList<Color> colorArray)
+    public void applyAnimationFrame(ArrayList<Color> pattern)
     {
-        for (int i = 0; i < colorArray.size(); i++)
+        for (int i = 0; i < pattern.size(); i++)
         {
-            var color = colorArray.get(i);
+            var color = pattern.get(i);
 
             if (color != null)
             {
@@ -39,6 +40,7 @@ public class LEDIOSim implements LEDIO
         }
 
         _led.setData(_ledBuffer);
+        _pattern = pattern;
     }
 
     @Override
@@ -50,8 +52,8 @@ public class LEDIOSim implements LEDIO
     }
 
     @Override
-    public AddressableLEDBuffer getLEDs()
+    public ArrayList<Color> getLEDs()
     {
-        return _ledBuffer;
+        return _pattern;
     }
 }

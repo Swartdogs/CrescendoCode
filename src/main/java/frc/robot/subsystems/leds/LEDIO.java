@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public interface LEDIO
 {
-    public default void applyAnimationFrame(ArrayList<Color> colorArray)
+    public default void applyAnimationFrame(ArrayList<Color> pattern)
     {
 
     }
@@ -20,7 +20,7 @@ public interface LEDIO
 
     }
 
-    public default AddressableLEDBuffer getLEDs()
+    public default ArrayList<Color> getLEDs()
     {
         return null;
     }
