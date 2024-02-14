@@ -16,7 +16,7 @@ public class Notepath extends SubsystemBase
     private double                   _intakePickupPercentOutput  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT;
     private double                   _notepathFeedPercentOutput  = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT;
     private double                   _shooterPickupPercentOutput = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT;
-    private boolean                  _hasNote                    = false;
+    private boolean                  _hasNote                    = true;
 
     public Notepath(NotepathIO io)
     {

@@ -21,5 +21,6 @@
   "[java]": {
     "editor.tabSize": 4,
     "editor.detectIndentation": false
-  }
+  },
+  "java.debug.settings.onBuildFailureProceed": true
 }

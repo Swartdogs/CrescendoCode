@@ -14,8 +14,12 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -147,6 +151,7 @@ public class RobotContainer
         new JoystickButton(_joystick, 4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1)); // TODO: test values
         new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
         new JoystickButton(_joystick, 2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
+        new JoystickButton(_joystick, 11).onTrue(DriveCommands.pathFinding(new Pose2d(100, 100, new Rotation2d()), new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
 
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
