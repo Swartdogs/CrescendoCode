@@ -225,92 +225,111 @@ public class Dashboard extends SubsystemBase
         {
             _drive.setModuleAbsoluteEncoderOffset(0, Rotation2d.fromDegrees(value));
         });
+
         initializeSetting("FR Offset", Constants.Drive.MODULE_FR_OFFSET.getDegrees(), _frOffset, value ->
         {
             _drive.setModuleAbsoluteEncoderOffset(1, Rotation2d.fromDegrees(value));
         });
+
         initializeSetting("BL Offset", Constants.Drive.MODULE_BL_OFFSET.getDegrees(), _blOffset, value ->
         {
             _drive.setModuleAbsoluteEncoderOffset(2, Rotation2d.fromDegrees(value));
         });
+
         initializeSetting("BR Offset", Constants.Drive.MODULE_BR_OFFSET.getDegrees(), _brOffset, value ->
         {
             _drive.setModuleAbsoluteEncoderOffset(3, Rotation2d.fromDegrees(value));
         });
+        
         // Intake
         initializeSetting("Intake In Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _intakeInSpeed, value ->
         {
             _intake.setIntakePercentOutput(value);
         });
+        
         initializeSetting("Intake Out Speed", Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT, _intakeOutSpeed, value ->
         {
             _intake.setOuttakePercentOutput(value);
         });
+        
         // Climb
         initializeSetting("Climb Left Offset", Constants.Climb.LEFT_ZERO_OFFSET, _climbLeftOffset, value ->
         {
             _climb.getExtensionLeft();
         });
+        
         initializeSetting("Climb Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET, _climbRightOffset, value ->
         {
             _climb.getExtensionRight();
         });
+        
         initializeSetting("Climb Minimum Height", Constants.Climb.MIN_EXTENSION, _climbMinHeight, value ->
         {
             _climb.setExtensionMin(value);
         });
+        
         initializeSetting("Climb Maximum Height", Constants.Climb.MAX_EXTENSION, _climbMaxHeight, value ->
         {
             _climb.setExtensionMax(value);
         });
+        
         // Notepath
         initializeSetting("Notepath Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT, _notepathShootSpeed, value ->
         {
             _notepath.setNotepathFeedPercentOutput(value);
         });
+        
         initializeSetting("Pickup Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _pickupIntakeSpeed, value ->
         {
             _notepath.setNotepathIntakePickupPercentOutput(value);
         });
+        
         initializeSetting("Shooter Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _shooterIntakeSpeed, value ->
         {
             _notepath.setNotepathShooterPickupPercentOutput(value);
         });
+        
         // Shooter bed
         initializeSetting("Shooter Bed Offset", Constants.ShooterBed.BED_ANGLE_OFFSET.getDegrees(), _shooterOffset, value ->
         {
             _shooterBed.setAngleOffset(Rotation2d.fromDegrees(value));
         });
+        
         initializeSetting("Bed Minimum Angle", Constants.ShooterBed.MIN_BED_ANGLE.getDegrees(), _bedMinimumAngle, value ->
         {
             _shooterBed.setMinAngle(Rotation2d.fromDegrees(value));
         });
+        
         initializeSetting("Bed Maximum Angle", Constants.ShooterBed.MAX_BED_ANGLE.getDegrees(), _bedMaximumAngle, value ->
         {
             _shooterBed.setMaxAngle(Rotation2d.fromDegrees(value));
         });
+        
         initializeSetting("Bed Intake Pickup Angle", Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees(), _bedPickupIntakeAngle, value ->
         {
             _shooterBed.setBedIntakePickupAngle(Rotation2d.fromDegrees(value));
         });
+        
         initializeSetting("Bed Shooter Pickup Angle", Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE.getDegrees(), _bedPickupShooterAngle, value ->
         {
             _shooterBed.setBedShooterPickupAngle(Rotation2d.fromDegrees(value));
         });
+        
         // Shooter flywheel
         initializeSetting("Shooter Velocity Range", Constants.ShooterFlywheel.VELOCITY_RANGE, _flywheelVelocityRange, value ->
         {
             _shooterFlywheel.setVelocityRange(value);
         });
+        
         initializeSetting("Max Flywheel Speed", Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED, _maxFlywheelSpeed, value ->
         {
             _shooterFlywheel.setMaxFlywheelSpeed(value);
         });
+        
         initializeSetting("Flywheel Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _flywheelIntakeSpeed, value ->
         {
             _shooterFlywheel.setFlywheelIntakeSpeed(value);
         });
-
     }
 
     public void initializeSetting(String key, double defaultValue, GenericEntry entry, DoubleConsumer consumer)
