@@ -144,10 +144,10 @@ public class Dashboard extends SubsystemBase
 
         // Swerve Module Angles
         var driveSettingsLayout = dashboard.getLayout("Swerve Angles", BuiltInLayouts.kGrid).withPosition(15, 8).withSize(5, 4).withProperties(Map.of("Number of columns", 2, "Number of rows", 2));
-        _flAngle = driveSettingsLayout.add("FL Angle", 0.0).withPosition(0, 0).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _frAngle = driveSettingsLayout.add("FR Angle", 0.0).withPosition(1, 0).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _blAngle = driveSettingsLayout.add("BL Angle", 0.0).withPosition(0, 1).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _brAngle = driveSettingsLayout.add("BR Angle", 0.0).withPosition(1, 1).withSize(2, 2).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _flAngle = driveSettingsLayout.add("FL Angle", 0.0).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _frAngle = driveSettingsLayout.add("FR Angle", 0.0).withPosition(1, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _blAngle = driveSettingsLayout.add("BL Angle", 0.0).withPosition(0, 1).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _brAngle = driveSettingsLayout.add("BR Angle", 0.0).withPosition(1, 1).withWidget(BuiltInWidgets.kTextView).getEntry();
 
         // Height, Intake and Speed
         var heightAndIntakeLayout = dashboard.getLayout("Climb and Intake", BuiltInLayouts.kGrid).withPosition(0, 10).withSize(15, 5).withProperties(Map.of("Number of columns", 3, "Number of rows", 1));
