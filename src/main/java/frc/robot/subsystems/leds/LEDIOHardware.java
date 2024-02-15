@@ -43,14 +43,6 @@ public class LEDIOHardware implements LEDIO
     }
 
     @Override
-    public void setLEDs(AddressableLEDBuffer buffer)
-    {
-        _ledBuffer = buffer;
-
-        _led.setData(buffer);
-    }
-
-    @Override
     public ArrayList<Color> getLEDs()
     {
         return _pattern;

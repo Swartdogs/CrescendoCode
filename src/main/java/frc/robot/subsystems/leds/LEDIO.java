@@ -5,17 +5,11 @@ package frc.robot.subsystems.leds;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 
 public interface LEDIO
 {
     public default void applyAnimationFrame(ArrayList<Color> pattern)
-    {
-
-    }
-
-    public default void setLEDs(AddressableLEDBuffer buffer)// Array list of colors
     {
 
     }
