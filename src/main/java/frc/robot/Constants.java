@@ -144,6 +144,8 @@ public final class Constants
     public static class LED
     {
         public static final int   NUM_LEDS = 20; // TODO: Change value
+        public static final Color RED   = new Color(255, 0, 0);
+        public static final Color BLUE   = new Color(0, 0, 255);
         public static final Color ORANGE   = new Color(255, 88, 0);
     }
 
