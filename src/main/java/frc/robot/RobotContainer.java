@@ -43,6 +43,10 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSparkMax;
+import frc.robot.subsystems.leds.LED;
+import frc.robot.subsystems.leds.LEDIO;
+import frc.robot.subsystems.leds.LEDIOHardware;
+import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
@@ -70,6 +74,7 @@ public class RobotContainer
     private final Gyro            _gyro;
     @SuppressWarnings("unused")
     private final Vision          _vision;
+    private final LED             _led;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -97,6 +102,7 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new Climb(_gyro, new ClimbIOVictorSPX());
+                _led = new LED(new LEDIOHardware());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -109,6 +115,7 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
                 _climb = new Climb(_gyro, new ClimbIOSim());
+                _led = new LED(new LEDIOSim());
                 break;
 
             // Replayed robot, disable IO implementations
@@ -121,6 +128,7 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
                 _climb = new Climb(_gyro, new ClimbIO() {});
+                _led = new LED(new LEDIO() {});
                 break;
         }
 
@@ -137,9 +145,9 @@ public class RobotContainer
     {
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed, _led));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
-        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath, _led));
         _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));

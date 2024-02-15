@@ -15,6 +15,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 
 public final class Constants
 {
@@ -142,7 +143,8 @@ public final class Constants
 
     public static class LED
     {
-        public static final int NUM_LEDS = 1; // TODO: Change value
+        public static final int   NUM_LEDS = 20; // TODO: Change value
+        public static final Color ORANGE   = new Color(255, 88, 0);
     }
 
     public static class General

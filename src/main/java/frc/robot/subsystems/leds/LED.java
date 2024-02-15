@@ -33,6 +33,18 @@ public class LED extends SubsystemBase
         _io.applyAnimationFrame(pattern);
     }
 
+    public void applyAnimationFrame(Color[] colorList)
+    {
+        var pattern = new ArrayList<Color>();
+
+        for (int i = 0; i < colorList.length; i++)
+        {
+            pattern.add(colorList[i]);
+        }
+
+        _io.applyAnimationFrame(pattern);
+    }
+
     public ArrayList<Color> getLEDs()
     {
         return _io.getLEDs();
