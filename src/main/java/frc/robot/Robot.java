@@ -84,7 +84,7 @@ public class Robot extends LoggedRobot
         // Start AdvantageKit logger
         Logger.start();
 
-        // Pathfinding.setPathfinder(new LocalADStarAK());
+        Pathfinding.setPathfinder(new LocalADStarAK());
 
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our autonomous chooser on the dashboard.

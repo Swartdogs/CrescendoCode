@@ -26,6 +26,7 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 public final class DriveCommands
 {
@@ -85,12 +86,11 @@ public final class DriveCommands
         return Math.atan2(deltaY, deltaX) / Math.PI * 180;
     }
 
-    public static Command pathFinding(Pose2d pose, PathConstraints constraints)
+    public static Command pathFinding(PathPlannerPath path, PathConstraints constraints)
     {
-        return AutoBuilder.pathfindToPose(
-                pose, constraints, 0.0, // Goal end velocity in meters/sec
-                0.0 // Rotation delay distance in meters. This is how far the robot should travel
-                    // before attempting to rotate.
+        return AutoBuilder.pathfindThenFollowPath(path, constraints, 3.0 // Goal end velocity in meters/sec// Rotation delay distance in meters. This is
+                                                                         // how far the robot should
+        // before attempting to rotate.
         );
     }
 }

@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterBed;
@@ -23,11 +24,16 @@ public final class CompositeCommands
 
     public static Command startNotepath(Notepath notepath, ShooterFlywheel shooterFlywheel)
     {
-        return Commands.waitUntil(() -> shooterFlywheel.atSpeed()).andThen(NotepathCommands.startFeed(notepath)).andThen(Commands.waitUntil(() -> notepath.sensorTripped())).andThen(Commands.waitUntil(() -> !notepath.sensorTripped()))
-                .andThen(Commands.runOnce(() -> notepath.setHasNote(false))).finallyDo(() ->
-                {
-                    notepath.setOff();
-                }).onlyIf(() -> shooterFlywheel.isShooting());
+        return Commands.waitUntil(() -> shooterFlywheel.atSpeed()).andThen(NotepathCommands.startFeed(notepath))
+                .andThen(
+                        Commands.either(
+                                Commands.waitSeconds(0.75), Commands.waitUntil(() -> notepath.sensorTripped()).andThen(Commands.waitUntil(() -> !notepath.sensorTripped())),
+                                () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+                        ).andThen(Commands.runOnce(() -> notepath.setHasNote(false))).finallyDo(() ->
+                        {
+                            notepath.setOff();
+                        })
+                ).onlyIf(() -> shooterFlywheel.isShooting());
     }
 
     public static Command stopShooter(ShooterFlywheel shooterFlywheel, Notepath notepath)
@@ -37,8 +43,8 @@ public final class CompositeCommands
 
     public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
     {
-        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed)).andThen(Commands.waitUntil(() -> notepath.sensorTripped()))
-                .finallyDo(interrupted ->
+        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed))
+                .andThen(Commands.either(Commands.waitSeconds(1), Commands.waitUntil(() -> notepath.sensorTripped()), () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM)).finallyDo(interrupted ->
                 {
                     intake.setIntakeOff();
                     notepath.setOff();

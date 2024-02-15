@@ -15,6 +15,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -133,9 +134,11 @@ public class RobotContainer
                 break;
         }
 
-        NamedCommands.registerCommand("Start Shooter", IntakeCommands.startIntake(_intake));
-        // AutoBuilder.buildAuto("Test Auto");
-        // AutoBuilder.buildAuto("Old Auto");
+        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        NamedCommands.registerCommand("Start Shooter", CompositeCommands.startShooter(_shooterFlywheel, _notepath, 2000, 2000));
+        NamedCommands.registerCommand("Feed Shooter", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
@@ -151,7 +154,11 @@ public class RobotContainer
         new JoystickButton(_joystick, 4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1)); // TODO: test values
         new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
         new JoystickButton(_joystick, 2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
-        new JoystickButton(_joystick, 11).onTrue(DriveCommands.pathFinding(new Pose2d(100, 100, new Rotation2d()), new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
+
+        // new JoystickButton(_joystick,
+        // 11).onTrue(DriveCommands.pathFinding(PathPlannerPath.fromPathFile("New
+        // Path"), new PathConstraints(0.5, 4.0, Units.degreesToRadians(540),
+        // Units.degreesToRadians(720))));
 
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
