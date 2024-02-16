@@ -26,7 +26,6 @@ import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
@@ -151,10 +150,10 @@ public class RobotContainer
         _hasNote.onTrue(CompositeCommands.LEDBlinking(_led, Constants.LED.ORANGE));
         _hasNote.onFalse(CompositeCommands.LEDTeleop(_led));
 
-        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed, _led));
+        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
-        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath, _led));
-        _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
+        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
@@ -165,8 +164,11 @@ public class RobotContainer
         _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
 
+        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
+        _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+
         _controller.leftStick().whileTrue(CompositeCommands.LEDMovingStrip(_led, _notepath, Constants.LED.ORANGE));
-        _controller.rightStick().whileTrue(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.ORANGE));
+        _controller.rightStick().whileTrue(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.ORANGE));    
     }
 
     public Command getAutonomousCommand()
