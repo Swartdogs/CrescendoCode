@@ -6,6 +6,7 @@ package frc.robot.subsystems.leds;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LED extends SubsystemBase
@@ -37,5 +38,17 @@ public class LED extends SubsystemBase
     public ArrayList<Color> getLEDs()
     {
         return _io.getLEDs();
+    }
+
+    public void switchDefaultCommand(Command defaultCommand)
+    {
+        var currentDefaultCommand = getDefaultCommand();
+
+        if (currentDefaultCommand != null)
+        {
+            currentDefaultCommand.cancel();
+        }
+
+        setDefaultCommand(defaultCommand);
     }
 }

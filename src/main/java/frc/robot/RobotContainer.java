@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
@@ -143,7 +144,12 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
+        Trigger _hasNote = new Trigger(() -> _notepath.hasNote());
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+
+        _hasNote.onTrue(CompositeCommands.LEDBlinking(_led, Constants.LED.ORANGE));
+        _hasNote.onFalse(CompositeCommands.LEDTeleop(_led));
 
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed, _led));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
@@ -158,10 +164,18 @@ public class RobotContainer
 
         _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
+
+        _controller.leftStick().whileTrue(CompositeCommands.LEDMovingStrip(_led, _notepath, Constants.LED.ORANGE));
+        _controller.rightStick().whileTrue(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.ORANGE));
     }
 
     public Command getAutonomousCommand()
     {
         return _autoChooser.get();
+    }
+
+    public LED getLEDSubsystem()
+    {
+        return _led;
     }
 }
