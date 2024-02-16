@@ -106,4 +106,10 @@ public class ShooterFlywheel extends SubsystemBase
     {
         return _upperVelocitySetpoint != null && _lowerVelocitySetpoint != null && _upperVelocitySetpoint > 0 && _lowerVelocitySetpoint > 0;
     }
+
+    public void setOff()
+    {
+        _flywheelIO.setLowerVelocity(0);
+        _flywheelIO.setUpperVoltage(0);
+    }
 }

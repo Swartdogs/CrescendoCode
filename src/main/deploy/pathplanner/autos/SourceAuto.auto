@@ -1,0 +1,103 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Pose to Source Side"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceSideToNote1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Pickup"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note1ToNote5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note5ToBlueLine"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueLineToNote4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note4ToBlueLine"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

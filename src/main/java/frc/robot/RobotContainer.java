@@ -14,13 +14,10 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
@@ -134,15 +130,18 @@ public class RobotContainer
                 break;
         }
 
+        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(1.39, 5.56, new Rotation2d()))));
+        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
+        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
+
         NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
-        NamedCommands.registerCommand("Start Shooter", CompositeCommands.startShooter(_shooterFlywheel, _notepath, 2000, 2000));
-        NamedCommands.registerCommand("Feed Shooter", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 2000, 2000));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
-        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
+        //_autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();

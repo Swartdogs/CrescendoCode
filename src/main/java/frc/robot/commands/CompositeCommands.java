@@ -16,10 +16,7 @@ public final class CompositeCommands
 
     public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
     {
-        return ShooterFlywheelCommands.shooterFlywheelShoot(shooterFlywheel, lowerVelocity, upperVelocity).andThen(Commands.waitUntil(() -> !notepath.hasNote())).finallyDo(() ->
-        {
-            shooterFlywheel.stop();
-        });
+        return ShooterFlywheelCommands.shooterFlywheelShoot(shooterFlywheel, lowerVelocity, upperVelocity);
     }
 
     public static Command startNotepath(Notepath notepath, ShooterFlywheel shooterFlywheel)
@@ -31,6 +28,7 @@ public final class CompositeCommands
                                 () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
                         ).andThen(Commands.runOnce(() -> notepath.setHasNote(false))).finallyDo(() ->
                         {
+                            shooterFlywheel.setOff();
                             notepath.setOff();
                         })
                 ).onlyIf(() -> shooterFlywheel.isShooting());
