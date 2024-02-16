@@ -12,7 +12,7 @@
         "y": 6.926593853187707
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AmpSide"
     },
     {
       "anchor": {
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "StartPositions",
+  "folder": "AmpSideStartingPaths",
   "previewStartingState": {
     "rotation": 59.981632572390886,
     "velocity": 0

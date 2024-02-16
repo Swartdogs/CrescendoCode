@@ -12,7 +12,7 @@
         "y": 5.564955745296107
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MiddleSide"
     },
     {
       "anchor": {
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "StartPositions",
+  "folder": "MiddleSideStartingPaths",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

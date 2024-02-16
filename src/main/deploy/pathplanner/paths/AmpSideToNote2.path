@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.894982565999367,
-        "y": 4.11050362756931
+        "x": 0.761513061487663,
+        "y": 6.768722768214768
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.942107422676385,
-        "y": 5.111076375998906
+        "x": 1.9652800844063243,
+        "y": 6.44311365545808
       },
       "isLocked": false,
-      "linkedName": "Note1"
+      "linkedName": "AmpSide"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 5.550936522700434
       },
       "prevControl": {
-        "x": 2.9026396514331507,
-        "y": 4.992673062269202
+        "x": 1.8962114847306633,
+        "y": 6.127371485512202
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 87.58615970382682,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "InnerNoteToInnerNote",
+  "folder": "AmpSideStartingPaths",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

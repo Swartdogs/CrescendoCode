@@ -3,14 +3,16 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "StartPositions",
-    "SourceAuto",
-    "Note2ToOuterNote",
-    "Note1ToOuterNote",
-    "Note3ToOuterNote",
-    "MiddleAuto",
+    "AmpAuto",
+    "AmpSideStartingPaths",
     "InnerNoteToInnerNote",
-    "AmpAuto"
+    "MiddleAuto",
+    "MiddleSideStartingPaths",
+    "Note1ToOuterNote",
+    "Note2ToOuterNote",
+    "Note3ToOuterNote",
+    "SourceAuto",
+    "SourceSideStartingPaths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
