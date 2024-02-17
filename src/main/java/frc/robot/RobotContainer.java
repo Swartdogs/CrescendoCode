@@ -147,7 +147,7 @@ public class RobotContainer
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _hasNote.onTrue(CompositeCommands.LEDBlinking(_led, Constants.LED.ORANGE));
+        _hasNote.onTrue(CompositeCommands.LEDBlinkingTeleOp(_led));
         _hasNote.onFalse(CompositeCommands.LEDTeleop(_led));
 
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
@@ -161,14 +161,18 @@ public class RobotContainer
         _controller.back().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
         _controller.start().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
 
-        _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
+        _controller.leftBumper()
+                .whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).alongWith(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.PINK)).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
 
-        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
-        _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_notepath, _shooterFlywheel, _led, 3000, 3000));
+        _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel, _led));
 
         _controller.leftStick().whileTrue(CompositeCommands.LEDMovingStrip(_led, _notepath, Constants.LED.ORANGE));
         _controller.rightStick().whileTrue(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.ORANGE));
+
+        _controller.povDown().onTrue(CompositeCommands.LEDPartyMode(_led));
+        _controller.povUp().onTrue(CompositeCommands.LEDTeleop(_led));
     }
 
     public Command getAutonomousCommand()

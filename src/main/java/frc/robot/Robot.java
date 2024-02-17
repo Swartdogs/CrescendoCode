@@ -117,8 +117,7 @@ public class Robot extends LoggedRobot
             _autonomousCommand.cancel();
         }
 
-        _led.switchDefaultCommand(CompositeCommands.LEDTeleop(_led));
-        CompositeCommands.LEDTeleopInit(_led).schedule();
+        CompositeCommands.LEDTeleop(_led).schedule();;
     }
 
     @Override
