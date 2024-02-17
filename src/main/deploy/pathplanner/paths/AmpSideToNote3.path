@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 0.761513061487663,
-        "y": 6.768722768214768
+        "y": 6.77
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6396709716496374,
-        "y": 6.926593853187707
+        "x": 1.5978394939871214,
+        "y": 7.074397927559845
       },
       "isLocked": false,
       "linkedName": "AmpSide"
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "AmpSideStartingPaths",
   "previewStartingState": {
-    "rotation": 59.981632572390886,
+    "rotation": 56.01704274794713,
     "velocity": 0
   },
   "useDefaultConstraints": true

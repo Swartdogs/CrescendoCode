@@ -43,7 +43,6 @@ import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonlib;
-import frc.robot.util.FeedForwardCharacterization;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -141,7 +140,9 @@ public class RobotContainer
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
-        //_autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
+        // _autoChooser.addOption("Drive FF Characterization", new
+        // FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts,
+        // _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();
