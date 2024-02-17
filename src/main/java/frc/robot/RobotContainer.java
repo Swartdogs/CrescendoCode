@@ -168,7 +168,7 @@ public class RobotContainer
         _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
 
         _controller.leftStick().whileTrue(CompositeCommands.LEDMovingStrip(_led, _notepath, Constants.LED.ORANGE));
-        _controller.rightStick().whileTrue(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.ORANGE));    
+        _controller.rightStick().whileTrue(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.ORANGE));
     }
 
     public Command getAutonomousCommand()

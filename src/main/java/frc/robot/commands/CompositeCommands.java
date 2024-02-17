@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.Arrays;
+
 import org.littletonrobotics.junction.inputs.LoggedDriverStation;
 
 import edu.wpi.first.hal.DriverStationJNI;
@@ -68,106 +70,43 @@ public final class CompositeCommands
                 }).unless(() -> notepath.hasNote());
     }
 
-    // Flywheel Ready to Shoot
     public static Command LEDFillUp(LED led, Color color)
     {
         var initialPattern = led.getLEDs();
+        int totalLEDs      = Constants.LED.NUM_LEDS;
 
-        var _1  = initialPattern.get(1);
-        var _2  = initialPattern.get(2);
-        var _3  = initialPattern.get(3);
-        var _4  = initialPattern.get(4);
-        var _5  = initialPattern.get(5);
-        var _6  = initialPattern.get(6);
-        var _7  = initialPattern.get(7);
-        var _8  = initialPattern.get(8);
-        var _9  = initialPattern.get(9);
-        var _10 = initialPattern.get(10);
-        var _11 = initialPattern.get(11);
-        var _12 = initialPattern.get(12);
-        var _13 = initialPattern.get(13);
-        var _14 = initialPattern.get(14);
-        var _15 = initialPattern.get(15);
-        var _16 = initialPattern.get(16);
-        var _17 = initialPattern.get(17);
-        var _18 = initialPattern.get(18);
-        var _19 = initialPattern.get(19);
-        var _20 = initialPattern.get(20);
+        Command[] commandSequence = new Command[totalLEDs];
 
-        return Commands.sequence(
-                LEDCommands.setFrame(led, new Color[] { color, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, _12, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, _13, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, _14, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, _15, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, _16, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, _17, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, _18, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, _19, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, _20 }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color })
-        );
+        for (int i = 0; i <= totalLEDs; i++)
+        {
+            Color[] newPattern = new Color[totalLEDs];
+            Arrays.fill(newPattern, 0, i, color);
+            if (i < totalLEDs)
+            {
+                System.arraycopy(initialPattern, i, newPattern, i, totalLEDs - i);
+            }
+            commandSequence[i] = LEDCommands.setFrame(led, newPattern);
+        }
+        return Commands.sequence(commandSequence);
     }
 
     // Flywheel No Longer Ready to Shoot
     public static Command LEDFillDown(LED led, Color color)
     {
         var initialPattern = led.getLEDs();
+        int totalLEDs      = Constants.LED.NUM_LEDS;
 
-        var _0  = initialPattern.get(0);
-        var _1  = initialPattern.get(1);
-        var _2  = initialPattern.get(2);
-        var _3  = initialPattern.get(3);
-        var _4  = initialPattern.get(4);
-        var _5  = initialPattern.get(5);
-        var _6  = initialPattern.get(6);
-        var _7  = initialPattern.get(7);
-        var _8  = initialPattern.get(8);
-        var _9  = initialPattern.get(9);
-        var _10 = initialPattern.get(10);
-        var _11 = initialPattern.get(11);
-        var _12 = initialPattern.get(12);
-        var _13 = initialPattern.get(13);
-        var _14 = initialPattern.get(14);
-        var _15 = initialPattern.get(15);
-        var _16 = initialPattern.get(16);
-        var _17 = initialPattern.get(17);
-        var _18 = initialPattern.get(18);
-        var _19 = initialPattern.get(19);
+        Command[] commandSequence = new Command[totalLEDs];
 
-        return Commands.sequence(
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, _8, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, _7, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, _6, color, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, _5, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, _4, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, _3, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, _2, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, _1, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { _0, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }),
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color })
-        );
+        for (int i = totalLEDs; i >= 0; i--)
+        {
+            Color[] newPattern = new Color[totalLEDs];
+            Arrays.fill(newPattern, i, totalLEDs, color);
+            System.arraycopy(initialPattern, 0, newPattern, 0, i);
+            commandSequence[totalLEDs - i] = LEDCommands.setFrame(led, newPattern);
+        }
+
+        return Commands.sequence(commandSequence);
     }
 
     // Note in Path
@@ -209,9 +148,7 @@ public final class CompositeCommands
 
     public static Command LEDSetSolidColor(LED led, Color color)
     {
-        return Commands.sequence(
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color })
-        );
+        return Commands.sequence(LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }));
     }
 
     public static Command LEDAutonomous(LED led)

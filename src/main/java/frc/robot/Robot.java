@@ -87,7 +87,7 @@ public class Robot extends LoggedRobot
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our autonomous chooser on the dashboard.
         _robotContainer = new RobotContainer();
-        _led = _robotContainer.getLEDSubsystem();
+        _led            = _robotContainer.getLEDSubsystem();
     }
 
     @Override
