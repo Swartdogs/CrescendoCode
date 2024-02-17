@@ -46,12 +46,15 @@ public final class CompositeCommands
 
     public static Command stopIntake(Intake intake, Notepath notepath, ShooterBed shooterBed)
     {
-        return Commands.either(Commands.waitSeconds(1), Commands.waitUntil(() -> notepath.sensorTripped()), () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM).finallyDo(interrupted ->
-                {
-                    intake.setIntakeOff();
-                    notepath.setOff();
-                    notepath.setHasNote(!interrupted);
-                });
+        return Commands.either(
+                Commands.waitSeconds(1), Commands.race(Commands.waitUntil(() -> notepath.sensorTripped()), Commands.waitSeconds(Constants.PathPlanner.INTAKE_DELAY)),
+                () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+        ).finallyDo(interrupted ->
+        {
+            intake.setIntakeOff();
+            notepath.setOff();
+            notepath.setHasNote(!interrupted);
+        });
     }
 
     public static Command stopIntaking(Intake intake, Notepath notepath)

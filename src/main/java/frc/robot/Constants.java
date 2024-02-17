@@ -182,4 +182,9 @@ public final class Constants
         public static final Pose2d RED_STAGE_TWO    = new Pose2d(Units.inchesToMeters(477.69), Units.inchesToMeters(192.69), Rotation2d.fromDegrees(60));
         public static final Pose2d RED_STAGE_THREE  = new Pose2d(Units.inchesToMeters(423.74), Units.inchesToMeters(161.62), Rotation2d.fromDegrees(180));
     }
+
+    public static class PathPlanner
+    {
+        public static final double INTAKE_DELAY = 4.5; // TODO: Change value
+    }
 }

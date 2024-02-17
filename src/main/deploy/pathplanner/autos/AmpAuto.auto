@@ -30,9 +30,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "AmpSideToNote3"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSideToNote3"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pickup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop Intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
