@@ -43,7 +43,7 @@ public class ModuleIOSparkMax implements ModuleIO
     private final RelativeEncoder _turnRelativeEncoder;
     private final AnalogEncoder   _turnAbsoluteEncoder;
     private final boolean         _isTurnMotorInverted = true;
-    private final Rotation2d      _absoluteEncoderOffset;
+    private Rotation2d            _absoluteEncoderOffset;
 
     public ModuleIOSparkMax(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
     {
@@ -120,5 +120,11 @@ public class ModuleIOSparkMax implements ModuleIO
     public void setTurnBrakeMode(boolean enable)
     {
         _turnSparkMax.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    }
+
+    @Override
+    public void setAngleOffset(Rotation2d ModuleAbsoluteEncoderOffset)
+    {
+        _absoluteEncoderOffset = ModuleAbsoluteEncoderOffset;
     }
 }

@@ -14,6 +14,7 @@ public class ShooterFlywheel extends SubsystemBase
     private double                                  _flywheelIntakeVoltage = Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE;
     private Double                                  _upperVelocitySetpoint = null;
     private Double                                  _lowerVelocitySetpoint = null;
+    private double                                  _velocityRange         = Constants.ShooterFlywheel.VELOCITY_RANGE;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
@@ -62,7 +63,7 @@ public class ShooterFlywheel extends SubsystemBase
         _maxFlywheelSpeed = maxFlywheelSpeed * Constants.General.MAX_NEO_SPEED;
     }
 
-    public void setFlywheelIntakeVoltage(double flywheelIntakeSpeed)
+    public void setFlywheelIntakeSpeed(double flywheelIntakeSpeed)
     {
         _flywheelIntakeVoltage = flywheelIntakeSpeed * Constants.General.MOTOR_VOLTAGE;
     }
@@ -84,7 +85,7 @@ public class ShooterFlywheel extends SubsystemBase
             return false;
         }
 
-        return Math.abs(_upperVelocitySetpoint - getUpperFlywheelVelocity()) <= _upperVelocitySetpoint * Constants.ShooterFlywheel.VELOCITY_RANGE;
+        return Math.abs(_upperVelocitySetpoint - getUpperFlywheelVelocity()) <= _upperVelocitySetpoint * _velocityRange;
     }
 
     public boolean lowerAtSpeed()
@@ -94,7 +95,7 @@ public class ShooterFlywheel extends SubsystemBase
             return false;
         }
 
-        return Math.abs(_lowerVelocitySetpoint - getLowerFlywheelVelocity()) <= _lowerVelocitySetpoint * Constants.ShooterFlywheel.VELOCITY_RANGE;
+        return Math.abs(_lowerVelocitySetpoint - getLowerFlywheelVelocity()) <= _lowerVelocitySetpoint * _velocityRange;
     }
 
     public boolean atSpeed()
@@ -111,5 +112,10 @@ public class ShooterFlywheel extends SubsystemBase
     {
         _flywheelIO.setLowerVelocity(0);
         _flywheelIO.setUpperVoltage(0);
+    }
+    
+    public void setVelocityRange(double velocityRange)
+    {
+        _velocityRange = velocityRange;
     }
 }

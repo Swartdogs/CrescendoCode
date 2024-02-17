@@ -55,4 +55,8 @@ public interface ModuleIO
     public default void setTurnBrakeMode(boolean enable)
     {
     }
+
+    public default void setAngleOffset(Rotation2d ModuleAbsoluteEncoderOffset)
+    {
+    }
 }
