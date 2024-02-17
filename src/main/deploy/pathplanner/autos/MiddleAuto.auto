@@ -14,25 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Start Shooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleSideToNote2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Pickup"
+            "name": "Auto Delay"
           }
         },
         {
@@ -48,15 +30,79 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Note2ToNote6"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MiddleSideToNote2"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pickup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop Intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Intake Pickup"
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note2ToNote6"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pickup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop Intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {

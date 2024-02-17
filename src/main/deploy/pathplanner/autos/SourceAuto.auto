@@ -20,6 +20,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Auto Delay"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Start Shooter"
           }
         },
@@ -36,9 +42,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Intake Pickup"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Load While Stopped"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {
@@ -48,21 +67,28 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Note1ToNote5"
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Intake Pickup"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Load While Stopped"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {
@@ -78,15 +104,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "BlueLineToNote4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Pickup"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueLineToNote4"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Pickup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop Intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {

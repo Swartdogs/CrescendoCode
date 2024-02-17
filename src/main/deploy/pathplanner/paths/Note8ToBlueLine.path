@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AmpDriveBack"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -69,7 +69,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 18.50559709724461,
     "rotateFast": false
   },
   "reversed": false,

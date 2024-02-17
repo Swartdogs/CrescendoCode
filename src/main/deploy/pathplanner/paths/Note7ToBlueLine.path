@@ -44,7 +44,7 @@
   ],
   "eventMarkers": [
     {
-      "name": "Start Shooter",
+      "name": "Start Notepath",
       "waypointRelativePos": 0.45,
       "command": {
         "type": "sequential",
@@ -69,7 +69,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 11.16808958381301,
     "rotateFast": false
   },
   "reversed": false,

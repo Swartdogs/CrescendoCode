@@ -20,45 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Start Shooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "AmpSideToNote3"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake Pickup"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop Intake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "name": "Auto Delay"
           }
         },
         {
@@ -76,13 +38,57 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Note3ToNote8"
+            "pathName": "AmpSideToNote3"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Load While Stopped"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Intake Pickup"
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note3ToNote8"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Load While Stopped"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {
@@ -104,9 +110,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Intake Pickup"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Load While Stopped"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {

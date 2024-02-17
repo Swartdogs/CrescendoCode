@@ -12,7 +12,6 @@
 // GNU General Public License for more details.
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -61,8 +60,6 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 public class RobotContainer
 {
     // Subsystems
@@ -77,9 +74,6 @@ public class RobotContainer
     private final Vision          _vision;
     @SuppressWarnings("unused")
     private final Dashboard       _dashboard;
-
-    // Dashboard inputs
-    private final LoggedDashboardChooser<Command> _autoChooser;
 
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
@@ -132,20 +126,10 @@ public class RobotContainer
                 break;
         }
 
-        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(1.39, 5.56, new Rotation2d()))));
-        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
-        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
-
-        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.startIntake(_intake, _notepath, _shooterBed));
-        NamedCommands.registerCommand("Stop Intake", CompositeCommands.stopIntake(_intake, _notepath, _shooterBed));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
-        NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 2000, 2000));
-
-        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
 
         // Configure the button bindings
         configureButtonBindings();
-        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
     }
 
     private void configureButtonBindings()
@@ -168,7 +152,7 @@ public class RobotContainer
 
         _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
-        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
+        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, 3000, 3000));
         _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
     }
 
@@ -179,6 +163,6 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        return _autoChooser.get();
+        return _dashboard.getAuto();
     }
 }

@@ -113,7 +113,7 @@ public class ShooterFlywheel extends SubsystemBase
         _flywheelIO.setLowerVelocity(0);
         _flywheelIO.setUpperVoltage(0);
     }
-    
+
     public void setVelocityRange(double velocityRange)
     {
         _velocityRange = velocityRange;

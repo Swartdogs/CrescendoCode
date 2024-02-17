@@ -14,9 +14,14 @@ public final class CompositeCommands
     {
     }
 
-    public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
+    public static Command startShooter(ShooterFlywheel shooterFlywheel, double upperVelocity, double lowerVelocity)
     {
         return ShooterFlywheelCommands.shooterFlywheelShoot(shooterFlywheel, lowerVelocity, upperVelocity);
+    }
+
+    public static Command stopShooter(ShooterFlywheel shooterFlywheel, Notepath notepath)
+    {
+        return Commands.parallel(ShooterFlywheelCommands.shooterFlywheelStop(shooterFlywheel), NotepathCommands.stopFeed(notepath));
     }
 
     public static Command startNotepath(Notepath notepath, ShooterFlywheel shooterFlywheel)
@@ -34,27 +39,37 @@ public final class CompositeCommands
                 ).onlyIf(() -> shooterFlywheel.isShooting());
     }
 
-    public static Command stopShooter(ShooterFlywheel shooterFlywheel, Notepath notepath)
-    {
-        return Commands.parallel(ShooterFlywheelCommands.shooterFlywheelStop(shooterFlywheel), NotepathCommands.stopFeed(notepath));
-    }
-
     public static Command startIntake(Intake intake, Notepath notepath, ShooterBed shooterBed)
     {
         return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed)).unless(() -> notepath.hasNote());
     }
 
-    public static Command stopIntake(Intake intake, Notepath notepath, ShooterBed shooterBed)
+    private static Command load(Intake intake, Notepath notepath)
     {
-        return Commands.either(
-                Commands.waitSeconds(1), Commands.race(Commands.waitUntil(() -> notepath.sensorTripped()), Commands.waitSeconds(Constants.PathPlanner.INTAKE_DELAY)),
-                () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
-        ).finallyDo(interrupted ->
+        return Commands.either(Commands.waitSeconds(1), Commands.waitUntil(() -> notepath.sensorTripped()), () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM);
+    }
+
+    public static Command loadWhileStopped(Intake intake, Notepath notepath)
+    {
+        return load(intake, notepath).finallyDo(interrupted ->
         {
             intake.setIntakeOff();
             notepath.setOff();
             notepath.setHasNote(!interrupted);
-        });
+        }).unless(() -> notepath.hasNote());
+    }
+
+    public static Command loadInMotion(Intake intake, Notepath notepath)
+    {
+        return load(intake, notepath).finallyDo(interrupted ->
+        {
+            if (!interrupted)
+            {
+                intake.setIntakeOff();
+                notepath.setOff();
+            }
+            notepath.setHasNote(!interrupted);
+        }).unless(() -> notepath.hasNote());
     }
 
     public static Command stopIntaking(Intake intake, Notepath notepath)

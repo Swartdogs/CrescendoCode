@@ -236,7 +236,7 @@ public class Drive extends SubsystemBase
     {
         return _kinematics.toChassisSpeeds(getModuleStates());
     }
-    
+
     public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
     {
         _modules[moduleIndex].setAbsoluteEncoderOffset(offset);

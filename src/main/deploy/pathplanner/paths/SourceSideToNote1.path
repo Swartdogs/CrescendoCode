@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Start Shooter",
+      "name": "Start Intake",
       "waypointRelativePos": 0.45,
       "command": {
         "type": "sequential",
@@ -41,7 +41,13 @@
             {
               "type": "named",
               "data": {
-                "name": "Start Shooter"
+                "name": "Intake Pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load in Motion"
               }
             }
           ]
