@@ -14,7 +14,7 @@ import frc.robot.Constants;
 public class LED extends SubsystemBase
 {
     private final LEDIO _io;
-    Random rand = new Random(); 
+    Random              rand = new Random();
 
     public LED(LEDIO io)
     {
@@ -57,7 +57,7 @@ public class LED extends SubsystemBase
 
     public Color[] randomColoring(Color color1, Color color2, Color color3)
     {
-        var threeColors = new Color[]{color1, color2, color3};
+        var threeColors = new Color[] { color1, color2, color3 };
 
         var colorList = new Color[Constants.LED.NUM_LEDS];
 
