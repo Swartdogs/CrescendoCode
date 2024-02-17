@@ -6,6 +6,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.util.NoteVisualizer;
 
 public final class CompositeCommands
 {
@@ -23,8 +24,8 @@ public final class CompositeCommands
 
     public static Command startNotepath(Notepath notepath, ShooterFlywheel shooterFlywheel)
     {
-        return Commands.waitUntil(() -> shooterFlywheel.atSpeed()).andThen(NotepathCommands.startFeed(notepath)).andThen(Commands.waitUntil(() -> notepath.sensorTripped())).andThen(Commands.waitUntil(() -> !notepath.sensorTripped()))
-                .andThen(Commands.runOnce(() -> notepath.setHasNote(false))).finallyDo(() ->
+        return Commands.waitUntil(() -> shooterFlywheel.atSpeed()).andThen(NotepathCommands.startFeed(notepath)).andThen(Commands.waitUntil(() -> notepath.sensorTripped())).andThen(NoteVisualizer.shoot())
+                .andThen(Commands.waitUntil(() -> !notepath.sensorTripped())).andThen(Commands.runOnce(() -> notepath.setHasNote(false))).finallyDo(() ->
                 {
                     notepath.setOff();
                 }).onlyIf(() -> shooterFlywheel.isShooting());
