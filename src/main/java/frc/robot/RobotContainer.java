@@ -133,16 +133,12 @@ public class RobotContainer
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
         NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
 
-        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.startIntake(_intake, _notepath, _shooterBed));
+        NamedCommands.registerCommand("Stop Intake", CompositeCommands.stopIntake(_intake, _notepath, _shooterBed));
         NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
         NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 2000, 2000));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-        // Set up feedforward characterization
-        // _autoChooser.addOption("Drive FF Characterization", new
-        // FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts,
-        // _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -155,12 +151,7 @@ public class RobotContainer
         new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
         new JoystickButton(_joystick, 2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
 
-        // new JoystickButton(_joystick,
-        // 11).onTrue(DriveCommands.pathFinding(PathPlannerPath.fromPathFile("New
-        // Path"), new PathConstraints(0.5, 4.0, Units.degreesToRadians(540),
-        // Units.degreesToRadians(720))));
-
-        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        _controller.y().onTrue(CompositeCommands.startIntake(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
         _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));

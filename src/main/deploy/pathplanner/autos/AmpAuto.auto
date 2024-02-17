@@ -38,12 +38,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Pickup"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Start Shooter"
           }
         },

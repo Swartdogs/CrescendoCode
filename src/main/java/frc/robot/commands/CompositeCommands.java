@@ -39,15 +39,19 @@ public final class CompositeCommands
         return Commands.parallel(ShooterFlywheelCommands.shooterFlywheelStop(shooterFlywheel), NotepathCommands.stopFeed(notepath));
     }
 
-    public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
+    public static Command startIntake(Intake intake, Notepath notepath, ShooterBed shooterBed)
     {
-        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed))
-                .andThen(Commands.either(Commands.waitSeconds(1), Commands.waitUntil(() -> notepath.sensorTripped()), () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM)).finallyDo(interrupted ->
+        return Commands.parallel(IntakeCommands.startIntake(intake), NotepathCommands.intakePickup(notepath), ShooterBedCommands.setBedIntakePickupAngle(shooterBed)).unless(() -> notepath.hasNote());
+    }
+
+    public static Command stopIntake(Intake intake, Notepath notepath, ShooterBed shooterBed)
+    {
+        return Commands.either(Commands.waitSeconds(1), Commands.waitUntil(() -> notepath.sensorTripped()), () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM).finallyDo(interrupted ->
                 {
                     intake.setIntakeOff();
                     notepath.setOff();
                     notepath.setHasNote(!interrupted);
-                }).unless(() -> notepath.hasNote());
+                });
     }
 
     public static Command stopIntaking(Intake intake, Notepath notepath)
