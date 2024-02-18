@@ -3,18 +3,19 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+
 import frc.robot.Constants;
 
 public class ShooterFlywheelIOSim implements ShooterFlywheelIO
 {
-    private final double UPPER_MOTOR_MAX_VOLTAGE;
-    private final double LOWER_MOTOR_MAX_VOLTAGE;
-    private DCMotor      _upperMotor        = DCMotor.getNEO(1);
-    private DCMotor      _lowerMotor        = DCMotor.getNEO(1);
-    private DCMotorSim   _upperFlywheelSim  = new DCMotorSim(_upperMotor, 1, 0.001);
-    private DCMotorSim   _lowerFlywheelSim  = new DCMotorSim(_lowerMotor, 1, 0.001);
-    private double       _upperAppliedVolts = 0;
-    private double       _lowerAppliedVolts = 0;
+    private final double     UPPER_MOTOR_MAX_VOLTAGE;
+    private final double     LOWER_MOTOR_MAX_VOLTAGE;
+    private final DCMotor    _upperMotor        = DCMotor.getNEO(1);
+    private final DCMotor    _lowerMotor        = DCMotor.getNEO(1);
+    private final DCMotorSim _upperMotorSim     = new DCMotorSim(_upperMotor, 1, 0.001);
+    private final DCMotorSim _lowerMotorSim     = new DCMotorSim(_lowerMotor, 1, 0.001);
+    private double           _upperAppliedVolts = 0;
+    private double           _lowerAppliedVolts = 0;
 
     public ShooterFlywheelIOSim()
     {
@@ -27,43 +28,43 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO
     @Override
     public void updateInputs(ShooterFlywheelIOInputs inputs)
     {
-        _upperFlywheelSim.update(Constants.General.LOOP_PERIOD_SECS);
-        _lowerFlywheelSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _upperMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _lowerMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.upperFlywheelVelocity     = _upperFlywheelSim.getAngularVelocityRPM();
-        inputs.upperFlywheelAppliedVolts = _upperAppliedVolts;
-        inputs.upperFlywheelCurrentAmps  = new double[] { Math.abs(_upperFlywheelSim.getCurrentDrawAmps()) };
+        inputs.upperVelocity = _upperMotorSim.getAngularVelocityRPM();
+        inputs.upperVolts    = _upperAppliedVolts;
+        inputs.upperCurrent  = new double[] { Math.abs(_upperMotorSim.getCurrentDrawAmps()) };
 
-        inputs.lowerFlywheelVelocity     = _lowerFlywheelSim.getAngularVelocityRPM();
-        inputs.lowerFlywheelAppliedVolts = _lowerAppliedVolts;
-        inputs.lowerFlywheelCurrentAmps  = new double[] { Math.abs(_lowerFlywheelSim.getCurrentDrawAmps()) };
+        inputs.lowerVelocity = _lowerMotorSim.getAngularVelocityRPM();
+        inputs.lowerVolts    = _lowerAppliedVolts;
+        inputs.lowerCurrent  = new double[] { Math.abs(_lowerMotorSim.getCurrentDrawAmps()) };
     }
 
     @Override
     public void setUpperVelocity(double velocity)
     {
         _upperAppliedVolts = UPPER_MOTOR_MAX_VOLTAGE * velocity / Units.radiansPerSecondToRotationsPerMinute(_upperMotor.freeSpeedRadPerSec);
-        _upperFlywheelSim.setInputVoltage(_upperAppliedVolts);
+        _upperMotorSim.setInputVoltage(_upperAppliedVolts);
     }
 
     @Override
     public void setLowerVelocity(double velocity)
     {
         _lowerAppliedVolts = LOWER_MOTOR_MAX_VOLTAGE * velocity / Units.radiansPerSecondToRotationsPerMinute(_lowerMotor.freeSpeedRadPerSec);
-        _lowerFlywheelSim.setInputVoltage(_lowerAppliedVolts);
+        _lowerMotorSim.setInputVoltage(_lowerAppliedVolts);
     }
 
     @Override
-    public void setUpperVoltage(double upperVolts)
+    public void setUpperVolts(double volts)
     {
-        _upperFlywheelSim.setInputVoltage(upperVolts);
-        _upperAppliedVolts = upperVolts;
+        _upperMotorSim.setInputVoltage(volts);
+        _upperAppliedVolts = volts;
     }
 
     @Override
-    public void setLowerVoltage(double lowerVolts)
+    public void setLowerVolts(double volts)
     {
-        _lowerFlywheelSim.setInputVoltage(lowerVolts);
-        _lowerAppliedVolts = lowerVolts;
+        _lowerMotorSim.setInputVoltage(volts);
+        _lowerAppliedVolts = volts;
     }
 }

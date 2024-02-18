@@ -47,14 +47,14 @@ public class ClimbIOVictorSPX implements ClimbIO
     }
 
     @Override
-    public void setLeftOffset(double leftAbsoluteEncoderOffset)
+    public void setLeftOffset(double offset)
     {
-        _leftOffset = leftAbsoluteEncoderOffset;
+        _leftOffset = offset;
     }
 
     @Override
-    public void setRightOffset(double rightAbsoluteEncoderOffset)
+    public void setRightOffset(double offset)
     {
-        _rightOffset = rightAbsoluteEncoderOffset;
+        _rightOffset = offset;
     }
 }

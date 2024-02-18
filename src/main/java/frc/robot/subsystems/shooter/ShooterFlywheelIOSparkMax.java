@@ -10,28 +10,37 @@ import frc.robot.Constants;
 
 public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
 {
-    private CANSparkMax        _upperFlywheelSparkMax;
-    private CANSparkMax        _lowerFlywheelSparkMax;
-    private RelativeEncoder    _upperFlywheelEncoder;
-    private RelativeEncoder    _lowerFlywheelEncoder;
-    private SparkPIDController _upperPIDController;
-    private SparkPIDController _lowerPIDController;
+    private final CANSparkMax        _upperMotor;
+    private final CANSparkMax        _lowerMotor;
+    private final RelativeEncoder    _upperEncoder;
+    private final RelativeEncoder    _lowerEncoder;
+    private final SparkPIDController _upperPID;
+    private final SparkPIDController _lowerPID;
 
     public ShooterFlywheelIOSparkMax()
     {
-        _upperFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_UPPER, MotorType.kBrushless);
-        _lowerFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_LOWER, MotorType.kBrushless);
+        _upperMotor = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_UPPER, MotorType.kBrushless);
+        _lowerMotor = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_LOWER, MotorType.kBrushless);
 
-        _upperFlywheelEncoder = _upperFlywheelSparkMax.getEncoder();
-        _lowerFlywheelEncoder = _lowerFlywheelSparkMax.getEncoder();
+        _upperMotor.restoreFactoryDefaults();
+        _lowerMotor.restoreFactoryDefaults();
 
-        _upperPIDController = _upperFlywheelSparkMax.getPIDController();
-        _lowerPIDController = _lowerFlywheelSparkMax.getPIDController();
+        _upperMotor.setCANTimeout(250);
+        _lowerMotor.setCANTimeout(250);
 
-        _upperFlywheelSparkMax.setIdleMode(IdleMode.kCoast);
-        _lowerFlywheelSparkMax.setIdleMode(IdleMode.kCoast);
+        _upperMotor.setSmartCurrentLimit(40);
+        _lowerMotor.setSmartCurrentLimit(40);
 
-        for (var pid : new SparkPIDController[] { _upperPIDController, _lowerPIDController })
+        _upperMotor.setIdleMode(IdleMode.kCoast);
+        _lowerMotor.setIdleMode(IdleMode.kCoast);
+
+        _upperEncoder = _upperMotor.getEncoder();
+        _lowerEncoder = _lowerMotor.getEncoder();
+
+        _upperPID = _upperMotor.getPIDController();
+        _lowerPID = _lowerMotor.getPIDController();
+
+        for (var pid : new SparkPIDController[] { _upperPID, _lowerPID })
         {
             pid.setP(6e-5);
             pid.setI(0);
@@ -40,41 +49,47 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
             pid.setFF(0.000015);
             pid.setOutputRange(-1, 1);
         }
+
+        _upperMotor.setCANTimeout(0);
+        _lowerMotor.setCANTimeout(0);
+
+        _upperMotor.burnFlash();
+        _lowerMotor.burnFlash();
     }
 
     @Override
     public void updateInputs(ShooterFlywheelIOInputs inputs)
     {
-        inputs.upperFlywheelVelocity     = _upperFlywheelEncoder.getVelocity();
-        inputs.upperFlywheelAppliedVolts = _upperFlywheelSparkMax.getAppliedOutput() * _upperFlywheelSparkMax.getBusVoltage();
-        inputs.upperFlywheelCurrentAmps  = new double[] { _upperFlywheelSparkMax.getOutputCurrent() };
+        inputs.upperVelocity = _upperEncoder.getVelocity();
+        inputs.upperVolts    = _upperMotor.getAppliedOutput() * _upperMotor.getBusVoltage();
+        inputs.upperCurrent  = new double[] { _upperMotor.getOutputCurrent() };
 
-        inputs.lowerFlywheelVelocity     = _lowerFlywheelEncoder.getVelocity();
-        inputs.lowerFlywheelAppliedVolts = _lowerFlywheelSparkMax.getAppliedOutput() * _lowerFlywheelSparkMax.getBusVoltage();
-        inputs.lowerFlywheelCurrentAmps  = new double[] { _lowerFlywheelSparkMax.getOutputCurrent() };
+        inputs.lowerVelocity = _lowerEncoder.getVelocity();
+        inputs.lowerVolts    = _lowerMotor.getAppliedOutput() * _lowerMotor.getBusVoltage();
+        inputs.lowerCurrent  = new double[] { _lowerMotor.getOutputCurrent() };
     }
 
     @Override
-    public void setUpperVelocity(double upperVelocity)
+    public void setUpperVelocity(double velocity)
     {
-        _upperPIDController.setReference(upperVelocity, CANSparkMax.ControlType.kVelocity);
+        _upperPID.setReference(velocity, CANSparkMax.ControlType.kVelocity);
     }
 
     @Override
-    public void setLowerVelocity(double lowerVelocity)
+    public void setLowerVelocity(double velocity)
     {
-        _lowerPIDController.setReference(lowerVelocity, CANSparkMax.ControlType.kVelocity);
+        _lowerPID.setReference(velocity, CANSparkMax.ControlType.kVelocity);
     }
 
     @Override
-    public void setUpperVoltage(double upperVolts)
+    public void setUpperVolts(double volts)
     {
-        _upperFlywheelSparkMax.setVoltage(upperVolts);
+        _upperMotor.setVoltage(volts);
     }
 
     @Override
-    public void setLowerVoltage(double lowerVolts)
+    public void setLowerVolts(double volts)
     {
-        _lowerFlywheelSparkMax.setVoltage(lowerVolts);
+        _lowerMotor.setVoltage(volts);
     }
 }

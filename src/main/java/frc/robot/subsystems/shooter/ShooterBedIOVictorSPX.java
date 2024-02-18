@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+
 import frc.robot.Constants;
 
 public class ShooterBedIOVictorSPX implements ShooterBedIO
@@ -16,14 +17,14 @@ public class ShooterBedIOVictorSPX implements ShooterBedIO
 
     public ShooterBedIOVictorSPX()
     {
-        _leaderMotor = new VictorSPX(Constants.CAN.SHOOTER_BED_LEADER);
+        _leaderMotor           = new VictorSPX(Constants.CAN.SHOOTER_BED_LEADER);
+        _followerMotor         = new VictorSPX(Constants.CAN.SHOOTER_BED_FOLLOWER);
+        _absoluteEncoder       = new DutyCycleEncoder(Constants.DIO.SHOOTER_BED_SENSOR);
+        _absoluteEncoderOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
 
-        _followerMotor = new VictorSPX(Constants.CAN.SHOOTER_BED_FOLLOWER);
         _followerMotor.follow(_leaderMotor);
         _followerMotor.setInverted(true);
 
-        _absoluteEncoder       = new DutyCycleEncoder(Constants.DIO.SHOOTER_BED_SENSOR);
-        _absoluteEncoderOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
     }
 
     @Override

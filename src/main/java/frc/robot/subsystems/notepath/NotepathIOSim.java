@@ -24,7 +24,8 @@ public class NotepathIOSim implements NotepathIO
 
         inputs.followerVolts   = _followerVolts;
         inputs.followerCurrent = new double[] { Math.abs(_followerMotorSim.getCurrentDrawAmps()) };
-        inputs.sensorTripped   = !_lightSensorSim.get();
+
+        inputs.sensorTripped = !_lightSensorSim.get();
     }
 
     @Override

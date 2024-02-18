@@ -1,15 +1,3 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -18,6 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
@@ -38,12 +27,10 @@ import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonlib;
-import frc.robot.util.FeedForwardCharacterization;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSparkMax;
-import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
@@ -129,9 +116,6 @@ public class RobotContainer
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-        // Set up feedforward characterization
-        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
-
         // Configure the button bindings
         configureButtonBindings();
         _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
@@ -149,10 +133,10 @@ public class RobotContainer
         _controller.leftBumper().onTrue(ShooterBedCommands.setAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setAngle(_shooterBed, 45));
 
-        _controller.back().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
-        _controller.start().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        _controller.back().whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        _controller.start().whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 8, 8).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
 
-        _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
+        _controller.leftBumper().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
         _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
         _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));

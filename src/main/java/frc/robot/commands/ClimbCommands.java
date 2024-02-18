@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
 
@@ -12,17 +13,17 @@ public final class ClimbCommands
     {
     }
 
-    public static Command setVoltage(Climb climb, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
+    public static Command setVolts(Climb climb, DoubleSupplier leftVolts, DoubleSupplier rightVolts)
     {
         return climb.run(() ->
         {
-            climb.setLeftVolts(leftSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
-            climb.setRightVolts(rightSupplier.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
+            climb.setLeftVolts(leftVolts.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
+            climb.setRightVolts(rightVolts.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
         });
     }
 
-    public static Command setHeight(Climb climb, double setpoint)
+    public static Command setHeight(Climb climb, double height)
     {
-        return climb.runOnce(() -> climb.setHeight(setpoint));
+        return climb.runOnce(() -> climb.setHeight(height));
     }
 }

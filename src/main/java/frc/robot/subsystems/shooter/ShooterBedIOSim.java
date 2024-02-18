@@ -25,7 +25,9 @@ public class ShooterBedIOSim implements ShooterBedIO
     {
         Mechanism2d     mechanism = new Mechanism2d(3, 3);
         MechanismRoot2d bedRoot   = mechanism.getRoot("Shooter Bed", 2, 0);
+
         _bedLigament = bedRoot.append(new MechanismLigament2d("Bed", 1, 90, 20, new Color8Bit(Color.kOrange)));
+
         SmartDashboard.putData("Shooter Bed", mechanism);
     }
 

@@ -12,8 +12,7 @@ public class ShooterBed extends SubsystemBase
 {
     public enum BedAngle
     {
-        IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE),
-        ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE);
+        IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE), ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE);
 
         private Rotation2d _angle;
 
@@ -34,11 +33,11 @@ public class ShooterBed extends SubsystemBase
     }
 
     private final ShooterBedIO                 _io;
-    private final ShooterBedIOInputsAutoLogged _inputs           = new ShooterBedIOInputsAutoLogged();
+    private final ShooterBedIOInputsAutoLogged _inputs        = new ShooterBedIOInputsAutoLogged();
     private final PIDController                _bedPID;
-    private Rotation2d                         _angleSetpoint    = null;
-    private Rotation2d                         _minAngle         = Constants.ShooterBed.MIN_BED_ANGLE;
-    private Rotation2d                         _maxAngle         = Constants.ShooterBed.MAX_BED_ANGLE;
+    private Rotation2d                         _angleSetpoint = null;
+    private Rotation2d                         _minAngle      = Constants.ShooterBed.MIN_BED_ANGLE;
+    private Rotation2d                         _maxAngle      = Constants.ShooterBed.MAX_BED_ANGLE;
 
     public ShooterBed(ShooterBedIO io)
     {
