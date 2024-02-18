@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
@@ -135,21 +137,38 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
+        // _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed,
+        // _shooterFlywheel, _notepath));
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
-        _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
-        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        // Test commands for intake - on gamepad
+        _controller.y().onTrue(IntakeCommands.startIntake(_intake));
         _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
+        _controller.x().onTrue(IntakeCommands.stopIntake(_intake));
 
+        // Test commands for shooterbed - on gamepad
+        _controller.back().onTrue(ShooterBedCommands.setBedIntakePickupAngle(_shooterBed));
+        _controller.start().onTrue(ShooterBedCommands.setBedShooterPickupAngle(_shooterBed));
         _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
 
-        _controller.back().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
-        _controller.start().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        // Test commands for climb - on gamepad
+        _controller.leftTrigger().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
+        _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
 
-        _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
-        _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
+        // Test commands for notepath - on joystick
+        new JoystickButton(_joystick, 2).onTrue(NotepathCommands.reverseFeed(_notepath));
+        new JoystickButton(_joystick, 3).onTrue(NotepathCommands.intakePickup(_notepath));
+        new JoystickButton(_joystick, 4).onTrue(NotepathCommands.shooterPickup(_notepath));
+        new JoystickButton(_joystick, 5).onTrue(NotepathCommands.startFeed(_notepath));
+        new JoystickButton(_joystick, 6).onTrue(NotepathCommands.stopFeed(_notepath));
+
+        // Test commands for shooterfly - on joystick
+        new JoystickButton(_joystick, 7).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        new JoystickButton(_joystick, 8).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        new JoystickButton(_joystick, 9).onTrue(ShooterFlywheelCommands.shooterFlywheelIntake(_shooterFlywheel));
+        new JoystickButton(_joystick, 10).onTrue(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel));
     }
 
     public Command getAutonomousCommand()
