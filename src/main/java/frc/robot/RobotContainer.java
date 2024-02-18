@@ -84,10 +84,9 @@ public class RobotContainer
     private final Joystick              _joystick   = new Joystick(1);
     private final CommandXboxController _controller = new CommandXboxController(0);
 
-    public enum Controller()
+    public enum Controller
     {
-        Joystick(0),
-        CommandXboxController(1);
+        Joystick(0);
 
         private Joystick _joystick;
         private ArrayList<JoystickButton> _buttons;
