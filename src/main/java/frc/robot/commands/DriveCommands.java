@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.drive.Drive;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -86,11 +88,15 @@ public final class DriveCommands
         return Math.atan2(deltaY, deltaX) / Math.PI * 180;
     }
 
-    public static Command pathFinding(PathPlannerPath path, PathConstraints constraints)
+    public static Command pathFinding(Drive drive, Pose2d targetPose, PathConstraints constraints)
     {
-        return AutoBuilder.pathfindThenFollowPath(path, constraints, 3.0 // Goal end velocity in meters/sec// Rotation delay distance in meters. This is
-                                                                         // how far the robot should
-        // before attempting to rotate.
+        return new PathfindHolonomic(
+                targetPose, constraints, 3.0, // Goal end velocity in m/s. Optional
+                drive::getPose, drive::getChassisSpeeds, drive::runVelocity, Constants.PathPlanner.pathFollowerConfig, // HolonomicPathFollwerConfig, see the API or "Follow a single path" example for
+                                                                                                                       // more info
+                0.0, // Rotation delay distance in meters. This is how far the robot should travel
+                     // before attempting to rotate. Optional
+                drive // Reference to drive subsystem to set requirements
         );
     }
 }

@@ -12,9 +12,14 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants
@@ -186,6 +191,13 @@ public final class Constants
 
     public static class PathPlanner
     {
-        public static final double INTAKE_DELAY = 4.5; // TODO: Change value
+        public static final double                      INTAKE_DELAY       = 4.5; // TODO: Change value
+        public static final Translation2d               flModuleOffset     = new Translation2d(0.4, -0.4);
+        public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
+                new PIDConstants(5.0, 0, 0), // Translation constants
+                new PIDConstants(5.0, 0, 0), // Rotation constants
+                Constants.General.MAX_KRAKEN_SPEED, flModuleOffset.getNorm(), // Drive base radius (distance from center to furthest module)
+                new ReplanningConfig()
+        );
     }
 }

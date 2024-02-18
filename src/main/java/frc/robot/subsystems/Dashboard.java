@@ -8,12 +8,17 @@ import java.util.function.DoubleConsumer;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -30,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.CompositeCommands;
+import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
@@ -194,6 +200,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
         NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
 
+        NamedCommands.registerCommand("Pathfinding", DriveCommands.pathFinding(drive, new Pose2d(10, 5, Rotation2d.fromDegrees(180)), new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
         NamedCommands.registerCommand("Load in Motion", CompositeCommands.loadInMotion(intake, notepath));
         NamedCommands.registerCommand("Load While Stopped", CompositeCommands.loadWhileStopped(intake, notepath));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));

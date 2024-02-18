@@ -13,6 +13,8 @@
 package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindHolonomic;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -28,8 +30,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.ExponentialProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.gyro.Gyro;
@@ -45,6 +50,9 @@ public class Drive extends SubsystemBase
     private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
     private PIDController                  _rotatePID;
     private double                         _maxSpeed;
+    // private Pose2d _targetPose = new Pose2d();
+    // private PathConstraints _constraints = new PathConstraints(_maxSpeed,
+    // _maxSpeed, _maxSpeed, _maxSpeed);
 
     public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -77,6 +85,12 @@ public class Drive extends SubsystemBase
         });
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
+
+        // _targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
+
+        // // Create the constraints to use while pathfinding
+        // _constraints = new PathConstraints(3.0, 4.0, Units.degreesToRadians(540),
+        // Units.degreesToRadians(720));
     }
 
     public void periodic()
