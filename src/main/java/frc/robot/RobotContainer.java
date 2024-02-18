@@ -60,6 +60,8 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 
+import java.util.ArrayList;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
@@ -81,6 +83,36 @@ public class RobotContainer
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
     private final CommandXboxController _controller = new CommandXboxController(0);
+
+    public enum Controller()
+    {
+        Joystick(0),
+        CommandXboxController(1);
+
+        private Joystick _joystick;
+        private ArrayList<JoystickButton> _buttons;
+
+        private Controller(int port)
+        {
+            _joystick = new Joystick(port);
+            _buttons = new ArrayList<JoystickButton>();
+
+            for (int i = 0; i < 12; i++)
+            {
+                _buttons.add(new JoystickButton(_joystick, i + 1));
+            }
+        }
+
+        public Joystick joystick()
+        {
+            return _joystick;
+        }
+
+        public JoystickButton button(int button)
+        {
+            return _buttons.get(button - 1);
+        }
+    }
 
     public RobotContainer()
     {
@@ -144,9 +176,10 @@ public class RobotContainer
     private void configureButtonBindings()
     {
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
-        new JoystickButton(_joystick, 4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1)); // TODO: test values
-        new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
-        new JoystickButton(_joystick, 2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
+
+        Controller.Joystick.button(4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1));
+        Controller.Joystick.button(3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1));
+        Controller.Joystick.button(2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1));
 
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));

@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
-public final class Constants 
+public final class Constants
 {
     // Private constructor to prevent instantiation
     private Constants()
@@ -152,7 +152,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.SIM;
+        public static final Mode CURRENT_MODE = Mode.REAL;
 
         public static enum Mode
         {
@@ -169,19 +169,17 @@ public final class Constants
 
     public static class Field
     {
-        public static final Pose2d BLUE_SPEAKER = new Pose2d(Units.inchesToMeters(-1.5) , Units.inchesToMeters(218.42), new Rotation2d());
-        public static final Pose2d BLUE_AMP     = new Pose2d(Units.inchesToMeters(72.5), Units.inchesToMeters(323.0), Rotation2d.fromDegrees(270));
-        public static final Pose2d RED_SPEAKER = new Pose2d(Units.inchesToMeters(625.7), Units.inchesToMeters(218.42), new Rotation2d());
-        public static final Pose2d RED_AMP     = new Pose2d(Units.inchesToMeters(578.77), Units.inchesToMeters(323.0), Rotation2d.fromDegrees(270));
-
-        public static final Pose2d BLUE_SOURCE = new Pose2d(Units.inchesToMeters(615.445), Units.inchesToMeters(22.235), Rotation2d.fromDegrees(120));
-        public static final Pose2d BLUE_STAGE_ONE = new Pose2d(Units.inchesToMeters(173.73), Units.inchesToMeters(192.69), Rotation2d.fromDegrees(120));
-        public static final Pose2d BLUE_STAGE_TWO = new Pose2d(Units.inchesToMeters(173.73), Units.inchesToMeters(130.6), Rotation2d.fromDegrees(240));
+        public static final Pose2d BLUE_SPEAKER     = new Pose2d(Units.inchesToMeters(-1.5), Units.inchesToMeters(218.42), new Rotation2d());
+        public static final Pose2d BLUE_AMP         = new Pose2d(Units.inchesToMeters(72.5), Units.inchesToMeters(323.0), Rotation2d.fromDegrees(270));
+        public static final Pose2d RED_SPEAKER      = new Pose2d(Units.inchesToMeters(625.7), Units.inchesToMeters(218.42), new Rotation2d());
+        public static final Pose2d RED_AMP          = new Pose2d(Units.inchesToMeters(578.77), Units.inchesToMeters(323.0), Rotation2d.fromDegrees(270));
+        public static final Pose2d BLUE_SOURCE      = new Pose2d(Units.inchesToMeters(615.445), Units.inchesToMeters(22.235), Rotation2d.fromDegrees(120));
+        public static final Pose2d BLUE_STAGE_ONE   = new Pose2d(Units.inchesToMeters(173.73), Units.inchesToMeters(192.69), Rotation2d.fromDegrees(120));
+        public static final Pose2d BLUE_STAGE_TWO   = new Pose2d(Units.inchesToMeters(173.73), Units.inchesToMeters(130.6), Rotation2d.fromDegrees(240));
         public static final Pose2d BLUE_STAGE_THREE = new Pose2d(Units.inchesToMeters(227.48), Units.inchesToMeters(161.62), Rotation2d.fromDegrees(0));
-        
-        public static final Pose2d RED_SOURCE = new Pose2d(Units.inchesToMeters(35.78), Units.inchesToMeters(22.235),Rotation2d.fromDegrees(60));
-        public static final Pose2d RED_STAGE_ONE = new Pose2d(Units.inchesToMeters(477.69), Units.inchesToMeters(130.6), Rotation2d.fromDegrees(300));
-        public static final Pose2d RED_STAGE_TWO = new Pose2d(Units.inchesToMeters(477.69), Units.inchesToMeters(192.69), Rotation2d.fromDegrees(60));
-        public static final Pose2d RED_STAGE_THREE = new Pose2d(Units.inchesToMeters(423.74), Units.inchesToMeters(161.62), Rotation2d.fromDegrees(180));
+        public static final Pose2d RED_SOURCE       = new Pose2d(Units.inchesToMeters(35.78), Units.inchesToMeters(22.235), Rotation2d.fromDegrees(60));
+        public static final Pose2d RED_STAGE_ONE    = new Pose2d(Units.inchesToMeters(477.69), Units.inchesToMeters(130.6), Rotation2d.fromDegrees(300));
+        public static final Pose2d RED_STAGE_TWO    = new Pose2d(Units.inchesToMeters(477.69), Units.inchesToMeters(192.69), Rotation2d.fromDegrees(60));
+        public static final Pose2d RED_STAGE_THREE  = new Pose2d(Units.inchesToMeters(423.74), Units.inchesToMeters(161.62), Rotation2d.fromDegrees(180));
     }
 }
