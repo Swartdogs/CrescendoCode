@@ -18,16 +18,16 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ClimbCommands;
+import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
@@ -71,6 +71,8 @@ public class RobotContainer
     private final Gyro            _gyro;
     @SuppressWarnings("unused")
     private final Vision          _vision;
+    @SuppressWarnings("unused")
+    private final Dashboard       _dashboard;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -132,6 +134,7 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
     }
 
     private void configureButtonBindings()
@@ -141,7 +144,7 @@ public class RobotContainer
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
-        _controller.b().whileTrue(IntakeCommands.reverse(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.set(IntakeState.Off)));
+        _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
         _controller.leftBumper().onTrue(ShooterBedCommands.setAngle(_shooterBed, 30));
         _controller.rightBumper().onTrue(ShooterBedCommands.setAngle(_shooterBed, 45));
@@ -151,6 +154,8 @@ public class RobotContainer
 
         _controller.leftBumper().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
+        _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
+        _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
     }
 
     public Command getAutonomousCommand()
