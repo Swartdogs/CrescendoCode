@@ -200,7 +200,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
         NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
 
-        NamedCommands.registerCommand("Pathfinding", DriveCommands.pathFinding(drive, new Pose2d(10, 5, Rotation2d.fromDegrees(180)), new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
+        //NamedCommands.registerCommand("Pathfinding", DriveCommands.pathFinding(drive, new Pose2d(10, 5, Rotation2d.fromDegrees(180)), new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
         NamedCommands.registerCommand("Load in Motion", CompositeCommands.loadInMotion(intake, notepath));
         NamedCommands.registerCommand("Load While Stopped", CompositeCommands.loadWhileStopped(intake, notepath));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));

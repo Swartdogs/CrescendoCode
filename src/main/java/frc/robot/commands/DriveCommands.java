@@ -88,15 +88,15 @@ public final class DriveCommands
         return Math.atan2(deltaY, deltaX) / Math.PI * 180;
     }
 
-    public static Command pathFinding(Drive drive, Pose2d targetPose, PathConstraints constraints)
-    {
-        return new PathfindHolonomic(
-                targetPose, constraints, 3.0, // Goal end velocity in m/s. Optional
-                drive::getPose, drive::getChassisSpeeds, drive::runVelocity, Constants.PathPlanner.pathFollowerConfig, // HolonomicPathFollwerConfig, see the API or "Follow a single path" example for
-                                                                                                                       // more info
-                0.0, // Rotation delay distance in meters. This is how far the robot should travel
-                     // before attempting to rotate. Optional
-                drive // Reference to drive subsystem to set requirements
-        );
-    }
+    // public static Command pathFinding(Drive drive, Pose2d targetPose, PathConstraints constraints)
+    // {
+    //     return new PathfindHolonomic(
+    //             targetPose, constraints, 3.0, // Goal end velocity in m/s. Optional
+    //             drive::getPose, drive::getChassisSpeeds, drive::runVelocity, Constants.PathPlanner.pathFollowerConfig, // HolonomicPathFollwerConfig, see the API or "Follow a single path" example for
+    //                                                                                                                    // more info
+    //             0.0, // Rotation delay distance in meters. This is how far the robot should travel
+    //                  // before attempting to rotate. Optional
+    //             drive // Reference to drive subsystem to set requirements
+    //     );
+    // }
 }
