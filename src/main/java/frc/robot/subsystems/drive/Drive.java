@@ -91,7 +91,7 @@ public class Drive extends SubsystemBase
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
 
-                // Create a list of bezier points from poses. Each pose represents one waypoint.
+        // Create a list of bezier points from poses. Each pose represents one waypoint.
         // The rotation component of the pose should be the direction of travel. Do not
         // use holonomic rotation.
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90)));

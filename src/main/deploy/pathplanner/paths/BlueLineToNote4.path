@@ -42,7 +42,31 @@
       }
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Start Intake",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load in Motion"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -55,7 +79,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SourceAuto",
+  "folder": "BlueLineToOuterNotes",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

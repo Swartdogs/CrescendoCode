@@ -30,32 +30,25 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
+          "data": {
+            "pathName": "MiddleSideToNote2"
+          }
+        },
+        {
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "MiddleSideToNote2"
+                  "name": "Load While Stopped"
                 }
               },
               {
-                "type": "sequential",
+                "type": "wait",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake Pickup"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop Intake"
-                      }
-                    }
-                  ]
+                  "waitTime": 1.0
                 }
               }
             ]
@@ -68,38 +61,25 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Start Notepath"
+            "pathName": "Note2ToNote6"
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Note2ToNote6"
+                  "name": "Load While Stopped"
                 }
               },
               {
-                "type": "sequential",
+                "type": "wait",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake Pickup"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Stop Intake"
-                      }
-                    }
-                  ]
+                  "waitTime": 1.0
                 }
               }
             ]

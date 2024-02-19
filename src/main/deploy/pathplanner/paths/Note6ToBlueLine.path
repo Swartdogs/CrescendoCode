@@ -35,7 +35,7 @@
       "name": "Start Shooter",
       "waypointRelativePos": 0.55,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -61,7 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "MiddleAuto",
+  "folder": "OuterNotesToBlueLine",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
