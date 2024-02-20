@@ -19,6 +19,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -73,8 +74,15 @@ public class Drive extends SubsystemBase
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
-                this::getPose, this::setPose, this::getChassisSpeeds, this::runVelocity, new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
-                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
+                this::getPose, this::setPose, this::getChassisSpeeds, this::runVelocity, new HolonomicPathFollowerConfig(new PIDConstants(0.01, 0.0, 0.0),
+                    new PIDConstants(0.02, 0.0, 0.0), Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                    () -> {
+                        var alliance = DriverStation.getAlliance();
+                        if (alliance.isPresent()) {
+                          return alliance.get() == DriverStation.Alliance.Red;
+                        }
+                        return false;
+                      }, this
         );
 
         Pathfinding.setPathfinder(new LocalADStarAK());

@@ -12,7 +12,13 @@
 // GNU General Public License for more details.
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -130,6 +136,10 @@ public class RobotContainer
 
     private void configureButtonBindings()
     {
+        Pose2d targetPose = new Pose2d(300, 200, Rotation2d.fromDegrees(180));
+        PathConstraints constraints = new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPose, constraints, 0.0, 0.0);
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
         new JoystickButton(_joystick, 4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1)); // TODO: test values
         new JoystickButton(_joystick, 3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1)); // TODO: test values
@@ -140,7 +150,7 @@ public class RobotContainer
         _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
         _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
-        _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
+        _controller.leftBumper().onTrue(pathfindingCommand);
         _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
 
         _controller.back().whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
