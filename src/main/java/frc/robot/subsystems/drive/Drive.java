@@ -18,6 +18,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,7 +42,9 @@ public class Drive extends SubsystemBase
     private final Gyro                     _gyro;
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
-    private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private PIDController                  _rotatePID;
+    private double                         _maxSpeed;
 
     public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -51,10 +55,12 @@ public class Drive extends SubsystemBase
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
 
+        _rotatePID = new PIDController(0.02, 0, 0); // TODO: tune
+        _rotatePID.enableContinuousInput(-180, 180);
+
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
-                this::getPose, this::setPose, () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
-                new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                this::getPose, this::setPose, this::getChassisSpeeds, this::runVelocity, new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
         );
 
@@ -226,6 +232,11 @@ public class Drive extends SubsystemBase
         return wheelPositions;
     }
 
+    public ChassisSpeeds getChassisSpeeds()
+    {
+        return _kinematics.toChassisSpeeds(getModuleStates());
+    }
+    
     public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
     {
         _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
@@ -236,5 +247,27 @@ public class Drive extends SubsystemBase
     {
         return new Translation2d[] { new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0),
                 new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
+    }
+
+    public void rotateInit(double setpoint, double maxSpeed)
+    {
+        _maxSpeed = Math.abs(maxSpeed);
+
+        _rotatePID.setSetpoint(setpoint);
+    }
+
+    public double rotateExecute()
+    {
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees()), -_maxSpeed, _maxSpeed);
+    }
+
+    public double rotateExecute(double setpoint)
+    {
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees(), setpoint), -_maxSpeed, _maxSpeed);
+    }
+
+    public boolean rotateIsFinished()
+    {
+        return _rotatePID.atSetpoint();
     }
 }

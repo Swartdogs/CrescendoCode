@@ -56,4 +56,29 @@ public final class DriveCommands
             );
         }, drive);
     }
+
+    public static Command driveAtOrientation(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double setpoint, double maxSpeed)
+    {
+        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute()));
+    }
+
+    public static Command aimAtSpeaker(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    {
+        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER), maxSpeed))
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER))));
+    }
+
+    public static Command aimAtAmp(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    {
+        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_AMP), maxSpeed))
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP))));
+    }
+
+    private static double getHeadingToPose(Drive drive, Pose2d pose)
+    {
+        double deltaY = pose.getY() - drive.getPose().getY();
+        double deltaX = pose.getX() - drive.getPose().getX();
+
+        return Math.atan2(deltaY, deltaX) / Math.PI * 180;
+    }
 }

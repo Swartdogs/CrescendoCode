@@ -13,14 +13,18 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.ClimbCommands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CompositeCommands;
+import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
@@ -31,6 +35,7 @@ import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
+import frc.robot.subsystems.gyro.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
@@ -56,6 +61,8 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 
+import java.util.ArrayList;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
@@ -80,8 +87,38 @@ public class RobotContainer
     private final Joystick              _joystick   = new Joystick(1);
     private final CommandXboxController _controller = new CommandXboxController(0);
 
+    public enum Controller
+    {
+        Joystick(0);
+
+        private Joystick _joystick;
+        private ArrayList<JoystickButton> _buttons;
+
+        private Controller(int port)
+        {
+            _joystick = new Joystick(port);
+            _buttons = new ArrayList<JoystickButton>();
+
+            for (int i = 0; i < 12; i++)
+            {
+                _buttons.add(new JoystickButton(_joystick, i + 1));
+            }
+        }
+
+        public Joystick joystick()
+        {
+            return _joystick;
+        }
+
+        public JoystickButton button(int button)
+        {
+            return _buttons.get(button - 1);
+        }
+    }
+
     public RobotContainer()
     {
+
         switch (Constants.AdvantageKit.CURRENT_MODE)
         {
             // Real robot, instantiate hardware IO implementations
@@ -103,7 +140,7 @@ public class RobotContainer
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
-                _gyro = new Gyro(new GyroIO() {});
+                _gyro = new Gyro(new GyroIOSim(this::getChassisSpeeds));
                 _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
@@ -126,6 +163,9 @@ public class RobotContainer
                 break;
         }
 
+        NamedCommands.registerCommand("Start Shooter", IntakeCommands.startIntake(_intake));
+        // AutoBuilder.buildAuto("Test Auto");
+        // AutoBuilder.buildAuto("Old Auto");
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Set up feedforward characterization
@@ -139,6 +179,10 @@ public class RobotContainer
     private void configureButtonBindings()
     {
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+
+        Controller.Joystick.button(4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1));
+        Controller.Joystick.button(3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1));
+        Controller.Joystick.button(2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1));
 
         _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
@@ -155,6 +199,11 @@ public class RobotContainer
         _controller.rightBumper().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
         _controller.rightTrigger().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
         _controller.leftTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+    }
+
+    private ChassisSpeeds getChassisSpeeds()
+    {
+        return _drive.getChassisSpeeds();
     }
 
     public Command getAutonomousCommand()

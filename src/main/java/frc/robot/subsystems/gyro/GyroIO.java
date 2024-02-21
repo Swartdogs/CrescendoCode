@@ -17,7 +17,7 @@ public interface GyroIO
         public Rotation2d rollPosition         = new Rotation2d();
     }
 
-    public default void updateInputs(GyroIOInputsAutoLogged inputs)
+    public default void updateInputs(GyroIOInputs inputs)
     {
     }
 }
