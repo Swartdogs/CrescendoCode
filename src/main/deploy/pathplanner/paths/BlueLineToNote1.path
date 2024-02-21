@@ -69,11 +69,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -13.920242780522903,
+    "rotation": 88.15238973400534,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "BlueLineToInnerNotes",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
