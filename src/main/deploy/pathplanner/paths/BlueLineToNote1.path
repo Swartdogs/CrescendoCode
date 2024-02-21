@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.79,
-        "y": 4.227611993027124
+        "x": 4.64908852894629,
+        "y": 1.637912506594245
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.162305962272408,
-        "y": 0.16395171164094074
+        "x": 3.188780992946603,
+        "y": 2.6344737304859236
       },
       "isLocked": false,
-      "linkedName": "SourceSide"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.293678213604645,
-        "y": 2.4241431649767726
+        "x": 2.894982565999367,
+        "y": 4.11050362756931
       },
       "prevControl": {
-        "x": 6.970353683931332,
-        "y": 2.435854001522554
+        "x": 2.9815751939196202,
+        "y": 3.0488853285398885
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Note5"
+      "linkedName": "Note1"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.4,
+      "name": "Start Intake",
+      "waypointRelativePos": 0.05,
       "command": {
         "type": "sequential",
         "data": {
@@ -42,6 +42,12 @@
               "type": "named",
               "data": {
                 "name": "Intake Pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Start Shooter"
               }
             },
             {
@@ -63,11 +69,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -13.920242780522903,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "SourceSideStartingPaths",
+  "folder": "BlueLineToInnerNotes",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

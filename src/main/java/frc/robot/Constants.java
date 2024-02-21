@@ -56,8 +56,8 @@ public final class Constants
         public static final int MODULE_FR_SENSOR   = 1;
         public static final int MODULE_BL_SENSOR   = 2;
         public static final int MODULE_BR_SENSOR   = 3;
+        public static final int CLIMB_RIGHT_SENSOR = 4;
         public static final int CLIMB_LEFT_SENSOR  = 5;
-        public static final int CLIMB_RIGHT_SENSOR = 6;
     }
 
     public static class DIO
