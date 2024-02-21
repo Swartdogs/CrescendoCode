@@ -51,7 +51,7 @@ public final class Constants
         public static final int MODULE_BL_SENSOR   = 2;
         public static final int MODULE_BR_SENSOR   = 3;
         public static final int CLIMB_LEFT_SENSOR  = 5;
-        public static final int CLIMB_RIGHT_SENSOR = 6;
+        public static final int CLIMB_RIGHT_SENSOR = 4;
     }
 
     public static class DIO
@@ -84,7 +84,7 @@ public final class Constants
 
     public static class Intake
     {
-        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.8;
+        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.3;
         public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 0.3;
     }
 
@@ -135,9 +135,9 @@ public final class Constants
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
-        public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.4;
-        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.5;
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.2;
+        public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.2;
+        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.2;
     }
 
     public static class General

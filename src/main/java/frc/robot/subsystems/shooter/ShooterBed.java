@@ -38,6 +38,12 @@ public class ShooterBed extends SubsystemBase
         }
     }
 
+    public void setVoltage(double voltage)
+    {
+        _angleSetpoint = null;
+        _io.setVoltage(voltage);
+    }
+
     public void setAngle(Rotation2d angleSetpoint)
     {
         _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle.getRadians(), _maxBedAngle.getRadians()));

@@ -143,22 +143,22 @@ public class RobotContainer
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
         // Test commands for intake - on gamepad
-        _controller.y().onTrue(IntakeCommands.startIntake(_intake));
+        _controller.y().whileTrue(IntakeCommands.startIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
         _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
         _controller.x().onTrue(IntakeCommands.stopIntake(_intake));
 
         // Test commands for shooterbed - on gamepad
-        _controller.back().onTrue(ShooterBedCommands.setBedIntakePickupAngle(_shooterBed));
-        _controller.start().onTrue(ShooterBedCommands.setBedShooterPickupAngle(_shooterBed));
-        _controller.leftBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 30));
-        _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed, 45));
+        // _controller.back().onTrue(ShooterBedCommands.setBedIntakePickupAngle(_shooterBed));
+        // _controller.start().onTrue(ShooterBedCommands.setBedShooterPickupAngle(_shooterBed));
+        _controller.leftBumper().whileTrue(ShooterBedCommands.runBed(_shooterBed, () -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
+        // _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed,
+        // 45));
 
         // Test commands for climb - on gamepad
         _controller.leftTrigger().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
 
         // Test commands for notepath - on joystick
-        new JoystickButton(_joystick, 2).onTrue(NotepathCommands.reverseFeed(_notepath));
         new JoystickButton(_joystick, 3).onTrue(NotepathCommands.intakePickup(_notepath));
         new JoystickButton(_joystick, 4).onTrue(NotepathCommands.shooterPickup(_notepath));
         new JoystickButton(_joystick, 5).onTrue(NotepathCommands.startFeed(_notepath));

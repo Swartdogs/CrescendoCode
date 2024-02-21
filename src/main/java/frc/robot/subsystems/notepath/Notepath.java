@@ -42,7 +42,7 @@ public class Notepath extends SubsystemBase
 
     public void setNotepathShooterPickupOn()
     {
-        _io.setVoltage(_shooterPickupPercentOutput * Constants.General.MOTOR_VOLTAGE);
+        _io.setVoltage(_shooterPickupPercentOutput * -Constants.General.MOTOR_VOLTAGE);
     }
 
     public void setOff()

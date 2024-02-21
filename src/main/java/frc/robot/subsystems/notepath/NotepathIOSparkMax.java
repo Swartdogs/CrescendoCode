@@ -18,6 +18,7 @@ public class NotepathIOSparkMax implements NotepathIO
     {
         _notepathSparkMax = new CANSparkMax(Constants.CAN.NOTEPATH_LEADER, MotorType.kBrushless);
         _followerSparkMax = new CANSparkMax(Constants.CAN.NOTEPATH_FOLLOWER, MotorType.kBrushless);
+        _notepathSparkMax.setInverted(true);
         _followerSparkMax.follow(_notepathSparkMax, true);
 
         _noteSensor = new DigitalInput(Constants.DIO.NOTE_SENSOR);
