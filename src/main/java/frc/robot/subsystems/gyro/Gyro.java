@@ -18,6 +18,7 @@ public class Gyro extends SubsystemBase
         _io = io;
     }
 
+    @Override
     public void periodic()
     {
         _io.updateInputs(_inputs);

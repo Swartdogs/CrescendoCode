@@ -12,6 +12,7 @@ public interface ShooterBedIO
         public double     bedLeaderAppliedVolts   = 0.0;
         public double     bedFollowerAppliedVolts = 0.0;
         public Rotation2d bedAngle                = new Rotation2d();
+        public double     bedAngleDegrees         = 0.0;
     }
 
     public default void updateInputs(ShooterBedIOInputs inputs)

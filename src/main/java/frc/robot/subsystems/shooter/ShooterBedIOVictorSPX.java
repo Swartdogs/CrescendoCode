@@ -31,7 +31,8 @@ public class ShooterBedIOVictorSPX implements ShooterBedIO
     {
         inputs.bedLeaderAppliedVolts   = _bedLeaderVictorSPX.getMotorOutputVoltage();
         inputs.bedFollowerAppliedVolts = _bedFollowerVictorSPX.getMotorOutputVoltage();
-        inputs.bedAngle                = Rotation2d.fromRotations(_bedAbsoluteEncoder.getAbsolutePosition()).minus(_bedAbsoluteEncoderOffset);
+        inputs.bedAngle                = Rotation2d.fromRotations(_bedAbsoluteEncoder.getAbsolutePosition()).times(0.426).minus(_bedAbsoluteEncoderOffset);
+        inputs.bedAngleDegrees         = inputs.bedAngle.getDegrees();
     }
 
     @Override

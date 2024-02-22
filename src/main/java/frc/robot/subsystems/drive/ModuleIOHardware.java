@@ -80,15 +80,19 @@ public class ModuleIOHardware implements ModuleIO
         _turnSparkMax.burnFlash();
 
         _drivePosition     = _driveTalonFX.getPosition();
-        _driveVelocity     = _driveTalonFX.getPosition();
+        _driveVelocity     = _driveTalonFX.getVelocity();
         _driveAppliedVolts = _driveTalonFX.getMotorVoltage();
         _driveCurrent      = _driveTalonFX.getStatorCurrent();
 
-        var driveConfig = new CurrentLimitsConfigs();
-        driveConfig.StatorCurrentLimit       = 40.0;
-        driveConfig.StatorCurrentLimitEnable = true;
-        _driveTalonFX.getConfigurator().apply(driveConfig);
+        var driveCurrentConfig = new CurrentLimitsConfigs();
+        driveCurrentConfig.StatorCurrentLimit       = 40.0;
+        driveCurrentConfig.StatorCurrentLimitEnable = true;
+        _driveTalonFX.getConfigurator().apply(driveCurrentConfig);
         setDriveBrakeMode(true);
+
+        var driveOutputConfig = new MotorOutputConfigs();
+        driveOutputConfig.Inverted = InvertedValue.Clockwise_Positive;
+        _driveTalonFX.getConfigurator().apply(driveOutputConfig);
 
         BaseStatusSignal.setUpdateFrequencyForAll(100.0, _drivePosition); // Required for odometry, use faster rate
         BaseStatusSignal.setUpdateFrequencyForAll(50.0, _driveVelocity, _driveAppliedVolts, _driveCurrent);

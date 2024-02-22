@@ -18,6 +18,7 @@ public class GyroIONavX2 implements GyroIO
         _gyro.reset();
     }
 
+    @Override
     public void updateInputs(GyroIOInputs inputs)
     {
         inputs.yawPosition          = Rotation2d.fromDegrees(-_gyro.getYaw());

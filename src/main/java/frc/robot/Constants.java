@@ -74,12 +74,12 @@ public final class Constants
     public static class Climb
     {
         public static final double MIN_EXTENSION                 = 0.0;
-        public static final double MAX_EXTENSION                 = 24.0;
+        public static final double MAX_EXTENSION                 = 17.5;
         public static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
         public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
         public static final double LEFT_ZERO_OFFSET              = 0.0;
-        public static final double RIGHT_ZERO_OFFSET             = 0.0;
-        public static final double SENSOR_SCALE                  = 1.0; // TODO: Find values (Lines 81 - 79)
+        public static final double RIGHT_ZERO_OFFSET             = 0.357;
+        public static final double SENSOR_SCALE                  = 27.473;
     }
 
     public static class Intake
@@ -100,17 +100,17 @@ public final class Constants
         public static final double     TURN_GEAR_RATIO    = (150.0 / 7.0);
         public static final double     HALL_EFFECT_SCALE  = 360 / 0.92;
         public static final double     HALL_EFFECT_OFFSET = (360 - HALL_EFFECT_SCALE) / 2.0;
-        public static final Rotation2d MODULE_FL_OFFSET   = Rotation2d.fromRadians(-2.49);
-        public static final Rotation2d MODULE_FR_OFFSET   = Rotation2d.fromRadians(2.09);
-        public static final Rotation2d MODULE_BL_OFFSET   = Rotation2d.fromRadians(-2.33);
-        public static final Rotation2d MODULE_BR_OFFSET   = Rotation2d.fromRadians(-1.63);
+        public static final Rotation2d MODULE_FL_OFFSET   = Rotation2d.fromRadians(-2.49).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d MODULE_FR_OFFSET   = Rotation2d.fromRadians(2.09).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d MODULE_BL_OFFSET   = Rotation2d.fromRadians(-2.33).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d MODULE_BR_OFFSET   = Rotation2d.fromRadians(-1.63).plus(Rotation2d.fromDegrees(180));
     }
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(0);
-        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(90);
-        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(0);
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-14.611);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(87);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(17);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(30);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(60);
     }
