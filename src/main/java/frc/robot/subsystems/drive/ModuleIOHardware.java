@@ -49,7 +49,7 @@ public class ModuleIOHardware implements ModuleIO
     private final RelativeEncoder      _turnRelativeEncoder;
     private final AnalogEncoder        _turnAbsoluteEncoder;
     private final boolean              _isTurnMotorInverted = true;
-    private final Rotation2d           _absoluteEncoderOffset;
+    private Rotation2d           _absoluteEncoderOffset;
     private final StatusSignal<Double> _drivePosition;
     private final StatusSignal<Double> _driveVelocity;
     private final StatusSignal<Double> _driveAppliedVolts;
@@ -142,5 +142,11 @@ public class ModuleIOHardware implements ModuleIO
     public void setTurnBrakeMode(boolean enable)
     {
         _turnSparkMax.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    }
+
+    @Override
+    public void setAngleOffset(Rotation2d ModuleAbsoluteEncoderOffset)
+    {
+        _absoluteEncoderOffset = ModuleAbsoluteEncoderOffset;
     }
 }

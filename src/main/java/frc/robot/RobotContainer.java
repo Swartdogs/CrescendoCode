@@ -30,6 +30,7 @@ import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
@@ -72,6 +73,8 @@ public class RobotContainer
     private final Gyro            _gyro;
     @SuppressWarnings("unused")
     private final Vision          _vision;
+    @SuppressWarnings("unused")
+    private final Dashboard       _dashboard;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> _autoChooser;
@@ -133,6 +136,7 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
     }
 
     private void configureButtonBindings()
@@ -142,10 +146,10 @@ public class RobotContainer
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        // Test commands for intake - on gamepad
-        _controller.y().whileTrue(IntakeCommands.startIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
-        _controller.b().whileTrue(IntakeCommands.reverseIntake(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.setIntakeOff()));
-        _controller.x().onTrue(IntakeCommands.stopIntake(_intake));
+        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
+        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
         // Test commands for shooterbed - on gamepad
         // _controller.back().onTrue(ShooterBedCommands.setBedIntakePickupAngle(_shooterBed));

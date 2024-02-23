@@ -20,7 +20,7 @@ import frc.robot.Constants;
 
 public class ModuleIOSim implements ModuleIO
 {
-    private final Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
+    private Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
     private DCMotorSim       _driveSim                 = new DCMotorSim(DCMotor.getKrakenX60(1), 6.75, 0.025);
     private DCMotorSim       _turnSim                  = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
     private double           _driveAppliedVolts        = 0.0;
@@ -56,5 +56,11 @@ public class ModuleIOSim implements ModuleIO
     {
         _turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
         _turnSim.setInputVoltage(_turnAppliedVolts);
+    }
+
+    @Override
+    public void setAngleOffset(Rotation2d angleOffset)
+    {
+        _turnAbsoluteInitPosition = angleOffset;
     }
 }

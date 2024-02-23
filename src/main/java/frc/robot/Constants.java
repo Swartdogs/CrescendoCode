@@ -119,6 +119,7 @@ public final class Constants
     {
         public static final double MAX_FLYWHEEL_SPEED    = 1.0;
         public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
+        public static final double VELOCITY_RANGE        = 0.05;
     }
 
     public static class Vision
@@ -131,6 +132,7 @@ public final class Constants
         // Measurement from the ground to the camera's center
         public static final double     CAMERA_Z        = Units.inchesToMeters(5.25);
         public static final Rotation3d CAMERA_ROTATION = new Rotation3d(0.0, 0.0, 0.0);
+        public static final String     CAMERA_URL      = "mjpg:http://10.5.25.12:1181/?action=stream";
     }
 
     public static class Notepath
