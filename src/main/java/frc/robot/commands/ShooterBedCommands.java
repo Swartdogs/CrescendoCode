@@ -25,6 +25,6 @@ public final class ShooterBedCommands
 
     public static Command runBed(ShooterBed shooterBed, DoubleSupplier supplier)
     {
-        return shooterBed.run(() -> shooterBed.setVoltage(supplier.getAsDouble()));
+        return shooterBed.run(() -> shooterBed.setVolts(supplier.getAsDouble()));
     }
 }
