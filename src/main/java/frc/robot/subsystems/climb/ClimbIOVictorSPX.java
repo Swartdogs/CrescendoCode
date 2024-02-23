@@ -21,7 +21,7 @@ public class ClimbIOVictorSPX implements ClimbIO
         _rightArmMotor = new VictorSPX(Constants.CAN.CLIMB_RIGHT);
         _leftArmMotor.setInverted(true);
 
-        _leftPot = new AnalogPotentiometer(Constants.AIO.CLIMB_LEFT_SENSOR, -26.87);
+        _leftPot  = new AnalogPotentiometer(Constants.AIO.CLIMB_LEFT_SENSOR, -26.87);
         _rightPot = new AnalogPotentiometer(Constants.AIO.CLIMB_RIGHT_SENSOR, Constants.Climb.SENSOR_SCALE);
     }
 

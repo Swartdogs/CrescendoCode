@@ -15,9 +15,9 @@ public class Notepath extends SubsystemBase
 
     private final NotepathIO               _io;
     private final NotepathInputsAutoLogged _inputs           = new NotepathInputsAutoLogged();
-    private double                         _intakeLoadVolts  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT;
-    private double                         _feedVolts        = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT;
-    private double                         _shooterLoadVolts = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT;
+    private double                         _intakeLoadVolts  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
+    private double                         _feedVolts        = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
+    private double                         _shooterLoadVolts = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
     private boolean                        _hasNote          = false;
 
     public Notepath(NotepathIO io)

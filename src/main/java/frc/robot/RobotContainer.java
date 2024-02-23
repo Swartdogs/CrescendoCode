@@ -10,9 +10,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.commands.ClimbCommands;
-import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
@@ -36,6 +35,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSparkMax;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
@@ -53,17 +53,17 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 public class RobotContainer
 {
     // Subsystems
-    private final Drive           _drive;
-    private final Intake          _intake;
-    private final Notepath        _notepath;
-    private final ShooterBed      _shooterBed;
-    private final ShooterFlywheel _shooterFlywheel;
-    private final Climb           _climb;
-    private final Gyro            _gyro;
+    private final Drive                 _drive;
+    private final Intake                _intake;
+    private final Notepath              _notepath;
+    private final ShooterBed            _shooterBed;
+    private final ShooterFlywheel       _shooterFlywheel;
+    private final Climb                 _climb;
+    private final Gyro                  _gyro;
     @SuppressWarnings("unused")
-    private final Vision          _vision;
+    private final Vision                _vision;
     @SuppressWarnings("unused")
-    private final Dashboard       _dashboard;
+    // private final Dashboard _dashboard;
 
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
@@ -117,7 +117,8 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
-        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
+        // _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive,
+        // _intake, _climb);
     }
 
     private void configureButtonBindings()
@@ -127,21 +128,33 @@ public class RobotContainer
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
-        _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
-        _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
-        _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
+        _controller.y().whileTrue(IntakeCommands.start(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.set(IntakeState.Off)));
+        _controller.a().whileTrue(ShooterFlywheelCommands.intake(_shooterFlywheel).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+
+        // _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath,
+        // _shooterBed));
+        // _controller.x().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
+        // _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed,
+        // _shooterFlywheel, _notepath));
+        // _controller.b().onTrue(CompositeCommands.stopShooter(_shooterFlywheel,
+        // _notepath));
 
         // Test commands for shooterbed - on gamepad
         // _controller.back().onTrue(ShooterBedCommands.setBedIntakePickupAngle(_shooterBed));
         // _controller.start().onTrue(ShooterBedCommands.setBedShooterPickupAngle(_shooterBed));
-        _controller.leftBumper().whileTrue(ShooterBedCommands.runBed(_shooterBed, () -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
+        // _controller.leftBumper().whileTrue(ShooterBedCommands.runBed(_shooterBed, ()
+        // -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
         // _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed,
         // 45));
+        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
         // Test commands for climb - on gamepad
-        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
-        _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
+        // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->
+        // -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() ->
+        // _climb.stop()));
+        // _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); //
+        // TODO: set setpoint
 
         // Test commands for notepath - on joystick
         new JoystickButton(_joystick, 3).whileTrue(NotepathCommands.intakeLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));

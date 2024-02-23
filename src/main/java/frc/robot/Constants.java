@@ -74,7 +74,7 @@ public final class Constants
         public static final double RIGHT_ZERO_OFFSET = 0.357;
         public static final double SENSOR_SCALE      = 27.473;
     }
-    
+
     public static class Controls
     {
         public static final double JOYSTICK_DEADBAND = 0.1;
@@ -118,9 +118,9 @@ public final class Constants
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.2;
-        public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.2;
-        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.2;
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
+        public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.6;
+        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.6;
     }
 
     public static class ShooterBed // FIXME: Update all these values

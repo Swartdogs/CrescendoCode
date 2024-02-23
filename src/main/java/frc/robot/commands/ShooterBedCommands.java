@@ -27,4 +27,9 @@ public final class ShooterBedCommands
     {
         return shooterBed.run(() -> shooterBed.setVolts(supplier.getAsDouble()));
     }
+
+    public static Command setVolts(ShooterBed shooterBed, double volts)
+    {
+        return shooterBed.runOnce(() -> shooterBed.setVolts(volts));
+    }
 }

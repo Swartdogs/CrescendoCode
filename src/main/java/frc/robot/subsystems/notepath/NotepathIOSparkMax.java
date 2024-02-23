@@ -28,14 +28,13 @@ public class NotepathIOSparkMax implements NotepathIO
         _followerMotor.setSmartCurrentLimit(20);
 
         _leaderMotor.setInverted(true);
+        _followerMotor.follow(_leaderMotor, true);
 
         _leaderMotor.setCANTimeout(0);
         _followerMotor.setCANTimeout(0);
 
         _leaderMotor.burnFlash();
         _followerMotor.burnFlash();
-
-        _followerMotor.follow(_leaderMotor, true);
 
         _lightSensor = new DigitalInput(Constants.DIO.NOTE_SENSOR);
     }
