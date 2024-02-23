@@ -38,8 +38,8 @@ public final class Constants
         public static final int NOTEPATH_FOLLOWER      = 12;
         public static final int SHOOTER_BED_LEADER     = 13;
         public static final int SHOOTER_BED_FOLLOWER   = 14;
-        public static final int SHOOTER_FLYWHEEL_UPPER = 15;
-        public static final int SHOOTER_FLYWHEEL_LOWER = 16;
+        public static final int SHOOTER_FLYWHEEL_LOWER = 15;
+        public static final int SHOOTER_FLYWHEEL_UPPER = 16;
         public static final int CLIMB_LEFT             = 17;
         public static final int CLIMB_RIGHT            = 18;
     }
@@ -77,15 +77,15 @@ public final class Constants
         public static final double MAX_EXTENSION                 = 17.5;
         public static final double CLIMB_SENSOR_RATE_DEG_PER_SEC = 360;
         public static final double CLIMB_SENSOR_DEG_PER_INCH     = 60;
-        public static final double LEFT_ZERO_OFFSET              = 0.0;
+        public static final double LEFT_ZERO_OFFSET              = -17.33;
         public static final double RIGHT_ZERO_OFFSET             = 0.357;
         public static final double SENSOR_SCALE                  = 27.473;
     }
 
     public static class Intake
     {
-        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.3;
-        public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 0.3;
+        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.6;
+        public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 0.6;
     }
 
     public static class Drive

@@ -22,6 +22,9 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
         _upperFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_UPPER, MotorType.kBrushless);
         _lowerFlywheelSparkMax = new CANSparkMax(Constants.CAN.SHOOTER_FLYWHEEL_LOWER, MotorType.kBrushless);
 
+        _upperFlywheelSparkMax.setInverted(false);
+        _lowerFlywheelSparkMax.setInverted(false);
+
         _upperFlywheelEncoder = _upperFlywheelSparkMax.getEncoder();
         _lowerFlywheelEncoder = _lowerFlywheelSparkMax.getEncoder();
 
@@ -33,11 +36,11 @@ public class ShooterFlywheelIOSparkMax implements ShooterFlywheelIO
 
         for (var pid : new SparkPIDController[] { _upperPIDController, _lowerPIDController })
         {
-            pid.setP(6e-5);
+            pid.setP(3e-5);
             pid.setI(0);
             pid.setD(0);
             pid.setIZone(0);
-            pid.setFF(0.000015);
+            pid.setFF(0.00017);
             pid.setOutputRange(-1, 1);
         }
     }

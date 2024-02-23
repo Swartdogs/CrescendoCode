@@ -32,7 +32,8 @@ public final class CompositeCommands
     public static Command shooterPickup(ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, Notepath notepath)
     {
         return Commands.parallel(ShooterBedCommands.setBedShooterPickupAngle(shooterBed), ShooterFlywheelCommands.shooterFlywheelIntake(shooterFlywheel), NotepathCommands.reverseFeed(notepath))
-                .andThen(Commands.waitUntil(() -> notepath.sensorTripped())).andThen(Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(interrupted ->
+                .andThen(Commands.waitUntil(() -> notepath.sensorTripped())).
+                andThen(Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(interrupted ->
                 {
                     shooterFlywheel.stop();
                     notepath.setOff();

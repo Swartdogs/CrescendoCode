@@ -159,14 +159,14 @@ public class RobotContainer
         _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
 
         // Test commands for notepath - on joystick
-        new JoystickButton(_joystick, 3).onTrue(NotepathCommands.intakePickup(_notepath));
-        new JoystickButton(_joystick, 4).onTrue(NotepathCommands.shooterPickup(_notepath));
-        new JoystickButton(_joystick, 5).onTrue(NotepathCommands.startFeed(_notepath));
+        new JoystickButton(_joystick, 3).whileTrue(NotepathCommands.intakePickup(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
+        new JoystickButton(_joystick, 4).whileTrue(NotepathCommands.shooterPickup(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
+        new JoystickButton(_joystick, 5).whileTrue(NotepathCommands.startFeed(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
         new JoystickButton(_joystick, 6).onTrue(NotepathCommands.stopFeed(_notepath));
 
         // Test commands for shooterfly - on joystick
-        new JoystickButton(_joystick, 7).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 6, 10).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
-        new JoystickButton(_joystick, 8).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 8, 8).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        new JoystickButton(_joystick, 7).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 2000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        new JoystickButton(_joystick, 8).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 1000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
         new JoystickButton(_joystick, 9).onTrue(ShooterFlywheelCommands.shooterFlywheelIntake(_shooterFlywheel));
         new JoystickButton(_joystick, 10).onTrue(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel));
     }
