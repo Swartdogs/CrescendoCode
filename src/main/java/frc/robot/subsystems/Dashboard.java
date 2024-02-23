@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
@@ -244,49 +245,49 @@ public class Dashboard extends SubsystemBase
         // Intake
         initializeSetting("Intake In Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _intakeInSpeed, value ->
         {
-            _intake.setIntakePercentOutput(value);
+            _intake.setInSpeed(value);
         });
 
         initializeSetting("Intake Out Speed", Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT, _intakeOutSpeed, value ->
         {
-            _intake.setOuttakePercentOutput(value);
+            _intake.setOutSpeed(value);
         });
 
         // Climb
         initializeSetting("Climb Left Offset", Constants.Climb.LEFT_ZERO_OFFSET, _climbLeftOffset, value ->
         {
-            _climb.getExtensionLeft();
+            _climb.setLeftOffset(value);
         });
 
         initializeSetting("Climb Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET, _climbRightOffset, value ->
         {
-            _climb.getExtensionRight();
+            _climb.setRightOffset(value);
         });
 
         initializeSetting("Climb Minimum Height", Constants.Climb.MIN_EXTENSION, _climbMinHeight, value ->
         {
-            _climb.setExtensionMin(value);
+            _climb.setMinExtension(value);
         });
 
         initializeSetting("Climb Maximum Height", Constants.Climb.MAX_EXTENSION, _climbMaxHeight, value ->
         {
-            _climb.setExtensionMax(value);
+            _climb.setMaxExtension(value);
         });
 
         // Notepath
         initializeSetting("Notepath Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT, _notepathShootSpeed, value ->
         {
-            _notepath.setNotepathFeedPercentOutput(value);
+            _notepath.setFeedSpeed(value);
         });
 
         initializeSetting("Pickup Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _pickupIntakeSpeed, value ->
         {
-            _notepath.setNotepathIntakePickupPercentOutput(value);
+            _notepath.setIntakeLoadSpeed(value);
         });
 
         initializeSetting("Shooter Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _shooterIntakeSpeed, value ->
         {
-            _notepath.setNotepathShooterPickupPercentOutput(value);
+            _notepath.setShooterLoadSpeed(value);
         });
 
         // Shooter bed
@@ -307,12 +308,12 @@ public class Dashboard extends SubsystemBase
 
         initializeSetting("Bed Intake Pickup Angle", Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees(), _bedPickupIntakeAngle, value ->
         {
-            _shooterBed.setBedIntakePickupAngle(Rotation2d.fromDegrees(value));
+            _shooterBed.setIntakeLoadAngle(Rotation2d.fromDegrees(value));
         });
 
         initializeSetting("Bed Shooter Pickup Angle", Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE.getDegrees(), _bedPickupShooterAngle, value ->
         {
-            _shooterBed.setBedShooterPickupAngle(Rotation2d.fromDegrees(value));
+            _shooterBed.setShooterLoadAngle(Rotation2d.fromDegrees(value));
         });
 
         // Shooter flywheel
@@ -323,12 +324,12 @@ public class Dashboard extends SubsystemBase
 
         initializeSetting("Max Flywheel Speed", Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED, _maxFlywheelSpeed, value ->
         {
-            _shooterFlywheel.setMaxFlywheelSpeed(value);
+            _shooterFlywheel.setMaxSpeed(value);
         });
 
         initializeSetting("Flywheel Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _flywheelIntakeSpeed, value ->
         {
-            _shooterFlywheel.setFlywheelIntakeSpeed(value);
+            _shooterFlywheel.setIntakeSpeed(value);
         });
     }
 
@@ -376,20 +377,20 @@ public class Dashboard extends SubsystemBase
         _field.setRobotPose(_drive.getPose());
 
         // Climb
-        _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getExtensionLeft())));
-        _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getExtensionRight())));
+        _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getLeftExtension())));
+        _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getRightExtension())));
 
         // Intake
-        _intakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", _intake.getPercentOutput())));
+        _intakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", _intake.getSpeed())));
 
         // Notepath
-        _notepathOutput.setDouble(Double.parseDouble(String.format("%6.2f", _notepath.getPercentOutput())));
+        _notepathOutput.setDouble(Double.parseDouble(String.format("%6.2f", _notepath.getSpeed())));
 
         // Shooter bed
         _bedAngle.setDouble(Double.parseDouble(String.format("%6.2f", _shooterBed.getBedAngle().getDegrees())));
 
         // Shooter flywheel
-        _upperVelocity.setDouble(Double.parseDouble(String.format("%6.2f", _shooterFlywheel.getUpperFlywheelVelocity())));
-        _lowerVelocity.setDouble(Double.parseDouble(String.format("%6.2f", _shooterFlywheel.getLowerFlywheelVelocity())));
+        _upperVelocity.setDouble(Double.parseDouble(String.format("%6.2f", _shooterFlywheel.getUpperVelocity())));
+        _lowerVelocity.setDouble(Double.parseDouble(String.format("%6.2f", _shooterFlywheel.getLowerVelocity())));
     }
 }

@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.MathUtil;
@@ -15,13 +12,13 @@ public class Climb extends SubsystemBase
 {
     private final Gyro                    _gyro;
     private final ClimbIO                 _io;
-    private final ClimbIOInputsAutoLogged _inputs            = new ClimbIOInputsAutoLogged();
+    private final ClimbIOInputsAutoLogged _inputs       = new ClimbIOInputsAutoLogged();
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
     private Double                        _desiredHeight;
-    private double                        _climbMinExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
-    private double                        _climbMaxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
+    private double                        _minExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
+    private double                        _maxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
 
     public Climb(Gyro gyro, ClimbIO io)
     {
@@ -43,62 +40,62 @@ public class Climb extends SubsystemBase
         if (_desiredHeight != null)
         {
             double heightAdjustment = _tiltPID.calculate(_gyro.getRollPosition().getDegrees(), 0);
-            double leftSetpoint     = MathUtil.clamp(_desiredHeight + heightAdjustment, _climbMinExtension, _climbMaxExtension);
-            double rightSetpoint    = MathUtil.clamp(_desiredHeight - heightAdjustment, _climbMinExtension, _climbMaxExtension);
+            double leftSetpoint     = MathUtil.clamp(_desiredHeight + heightAdjustment, _minExtension, _maxExtension);
+            double rightSetpoint    = MathUtil.clamp(_desiredHeight - heightAdjustment, _minExtension, _maxExtension);
 
-            _io.setVoltageLeft(_leftPID.calculate(getExtensionLeft(), leftSetpoint));
-            _io.setVoltageRight(_rightPID.calculate(getExtensionRight(), rightSetpoint));
+            _io.setLeftVolts(_leftPID.calculate(getLeftExtension(), leftSetpoint));
+            _io.setRightVolts(_rightPID.calculate(getRightExtension(), rightSetpoint));
         }
     }
 
     public void stop()
     {
-        _io.setVoltageLeft(0.0);
-        _io.setVoltageRight(0.0);
+        _io.setLeftVolts(0.0);
+        _io.setRightVolts(0.0);
 
         _desiredHeight = null;
     }
 
-    public void setExtensionMax(double max)
+    public void setMinExtension(double min)
     {
-        _climbMaxExtension = max;
+        _minExtension = min;
     }
 
-    public void setExtensionMin(double min)
+    public void setMaxExtension(double max)
     {
-        _climbMinExtension = min;
+        _maxExtension = max;
     }
 
-    public void setVoltageLeft(double volts)
+    public void setLeftVolts(double volts)
     {
         if (_desiredHeight != null)
         {
             _desiredHeight = null;
-            _io.setVoltageRight(0.0);
+            _io.setRightVolts(0.0);
         }
 
-        if ((_inputs.extensionLeft >= _climbMaxExtension && volts > 0) || (_inputs.extensionLeft <= _climbMinExtension && volts < 0))
+        if ((_inputs.leftExtension >= _maxExtension && volts > 0) || (_inputs.leftExtension <= _minExtension && volts < 0))
         {
             volts = 0;
         }
 
-        _io.setVoltageLeft(volts);
+        _io.setLeftVolts(volts);
     }
 
-    public void setVoltageRight(double volts)
+    public void setRightVolts(double volts)
     {
         if (_desiredHeight != null)
         {
             _desiredHeight = null;
-            _io.setVoltageLeft(0.0);
+            _io.setLeftVolts(0.0);
         }
 
-        if ((_inputs.extensionRight >= _climbMaxExtension && volts > 0) || (_inputs.extensionRight <= _climbMinExtension && volts < 0))
+        if ((_inputs.rightExtension >= _maxExtension && volts > 0) || (_inputs.rightExtension <= _minExtension && volts < 0))
         {
             volts = 0;
         }
 
-        _io.setVoltageRight(volts);
+        _io.setRightVolts(volts);
     }
 
     public boolean isAtLeftSetpoint()
@@ -111,24 +108,24 @@ public class Climb extends SubsystemBase
         return _rightPID.atSetpoint();
     }
 
-    public void setLeftAngleOffset(double angleOffset)
+    public void setLeftOffset(double offset)
     {
-        _io.setLeftOffset(angleOffset);
+        _io.setLeftOffset(offset);
     }
 
-    public void setRightAngleOffset(double angleOffset)
+    public void setRightOffset(double offset)
     {
-        _io.setRightOffset(angleOffset);
+        _io.setRightOffset(offset);
     }
 
-    public double getExtensionLeft()
+    public double getLeftExtension()
     {
-        return _inputs.extensionLeft;
+        return _inputs.leftExtension;
     }
 
-    public double getExtensionRight()
+    public double getRightExtension()
     {
-        return _inputs.extensionRight;
+        return _inputs.rightExtension;
     }
 
     public void setHeight(double height)

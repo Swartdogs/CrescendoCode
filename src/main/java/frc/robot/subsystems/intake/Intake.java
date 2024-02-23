@@ -8,10 +8,15 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase
 {
-    private IntakeIO                       _io;
-    private final IntakeIOInputsAutoLogged _inputs               = new IntakeIOInputsAutoLogged();
-    private double                         _intakePercentOutput  = Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT;
-    private double                         _outtakePercentOutput = Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT;
+    public enum IntakeState
+    {
+        On, Off, Reverse
+    }
+
+    private final IntakeIO                 _io;
+    private final IntakeIOInputsAutoLogged _inputs   = new IntakeIOInputsAutoLogged();
+    private double                         _inVolts  = Constants.General.MOTOR_VOLTAGE * Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT;
+    private double                         _outVolts = Constants.General.MOTOR_VOLTAGE * Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT;
 
     public Intake(IntakeIO io)
     {
@@ -25,33 +30,29 @@ public class Intake extends SubsystemBase
         Logger.processInputs("Intake", _inputs);
     }
 
-    public void setIntakeOn()
+    public void set(IntakeState state)
     {
-        _io.setVoltage(_intakePercentOutput * Constants.General.MOTOR_VOLTAGE);
+        _io.setVolts(switch (state)
+        {
+            case On -> _inVolts;
+            case Reverse -> _outVolts;
+            case Off -> 0;
+            default -> 0;
+        });
     }
 
-    public void setIntakeOff()
+    public void setInSpeed(double speed)
     {
-        _io.setVoltage(0.0);
+        _inVolts = Constants.General.MOTOR_VOLTAGE * speed;
     }
 
-    public void setIntakeReverse()
+    public void setOutSpeed(double speed)
     {
-        _io.setVoltage(-_outtakePercentOutput * Constants.General.MOTOR_VOLTAGE);
+        _outVolts = -Constants.General.MOTOR_VOLTAGE * speed;
     }
 
-    public void setIntakePercentOutput(double percentOutput)
+    public double getSpeed()
     {
-        _intakePercentOutput = percentOutput;
-    }
-
-    public void setOuttakePercentOutput(double percentOutput)
-    {
-        _outtakePercentOutput = percentOutput;
-    }
-
-    public double getPercentOutput()
-    {
-        return _inputs.appliedVolts / Constants.General.MOTOR_VOLTAGE;
+        return _inputs.motorVolts / Constants.General.MOTOR_VOLTAGE;
     }
 }

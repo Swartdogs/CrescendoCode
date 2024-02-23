@@ -1,15 +1,3 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot.subsystems.drive;
 
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -23,81 +11,69 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogEncoder;
+
 import frc.robot.Constants;
 
-/**
- * Module IO implementation for SparkMax drive motor controller, SparkMax turn
- * motor controller (NEO or NEO 550), and analog absolute encoder connected to
- * the RIO
- * <p>
- * NOTE: This implementation should be used as a starting point and adapted to
- * different hardware configurations (e.g. If using a CANcoder, copy from
- * "ModuleIOTalonFX")
- * <p>
- * To calibrate the absolute encoder offsets, point the modules straight (such
- * that forward motion on the drive motor will propel the robot forward) and
- * copy the reported values from the absolute encoders using AdvantageScope.
- * These values are logged under "/Drive/ModuleX/TurnAbsolutePositionRad"
- */
 public class ModuleIOHardware implements ModuleIO
 {
-    private final TalonFX              _driveTalonFX;
-    private final CANSparkMax          _turnSparkMax;
-    private final RelativeEncoder      _turnRelativeEncoder;
-    private final AnalogEncoder        _turnAbsoluteEncoder;
-    private final boolean              _isTurnMotorInverted = true;
-    private Rotation2d           _absoluteEncoderOffset;
+    private final TalonFX              _driveMotor;
+    private final CANSparkMax          _turnMotor;
     private final StatusSignal<Double> _drivePosition;
     private final StatusSignal<Double> _driveVelocity;
     private final StatusSignal<Double> _driveAppliedVolts;
     private final StatusSignal<Double> _driveCurrent;
+    private final RelativeEncoder      _turnEncoder;
+    private final AnalogEncoder        _turnPot;
+    private Rotation2d                 _potOffset;
 
-    public ModuleIOHardware(int driveCanId, int turnCanId, int absoluteEncoderChannel, Rotation2d absoluteEncoderOffset)
+    public ModuleIOHardware(int driveCanId, int turnCanId, int potChannel, Rotation2d potOffset)
     {
-        _driveTalonFX          = new TalonFX(driveCanId);
-        _turnSparkMax          = new CANSparkMax(turnCanId, MotorType.kBrushless);
-        _turnAbsoluteEncoder   = new AnalogEncoder(absoluteEncoderChannel);
-        _absoluteEncoderOffset = absoluteEncoderOffset;
+        _driveMotor = new TalonFX(driveCanId);
+        _turnMotor  = new CANSparkMax(turnCanId, MotorType.kBrushless);
+        _turnPot    = new AnalogEncoder(potChannel);
+        _potOffset  = potOffset;
 
-        _turnSparkMax.restoreFactoryDefaults();
-        _turnSparkMax.setCANTimeout(250);
+        _turnMotor.restoreFactoryDefaults();
 
-        _turnRelativeEncoder = _turnSparkMax.getEncoder();
+        _turnMotor.setCANTimeout(250);
 
-        _turnSparkMax.setInverted(_isTurnMotorInverted);
-        _turnSparkMax.setSmartCurrentLimit(30);
-        _turnSparkMax.enableVoltageCompensation(12.0);
+        _turnEncoder = _turnMotor.getEncoder();
 
-        _turnRelativeEncoder.setPosition(0.0);
-        _turnRelativeEncoder.setMeasurementPeriod(10);
-        _turnRelativeEncoder.setAverageDepth(2);
+        _turnMotor.setInverted(true);
+        _turnMotor.setSmartCurrentLimit(30);
+        _turnMotor.enableVoltageCompensation(Constants.General.MOTOR_VOLTAGE);
 
-        _turnSparkMax.setCANTimeout(0);
+        _turnEncoder.setPosition(0.0);
+        _turnEncoder.setMeasurementPeriod(10);
+        _turnEncoder.setAverageDepth(2);
 
-        _turnSparkMax.burnFlash();
+        _turnMotor.setCANTimeout(0);
 
-        _drivePosition     = _driveTalonFX.getPosition();
-        _driveVelocity     = _driveTalonFX.getVelocity();
-        _driveAppliedVolts = _driveTalonFX.getMotorVoltage();
-        _driveCurrent      = _driveTalonFX.getStatorCurrent();
+        _turnMotor.burnFlash();
+
+        _drivePosition     = _driveMotor.getPosition();
+        _driveVelocity     = _driveMotor.getVelocity();
+        _driveAppliedVolts = _driveMotor.getMotorVoltage();
+        _driveCurrent      = _driveMotor.getStatorCurrent();
 
         var driveCurrentConfig = new CurrentLimitsConfigs();
         driveCurrentConfig.StatorCurrentLimit       = 40.0;
         driveCurrentConfig.StatorCurrentLimitEnable = true;
-        _driveTalonFX.getConfigurator().apply(driveCurrentConfig);
+        _driveMotor.getConfigurator().apply(driveCurrentConfig);
         setDriveBrakeMode(true);
 
         var driveOutputConfig = new MotorOutputConfigs();
         driveOutputConfig.Inverted = InvertedValue.Clockwise_Positive;
-        _driveTalonFX.getConfigurator().apply(driveOutputConfig);
+        _driveMotor.getConfigurator().apply(driveOutputConfig);
 
         BaseStatusSignal.setUpdateFrequencyForAll(100.0, _drivePosition); // Required for odometry, use faster rate
         BaseStatusSignal.setUpdateFrequencyForAll(50.0, _driveVelocity, _driveAppliedVolts, _driveCurrent);
 
-        _driveTalonFX.optimizeBusUtilization();
+        _driveMotor.optimizeBusUtilization();
     }
 
     @Override
@@ -107,26 +83,26 @@ public class ModuleIOHardware implements ModuleIO
 
         inputs.drivePositionRad       = Units.rotationsToRadians(_drivePosition.getValueAsDouble()) / Constants.Drive.DRIVE_GEAR_RATIO;
         inputs.driveVelocityRadPerSec = Units.rotationsToRadians(_driveVelocity.getValueAsDouble()) / Constants.Drive.DRIVE_GEAR_RATIO;
-        inputs.driveAppliedVolts      = _driveAppliedVolts.getValueAsDouble();
-        inputs.driveCurrentAmps       = new double[] { _driveCurrent.getValueAsDouble() };
+        inputs.driveVolts             = _driveAppliedVolts.getValueAsDouble();
+        inputs.driveCurrent           = new double[] { _driveCurrent.getValueAsDouble() };
 
-        inputs.turnAbsolutePosition  = Rotation2d.fromRotations(_turnAbsoluteEncoder.getAbsolutePosition()).minus(_absoluteEncoderOffset);
-        inputs.turnPosition          = Rotation2d.fromRotations(_turnRelativeEncoder.getPosition() / Constants.Drive.TURN_GEAR_RATIO);
-        inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_turnRelativeEncoder.getVelocity()) / Constants.Drive.TURN_GEAR_RATIO;
-        inputs.turnAppliedVolts      = _turnSparkMax.getAppliedOutput() * _turnSparkMax.getBusVoltage();
-        inputs.turnCurrentAmps       = new double[] { _turnSparkMax.getOutputCurrent() };
+        inputs.turnAbsolutePosition  = Rotation2d.fromRotations(_turnPot.getAbsolutePosition()).minus(_potOffset);
+        inputs.turnPosition          = Rotation2d.fromRotations(_turnEncoder.getPosition() / Constants.Drive.TURN_GEAR_RATIO);
+        inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(_turnEncoder.getVelocity()) / Constants.Drive.TURN_GEAR_RATIO;
+        inputs.turnVolts             = _turnMotor.getAppliedOutput() * _turnMotor.getBusVoltage();
+        inputs.turnCurrent           = new double[] { _turnMotor.getOutputCurrent() };
     }
 
     @Override
-    public void setDriveVoltage(double volts)
+    public void setDriveVolts(double volts)
     {
-        _driveTalonFX.setVoltage(volts);
+        _driveMotor.setVoltage(volts);
     }
 
     @Override
-    public void setTurnVoltage(double volts)
+    public void setTurnVolts(double volts)
     {
-        _turnSparkMax.setVoltage(volts);
+        _turnMotor.setVoltage(volts);
     }
 
     @Override
@@ -135,18 +111,18 @@ public class ModuleIOHardware implements ModuleIO
         var config = new MotorOutputConfigs();
         config.Inverted    = InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-        _driveTalonFX.getConfigurator().apply(config);
+        _driveMotor.getConfigurator().apply(config);
     }
 
     @Override
     public void setTurnBrakeMode(boolean enable)
     {
-        _turnSparkMax.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+        _turnMotor.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     }
 
     @Override
-    public void setAngleOffset(Rotation2d ModuleAbsoluteEncoderOffset)
+    public void setAngleOffset(Rotation2d offset)
     {
-        _absoluteEncoderOffset = ModuleAbsoluteEncoderOffset;
+        _potOffset = offset;
     }
 }

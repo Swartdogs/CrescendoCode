@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.notepath;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -8,35 +5,35 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants;
 
-/** Add your docs here. */
 public class NotepathIOSim implements NotepathIO
 {
-    private DCMotorSim   _leaderNotepathSim   = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
-    private DCMotorSim   _followerNotepathSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
-    private DigitalInput _noteSensorSim       = new DigitalInput(Constants.DIO.NOTE_SENSOR);
-    private double       _leaderVoltage;
-    private double       _followerVoltage;
+    private final DCMotorSim   _leaderMotorSim   = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private final DCMotorSim   _followerMotorSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private final DigitalInput _lightSensorSim   = new DigitalInput(Constants.DIO.NOTE_SENSOR);
+    private double             _leaderVolts;
+    private double             _followerVolts;
 
     @Override
     public void updateInputs(NotepathInputs inputs)
     {
-        _leaderNotepathSim.update(Constants.General.LOOP_PERIOD_SECS);
-        _followerNotepathSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _leaderMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _followerMotorSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.leaderNotepathAppliedVolts = _leaderVoltage;
-        inputs.leaderNotepathCurrentAmps  = new double[] { Math.abs(_leaderNotepathSim.getCurrentDrawAmps()) };
+        inputs.leaderVolts   = _leaderVolts;
+        inputs.leaderCurrent = new double[] { Math.abs(_leaderMotorSim.getCurrentDrawAmps()) };
 
-        inputs.followerNotepathAppliedVolts = _followerVoltage;
-        inputs.followerNotepathCurrentAmps  = new double[] { Math.abs(_followerNotepathSim.getCurrentDrawAmps()) };
-        inputs.sensorTripped                = !_noteSensorSim.get();
+        inputs.followerVolts   = _followerVolts;
+        inputs.followerCurrent = new double[] { Math.abs(_followerMotorSim.getCurrentDrawAmps()) };
+
+        inputs.sensorTripped = !_lightSensorSim.get();
     }
 
     @Override
-    public void setVoltage(double volts)
+    public void setVolts(double volts)
     {
-        _leaderVoltage   = volts;
-        _followerVoltage = volts;
-        _leaderNotepathSim.setInputVoltage(_leaderVoltage);
-        _followerNotepathSim.setInputVoltage(-_followerVoltage);
+        _leaderVolts   = volts;
+        _followerVolts = volts;
+        _leaderMotorSim.setInputVoltage(_leaderVolts);
+        _followerMotorSim.setInputVoltage(_followerVolts);
     }
 }

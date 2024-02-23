@@ -30,6 +30,7 @@ public class Vision extends SubsystemBase
             {
                 _drive.addVisionMeasurement(_inputs.pose, _inputs.captureTimestamp);
             }
+
             _lastTimestamp = _inputs.captureTimestamp;
         }
     }

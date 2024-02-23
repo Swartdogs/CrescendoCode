@@ -1,32 +1,22 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.CompositeCommands;
+
 import frc.robot.commands.ClimbCommands;
+import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
@@ -34,6 +24,7 @@ import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
+import frc.robot.subsystems.gyro.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOHardware;
@@ -41,7 +32,6 @@ import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonlib;
-import frc.robot.util.FeedForwardCharacterization;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -50,6 +40,7 @@ import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
 import frc.robot.subsystems.notepath.NotepathIOSparkMax;
+import frc.robot.subsystems.notepath.Notepath.NotepathState;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterBedIO;
 import frc.robot.subsystems.shooter.ShooterBedIOSim;
@@ -58,8 +49,6 @@ import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
-
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer
 {
@@ -75,9 +64,6 @@ public class RobotContainer
     private final Vision          _vision;
     @SuppressWarnings("unused")
     private final Dashboard       _dashboard;
-
-    // Dashboard inputs
-    private final LoggedDashboardChooser<Command> _autoChooser;
 
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
@@ -106,7 +92,7 @@ public class RobotContainer
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
-                _gyro = new Gyro(new GyroIO() {});
+                _gyro = new Gyro(new GyroIOSim(this::getChassisSpeeds));
                 _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
                 _vision = new Vision(_drive, new VisionIOPhotonlib());
                 _intake = new Intake(new IntakeIOSim());
@@ -128,11 +114,6 @@ public class RobotContainer
                 _climb = new Climb(_gyro, new ClimbIO() {});
                 break;
         }
-
-        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-        // Set up feedforward characterization
-        _autoChooser.addOption("Drive FF Characterization", new FeedForwardCharacterization(_drive, _drive::runCharacterizationVolts, _drive::getCharacterizationVelocity));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -159,24 +140,31 @@ public class RobotContainer
         // 45));
 
         // Test commands for climb - on gamepad
-        _controller.leftTrigger().whileTrue(ClimbCommands.setVoltage(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
+        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); // TODO: set setpoint
 
         // Test commands for notepath - on joystick
-        new JoystickButton(_joystick, 3).whileTrue(NotepathCommands.intakePickup(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
-        new JoystickButton(_joystick, 4).whileTrue(NotepathCommands.shooterPickup(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
-        new JoystickButton(_joystick, 5).whileTrue(NotepathCommands.startFeed(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.setOff()));
-        new JoystickButton(_joystick, 6).onTrue(NotepathCommands.stopFeed(_notepath));
+        new JoystickButton(_joystick, 3).whileTrue(NotepathCommands.intakeLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
+        new JoystickButton(_joystick, 4).whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
+        new JoystickButton(_joystick, 5).whileTrue(NotepathCommands.feed(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
+        new JoystickButton(_joystick, 6).onTrue(NotepathCommands.stop(_notepath));
 
         // Test commands for shooterfly - on joystick
-        new JoystickButton(_joystick, 7).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 2000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
-        new JoystickButton(_joystick, 8).whileTrue(ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 1000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
-        new JoystickButton(_joystick, 9).onTrue(ShooterFlywheelCommands.shooterFlywheelIntake(_shooterFlywheel));
-        new JoystickButton(_joystick, 10).onTrue(ShooterFlywheelCommands.shooterFlywheelStop(_shooterFlywheel));
+        new JoystickButton(_joystick, 7).whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 2000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        new JoystickButton(_joystick, 8).whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 1000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        new JoystickButton(_joystick, 9).onTrue(ShooterFlywheelCommands.intake(_shooterFlywheel));
+        new JoystickButton(_joystick, 10).onTrue(ShooterFlywheelCommands.stop(_shooterFlywheel));
+    }
+
+    private ChassisSpeeds getChassisSpeeds()
+    {
+        return _drive.getChassisSpeeds();
     }
 
     public Command getAutonomousCommand()
     {
-        return _autoChooser.get();
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+
+        return AutoBuilder.followPath(path);
     }
 }
