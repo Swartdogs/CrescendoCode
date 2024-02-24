@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -25,6 +27,24 @@ public final class CompositeCommands
                 ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity),
                 Commands.waitUntil(() -> !notepath.hasNote())
             )
+            .finallyDo(() ->
+            {
+                shooterFlywheel.stop();
+            });
+        // @formatter:on
+    }
+
+    public static Command runShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, DoubleSupplier velocitySupplier)
+    {
+        // @formatter:off
+        return
+            shooterFlywheel.run(() -> 
+            {
+                var velocity = velocitySupplier.getAsDouble();
+                shooterFlywheel.setLowerVelocity(velocity);
+                shooterFlywheel.setUpperVelocity(velocity);
+            })
+            .until(() -> !notepath.hasNote())
             .finallyDo(() ->
             {
                 shooterFlywheel.stop();

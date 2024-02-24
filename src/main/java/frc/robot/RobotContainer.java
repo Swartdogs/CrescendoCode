@@ -163,6 +163,9 @@ public class RobotContainer
 
         _controller.x().whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
 
+        new JoystickButton(_joystick, 1).onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        new JoystickButton(_joystick, 2).onTrue(CompositeCommands.runShooter(_shooterFlywheel, _notepath, () -> ((-_joystick.getThrottle()) + 1) / 2));
+
         // Test commands for climb - on gamepad
         // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->
         // -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() ->
