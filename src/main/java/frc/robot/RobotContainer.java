@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.commands.ClimbCommands;
+import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.climb.Climb;
@@ -128,8 +129,14 @@ public class RobotContainer
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
-        _controller.y().whileTrue(IntakeCommands.start(_intake).andThen(Commands.idle(_intake)).finallyDo(() -> _intake.set(IntakeState.Off)));
-        _controller.a().whileTrue(ShooterFlywheelCommands.intake(_shooterFlywheel).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
+        // _controller.y().whileTrue(IntakeCommands.start(_intake).andThen(Commands.idle(_intake)).finallyDo(()
+        // -> _intake.set(IntakeState.Off)));
+        // _controller.a().whileTrue(ShooterFlywheelCommands.intake(_shooterFlywheel).andThen(Commands.idle(_shooterFlywheel)).finallyDo(()
+        // -> _shooterFlywheel.stop()));
+
+        _controller.a().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        _controller.b().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
+        _controller.y().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
 
         // _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath,
         // _shooterBed));
@@ -149,6 +156,13 @@ public class RobotContainer
         _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
+        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
+        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
+        _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
+
+        _controller.x().whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
+
         // Test commands for climb - on gamepad
         // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->
         // -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() ->
@@ -156,17 +170,31 @@ public class RobotContainer
         // _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); //
         // TODO: set setpoint
 
-        // Test commands for notepath - on joystick
-        new JoystickButton(_joystick, 3).whileTrue(NotepathCommands.intakeLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
-        new JoystickButton(_joystick, 4).whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
-        new JoystickButton(_joystick, 5).whileTrue(NotepathCommands.feed(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
-        new JoystickButton(_joystick, 6).onTrue(NotepathCommands.stop(_notepath));
+        // // Test commands for notepath - on joystick
+        // new JoystickButton(_joystick,
+        // 3).whileTrue(NotepathCommands.intakeLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(()
+        // -> _notepath.set(NotepathState.Off)));
+        // new JoystickButton(_joystick,
+        // 4).whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(()
+        // -> _notepath.set(NotepathState.Off)));
+        // new JoystickButton(_joystick,
+        // 5).whileTrue(NotepathCommands.feed(_notepath).andThen(Commands.idle(_notepath)).finallyDo(()
+        // -> _notepath.set(NotepathState.Off)));
+        // new JoystickButton(_joystick, 6).onTrue(NotepathCommands.stop(_notepath));
 
-        // Test commands for shooterfly - on joystick
-        new JoystickButton(_joystick, 7).whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 2000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
-        new JoystickButton(_joystick, 8).whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 1000, 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() -> _shooterFlywheel.stop()));
-        new JoystickButton(_joystick, 9).onTrue(ShooterFlywheelCommands.intake(_shooterFlywheel));
-        new JoystickButton(_joystick, 10).onTrue(ShooterFlywheelCommands.stop(_shooterFlywheel));
+        // // Test commands for shooterfly - on joystick
+        // new JoystickButton(_joystick,
+        // 7).whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 2000,
+        // 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() ->
+        // _shooterFlywheel.stop()));
+        // new JoystickButton(_joystick,
+        // 8).whileTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 1000,
+        // 2000).andThen(Commands.idle(_shooterFlywheel)).finallyDo(() ->
+        // _shooterFlywheel.stop()));
+        // new JoystickButton(_joystick,
+        // 9).onTrue(ShooterFlywheelCommands.intake(_shooterFlywheel));
+        // new JoystickButton(_joystick,
+        // 10).onTrue(ShooterFlywheelCommands.stop(_shooterFlywheel));
     }
 
     private ChassisSpeeds getChassisSpeeds()

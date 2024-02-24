@@ -19,7 +19,7 @@ public final class ClimbCommands
         {
             climb.setLeftVolts(leftVolts.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
             climb.setRightVolts(rightVolts.getAsDouble() * Constants.General.MOTOR_VOLTAGE);
-        });
+        }).finallyDo(() -> climb.stop());
     }
 
     public static Command setHeight(Climb climb, double height)

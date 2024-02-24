@@ -120,7 +120,7 @@ public final class Constants
     {
         public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
         public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.6;
-        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.6;
+        public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.3;
     }
 
     public static class ShooterBed // FIXME: Update all these values
@@ -135,7 +135,7 @@ public final class Constants
     public static class ShooterFlywheel
     {
         public static final double MAX_FLYWHEEL_SPEED    = 1.0;
-        public static final double FLYWHEEL_INTAKE_SPEED = 0.3;
+        public static final double FLYWHEEL_INTAKE_SPEED = 0.15;
         public static final double VELOCITY_RANGE        = 0.05;
     }
 

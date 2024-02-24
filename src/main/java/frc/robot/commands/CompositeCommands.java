@@ -68,8 +68,9 @@ public final class CompositeCommands
             Commands.parallel
             (
                 IntakeCommands.start(intake),
-                NotepathCommands.intakeLoad(notepath),
-                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
+                NotepathCommands.intakeLoad(notepath)
+                // ,
+                // ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
             )
             .andThen(Commands.waitUntil(() -> notepath.sensorTripped()))
             .finallyDo(interrupted ->
@@ -100,7 +101,7 @@ public final class CompositeCommands
         return
             Commands.parallel
             (
-                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.ShooterLoad),
+//                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.ShooterLoad),
                 ShooterFlywheelCommands.intake(shooterFlywheel),
                 NotepathCommands.shooterLoad(notepath)
             )
