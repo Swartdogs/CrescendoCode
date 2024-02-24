@@ -12,15 +12,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
 import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
-import frc.robot.commands.ShooterFlywheelCommands;
-import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
@@ -36,7 +33,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSparkMax;
-import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
@@ -137,6 +133,7 @@ public class RobotContainer
         _controller.a().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.b().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.y().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.x().whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
 
         // _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath,
         // _shooterBed));
@@ -153,18 +150,18 @@ public class RobotContainer
         // -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
         // _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed,
         // 45));
-        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
-        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
-        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 3000, 3000));
-        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
-        _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 4000, 4000));
         _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
-        _controller.x().whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
+        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
+        _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
 
         new JoystickButton(_joystick, 1).onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
         new JoystickButton(_joystick, 2).onTrue(CompositeCommands.runShooter(_shooterFlywheel, _notepath, () -> ((-_joystick.getThrottle()) + 1) / 2));
+        new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
 
         // Test commands for climb - on gamepad
         // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->
@@ -207,8 +204,10 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+        // PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
 
-        return AutoBuilder.followPath(path);
+        // return AutoBuilder.followPath(path);
+
+        return null;
     }
 }

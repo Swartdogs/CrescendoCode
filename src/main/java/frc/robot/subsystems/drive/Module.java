@@ -80,16 +80,22 @@ public class Module
             // Only allowed if closed loop turn control is running
             if (_speedSetpoint != null)
             {
-                // Scale velocity based on turn error
-                //
-                // When the error is 90°, the velocity setpoint should be 0. As the wheel turns
-                // towards the setpoint, its velocity should increase. This is achieved by
-                // taking the component of the velocity in the direction of the setpoint.
-                double adjustSpeedSetpoint = _speedSetpoint * Math.cos(_turnFeedback.getPositionError());
+                // // Scale velocity based on turn error
+                // //
+                // // When the error is 90°, the velocity setpoint should be 0. As the wheel
+                // turns
+                // // towards the setpoint, its velocity should increase. This is achieved by
+                // // taking the component of the velocity in the direction of the setpoint.
+                // double adjustSpeedSetpoint = _speedSetpoint *
+                // Math.cos(_turnFeedback.getPositionError());
 
-                // Run drive controller
-                double velocityRadPerSec = adjustSpeedSetpoint / Constants.Drive.WHEEL_RADIUS;
-                _io.setDriveVolts(_driveFeedforward.calculate(velocityRadPerSec) + _driveFeedback.calculate(_inputs.driveVelocityRadPerSec, velocityRadPerSec));
+                // // Run drive controller
+                // double velocityRadPerSec = adjustSpeedSetpoint /
+                // Constants.Drive.WHEEL_RADIUS;
+                // _io.setDriveVolts(_driveFeedforward.calculate(velocityRadPerSec) +
+                // _driveFeedback.calculate(_inputs.driveVelocityRadPerSec, velocityRadPerSec));
+
+                _io.setDriveVolts(Constants.General.MOTOR_VOLTAGE * (_speedSetpoint / Constants.Drive.MAX_LINEAR_SPEED));
             }
         }
     }
