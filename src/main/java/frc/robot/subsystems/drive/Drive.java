@@ -1,11 +1,16 @@
 package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,6 +27,8 @@ import frc.robot.Constants;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.util.LocalADStarAK;
 
+import java.util.List;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -31,6 +38,11 @@ public class Drive extends SubsystemBase
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private PIDController                  _rotatePID;
+    private double                         _maxSpeed;
+    // private Pose2d _targetPose = new Pose2d();
+    // private PathConstraints _constraints = new PathConstraints(_maxSpeed,
+    // _maxSpeed, _maxSpeed, _maxSpeed);
 
     public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -40,6 +52,9 @@ public class Drive extends SubsystemBase
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
+
+        _rotatePID = new PIDController(0.02, 0, 0); // TODO: tune
+        _rotatePID.enableContinuousInput(-180, 180);
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
@@ -60,6 +75,22 @@ public class Drive extends SubsystemBase
         });
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
+
+        // Create a list of bezier points from poses. Each pose represents one waypoint.
+        // The rotation component of the pose should be the direction of travel. Do not
+        // use holonomic rotation.
+        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90)));
+
+        // Create the path using the bezier points created above
+        PathPlannerPath path = new PathPlannerPath(
+                bezierPoints, new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The constraints for this path. If using a differential drivetrain, the
+                                                                                       // angular constraints have no effect.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a
+                                                                   // differential drivetrain, the rotation will have no effect.
+        );
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
     }
 
     public void periodic()
@@ -215,14 +246,14 @@ public class Drive extends SubsystemBase
         return wheelPositions;
     }
 
-    public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
-    {
-        _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
-    }
-
     public ChassisSpeeds getChassisSpeeds()
     {
         return _kinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
+    {
+        _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
     }
 
     /** Returns an array of module translations. */
@@ -230,5 +261,27 @@ public class Drive extends SubsystemBase
     {
         return new Translation2d[] { new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0),
                 new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
+    }
+
+    public void rotateInit(double setpoint, double maxSpeed)
+    {
+        _maxSpeed = Math.abs(maxSpeed);
+
+        _rotatePID.setSetpoint(setpoint);
+    }
+
+    public double rotateExecute()
+    {
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees()), -_maxSpeed, _maxSpeed);
+    }
+
+    public double rotateExecute(double setpoint)
+    {
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees(), setpoint), -_maxSpeed, _maxSpeed);
+    }
+
+    public boolean rotateIsFinished()
+    {
+        return _rotatePID.atSetpoint();
     }
 }

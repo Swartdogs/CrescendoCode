@@ -3,10 +3,22 @@ package frc.robot.subsystems;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.DoubleConsumer;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import com.fasterxml.jackson.core.sym.Name;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -18,9 +30,14 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.commands.CompositeCommands;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
@@ -114,7 +131,8 @@ public class Dashboard extends SubsystemBase
     /*
      * SendableChoosers for Autonomous options
      */
-    private final SendableChooser<Integer> _autoDelayChooser;
+    private final SendableChooser<Integer>        _autoDelayChooser;
+    private final LoggedDashboardChooser<Command> _autoChooser;
 
     public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb)
     {
@@ -178,7 +196,23 @@ public class Dashboard extends SubsystemBase
         _autoDelayChooser.addOption("3", 3);
         _autoDelayChooser.addOption("4", 4);
         _autoDelayChooser.addOption("5", 5);
+
+        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(1.39, 5.56, new Rotation2d()))));
+        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
+        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
+
+        NamedCommands.registerCommand("Load in Motion", CompositeCommands.loadInMotion(intake, notepath));
+        NamedCommands.registerCommand("Load While Stopped", CompositeCommands.loadWhileStopped(intake, notepath));
+        NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
+        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.startIntake(_intake, _notepath, _shooterBed));
+        NamedCommands.registerCommand("Stop Intake", CompositeCommands.loadWhileStopped(_intake, _notepath));
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.shooterFlywheelShoot(_shooterFlywheel, 2000, 2000));
+
+        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
         autonomousLayout.add("Delay Options", _autoDelayChooser).withPosition(0, 0).withWidget(BuiltInWidgets.kSplitButtonChooser);
+        autonomousLayout.add("Autonomous Path", _autoChooser.getSendableChooser()).withPosition(0, 1).withWidget(BuiltInWidgets.kComboBoxChooser);
 
         /*
          * SETTINGS
@@ -354,6 +388,16 @@ public class Dashboard extends SubsystemBase
 
         consumer.accept(value);
         entry.setDouble(value);
+    }
+
+    public Command getAuto()
+    {
+        return _autoChooser.get();
+    }
+
+    public Integer autoDelayTime()
+    {
+        return _autoDelayChooser.getSelected();
     }
 
     @Override

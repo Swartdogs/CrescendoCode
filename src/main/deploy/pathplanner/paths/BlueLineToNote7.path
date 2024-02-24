@@ -3,56 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.3985485374679727,
-        "y": 1.6746496260467554
+        "x": 5.231238154784003,
+        "y": 6.729254996971533
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.398548537467978,
-        "y": 1.6746496260467554
+        "x": 6.365936578027003,
+        "y": 6.344444227349993
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AmpDriveBack"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 8.289990426134699,
+        "y": 5.7721615443230885
       },
       "prevControl": {
-        "x": 3.4922352298342245,
-        "y": 5.340141464876368
-      },
-      "nextControl": {
-        "x": 4.609847539418569,
-        "y": 6.792518756033642
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.970353683931332,
-        "y": 6.651755158003897
-      },
-      "prevControl": {
-        "x": 6.080330106451938,
-        "y": 6.874261052373746
+        "x": 7.263828373810594,
+        "y": 6.018835114593306
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Note7"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.25,
-      "maxWaypointRelativePos": 0.85,
+      "minWaypointRelativePos": 0.15,
+      "maxWaypointRelativePos": 0.75,
       "constraints": {
-        "maxVelocity": 5.0,
-        "maxAcceleration": 50.0,
+        "maxVelocity": 9.0,
+        "maxAcceleration": 5.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
@@ -60,12 +44,25 @@
   ],
   "eventMarkers": [
     {
-      "name": "Start Motor",
-      "waypointRelativePos": 0.35,
+      "name": "Start Intake",
+      "waypointRelativePos": 0.65,
       "command": {
-        "type": "race",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load in Motion"
+              }
+            }
+          ]
         }
       }
     }
@@ -82,7 +79,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "BlueLineToOuterNotes",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
