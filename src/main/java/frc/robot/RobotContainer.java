@@ -137,7 +137,7 @@ public class RobotContainer
         // _controller.a().whileTrue(ShooterFlywheelCommands.intake(_shooterFlywheel).andThen(Commands.idle(_shooterFlywheel)).finallyDo(()
         // -> _shooterFlywheel.stop()));
 
-        _controller.a().onTrue(CompositeCommands.startIntake(_intake, _notepath, _shooterBed));
+        _controller.a().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.b().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.y().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
 

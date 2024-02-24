@@ -4,7 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.notepath.Notepath;
@@ -18,19 +18,11 @@ public final class CompositeCommands
     {
     }
 
-    public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
+    public static Command startShooter(ShooterFlywheel shooterFlywheel, double upperVelocity, double lowerVelocity)
     {
         // @formatter:off
         return 
-            Commands.sequence
-            (
-                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity),
-                Commands.waitUntil(() -> !notepath.hasNote())
-            )
-            .finallyDo(() ->
-            {
-                shooterFlywheel.stop();
-            });
+                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity);
         // @formatter:on
     }
 
@@ -64,7 +56,13 @@ public final class CompositeCommands
                 Commands.waitUntil(() -> !notepath.sensorTripped()),
                 Commands.runOnce(() -> notepath.setHasNote(false))
             )
-            .finallyDo(() -> notepath.set(NotepathState.Off))
+            .finallyDo(interrupted -> 
+            {
+                if (!interrupted)
+                {
+                    notepath.set(NotepathState.Off);
+                }
+            })
             .onlyIf(() -> shooterFlywheel.isShooting());
         // @formatter:on
     }
@@ -97,6 +95,53 @@ public final class CompositeCommands
             {
                 intake.set(IntakeState.Off);
                 notepath.set(NotepathState.Off);
+                notepath.setHasNote(!interrupted);
+            })
+            .unless(() -> notepath.hasNote());
+        // @formatter:on
+    }
+
+    private static Command load(Intake intake, Notepath notepath)
+    {
+        // @formatter:off
+        return 
+            Commands.either
+            (
+                Commands.waitSeconds(1),
+                Commands.waitUntil(() -> notepath.sensorTripped()), 
+                () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+            );
+        // @formatter:on
+    }
+
+
+    public static Command loadWhileStopped(Intake intake, Notepath notepath)
+    {
+        // @formatter:off
+        return
+            load(intake, notepath)
+            .finallyDo(interrupted ->
+            {
+                intake.set(IntakeState.Off);
+                notepath.set(NotepathState.Off);
+                notepath.setHasNote(!interrupted);
+            })
+            .unless(() -> notepath.hasNote());
+        // @formatter:on
+    }
+
+    public static Command loadInMotion(Intake intake, Notepath notepath)
+    {
+        // @formatter:off
+        return
+            load(intake, notepath)
+            .finallyDo(interrupted ->
+            {
+                if (!interrupted)
+                {
+                    intake.set(IntakeState.Off);
+                    notepath.set(NotepathState.Off);
+                }
                 notepath.setHasNote(!interrupted);
             })
             .unless(() -> notepath.hasNote());
