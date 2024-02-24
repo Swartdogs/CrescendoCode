@@ -20,12 +20,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Delay"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Start Shooter"
           }
         },
@@ -33,6 +27,12 @@
           "type": "named",
           "data": {
             "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooter"
           }
         },
         {
@@ -132,12 +132,6 @@
           "type": "path",
           "data": {
             "pathName": "Note7ToBlueLine"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
           }
         }
       ]

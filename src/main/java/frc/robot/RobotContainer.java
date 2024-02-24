@@ -1,9 +1,14 @@
 package frc.robot;
 
+import java.util.Set;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,22 +57,21 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 public class RobotContainer
 {
     // Subsystems
-    private final Drive                 _drive;
-    private final Intake                _intake;
-    private final Notepath              _notepath;
-    private final ShooterBed            _shooterBed;
-    private final ShooterFlywheel       _shooterFlywheel;
-    private final Climb                 _climb;
-    private final Gyro                  _gyro;
+    private final Drive                           _drive;
+    private final Intake                          _intake;
+    private final Notepath                        _notepath;
+    private final ShooterBed                      _shooterBed;
+    private final ShooterFlywheel                 _shooterFlywheel;
+    private final Climb                           _climb;
+    private final Gyro                            _gyro;
     @SuppressWarnings("unused")
-    private final Vision                _vision;
+    private final Vision                          _vision;
     @SuppressWarnings("unused")
     // private final Dashboard _dashboard;
 
     // Controls
-    private final Joystick              _joystick   = new Joystick(1);
-    private final CommandXboxController _controller = new CommandXboxController(0);
-
+    private final Joystick                        _joystick   = new Joystick(1);
+    private final CommandXboxController           _controller = new CommandXboxController(0);
     private final LoggedDashboardChooser<Command> _autoChooser;
 
     public RobotContainer()
@@ -117,6 +121,21 @@ public class RobotContainer
                 break;
         }
 
+        // Temp for dashboard replacment
+        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(1.39, 5.56, new Rotation2d()))));
+        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
+        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
+
+        NamedCommands.registerCommand("Load in Motion", CompositeCommands.loadInMotion(_intake, _notepath));
+        NamedCommands.registerCommand("Load While Stopped", CompositeCommands.loadWhileStopped(_intake, _notepath));
+        // NamedCommands.registerCommand("Auto Delay", Commands.defer(() ->
+        // Commands.waitSeconds(0), Set.of())); // TODO: Change??
+        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        NamedCommands.registerCommand("Stop Intake", CompositeCommands.loadWhileStopped(_intake, _notepath));
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
+        NamedCommands.registerCommand("Stop Shooter", CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
+
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
         // Configure the button bindings
@@ -162,7 +181,7 @@ public class RobotContainer
         _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, 3000, 3000));
         _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
         _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
-        _controller.back().onTrue(ShooterFlywheelCommands.stop(_shooterFlywheel)); //TODO: Check!!!
+        _controller.back().onTrue(ShooterFlywheelCommands.stop(_shooterFlywheel)); // TODO: Check!!!
 
         _controller.x().whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
 

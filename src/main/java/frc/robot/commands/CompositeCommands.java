@@ -52,8 +52,16 @@ public final class CompositeCommands
             (
                 Commands.waitUntil(() -> shooterFlywheel.atSpeed()),
                 NotepathCommands.feed(notepath),
-                Commands.waitUntil(() -> notepath.sensorTripped()),
-                Commands.waitUntil(() -> !notepath.sensorTripped()),
+                Commands.either
+                (
+                    Commands.waitSeconds(1), 
+                    Commands.sequence
+                    (
+                        Commands.waitUntil(() -> notepath.sensorTripped()),
+                        Commands.waitUntil(() -> !notepath.sensorTripped())
+                    ), 
+                    () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+                ),
                 Commands.runOnce(() -> notepath.setHasNote(false))
             )
             .finallyDo(interrupted -> 
@@ -113,7 +121,6 @@ public final class CompositeCommands
             );
         // @formatter:on
     }
-
 
     public static Command loadWhileStopped(Intake intake, Notepath notepath)
     {

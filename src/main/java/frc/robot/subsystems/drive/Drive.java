@@ -81,16 +81,18 @@ public class Drive extends SubsystemBase
         // use holonomic rotation.
         List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90)));
 
-        // Create the path using the bezier points created above
-        PathPlannerPath path = new PathPlannerPath(
-                bezierPoints, new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The constraints for this path. If using a differential drivetrain, the
-                                                                                       // angular constraints have no effect.
-                new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a
-                                                                   // differential drivetrain, the rotation will have no effect.
-        );
+        // // Create the path using the bezier points created above
+        // PathPlannerPath path = new PathPlannerPath(
+        // bezierPoints, new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The
+        // constraints for this path. If using a differential drivetrain, the
+        // // angular constraints have no effect.
+        // new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can
+        // set a holonomic rotation here. If using a
+        // // differential drivetrain, the rotation will have no effect.
+        // );
 
         // Prevent the path from being flipped if the coordinates are already correct
-        path.preventFlipping = true;
+        // path.preventFlipping = true;
     }
 
     public void periodic()

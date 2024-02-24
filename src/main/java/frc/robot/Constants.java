@@ -20,7 +20,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {
@@ -79,18 +79,18 @@ public final class Constants
         public static final double LEFT_ZERO_OFFSET  = -17.33;
         public static final double RIGHT_ZERO_OFFSET = 0.357;
         public static final double SENSOR_SCALE      = 27.473;
-    }    
-    
+    }
+
     public static class Controls
     {
         public static final double JOYSTICK_DEADBAND = 0.1;
-    }    
-    
+    }
+
     public static class DIO
     {
         public static final int SHOOTER_BED_SENSOR = 0;
         public static final int NOTE_SENSOR        = 1;
-    }    
+    }
 
     public static class Drive
     {
@@ -106,8 +106,8 @@ public final class Constants
         public static final Rotation2d MODULE_FR_OFFSET  = Rotation2d.fromRadians(2.09).plus(Rotation2d.fromDegrees(180));
         public static final Rotation2d MODULE_BL_OFFSET  = Rotation2d.fromRadians(-2.33).plus(Rotation2d.fromDegrees(180));
         public static final Rotation2d MODULE_BR_OFFSET  = Rotation2d.fromRadians(-1.63).plus(Rotation2d.fromDegrees(180));
-    }    
-    
+    }
+
     public static class Field
     {
         public static final Pose2d BLUE_SPEAKER     = new Pose2d(Units.inchesToMeters(-1.5), Units.inchesToMeters(218.42), new Rotation2d());
@@ -130,21 +130,21 @@ public final class Constants
         public static final double MOTOR_VOLTAGE    = 12.0;
         public static final double MAX_NEO_SPEED    = 5874;
         public static final double MAX_KRAKEN_SPEED = 6000;
-    }    
+    }
 
     public static class Intake
     {
         public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.6;
         public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 0.6;
-    }    
+    }
 
     public static class Notepath
     {
         public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
         public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.6;
         public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.3;
-    }    
-    
+    }
+
     public static class PathPlanner
     {
         public static final double                      INTAKE_DELAY       = 4.5; // TODO: Change value
@@ -156,7 +156,7 @@ public final class Constants
                 new ReplanningConfig()
         );
     }
-    
+
     public static class ShooterBed // FIXME: Update all these values
     {
         public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-14.611);
@@ -164,14 +164,14 @@ public final class Constants
         public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(17);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(30);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(60);
-    }    
+    }
 
     public static class ShooterFlywheel
     {
         public static final double MAX_FLYWHEEL_SPEED    = 1.0;
         public static final double FLYWHEEL_INTAKE_SPEED = 0.15;
         public static final double VELOCITY_RANGE        = 0.05;
-    }    
+    }
 
     public static class Vision
     {
@@ -179,5 +179,5 @@ public final class Constants
         public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, 0.0, 0.0);
         public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(12), Units.inchesToMeters(0), Units.inchesToMeters(5.25), CAMERA_ROTATION);
         public static final String      CAMERA_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
-    }    
+    }
 }
