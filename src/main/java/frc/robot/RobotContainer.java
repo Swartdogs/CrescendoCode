@@ -133,7 +133,11 @@ public class RobotContainer
         _controller.a().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.b().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.y().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
-        _controller.x().whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
+        _controller.x().whileTrue(CompositeCommands.suckIn(_notepath, _shooterFlywheel).andThen(Commands.idle(_notepath, _shooterFlywheel)).finallyDo(() ->
+        {
+            _notepath.set(NotepathState.Off);
+            _shooterFlywheel.stop();
+        }));
 
         // _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath,
         // _shooterBed));
@@ -153,14 +157,17 @@ public class RobotContainer
         _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
-        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 4000, 4000));
+        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
         _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
         _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
         _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
 
-        new JoystickButton(_joystick, 1).onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
-        new JoystickButton(_joystick, 2).onTrue(CompositeCommands.runShooter(_shooterFlywheel, _notepath, () -> ((-_joystick.getThrottle()) + 1) / 2));
+        _controller.povUp().onTrue(Commands.runOnce(() -> _notepath.setHasNote(true)).ignoringDisable(true));
+        _controller.povDown().onTrue(Commands.runOnce(() -> _notepath.setHasNote(false)).ignoringDisable(true));
+        _controller.povLeft().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 4000, 4000));
+        _controller.povRight().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 2000, 5000));
+
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
 
         // Test commands for climb - on gamepad

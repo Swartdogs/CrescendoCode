@@ -9,9 +9,10 @@ public interface ShooterBedIO
     @AutoLog
     public static class ShooterBedIOInputs
     {
-        public double     leaderVolts   = 0.0;
-        public double     followerVolts = 0.0;
-        public Rotation2d bedAngle      = new Rotation2d();
+        public double     leaderVolts     = 0.0;
+        public double     followerVolts   = 0.0;
+        public Rotation2d bedAngle        = new Rotation2d();
+        public double     bedAngleDegrees = 0.0;
     }
 
     public default void updateInputs(ShooterBedIOInputs inputs)

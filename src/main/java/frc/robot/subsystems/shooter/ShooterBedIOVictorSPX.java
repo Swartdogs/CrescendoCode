@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -30,9 +32,10 @@ public class ShooterBedIOVictorSPX implements ShooterBedIO
     @Override
     public void updateInputs(ShooterBedIOInputs inputs)
     {
-        inputs.leaderVolts   = _leaderMotor.getMotorOutputVoltage();
-        inputs.followerVolts = _followerMotor.getMotorOutputVoltage();
-        inputs.bedAngle      = Rotation2d.fromRotations(_absoluteEncoder.getAbsolutePosition()).minus(_absoluteEncoderOffset);
+        inputs.leaderVolts     = _leaderMotor.getMotorOutputVoltage();
+        inputs.followerVolts   = _followerMotor.getMotorOutputVoltage();
+        inputs.bedAngle        = Rotation2d.fromRotations(_absoluteEncoder.getAbsolutePosition()).times(Constants.ShooterBed.BED_SCALE).minus(_absoluteEncoderOffset);
+        inputs.bedAngleDegrees = inputs.bedAngle.getDegrees();
     }
 
     @Override

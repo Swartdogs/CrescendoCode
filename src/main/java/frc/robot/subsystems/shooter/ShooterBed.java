@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -12,7 +13,7 @@ public class ShooterBed extends SubsystemBase
 {
     public enum BedAngle
     {
-        IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE), ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE);
+        IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE), ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE), SubwooferShot(Constants.ShooterBed.BED_SUBWOOFER_SHOT_ANGLE);
 
         private Rotation2d _angle;
 
@@ -43,7 +44,8 @@ public class ShooterBed extends SubsystemBase
     {
         _io = io;
 
-        _bedPID = new PIDController(34.4, 0, 0); // FIXME: Set values, calibrate
+        _bedPID = new PIDController(100 / Math.PI, 0, 1); // FIXME: Set values, calibrate
+        _bedPID.setTolerance(Units.degreesToRadians(3));
     }
 
     @Override
@@ -54,8 +56,12 @@ public class ShooterBed extends SubsystemBase
 
         if (_angleSetpoint != null)
         {
-            _io.setVolts(_bedPID.calculate(_inputs.bedAngle.getRadians(), _angleSetpoint.getRadians()));
+            var setpoint = MathUtil.clamp(_bedPID.calculate(_inputs.bedAngle.getRadians(), _angleSetpoint.getRadians()), -Constants.ShooterBed.MAX_BED_VOLTS, Constants.ShooterBed.MAX_BED_VOLTS);
+            Logger.recordOutput("Bed Setpoint", setpoint);
+            _io.setVolts(setpoint);
         }
+
+        Logger.recordOutput("Has Bed Setpoint", _angleSetpoint != null);
     }
 
     public void setVolts(double volts)

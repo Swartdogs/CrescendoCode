@@ -53,21 +53,6 @@ public final class DriveCommands
 
     public static Command resetGyro(Drive drive, Gyro gyro)
     {
-        return Commands.runOnce(() ->
-        {
-            Optional<Alliance> alliance = DriverStation.getAlliance();
-            Pose2d             pose     = new Pose2d();
-
-            if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red)
-            {
-                pose = new Pose2d(0, 0, Rotation2d.fromDegrees(180));
-            }
-            else
-            {
-                pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-            }
-
-            drive.setPose(pose);
-        }, drive, gyro);
+        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))).ignoringDisable(true);
     }
 }
