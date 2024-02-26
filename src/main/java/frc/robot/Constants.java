@@ -103,12 +103,18 @@ public final class Constants
         public static final Rotation2d MODULE_BR_OFFSET  = Rotation2d.fromRadians(-1.63).plus(Rotation2d.fromDegrees(180));
     }
 
+    public static class Field
+    {
+        public static final double HEIGHT_OF_SPEAKER = Units.inchesToMeters(78);
+    }
+
     public static class General
     {
         public static final double LOOP_PERIOD_SECS = 0.02;
         public static final double MOTOR_VOLTAGE    = 12.0;
         public static final double MAX_NEO_SPEED    = 5874;
         public static final double MAX_KRAKEN_SPEED = 6000;
+        public static final double NOTE_SHOT_HEIGHT = Units.inchesToMeters(22.8289); //Maybe change this depending on performance
     }
 
     public static class Intake
