@@ -11,6 +11,7 @@ import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.Notepath.NotepathState;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.subsystems.shooter.ShooterBed.BedAngle;
 
 public final class CompositeCommands
 {
@@ -23,6 +24,42 @@ public final class CompositeCommands
         // @formatter:off
         return 
                 ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity);
+        // @formatter:on
+    }
+
+    public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed, double upperVelocity, double lowerVelocity, double shootAngle)
+    {
+        // @formatter:off
+        return 
+            Commands.sequence
+            (
+                ShooterBedCommands.setAngle(shooterBed, shootAngle),
+                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity),
+                Commands.waitUntil(() -> !notepath.hasNote())
+            )
+            .finallyDo(() ->
+            {
+                shooterFlywheel.stop();
+            });
+        // @formatter:on
+    }
+
+    public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed, double upperVelocity, double lowerVelocity, BedAngle shootAngle)
+    {
+        // @formatter:off
+        return 
+            Commands.sequence
+            (
+                ShooterBedCommands.setAngle(shooterBed, shootAngle),
+                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity),
+                Commands.waitUntil(() -> !notepath.hasNote())
+            )
+            .finallyDo(() ->
+            {
+                shooterFlywheel.stop();
+            });
         // @formatter:on
     }
 
@@ -91,14 +128,17 @@ public final class CompositeCommands
     {
         // @formatter:off
         return
-            Commands.parallel
+            ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
+            .andThen
             (
-                IntakeCommands.start(intake),
-                NotepathCommands.intakeLoad(notepath)
-                // ,
-                // ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
+                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                Commands.parallel
+                (
+                    IntakeCommands.start(intake),
+                    NotepathCommands.intakeLoad(notepath)
+                ),
+                Commands.waitUntil(() -> notepath.sensorTripped())
             )
-            .andThen(Commands.waitUntil(() -> notepath.sensorTripped()))
             .finallyDo(interrupted ->
             {
                 intake.set(IntakeState.Off);
@@ -171,14 +211,16 @@ public final class CompositeCommands
     {
         // @formatter:off
         return
-            Commands.parallel
-            (
-//                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.ShooterLoad),
-                ShooterFlywheelCommands.intake(shooterFlywheel),
-                NotepathCommands.shooterLoad(notepath)
-            )
+
+            ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.ShooterLoad)
             .andThen
             (
+                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                Commands.parallel
+                (
+                    ShooterFlywheelCommands.intake(shooterFlywheel),
+                    NotepathCommands.shooterLoad(notepath)
+                ),
                 Commands.waitUntil(() -> notepath.sensorTripped()),
                 Commands.waitUntil(() -> !notepath.sensorTripped())
             )
@@ -190,5 +232,10 @@ public final class CompositeCommands
             })
             .unless(() -> notepath.hasNote());
         // @formatter:on
+    }
+
+    public static Command suckIn(Notepath notepath, ShooterFlywheel shooterFlywheel)
+    {
+        return Commands.parallel(NotepathCommands.shooterLoad(notepath), ShooterFlywheelCommands.intake(shooterFlywheel));
     }
 }

@@ -99,7 +99,8 @@ public final class Constants
         public static final double     WHEEL_RADIUS      = Units.inchesToMeters(2.0);
         public static final double     DRIVE_GEAR_RATIO  = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
         public static final double     TURN_GEAR_RATIO   = (150.0 / 7.0);
-        public static final double     MAX_LINEAR_SPEED  = Units.rotationsPerMinuteToRadiansPerSecond(Constants.General.MAX_KRAKEN_SPEED) * WHEEL_RADIUS / DRIVE_GEAR_RATIO;
+        public static final double     MAX_LINEAR_SPEED  = 2; // Units.rotationsPerMinuteToRadiansPerSecond(Constants.General.MAX_KRAKEN_SPEED)
+                                                              // * WHEEL_RADIUS / DRIVE_GEAR_RATIO;
         public static final double     DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2, TRACK_WIDTH_Y / 2);
         public static final double     MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
         public static final Rotation2d MODULE_FL_OFFSET  = Rotation2d.fromRadians(-2.49).plus(Rotation2d.fromDegrees(180));
@@ -134,13 +135,13 @@ public final class Constants
 
     public static class Intake
     {
-        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.6;
+        public static final double INTAKE_DEFAULT_PERCENT_OUTPUT  = 0.8;
         public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 0.6;
     }
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.6;
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.2;
         public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.6;
         public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.3;
     }
@@ -159,11 +160,14 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-14.611);
+        public static final double     MAX_BED_VOLTS            = 6;
+        public static final double     BED_SCALE                = 0.421;
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-15.569);
         public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(87);
         public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(17);
-        public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(30);
-        public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(60);
+        public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
+        public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
+        public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(57.3);
     }
 
     public static class ShooterFlywheel
@@ -176,8 +180,8 @@ public final class Constants
     public static class Vision
     {
         public static final String      CAMERA_NAME      = "frontCam";
-        public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, 0.0, 0.0);
-        public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(12), Units.inchesToMeters(0), Units.inchesToMeters(5.25), CAMERA_ROTATION);
+        public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
+        public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
         public static final String      CAMERA_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
     }
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.gyro.Gyro;
 
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -100,4 +101,9 @@ public final class DriveCommands
     // drive // Reference to drive subsystem to set requirements
     // );
     // }
+    
+    public static Command resetGyro(Drive drive, Gyro gyro)
+    {
+        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))).ignoringDisable(true);
+    }
 }

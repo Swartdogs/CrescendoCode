@@ -1,10 +1,5 @@
 package frc.robot;
 
-import java.util.Set;
-
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,7 +17,6 @@ import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
-import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
@@ -72,7 +66,6 @@ public class RobotContainer
     // Controls
     private final Joystick                        _joystick   = new Joystick(1);
     private final CommandXboxController           _controller = new CommandXboxController(0);
-    private final LoggedDashboardChooser<Command> _autoChooser;
 
     public RobotContainer()
     {
@@ -136,8 +129,6 @@ public class RobotContainer
         NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
         NamedCommands.registerCommand("Stop Shooter", CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
 
-        _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
         // Configure the button bindings
         configureButtonBindings();
         // _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive,
@@ -159,6 +150,11 @@ public class RobotContainer
         _controller.a().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.b().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.y().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.x().whileTrue(CompositeCommands.suckIn(_notepath, _shooterFlywheel).andThen(Commands.idle(_notepath, _shooterFlywheel)).finallyDo(() ->
+        {
+            _notepath.set(NotepathState.Off);
+            _shooterFlywheel.stop();
+        }));
 
         // _controller.y().onTrue(CompositeCommands.intakePickup(_intake, _notepath,
         // _shooterBed));
@@ -175,18 +171,21 @@ public class RobotContainer
         // -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
         // _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed,
         // 45));
-        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
-        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -4).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
-        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, 3000, 3000));
+        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
+        _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
+
         _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
         _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
-        _controller.back().onTrue(ShooterFlywheelCommands.stop(_shooterFlywheel)); // TODO: Check!!!
 
-        _controller.x().whileTrue(NotepathCommands.shooterLoad(_notepath).andThen(Commands.idle(_notepath)).finallyDo(() -> _notepath.set(NotepathState.Off)));
+        _controller.povUp().onTrue(Commands.runOnce(() -> _notepath.setHasNote(true)).ignoringDisable(true));
+        _controller.povDown().onTrue(Commands.runOnce(() -> _notepath.setHasNote(false)).ignoringDisable(true));
+        _controller.povLeft().onTrue(CompositeCommands.startShooter(_shooterFlywheel, 4000, 4000));
+        _controller.povRight().onTrue(CompositeCommands.startShooter(_shooterFlywheel, 2000, 5000));
 
-        new JoystickButton(_joystick, 1).onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
-        new JoystickButton(_joystick, 2).onTrue(CompositeCommands.runShooter(_shooterFlywheel, _notepath, () -> ((-_joystick.getThrottle()) + 1) / 2));
+        new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
 
         // Test commands for climb - on gamepad
         // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->
@@ -229,6 +228,10 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        return _autoChooser.get();
+        // PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+
+        // return AutoBuilder.followPath(path);
+
+        return null;
     }
 }
