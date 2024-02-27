@@ -1,0 +1,64 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.94693201083977,
+        "y": 4.180768646843998
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.957953146675526,
+        "y": 5.604423516539341
+      },
+      "isLocked": false,
+      "linkedName": "DriveTest2"
+    },
+    {
+      "anchor": {
+        "x": 6.94693201083977,
+        "y": 6.887126081944472
+      },
+      "prevControl": {
+        "x": 6.9678200894863345,
+        "y": 6.028702057404115
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DriveTest3"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.15,
+      "maxWaypointRelativePos": 0.85,
+      "constraints": {
+        "maxVelocity": 5.0,
+        "maxAcceleration": 10.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "TestDrive",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

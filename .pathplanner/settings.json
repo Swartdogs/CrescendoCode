@@ -4,10 +4,11 @@
   "holonomicMode": true,
   "pathFolders": [
     "AmpSideStartingPaths",
+    "BlueLineToInnerNotes",
     "BlueLineToOuterNotes",
     "InnerNoteToInnerNote",
     "MiddleSideStartingPaths",
-    "BlueLineToInnerNotes",
+    "TestDrive",
     "Note1ToOuterNote",
     "Note2ToOuterNote",
     "Note3ToOuterNote",

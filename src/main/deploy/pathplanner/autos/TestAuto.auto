@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TestDrive1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TestDrive2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TestDrive3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TestDrive4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
