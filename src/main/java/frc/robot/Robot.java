@@ -1,19 +1,8 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -56,7 +45,7 @@ public class Robot extends LoggedRobot
         {
             case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
-                Logger.addDataReceiver(new WPILOGWriter("/home/lvuser"));
+                Logger.addDataReceiver(new WPILOGWriter("/U/logs"));
                 Logger.addDataReceiver(new NT4Publisher());
                 break;
 

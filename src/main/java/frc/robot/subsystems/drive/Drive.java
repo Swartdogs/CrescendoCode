@@ -1,15 +1,3 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -29,9 +17,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.util.LocalADStarAK;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -40,7 +30,7 @@ public class Drive extends SubsystemBase
     private final Gyro                     _gyro;
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
-    private SwerveDriveKinematics          _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
     public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -53,8 +43,7 @@ public class Drive extends SubsystemBase
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
-                this::getPose, this::setPose, () -> _kinematics.toChassisSpeeds(getModuleStates()), this::runVelocity,
-                new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+                this::getPose, this::setPose, this::getChassisSpeeds, this::runVelocity, new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
                 () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
         );
 
@@ -229,6 +218,11 @@ public class Drive extends SubsystemBase
     public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
     {
         _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
+    }
+
+    public ChassisSpeeds getChassisSpeeds()
+    {
+        return _kinematics.toChassisSpeeds(getModuleStates());
     }
 
     /** Returns an array of module translations. */

@@ -7,18 +7,18 @@ public interface NotepathIO
     @AutoLog
     public static class NotepathInputs
     {
-        public double   leaderNotepathAppliedVolts   = 0.0;
-        public double[] leaderNotepathCurrentAmps    = new double[] {};
-        public double   followerNotepathAppliedVolts = 0.0;
-        public double[] followerNotepathCurrentAmps  = new double[] {};
-        public boolean  sensorTripped                = false;
+        public double   leaderVolts     = 0.0;
+        public double[] leaderCurrent   = new double[] {};
+        public double   followerVolts   = 0.0;
+        public double[] followerCurrent = new double[] {};
+        public boolean  sensorTripped   = false;
     }
 
     public default void updateInputs(NotepathInputs inputs)
     {
     }
 
-    public default void setVoltage(double volts)
+    public default void setVolts(double volts)
     {
     }
 }

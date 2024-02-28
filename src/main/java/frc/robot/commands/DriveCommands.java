@@ -1,15 +1,3 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
@@ -18,10 +6,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.gyro.Gyro;
+
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 public final class DriveCommands
@@ -55,5 +49,10 @@ public final class DriveCommands
                     ChassisSpeeds.fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())
             );
         }, drive);
+    }
+
+    public static Command resetGyro(Drive drive, Gyro gyro)
+    {
+        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))).ignoringDisable(true);
     }
 }

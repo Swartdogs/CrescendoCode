@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.subsystems.shooter.ShooterBed;
 
 public final class ShooterBedCommands
@@ -10,18 +13,28 @@ public final class ShooterBedCommands
     {
     }
 
-    public static Command setBedAngle(ShooterBed shooterBed, double bedAngle)
+    public static Command setAngle(ShooterBed shooterBed, double angle)
     {
-        return shooterBed.runOnce(() -> shooterBed.setAngle(Rotation2d.fromDegrees(bedAngle)));
+        return shooterBed.runOnce(() -> shooterBed.setAngle(Rotation2d.fromDegrees(angle)));
     }
 
-    public static Command setBedIntakePickupAngle(ShooterBed shooterBed)
+    public static Command setAngle(ShooterBed shooterBed, ShooterBed.BedAngle angle)
     {
-        return shooterBed.runOnce(shooterBed::setIntakePickupAngle);
+        return shooterBed.runOnce(() -> shooterBed.setAngle(angle));
     }
 
-    public static Command setBedShooterPickupAngle(ShooterBed shooterBed)
+    public static Command runBed(ShooterBed shooterBed, DoubleSupplier supplier)
     {
-        return shooterBed.runOnce(shooterBed::setShooterPickupAngle);
+        return shooterBed.run(() -> shooterBed.setVolts(supplier.getAsDouble()));
+    }
+
+    public static Command setVolts(ShooterBed shooterBed, double volts)
+    {
+        return shooterBed.runOnce(() -> shooterBed.setVolts(volts));
+    }
+
+    public static Command setVolts(ShooterBed shooterBed, DoubleSupplier volts)
+    {
+        return shooterBed.run(() -> shooterBed.setVolts(volts.getAsDouble()));
     }
 }

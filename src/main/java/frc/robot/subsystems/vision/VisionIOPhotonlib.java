@@ -1,15 +1,13 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 import frc.robot.Constants;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -24,16 +22,15 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
-/** Vision hardware implementation for PhotonVision. */
 public class VisionIOPhotonlib implements VisionIO
 {
-    private final PhotonCamera  _camera           = new PhotonCamera(Constants.Vision.CAMERA_NAME);
-    private double              _captureTimestamp = 0.0;
-    private double[]            _cornerX          = new double[] {};
-    private double[]            _cornerY          = new double[] {};
-    private PhotonPoseEstimator _poseEstimator;
-    private Pose2d              _lastPose         = new Pose2d();
-    private boolean             _hasPose          = false;
+    private final PhotonCamera        _camera           = new PhotonCamera(Constants.Vision.CAMERA_NAME);
+    private final PhotonPoseEstimator _poseEstimator;
+    private double                    _captureTimestamp = 0.0;
+    private double[]                  _cornerX          = new double[] {};
+    private double[]                  _cornerY          = new double[] {};
+    private Pose2d                    _lastPose         = new Pose2d();
+    private boolean                   _hasPose          = false;
 
     public VisionIOPhotonlib()
     {
@@ -49,9 +46,7 @@ public class VisionIOPhotonlib implements VisionIO
             System.out.println("Exception encountered: " + e.getMessage());
         }
 
-        _poseEstimator = new PhotonPoseEstimator(
-                aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _camera, new Transform3d(Constants.Vision.CAMERA_X, Constants.Vision.CAMERA_Y, Constants.Vision.CAMERA_Z, Constants.Vision.CAMERA_ROTATION)
-        );
+        _poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _camera, Constants.Vision.CAMERA_TRANSFORM);
         _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
