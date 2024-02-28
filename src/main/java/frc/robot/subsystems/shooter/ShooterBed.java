@@ -13,7 +13,12 @@ public class ShooterBed extends SubsystemBase
 {
     public enum BedAngle
     {
-        IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE), ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE), SubwooferShot(Constants.ShooterBed.BED_SUBWOOFER_SHOT_ANGLE);
+        // @formatter:off
+        IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE), 
+        ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE), 
+        SubwooferShot(Constants.ShooterBed.BED_SUBWOOFER_SHOT_ANGLE),
+        ClimbVertical(Constants.ShooterBed.BED_CLIMB_VERTICAL_ANGLE);
+        // @formatter:on
 
         private Rotation2d _angle;
 

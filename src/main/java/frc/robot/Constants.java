@@ -14,7 +14,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {
@@ -129,11 +129,12 @@ public final class Constants
         public static final double     MAX_BED_VOLTS            = 10; // TODO: Check if this is enough
         public static final double     BED_SCALE                = 0.421;
         public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-15.569);
-        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(87);
-        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(17);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(88);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(20);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
         public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(57.3);
+        public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
     }
 
     public static class ShooterFlywheel
