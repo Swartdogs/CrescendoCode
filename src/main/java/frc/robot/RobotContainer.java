@@ -51,17 +51,17 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 public class RobotContainer
 {
     // Subsystems
-    private final Drive                 _drive;
-    private final Intake                _intake;
-    private final Notepath              _notepath;
-    private final ShooterBed            _shooterBed;
-    private final ShooterFlywheel       _shooterFlywheel;
-    private final Climb                 _climb;
-    private final Gyro                  _gyro;
+    private final Drive           _drive;
+    private final Intake          _intake;
+    private final Notepath        _notepath;
+    private final ShooterBed      _shooterBed;
+    private final ShooterFlywheel _shooterFlywheel;
+    private final Climb           _climb;
+    private final Gyro            _gyro;
     @SuppressWarnings("unused")
-    private final Vision                _vision;
+    private final Vision          _vision;
     @SuppressWarnings("unused")
-    private final Dashboard _dashboard;
+    private final Dashboard       _dashboard;
 
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
@@ -154,8 +154,8 @@ public class RobotContainer
         // -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
         // _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed,
         // 45));
-        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
-        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
         _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
         _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
