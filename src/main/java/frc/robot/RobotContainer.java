@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
@@ -60,7 +61,7 @@ public class RobotContainer
     @SuppressWarnings("unused")
     private final Vision                _vision;
     @SuppressWarnings("unused")
-    // private final Dashboard _dashboard;
+    private final Dashboard       _dashboard;
 
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
@@ -114,8 +115,7 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
-        // _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive,
-        // _intake, _climb);
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
     }
 
     private void configureButtonBindings()
@@ -154,8 +154,8 @@ public class RobotContainer
         // -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
         // _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed,
         // 45));
-        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
-        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
         _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
         _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));

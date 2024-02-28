@@ -132,7 +132,7 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final double     MAX_BED_VOLTS            = 6;
+        public static final double     MAX_BED_VOLTS            = 10; // TODO: Check if this is enough
         public static final double     BED_SCALE                = 0.421;
         public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-15.569);
         public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(87);
@@ -155,5 +155,13 @@ public final class Constants
         public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
         public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
         public static final String      CAMERA_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
+
+        // public static final String CAMERA_NAME_TWO = "backCam";
+        // public static final Rotation3d CAMERA_ROTATION_TWO = new Rotation3d(0.0,
+        // Units.degreesToRadians(0), Units.degreesToRadians(0));
+        // public static final Transform3d CAMERA_TRANSFORM_TWO = new
+        // Transform3d(Units.inchesToMeters(0), Units.inchesToMeters(0),
+        // Units.inchesToMeters(9.5), CAMERA_ROTATION_TWO);
+        // public static final String CAMERA_URL_TWO = "";
     }
 }
