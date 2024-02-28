@@ -167,6 +167,7 @@ public class RobotContainer
         _controller.povRight().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 2000, 5000));
 
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
+        new JoystickButton(_joystick, 11).whileTrue(DriveCommands.driveVolts(_drive, 12).andThen(Commands.idle(_drive)).finallyDo(() -> _drive.stop()));
 
         // Test commands for climb - on gamepad
         // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->

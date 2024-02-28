@@ -116,6 +116,15 @@ public class Drive extends SubsystemBase
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
     }
 
+    public void runVolts(double volts)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            _modules[i].runSetpoint(new SwerveModuleState());
+            _modules[i].setDriveVolts(volts);
+        }
+    }
+
     /** Stops the drive. */
     public void stop()
     {

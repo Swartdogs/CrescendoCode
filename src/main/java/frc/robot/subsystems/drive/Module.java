@@ -196,4 +196,10 @@ public class Module
     {
         _io.setAngleOffset(ModuleOffset);
     }
+
+    public void setDriveVolts(double volts)
+    {
+        _speedSetpoint = null;
+        _io.setDriveVolts(volts);
+    }
 }

@@ -55,4 +55,9 @@ public final class DriveCommands
     {
         return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))).ignoringDisable(true);
     }
+
+    public static Command driveVolts(Drive drive, double volts)
+    {
+        return Commands.runOnce(() -> drive.runVolts(volts));
+    }
 }
