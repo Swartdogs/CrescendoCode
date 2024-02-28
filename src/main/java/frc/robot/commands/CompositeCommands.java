@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -193,6 +194,9 @@ public final class CompositeCommands
     {
         var x = Math.hypot(drive.getPose().getX(), drive.getPose().getY());
         var y = Constants.Field.HEIGHT_OF_SPEAKER - Constants.General.NOTE_SHOT_HEIGHT;
+        var v = Units.rotationsPerMinuteToRadiansPerSecond(Constants.General.MAX_NEO_SPEED) * Units.inchesToMeters(2);
+
+
 
         return 9;
     }
