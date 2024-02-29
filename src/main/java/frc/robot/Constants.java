@@ -134,6 +134,7 @@ public final class Constants
         // Measurement from the ground to the camera's center
         public static final double     CAMERA_Z        = Units.inchesToMeters(5.25);
         public static final Rotation3d CAMERA_ROTATION = new Rotation3d(0.0, 0.0, 0.0);
+        public static final String     CAMERA_URL      = "mjpg:http://10.5.25.12:1181/?action=stream";
     }
 
     public static class Notepath
