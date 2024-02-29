@@ -101,7 +101,7 @@ public final class DriveCommands
     // drive // Reference to drive subsystem to set requirements
     // );
     // }
-    
+
     public static Command resetGyro(Drive drive, Gyro gyro)
     {
         return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))).ignoringDisable(true);
