@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.Dashboard;
@@ -164,8 +165,8 @@ public class RobotContainer
         // _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
         // _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel,
         // _notepath));
-        _controller.start().onTrue(ShooterBedCommands.setAngle(_shooterBed, 30));
-        _controller.back().onTrue(ShooterBedCommands.setAngle(_shooterBed, 70));
+        _controller.start().onTrue(ShooterBedCommands.setAngle(_shooterBed, ShooterBed.BedAngle.ShooterLoad));
+        _controller.back().onTrue(ShooterBedCommands.setAngle(_shooterBed, ShooterBed.BedAngle.SubwooferShot));
 
         _controller.leftTrigger().whileTrue(CompositeCommands.climbJoystick(_climb, _shooterBed, ShooterBed.BedAngle.ClimbVertical, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
         _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
@@ -179,9 +180,7 @@ public class RobotContainer
         new JoystickButton(_joystick, 11).whileTrue(DriveCommands.driveVolts(_drive, 12).andThen(Commands.idle(_drive)).finallyDo(() -> _drive.stop()));
 
         // Test commands for climb - on gamepad
-        // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->
-        // -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() ->
-        // _climb.stop()));
+        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         // _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); //
         // TODO: set setpoint
 

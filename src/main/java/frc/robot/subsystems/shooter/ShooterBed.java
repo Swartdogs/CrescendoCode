@@ -68,6 +68,11 @@ public class ShooterBed extends SubsystemBase
                 feedForward = Constants.ShooterBed.BED_UP_MIN_VOLTS;
             }
 
+            if (atSetpoint())
+            {
+                feedForward = 0;
+            }
+
             _io.setVolts(MathUtil.clamp(feedForward + _bedPID.calculate(_inputs.bedAngle.getRadians(), _angleSetpoint.getRadians()), -Constants.ShooterBed.MAX_BED_VOLTS, Constants.ShooterBed.MAX_BED_VOLTS));
         }
 

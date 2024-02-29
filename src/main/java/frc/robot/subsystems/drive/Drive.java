@@ -120,8 +120,15 @@ public class Drive extends SubsystemBase
     {
         for (int i = 0; i < 4; i++)
         {
-            _modules[i].runSetpoint(new SwerveModuleState());
-            _modules[i].setDriveVolts(volts);
+            var optimized = _modules[i].runSetpoint(new SwerveModuleState());
+
+            var speed = volts;
+
+            if (optimized.angle.getDegrees() != 0)
+            {
+                speed *= -1;
+            }
+            _modules[i].setDriveVolts(speed);
         }
     }
 

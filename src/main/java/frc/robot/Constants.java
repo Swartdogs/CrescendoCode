@@ -88,19 +88,19 @@ public final class Constants
 
     public static class Drive
     {
-        public static final double     TRACK_WIDTH_X     = Units.inchesToMeters(20.0);
-        public static final double     TRACK_WIDTH_Y     = Units.inchesToMeters(28.5);
-        public static final double     WHEEL_RADIUS      = Units.inchesToMeters(2.0);
-        public static final double     DRIVE_GEAR_RATIO  = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
-        public static final double     TURN_GEAR_RATIO   = (150.0 / 7.0);
-        public static final double     MAX_LINEAR_SPEED  = 2; // Units.rotationsPerMinuteToRadiansPerSecond(Constants.General.MAX_KRAKEN_SPEED)
-                                                              // * WHEEL_RADIUS / DRIVE_GEAR_RATIO;
+        public static final double TRACK_WIDTH_X    = Units.inchesToMeters(20.0);
+        public static final double TRACK_WIDTH_Y    = Units.inchesToMeters(28.5);
+        public static final double WHEEL_RADIUS     = Units.inchesToMeters(2.0);
+        public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+        public static final double TURN_GEAR_RATIO  = (150.0 / 7.0);
+        public static final double MAX_LINEAR_SPEED = Units.feetToMeters(13.86); // Units.rotationsPerMinuteToRadiansPerSecond(Constants.General.MAX_KRAKEN_SPEED)
+        // * WHEEL_RADIUS / DRIVE_GEAR_RATIO;
         public static final double     DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2, TRACK_WIDTH_Y / 2);
         public static final double     MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
         public static final Rotation2d MODULE_FL_OFFSET  = Rotation2d.fromRadians(-2.49).plus(Rotation2d.fromDegrees(180));
         public static final Rotation2d MODULE_FR_OFFSET  = Rotation2d.fromRadians(2.09).plus(Rotation2d.fromDegrees(180));
         public static final Rotation2d MODULE_BL_OFFSET  = Rotation2d.fromRadians(-2.33).plus(Rotation2d.fromDegrees(180));
-        public static final Rotation2d MODULE_BR_OFFSET  = Rotation2d.fromRadians(-1.63).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d MODULE_BR_OFFSET  = Rotation2d.fromRadians(1.81);
     }
 
     public static class General
@@ -135,7 +135,7 @@ public final class Constants
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
         public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(57.3);
         public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
-        public static final double     BED_DOWN_MIN_VOLTS       = -3.5;
+        public static final double     BED_DOWN_MIN_VOLTS       = -4;
         public static final double     BED_UP_MIN_VOLTS         = 0.9;
     }
 
