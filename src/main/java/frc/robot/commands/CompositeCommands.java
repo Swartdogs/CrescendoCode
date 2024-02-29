@@ -137,15 +137,8 @@ public final class CompositeCommands
                 (
                     IntakeCommands.start(intake),
                     NotepathCommands.intakeLoad(notepath)
-                ),
-                Commands.waitUntil(() -> notepath.sensorTripped())
+                )
             )
-            .finallyDo(interrupted ->
-            {
-                intake.set(IntakeState.Off);
-                notepath.set(NotepathState.Off);
-                notepath.setHasNote(!interrupted);
-            })
             .unless(() -> notepath.hasNote());
         // @formatter:on
     }
@@ -154,11 +147,15 @@ public final class CompositeCommands
     {
         // @formatter:off
         return 
-            Commands.either
+            Commands.runOnce(() -> {}, intake, notepath)
+            .andThen
             (
-                Commands.waitSeconds(1),
-                Commands.waitUntil(() -> notepath.sensorTripped()), 
-                () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+                Commands.either
+                (
+                    Commands.waitSeconds(1),
+                    Commands.waitUntil(() -> notepath.sensorTripped()), 
+                    () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+                )
             );
         // @formatter:on
     }

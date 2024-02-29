@@ -1,12 +1,16 @@
 package frc.robot;
 
+import java.util.Set;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimbCommands;
@@ -18,6 +22,7 @@ import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
 import frc.robot.commands.ShooterBedCommands;
+import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
@@ -64,6 +69,7 @@ public class RobotContainer
 
     // Controls
     private final Joystick              _joystick   = new Joystick(1);
+    private final Joystick              _testJoy    = new Joystick(2);
     private final CommandXboxController _controller = new CommandXboxController(0);
 
     public RobotContainer()
@@ -161,12 +167,12 @@ public class RobotContainer
         _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
-        // _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel,
-        // _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
-        // _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel,
-        // _notepath));
-        _controller.start().onTrue(ShooterBedCommands.setAngle(_shooterBed, ShooterBed.BedAngle.ShooterLoad));
-        _controller.back().onTrue(ShooterBedCommands.setAngle(_shooterBed, ShooterBed.BedAngle.SubwooferShot));
+        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
+        _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
+        // _controller.start().onTrue(ShooterBedCommands.setAngle(_shooterBed,
+        // ShooterBed.BedAngle.ShooterLoad));
+        // _controller.back().onTrue(ShooterBedCommands.setAngle(_shooterBed,
+        // ShooterBed.BedAngle.SubwooferShot));
 
         _controller.leftTrigger().whileTrue(CompositeCommands.climbJoystick(_climb, _shooterBed, ShooterBed.BedAngle.ClimbVertical, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
         _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
@@ -183,6 +189,16 @@ public class RobotContainer
         _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         // _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); //
         // TODO: set setpoint
+
+        new JoystickButton(_testJoy, 12).onTrue(CompositeCommands.loadInMotion(_intake, _notepath));
+        new JoystickButton(_testJoy, 11).onTrue(CompositeCommands.loadWhileStopped(_intake, _notepath));
+        new JoystickButton(_testJoy, 10).onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
+        new JoystickButton(_testJoy, 9).onTrue(CompositeCommands.loadWhileStopped(_intake, _notepath));
+        new JoystickButton(_testJoy, 8).onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        new JoystickButton(_testJoy, 7).onTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
+        new JoystickButton(_testJoy, 1).onTrue(Commands.runOnce(() ->
+        {
+        }, _intake, _notepath, _shooterBed, _shooterFlywheel));
 
         // // Test commands for notepath - on joystick
         // new JoystickButton(_joystick,
@@ -218,8 +234,6 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("New Path");
-
-        return AutoBuilder.followPath(path);
+        return AutoBuilder.buildAuto("New Auto");
     }
 }
