@@ -50,21 +50,21 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
 public class RobotContainer
 {
     // Subsystems
-    private final Drive                           _drive;
-    private final Intake                          _intake;
-    private final Notepath                        _notepath;
-    private final ShooterBed                      _shooterBed;
-    private final ShooterFlywheel                 _shooterFlywheel;
-    private final Climb                           _climb;
-    private final Gyro                            _gyro;
+    private final Drive           _drive;
+    private final Intake          _intake;
+    private final Notepath        _notepath;
+    private final ShooterBed      _shooterBed;
+    private final ShooterFlywheel _shooterFlywheel;
+    private final Climb           _climb;
+    private final Gyro            _gyro;
     @SuppressWarnings("unused")
-    private final Vision                          _vision;
+    private final Vision          _vision;
     @SuppressWarnings("unused")
     private final Dashboard       _dashboard;
 
     // Controls
-    private final Joystick                        _joystick   = new Joystick(1);
-    private final CommandXboxController           _controller = new CommandXboxController(0);
+    private final Joystick              _joystick   = new Joystick(1);
+    private final CommandXboxController _controller = new CommandXboxController(0);
 
     public RobotContainer()
     {
