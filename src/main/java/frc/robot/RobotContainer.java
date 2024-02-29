@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -122,6 +123,10 @@ public class RobotContainer
         // _shooterFlywheel, _notepath));
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+        // _shooterBed.setDefaultCommand(ShooterBedCommands.setVolts(_shooterBed, () ->
+        // Constants.ShooterBed.MAX_BED_VOLTS *
+        // -MathUtil.applyDeadband(_controller.getLeftY(),
+        // Constants.Controls.JOYSTICK_DEADBAND)));
 
         // _controller.y().whileTrue(IntakeCommands.start(_intake).andThen(Commands.idle(_intake)).finallyDo(()
         // -> _intake.set(IntakeState.Off)));
@@ -155,8 +160,12 @@ public class RobotContainer
         _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
-        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
-        _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
+        // _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel,
+        // _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
+        // _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel,
+        // _notepath));
+        _controller.start().onTrue(ShooterBedCommands.setAngle(_shooterBed, 30));
+        _controller.back().onTrue(ShooterBedCommands.setAngle(_shooterBed, 70));
 
         _controller.leftTrigger().whileTrue(CompositeCommands.climbJoystick(_climb, _shooterBed, ShooterBed.BedAngle.ClimbVertical, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
         _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
