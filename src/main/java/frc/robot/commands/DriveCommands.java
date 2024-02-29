@@ -74,6 +74,12 @@ public final class DriveCommands
                 .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP))));
     }
 
+    public static Command shootFromStage(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    { 
+        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_PODIUM), maxSpeed))
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_PODIUM))));
+    }
+
     private static double getHeadingToPose(Drive drive, Pose2d pose)
     {
         double deltaY = pose.getY() - drive.getPose().getY();

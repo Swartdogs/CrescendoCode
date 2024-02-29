@@ -177,6 +177,7 @@ public class RobotContainer
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
 
         Controller.Joystick.button(4).whileTrue(DriveCommands.driveAtOrientation(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 90.00, 1));
+        Controller.Joystick.button(5).whileTrue(DriveCommands.shootFromStage(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1));
         Controller.Joystick.button(3).whileTrue(DriveCommands.aimAtSpeaker(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1));
         Controller.Joystick.button(2).whileTrue(DriveCommands.aimAtAmp(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), 1));
 
