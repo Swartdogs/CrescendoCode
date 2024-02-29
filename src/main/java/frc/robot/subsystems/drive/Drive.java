@@ -1,8 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -147,6 +145,22 @@ public class Drive extends SubsystemBase
         // Log setpoint states
         Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
+    }
+
+    public void runVolts(double volts)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            var optimized = _modules[i].runSetpoint(new SwerveModuleState());
+
+            var speed = volts;
+
+            if (optimized.angle.getDegrees() != 0)
+            {
+                speed *= -1;
+            }
+            _modules[i].setDriveVolts(speed);
+        }
     }
 
     /** Stops the drive. */

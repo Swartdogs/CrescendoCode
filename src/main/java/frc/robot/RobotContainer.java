@@ -1,26 +1,23 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ClimbCommands;
+import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
 import frc.robot.commands.ShooterBedCommands;
-import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
@@ -63,7 +60,7 @@ public class RobotContainer
     @SuppressWarnings("unused")
     private final Vision                          _vision;
     @SuppressWarnings("unused")
-    // private final Dashboard _dashboard;
+    private final Dashboard       _dashboard;
 
     // Controls
     private final Joystick                        _joystick   = new Joystick(1);
@@ -116,25 +113,9 @@ public class RobotContainer
                 break;
         }
 
-        // Temp for dashboard replacment
-        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(1.39, 5.56, new Rotation2d()))));
-        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
-        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
-
-        NamedCommands.registerCommand("Load in Motion", CompositeCommands.loadInMotion(_intake, _notepath));
-        NamedCommands.registerCommand("Load While Stopped", CompositeCommands.loadWhileStopped(_intake, _notepath));
-        // NamedCommands.registerCommand("Auto Delay", Commands.defer(() ->
-        // Commands.waitSeconds(0), Set.of())); // TODO: Change??
-        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
-        NamedCommands.registerCommand("Stop Intake", CompositeCommands.loadWhileStopped(_intake, _notepath));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
-        NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
-        NamedCommands.registerCommand("Stop Shooter", CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
-
         // Configure the button bindings
         configureButtonBindings();
-        // _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive,
-        // _intake, _climb);
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
     }
 
     private void configureButtonBindings()
@@ -143,6 +124,10 @@ public class RobotContainer
         // _shooterFlywheel, _notepath));
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+        // _shooterBed.setDefaultCommand(ShooterBedCommands.setVolts(_shooterBed, () ->
+        // Constants.ShooterBed.MAX_BED_VOLTS *
+        // -MathUtil.applyDeadband(_controller.getLeftY(),
+        // Constants.Controls.JOYSTICK_DEADBAND)));
 
         // _controller.y().whileTrue(IntakeCommands.start(_intake).andThen(Commands.idle(_intake)).finallyDo(()
         // -> _intake.set(IntakeState.Off)));
@@ -173,13 +158,17 @@ public class RobotContainer
         // -> -_controller.getLeftY() * Constants.General.MOTOR_VOLTAGE));
         // _controller.rightBumper().onTrue(ShooterBedCommands.setBedAngle(_shooterBed,
         // 45));
-        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, 5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
-        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -5).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.leftBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
+        _controller.rightBumper().whileTrue(ShooterBedCommands.setVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS).andThen(Commands.idle(_shooterBed)).finallyDo(() -> _shooterBed.setVolts(0)));
 
-        _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
-        _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel, _notepath));
+        // _controller.start().onTrue(CompositeCommands.startShooter(_shooterFlywheel,
+        // _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
+        // _controller.back().onTrue(CompositeCommands.stopShooter(_shooterFlywheel,
+        // _notepath));
+        _controller.start().onTrue(ShooterBedCommands.setAngle(_shooterBed, ShooterBed.BedAngle.ShooterLoad));
+        _controller.back().onTrue(ShooterBedCommands.setAngle(_shooterBed, ShooterBed.BedAngle.SubwooferShot));
 
-        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
+        _controller.leftTrigger().whileTrue(CompositeCommands.climbJoystick(_climb, _shooterBed, ShooterBed.BedAngle.ClimbVertical, () -> -_controller.getLeftY(), () -> -_controller.getRightY()));
         _controller.rightTrigger().onTrue(CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
 
         _controller.povUp().onTrue(Commands.runOnce(() -> _notepath.setHasNote(true)).ignoringDisable(true));
@@ -188,11 +177,10 @@ public class RobotContainer
         _controller.povRight().onTrue(CompositeCommands.startShooter(_shooterFlywheel, 2000, 5000));
 
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
+        new JoystickButton(_joystick, 11).whileTrue(DriveCommands.driveVolts(_drive, 12).andThen(Commands.idle(_drive)).finallyDo(() -> _drive.stop()));
 
         // Test commands for climb - on gamepad
-        // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->
-        // -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() ->
-        // _climb.stop()));
+        _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () -> -_controller.getLeftY(), () -> -_controller.getRightY()).finallyDo(() -> _climb.stop()));
         // _controller.rightTrigger().onTrue(ClimbCommands.setHeight(_climb, 0)); //
         // TODO: set setpoint
 

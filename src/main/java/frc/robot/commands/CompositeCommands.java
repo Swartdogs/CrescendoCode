@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.notepath.Notepath;
@@ -237,5 +238,18 @@ public final class CompositeCommands
     public static Command suckIn(Notepath notepath, ShooterFlywheel shooterFlywheel)
     {
         return Commands.parallel(NotepathCommands.shooterLoad(notepath), ShooterFlywheelCommands.intake(shooterFlywheel));
+    }
+
+    public static Command climbJoystick(Climb climb, ShooterBed shooterBed, BedAngle angle, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
+    {
+        // @formatter:off
+        return 
+            Commands.sequence
+            (
+                ShooterBedCommands.setAngle(shooterBed, angle),
+                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                ClimbCommands.setVolts(climb, leftSupplier, rightSupplier)
+            );
+        // @formatter:on
     }
 }

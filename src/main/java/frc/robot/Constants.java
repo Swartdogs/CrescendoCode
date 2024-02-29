@@ -99,14 +99,13 @@ public final class Constants
         public static final double     WHEEL_RADIUS      = Units.inchesToMeters(2.0);
         public static final double     DRIVE_GEAR_RATIO  = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
         public static final double     TURN_GEAR_RATIO   = (150.0 / 7.0);
-        public static final double     MAX_LINEAR_SPEED  = 2; // Units.rotationsPerMinuteToRadiansPerSecond(Constants.General.MAX_KRAKEN_SPEED)
-                                                              // * WHEEL_RADIUS / DRIVE_GEAR_RATIO;
+        public static final double     MAX_LINEAR_SPEED  = Units.feetToMeters(13.86);
         public static final double     DRIVE_BASE_RADIUS = Math.hypot(TRACK_WIDTH_X / 2, TRACK_WIDTH_Y / 2);
         public static final double     MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
         public static final Rotation2d MODULE_FL_OFFSET  = Rotation2d.fromRadians(-2.49).plus(Rotation2d.fromDegrees(180));
         public static final Rotation2d MODULE_FR_OFFSET  = Rotation2d.fromRadians(2.09).plus(Rotation2d.fromDegrees(180));
         public static final Rotation2d MODULE_BL_OFFSET  = Rotation2d.fromRadians(-2.33).plus(Rotation2d.fromDegrees(180));
-        public static final Rotation2d MODULE_BR_OFFSET  = Rotation2d.fromRadians(-1.63).plus(Rotation2d.fromDegrees(180));
+        public static final Rotation2d MODULE_BR_OFFSET  = Rotation2d.fromRadians(1.81);
     }
 
     public static class Field
@@ -160,14 +159,17 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final double     MAX_BED_VOLTS            = 6;
+        public static final double     MAX_BED_VOLTS            = 7; // TODO: Check if this is enough
         public static final double     BED_SCALE                = 0.421;
         public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-15.569);
-        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(87);
-        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(17);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(88);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(20);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
         public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(57.3);
+        public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
+        public static final double     BED_DOWN_MIN_VOLTS       = -4;
+        public static final double     BED_UP_MIN_VOLTS         = 0.9;
     }
 
     public static class ShooterFlywheel
