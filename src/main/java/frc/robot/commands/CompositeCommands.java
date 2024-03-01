@@ -74,41 +74,56 @@ public final class CompositeCommands
 
     public static Command LEDFillUp(LED led, Color color)
     {
-        var initialPattern = led.getLEDs();
+        // @formatter:off
         int totalLEDs      = Constants.LED.NUM_LEDS;
-
+        
         Command[] commandSequence = new Command[totalLEDs];
-
-        for (int i = 0; i <= totalLEDs; i++)
-        {
-            Color[] newPattern = new Color[totalLEDs];
-            Arrays.fill(newPattern, 0, i, color);
-            if (i < totalLEDs)
+        return Commands.sequence
+        (
+            Commands.runOnce(() -> 
             {
-                System.arraycopy(initialPattern, i, newPattern, i, totalLEDs - i);
-            }
-            commandSequence[i] = LEDCommands.setFrame(led, newPattern);
-        }
-        return Commands.sequence(commandSequence);
+                var initialPattern = led.getLEDs();
+        
+                for (int i = 0; i <= totalLEDs; i++)
+                {
+                    Color[] newPattern = new Color[totalLEDs];
+                    Arrays.fill(newPattern, 0, i, color);
+                    if (i < totalLEDs)
+                    {
+                        System.arraycopy(initialPattern, i, newPattern, i, totalLEDs - i);
+                    }
+                    commandSequence[i] = LEDCommands.setFrame(led, newPattern);
+                }
+            }),
+            Commands.sequence(commandSequence)
+        );
+        // @formatter:on
     }
 
     // Flywheel No Longer Ready to Shoot
     public static Command LEDFillDown(LED led, Color color)
     {
-        var initialPattern = led.getLEDs();
+        // @formatter.off
         int totalLEDs      = Constants.LED.NUM_LEDS;
+        Command[]  commandSequence = new Command[totalLEDs];
 
-        Command[] commandSequence = new Command[totalLEDs];
+        return Commands.sequence
+        (
+            Commands.runOnce(() ->
+            {
+                var initialPattern = led.getLEDs();
 
-        for (int i = totalLEDs; i >= 0; i--)
-        {
-            Color[] newPattern = new Color[totalLEDs];
-            Arrays.fill(newPattern, i, totalLEDs, color);
-            System.arraycopy(initialPattern, 0, newPattern, 0, i);
-            commandSequence[totalLEDs - i] = LEDCommands.setFrame(led, newPattern);
-        }
-
-        return Commands.sequence(commandSequence);
+                for (int i = totalLEDs; i >= 0; i--)
+                    {
+                    Color[] newPattern = new Color[totalLEDs];
+                    Arrays.fill(newPattern, i, totalLEDs, color);
+                    System.arraycopy(initialPattern, 0, newPattern, 0, i);
+                    commandSequence[totalLEDs - i] = LEDCommands.setFrame(led, newPattern);
+                }
+            }),
+            Commands.sequence(commandSequence)
+        );
+        // @formatter.on
     }
 
     // Note in Path
@@ -178,7 +193,7 @@ public final class CompositeCommands
 
     public static Command LEDTeleop(LED led)
     {
-        return CompositeCommands.LEDFillDown(led, Constants.LED.ORANGE).andThen(() -> led.switchDefaultCommand(CompositeCommands.LEDTeleop(led)));
+        return CompositeCommands.LEDFillDown(led, Constants.LED.ORANGE).andThen(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, Constants.LED.ORANGE)));
     }
 
     public static Command LEDBlinkingTeleOp(LED led)
@@ -188,6 +203,6 @@ public final class CompositeCommands
 
     public static Command LEDPartyMode(LED led)
     {
-        return Commands.runOnce(() -> Commands.repeatingSequence(LEDCommands.setFrame(led, led.randomColoring(Constants.LED.PINK, Constants.LED.ORANGE, Constants.LED.TEAL))));
+        return Commands.runOnce(() -> Commands.repeatingSequence(LEDCommands.setFrame(led, led.getRandomColoring(Constants.LED.PINK, Constants.LED.ORANGE, Constants.LED.TEAL))));
     }
 }

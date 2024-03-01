@@ -55,7 +55,7 @@ public class LED extends SubsystemBase
         setDefaultCommand(defaultCommand);
     }
 
-    public Color[] randomColoring(Color color1, Color color2, Color color3)
+    public Color[] getRandomColoring(Color color1, Color color2, Color color3)
     {
         var threeColors = new Color[] { color1, color2, color3 };
 
