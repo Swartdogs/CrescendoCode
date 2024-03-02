@@ -14,7 +14,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {
@@ -152,13 +152,7 @@ public final class Constants
         public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
         public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
         public static final String      CAMERA_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
-
-        // public static final String CAMERA_NAME_TWO = "backCam";
-        // public static final Rotation3d CAMERA_ROTATION_TWO = new Rotation3d(0.0,
-        // Units.degreesToRadians(0), Units.degreesToRadians(0));
-        // public static final Transform3d CAMERA_TRANSFORM_TWO = new
-        // Transform3d(Units.inchesToMeters(0), Units.inchesToMeters(0),
-        // Units.inchesToMeters(9.5), CAMERA_ROTATION_TWO);
-        // public static final String CAMERA_URL_TWO = "";
+        public static final String      CAMERA_NAME_TWO  = "backCam";
+        public static final String      CAMERA_URL_TWO   = "";
     }
 }

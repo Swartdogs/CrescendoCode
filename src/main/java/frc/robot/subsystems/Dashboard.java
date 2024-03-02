@@ -135,7 +135,7 @@ public class Dashboard extends SubsystemBase
         dashboard.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, Constants.Vision.CAMERA_URL).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
                 .withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
-        // CameraServer.addSwitchedCamera(getName());
+        CameraServer.addSwitchedCamera(getName());
 
         // Field
         _field = new Field2d();
