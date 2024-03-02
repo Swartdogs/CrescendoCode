@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
@@ -131,7 +130,7 @@ public class Dashboard extends SubsystemBase
         var dashboard = Shuffleboard.getTab("Dashboard");
 
         // Camera Stream
-        dashboard.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, Constants.Vision.CAMERA_URL).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
+        dashboard.addCamera("Camera Stream", Constants.Vision.CAMERA1_NAME, Constants.Vision.CAMERA1_URL).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
                 .withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
         // Field
@@ -354,6 +353,20 @@ public class Dashboard extends SubsystemBase
 
         consumer.accept(value);
         entry.setDouble(value);
+    }
+
+
+    public void switchCameraFeed()
+    {
+        Boolean isCamera1Active = Constants.Vision.isCamera1Active;
+
+        isCamera1Active = !isCamera1Active;
+        
+        String newCameraName = isCamera1Active ? Constants.Vision.CAMERA1_NAME : Constants.Vision.CAMERA2_NAME;
+        String newCameraURL  = isCamera1Active ? Constants.Vision.CAMERA1_URL : Constants.Vision.CAMERA2_URL;
+        
+        NetworkTableInstance.getDefault().getTable("Shuffleboard/Dashboard").getEntry("Camera Stream").setStringArray(new String[] {newCameraName, newCameraURL});
+
     }
 
     @Override

@@ -129,7 +129,7 @@ public class RobotContainer
         // -> _intake.set(IntakeState.Off)));
         // _controller.a().whileTrue(ShooterFlywheelCommands.intake(_shooterFlywheel).andThen(Commands.idle(_shooterFlywheel)).finallyDo(()
         // -> _shooterFlywheel.stop()));
-
+        
         _controller.a().onTrue(CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         _controller.b().onTrue(CompositeCommands.stopIntaking(_intake, _notepath));
         _controller.y().onTrue(CompositeCommands.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
@@ -169,6 +169,7 @@ public class RobotContainer
         _controller.povRight().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 2000, 5000));
 
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
+        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(() -> _dashboard.switchCameraFeed()));
 
         // Test commands for climb - on gamepad
         // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->

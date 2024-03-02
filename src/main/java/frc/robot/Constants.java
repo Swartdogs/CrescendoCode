@@ -145,10 +145,14 @@ public final class Constants
 
     public static class Vision
     {
-        public static final String      CAMERA_NAME      = "frontCam";
+        public static final String      CAMERA1_NAME      = "frontCam";
+        public static final String      CAMERA2_NAME = "BackCam";
         public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
         public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
-        public static final String      CAMERA_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
+        public static final String      CAMERA1_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
+        public static final String      CAMERA2_URL   = "mjpg:";
+        public static boolean isCamera1Active = true;
+
 
         // public static final String CAMERA_NAME_TWO = "backCam";
         // public static final Rotation3d CAMERA_ROTATION_TWO = new Rotation3d(0.0,
