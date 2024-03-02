@@ -5,6 +5,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.simulation.JoystickSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -168,8 +169,8 @@ public class RobotContainer
         _controller.povLeft().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 4000, 4000));
         _controller.povRight().onTrue(CompositeCommands.startShooter(_shooterFlywheel, _notepath, 2000, 5000));
 
+        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(() -> _dashboard.toggle()));
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
-        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(() -> _dashboard.switchCameraFeed()));
 
         // Test commands for climb - on gamepad
         // _controller.leftTrigger().whileTrue(ClimbCommands.setVolts(_climb, () ->

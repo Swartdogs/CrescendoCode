@@ -5,6 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.DoubleConsumer;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
@@ -18,6 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
@@ -100,6 +107,13 @@ public class Dashboard extends SubsystemBase
     private final GenericEntry _maxFlywheelSpeed;
     private final GenericEntry _flywheelIntakeSpeed;
 
+    //Vision
+    HttpCamera photonCamera;
+    UsbCamera driverCamera;
+    VideoSink videoSink;
+    boolean showFrontCamera = true;
+
+
     /*
      * Subsystems
      */
@@ -129,8 +143,16 @@ public class Dashboard extends SubsystemBase
          */
         var dashboard = Shuffleboard.getTab("Dashboard");
 
+        photonCamera = new HttpCamera(Constants.Vision.PHOTON_CAMERA_NAME, Constants.Vision.PHOTON_CAMERA_URL, HttpCameraKind.kMJPGStreamer);
+        photonCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+        driverCamera = CameraServer.startAutomaticCapture(Constants.Vision.DRIVER_CAMERA_NAME, 0);
+        driverCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+        videoSink = CameraServer.addSwitchedCamera("Switched camera");
+
         // Camera Stream
-        dashboard.addCamera("Camera Stream", Constants.Vision.CAMERA1_NAME, Constants.Vision.CAMERA1_URL).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
+        dashboard.add("Camera Stream", videoSink).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
                 .withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
         // Field
@@ -332,6 +354,16 @@ public class Dashboard extends SubsystemBase
         });
     }
 
+      public void toggle() {
+        showFrontCamera = !showFrontCamera;
+        if(showFrontCamera) {
+        videoSink.setSource(photonCamera);
+        }
+        else {
+        videoSink.setSource(driverCamera);
+        }
+    }
+
     public void initializeSetting(String key, double defaultValue, GenericEntry entry, DoubleConsumer consumer)
     {
         NetworkTableInstance.getDefault().addListener(entry, EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
@@ -353,20 +385,6 @@ public class Dashboard extends SubsystemBase
 
         consumer.accept(value);
         entry.setDouble(value);
-    }
-
-
-    public void switchCameraFeed()
-    {
-        Boolean isCamera1Active = Constants.Vision.isCamera1Active;
-
-        isCamera1Active = !isCamera1Active;
-        
-        String newCameraName = isCamera1Active ? Constants.Vision.CAMERA1_NAME : Constants.Vision.CAMERA2_NAME;
-        String newCameraURL  = isCamera1Active ? Constants.Vision.CAMERA1_URL : Constants.Vision.CAMERA2_URL;
-        
-        NetworkTableInstance.getDefault().getTable("Shuffleboard/Dashboard").getEntry("Camera Stream").setStringArray(new String[] {newCameraName, newCameraURL});
-
     }
 
     @Override
