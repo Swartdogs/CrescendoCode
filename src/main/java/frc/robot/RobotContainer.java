@@ -132,7 +132,7 @@ public class RobotContainer
 
         // Configure the button bindings
         configureButtonBindings();
-        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb, _led);
     }
 
     private void configureButtonBindings()

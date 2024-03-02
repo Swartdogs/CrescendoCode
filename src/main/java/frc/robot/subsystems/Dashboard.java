@@ -35,6 +35,7 @@ import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
@@ -121,6 +122,7 @@ public class Dashboard extends SubsystemBase
     private final ShooterFlywheel _shooterFlywheel;
     private final Drive           _drive;
     private final Climb           _climb;
+    private final LED             _led;
 
     /*
      * SendableChoosers for Autonomous options
@@ -128,7 +130,7 @@ public class Dashboard extends SubsystemBase
     private final SendableChooser<Integer>        _autoDelayChooser;
     private final LoggedDashboardChooser<Command> _autoChooser;
 
-    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb)
+    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb, LED led)
     {
         _drive           = drive;
         _shooterBed      = shooterBed;
@@ -136,6 +138,7 @@ public class Dashboard extends SubsystemBase
         _shooterFlywheel = shooterFlywheel;
         _intake          = intake;
         _climb           = climb;
+        _led             = led;
 
         /*
          * DASHBOARD
@@ -202,7 +205,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
         NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         NamedCommands.registerCommand("Stop Intake", CompositeCommands.loadWhileStopped(_intake, _notepath));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel, _led));
         NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
