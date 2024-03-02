@@ -1,7 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -165,6 +163,7 @@ public class RobotContainer
     private void configureDriverCommands()
     {
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
+        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(()-> _dashboard.toggle()));
     }
 
     private void configureOperatorCommands()

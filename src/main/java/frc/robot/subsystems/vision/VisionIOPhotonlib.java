@@ -24,7 +24,7 @@ import org.photonvision.targeting.TargetCorner;
 
 public class VisionIOPhotonlib implements VisionIO
 {
-    private final PhotonCamera        _camera           = new PhotonCamera(Constants.Vision.CAMERA_NAME);
+    private final PhotonCamera        _camera           = new PhotonCamera(Constants.Vision.PHOTON_CAMERA_NAME);
     private final PhotonPoseEstimator _poseEstimator;
     private double                    _captureTimestamp = 0.0;
     private double[]                  _cornerX          = new double[] {};
@@ -49,7 +49,7 @@ public class VisionIOPhotonlib implements VisionIO
         _poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _camera, Constants.Vision.CAMERA_TRANSFORM);
         _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
-        NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
+        NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
             PhotonPipelineResult result    = _camera.getLatestResult();
             double               timestamp = Logger.getRealTimestamp() - (result.getLatencyMillis() / 1000.0);

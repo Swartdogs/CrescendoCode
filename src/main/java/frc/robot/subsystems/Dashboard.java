@@ -12,6 +12,12 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
@@ -28,7 +34,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
@@ -112,6 +117,13 @@ public class Dashboard extends SubsystemBase
     private final GenericEntry _maxFlywheelSpeed;
     private final GenericEntry _flywheelIntakeSpeed;
 
+    //Vision
+    HttpCamera photonCamera;
+    UsbCamera driverCamera;
+    VideoSink videoSink;
+    boolean showFrontCamera = true;
+
+
     /*
      * Subsystems
      */
@@ -142,8 +154,16 @@ public class Dashboard extends SubsystemBase
          */
         var dashboard = Shuffleboard.getTab("Dashboard");
 
+        photonCamera = new HttpCamera(Constants.Vision.PHOTON_CAMERA_NAME, Constants.Vision.PHOTON_CAMERA_URL, HttpCameraKind.kMJPGStreamer);
+        photonCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+        driverCamera = CameraServer.startAutomaticCapture(Constants.Vision.DRIVER_CAMERA_NAME, 0);
+        driverCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+        videoSink = CameraServer.addSwitchedCamera("Switched camera");
+
         // Camera Stream
-        dashboard.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, Constants.Vision.CAMERA_URL).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
+        dashboard.add("Camera Stream", videoSink).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
                 .withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
         // CameraServer.addSwitchedCamera(getName());
@@ -361,6 +381,16 @@ public class Dashboard extends SubsystemBase
         {
             _shooterFlywheel.setIntakeSpeed(value);
         });
+    }
+
+      public void toggle() {
+        showFrontCamera = !showFrontCamera;
+        if(showFrontCamera) {
+        videoSink.setSource(photonCamera);
+        }
+        else {
+        videoSink.setSource(driverCamera);
+        }
     }
 
     public void initializeSetting(String key, double defaultValue, GenericEntry entry, DoubleConsumer consumer)
