@@ -1,5 +1,13 @@
 package frc.robot;
 
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.DoubleUnaryOperator;
+
+import javax.swing.RowFilter.Entry;
+
+import java.util.NavigableMap;
+
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -187,5 +195,48 @@ public final class Constants
         public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
         public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
         public static final String      CAMERA_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
+    }
+
+    private static final Map<Double, Double> SHOOTER_SPEEDS      = Map.of(
+        // TODO: Add values
+    );
+    public static final DoubleUnaryOperator SHOOTER_SPEED_LOOKUP = (distance) -> 
+    {
+        TreeMap<Double, Double> map = new TreeMap<Double, Double>(SHOOTER_SPEEDS);
+
+        return lookup(distance, map);
+    }
+
+    private static double lookup(double distance, NavigableMap<Double, Double> table)
+    {
+        Entry<Double, Double> start = table.floorEntry(distance);
+        Entry<Double, Double> end   = table.ceilingEntry(distance);
+
+        double output = 0;
+
+        if (start == null)
+        {
+            output = table.firstEntry().getValue();
+        }
+        else if (end == null)
+        {
+            output = table.lastEntry().getValue();
+        }
+        else if (end == null)
+        {
+            output = table.lastEntry().getValue();
+        }
+
+        else if (start.getKey() == end.getKey())
+        {
+            output = start.getValue();
+        }
+
+        else
+        {
+            output = ((start.getValue() * (end.getKey() - distance)) + (end.getValue() * (distance - start.getKey()))) / (end.getKey() - start.getKey());
+        }
+
+        return output;
     }
 }
