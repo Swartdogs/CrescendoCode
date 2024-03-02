@@ -197,12 +197,12 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
         NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
 
-        NamedCommands.registerCommand("Load in Motion", CompositeCommands.loadInMotion(intake, notepath));
-        NamedCommands.registerCommand("Load While Stopped", CompositeCommands.loadWhileStopped(intake, notepath));
+        NamedCommands.registerCommand("Load in Motion", CompositeCommands.Autonomous.loadInMotion(intake, notepath));
+        NamedCommands.registerCommand("Load While Stopped", CompositeCommands.Autonomous.loadWhileStopped(intake, notepath));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
-        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
-        NamedCommands.registerCommand("Stop Intake", CompositeCommands.loadWhileStopped(_intake, _notepath));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.Autonomous.intakePickup(_intake, _notepath, _shooterBed));
+        NamedCommands.registerCommand("Stop Intake", CompositeCommands.General.stopIntaking(_intake, _notepath));
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
         NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -310,12 +310,12 @@ public class Dashboard extends SubsystemBase
             _notepath.setFeedSpeed(value);
         });
 
-        initializeSetting("Pickup Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _pickupIntakeSpeed, value ->
+        initializeSetting("Pickup Intake Speed", Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT, _pickupIntakeSpeed, value ->
         {
             _notepath.setIntakeLoadSpeed(value);
         });
 
-        initializeSetting("Shooter Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _shooterIntakeSpeed, value ->
+        initializeSetting("Shooter Intake Speed", Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT, _shooterIntakeSpeed, value ->
         {
             _notepath.setShooterLoadSpeed(value);
         });
@@ -357,7 +357,7 @@ public class Dashboard extends SubsystemBase
             _shooterFlywheel.setMaxSpeed(value);
         });
 
-        initializeSetting("Flywheel Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _flywheelIntakeSpeed, value ->
+        initializeSetting("Flywheel Intake Speed", Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED, _flywheelIntakeSpeed, value ->
         {
             _shooterFlywheel.setIntakeSpeed(value);
         });

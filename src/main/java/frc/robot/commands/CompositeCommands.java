@@ -20,233 +20,314 @@ public final class CompositeCommands
     {
     }
 
-    public static Command startShooter(ShooterFlywheel shooterFlywheel, double upperVelocity, double lowerVelocity)
+    public static class Autonomous
     {
-        // @formatter:off
-        return 
-                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity);
-        // @formatter:on
-    }
-
-    public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed, double upperVelocity, double lowerVelocity, double shootAngle)
-    {
-        // @formatter:off
-        return 
-            Commands.sequence
-            (
-                ShooterBedCommands.setAngle(shooterBed, shootAngle),
-                Commands.waitUntil(() -> shooterBed.atSetpoint()),
-                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity),
-                Commands.waitUntil(() -> !notepath.hasNote())
-            )
-            .finallyDo(() ->
-            {
-                shooterFlywheel.stop();
-            });
-        // @formatter:on
-    }
-
-    public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed, double upperVelocity, double lowerVelocity, BedAngle shootAngle)
-    {
-        // @formatter:off
-        return 
-            Commands.sequence
-            (
-                ShooterBedCommands.setAngle(shooterBed, shootAngle),
-                Commands.waitUntil(() -> shooterBed.atSetpoint()),
-                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity),
-                Commands.waitUntil(() -> !notepath.hasNote())
-            )
-            .finallyDo(() ->
-            {
-                shooterFlywheel.stop();
-            });
-        // @formatter:on
-    }
-
-    public static Command runShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, DoubleSupplier velocitySupplier)
-    {
-        // @formatter:off
-        return
-            shooterFlywheel.run(() -> 
-            {
-                var velocity = velocitySupplier.getAsDouble();
-                shooterFlywheel.setLowerVelocity(velocity);
-                shooterFlywheel.setUpperVelocity(velocity);
-            })
-            .until(() -> !notepath.hasNote())
-            .finallyDo(() ->
-            {
-                shooterFlywheel.stop();
-            });
-        // @formatter:on
-    }
-
-    public static Command startNotepath(Notepath notepath, ShooterFlywheel shooterFlywheel)
-    {
-        // @formatter:off
-        return            
-            Commands.sequence
-            (
-                Commands.waitUntil(() -> shooterFlywheel.atSpeed()),
-                NotepathCommands.feed(notepath),
-                Commands.either
+        public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
+        {
+            // @formatter:off
+            return
+                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
+                .andThen
                 (
-                    Commands.waitSeconds(1), 
-                    Commands.sequence
+                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    Commands.parallel
                     (
-                        Commands.waitUntil(() -> notepath.sensorTripped()),
-                        Commands.waitUntil(() -> !notepath.sensorTripped())
-                    ), 
-                    () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
-                ),
-                Commands.runOnce(() -> notepath.setHasNote(false))
-            )
-            .finallyDo(interrupted -> 
-            {
-                if (!interrupted)
-                {
-                    notepath.set(NotepathState.Off);
-                }
-            })
-            .onlyIf(() -> shooterFlywheel.isShooting());
-        // @formatter:on
-    }
-
-    public static Command stopShooter(ShooterFlywheel shooterFlywheel, Notepath notepath)
-    {
-        // @formatter:off
-        return
-            Commands.parallel
-            (
-                ShooterFlywheelCommands.stop(shooterFlywheel),
-                NotepathCommands.stop(notepath)
-            );
-        // @formatter:on
-    }
-
-    public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
-    {
-        // @formatter:off
-        return
-            ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
-            .andThen
-            (
-                Commands.waitUntil(() -> shooterBed.atSetpoint()),
-                Commands.parallel
-                (
-                    IntakeCommands.start(intake),
-                    NotepathCommands.intakeLoad(notepath)
+                        IntakeCommands.start(intake),
+                        NotepathCommands.intakeLoad(notepath)
+                    )
                 )
-            )
-            .unless(() -> notepath.hasNote());
-        // @formatter:on
-    }
+                .unless(() -> notepath.hasNote());
+            // @formatter:on
+        }
 
-    private static Command load(Intake intake, Notepath notepath)
-    {
-        // @formatter:off
-        return 
-            Commands.runOnce(() -> {}, intake, notepath)
-            .andThen
-            (
-                Commands.either
+        private static Command load(Intake intake, Notepath notepath)
+        {
+            // @formatter:off
+            return 
+                Commands.runOnce(() -> {}, intake, notepath)
+                .andThen
                 (
-                    Commands.waitSeconds(1),
-                    Commands.waitUntil(() -> notepath.sensorTripped()), 
-                    () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
-                )
-            );
-        // @formatter:on
-    }
+                    Commands.either
+                    (
+                        Commands.waitSeconds(1),
+                        Commands.waitUntil(() -> notepath.sensorTripped()), 
+                        () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+                    )
+                );
+            // @formatter:on
+        }
 
-    public static Command loadWhileStopped(Intake intake, Notepath notepath)
-    {
-        // @formatter:off
-        return
-            load(intake, notepath)
-            .finallyDo(interrupted ->
-            {
-                intake.set(IntakeState.Off);
-                notepath.set(NotepathState.Off);
-                notepath.setHasNote(!interrupted);
-            })
-            .unless(() -> notepath.hasNote());
-        // @formatter:on
-    }
-
-    public static Command loadInMotion(Intake intake, Notepath notepath)
-    {
-        // @formatter:off
-        return
-            load(intake, notepath)
-            .finallyDo(interrupted ->
-            {
-                if (!interrupted)
+        public static Command loadWhileStopped(Intake intake, Notepath notepath)
+        {
+            // @formatter:off
+            return
+                load(intake, notepath)
+                .finallyDo(interrupted ->
                 {
                     intake.set(IntakeState.Off);
                     notepath.set(NotepathState.Off);
-                }
-                notepath.setHasNote(!interrupted);
-            })
-            .unless(() -> notepath.hasNote());
-        // @formatter:on
+                    notepath.setHasNote(!interrupted);
+                })
+                .unless(() -> notepath.hasNote());
+            // @formatter:on
+        }
+
+        public static Command loadInMotion(Intake intake, Notepath notepath)
+        {
+            // @formatter:off
+            return
+                load(intake, notepath)
+                .finallyDo(interrupted ->
+                {
+                    if (!interrupted)
+                    {
+                        intake.set(IntakeState.Off);
+                        notepath.set(NotepathState.Off);
+                    }
+                    notepath.setHasNote(!interrupted);
+                })
+                .unless(() -> notepath.hasNote());
+            // @formatter:on
+        }
+
+        public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
+        {
+            // @formatter:off
+            return 
+                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity)
+                .onlyIf(()-> notepath.hasNote());
+            // @formatter:on
+        }
+
+        public static Command setBedAngle(ShooterBed shooterBed, BedAngle bedAngle)
+        {
+            // @formatter:off
+            return 
+                Commands.sequence
+                (
+                    ShooterBedCommands.setAngle(shooterBed, bedAngle),
+                    Commands.waitUntil(() -> shooterBed.atSetpoint())
+                );
+            // @formatter:on
+        }
+
+        public static Command setBedAngle(ShooterBed shooterBed, double bedAngle)
+        {
+            // @formatter:off
+            return 
+                Commands.sequence
+                (
+                    ShooterBedCommands.setAngle(shooterBed, bedAngle),
+                    Commands.waitUntil(() -> shooterBed.atSetpoint())
+                );
+            // @formatter:on
+        }
     }
 
-    public static Command stopIntaking(Intake intake, Notepath notepath)
+    public static class General
     {
-        // @formatter:off
-        return
-            Commands.parallel
-            (
-                IntakeCommands.stop(intake),
-                NotepathCommands.stop(notepath)
-            );
-        // @formatter:on
-    }
+        public static Command startNotepath(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel)
+        {
+            // @formatter:off
+            return            
+                Commands.sequence
+                (
+                    Commands.waitUntil(() -> shooterFlywheel.atSpeed()),
+                    NotepathCommands.feed(notepath),
+                    Commands.either
+                    (
+                        Commands.waitSeconds(1), 
+                        Commands.sequence
+                        (
+                        Commands.waitUntil(() -> notepath.sensorTripped()),
+                        Commands.waitUntil(() -> !notepath.sensorTripped())
+                        ), 
+                        () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
+                    ),
+                    Commands.runOnce(() -> notepath.setHasNote(false)),
+                    ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow)
+                )
+                .finallyDo(interrupted -> 
+                {
+                    if (!interrupted)
+                    {
+                        notepath.set(NotepathState.Off);
+                        shooterFlywheel.stop();
+                    }
+                })
+                .onlyIf(() -> shooterFlywheel.isShooting());
+            // @formatter:on
+        }
 
-    public static Command shooterPickup(ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, Notepath notepath)
-    {
-        // @formatter:off
-        return
-
-            ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.ShooterLoad)
-            .andThen
-            (
-                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+        public static Command stopShooter(ShooterFlywheel shooterFlywheel, Notepath notepath)
+        {
+            // @formatter:off
+            return
                 Commands.parallel
                 (
-                    ShooterFlywheelCommands.intake(shooterFlywheel),
-                    NotepathCommands.shooterLoad(notepath)
-                ),
-                Commands.waitUntil(() -> notepath.sensorTripped()),
-                Commands.waitUntil(() -> !notepath.sensorTripped())
-            )
-            .finallyDo(interrupted ->
-            {
-                shooterFlywheel.stop();
-                notepath.set(NotepathState.Off);
-                notepath.setHasNote(!interrupted);
-            })
-            .unless(() -> notepath.hasNote());
-        // @formatter:on
+                    ShooterFlywheelCommands.stop(shooterFlywheel),
+                    NotepathCommands.stop(notepath)
+                );
+            // @formatter:on
+        }
+
+        public static Command stopIntaking(Intake intake, Notepath notepath)
+        {
+            // @formatter:off
+            return
+                Commands.parallel
+                (
+                    IntakeCommands.stop(intake),
+                    NotepathCommands.stop(notepath)
+                );
+            // @formatter:on
+        }
+
+        public static Command setHasNote(Notepath notepath, boolean hasNote)
+        {
+            return Commands.runOnce(() -> notepath.setHasNote(hasNote)).ignoringDisable(true);
+        }
     }
 
-    public static Command suckIn(Notepath notepath, ShooterFlywheel shooterFlywheel)
+    public static class Teleop
     {
-        return Commands.parallel(NotepathCommands.shooterLoad(notepath), ShooterFlywheelCommands.intake(shooterFlywheel));
-    }
+        public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
+        {
+            // @formatter:off
+            return
+                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
+                .andThen
+                (
+                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    Commands.parallel
+                    (
+                        IntakeCommands.start(intake),
+                        NotepathCommands.intakeLoad(notepath)
+                        ),
+                        Commands.waitUntil(() -> notepath.sensorTripped()),
+                        ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow)
+                )
+                .finallyDo(interrupted ->
+                {
+                    intake.set(IntakeState.Off);
+                    notepath.set(NotepathState.Off);
+                    notepath.setHasNote(!interrupted);
+                })
+                .unless(() -> notepath.hasNote());
+            // @formatter:on
+        }
 
-    public static Command climbJoystick(Climb climb, ShooterBed shooterBed, BedAngle angle, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
-    {
-        // @formatter:off
-        return 
-            Commands.sequence
-            (
-                ShooterBedCommands.setAngle(shooterBed, angle),
-                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+        public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
+        {
+            // @formatter:off
+            return 
+                Commands.sequence
+                (
+                    ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity)
+                )
+                .onlyIf(() -> notepath.hasNote());
+            // @formatter:on
+        }
+
+        public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed, double upperVelocity, double lowerVelocity, double shootAngle)
+        {
+            // @formatter:off
+            return 
+                Commands.sequence
+                (
+                    ShooterBedCommands.setAngle(shooterBed, shootAngle),
+                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity)
+                )
+                .onlyIf(()-> notepath.hasNote());
+            // @formatter:on
+        }
+
+        public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed, double upperVelocity, double lowerVelocity, BedAngle shootAngle)
+        {
+            // @formatter:off
+            return 
+                Commands.sequence
+                (
+                    ShooterBedCommands.setAngle(shooterBed, shootAngle),
+                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity)
+                )
+                .onlyIf(()-> notepath.hasNote());
+            // @formatter:on
+        }
+
+        public static Command shooterPickup(ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, Notepath notepath)
+        {
+            // @formatter:off
+            return
+                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.ShooterLoad)
+                .andThen
+                (
+                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    Commands.parallel
+                    (
+                        ShooterFlywheelCommands.intake(shooterFlywheel),
+                        NotepathCommands.shooterLoad(notepath)
+                    ),
+                    Commands.waitUntil(() -> notepath.sensorTripped()),
+                    Commands.waitUntil(() -> !notepath.sensorTripped()),
+                    ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow)
+                )
+                .finallyDo(interrupted ->
+                    {
+                        shooterFlywheel.stop();
+                        notepath.set(NotepathState.Off);
+                        notepath.setHasNote(!interrupted);
+                    })
+                .unless(() -> notepath.hasNote());
+            // @formatter:on
+        }
+
+        public static Command suckIn(Notepath notepath, ShooterFlywheel shooterFlywheel)
+        {
+            // @formatter:off
+            return 
+                Commands.parallel
+                (
+                    NotepathCommands.shooterLoad(notepath), 
+                    ShooterFlywheelCommands.intake(shooterFlywheel)
+                )
+                .andThen(Commands.idle(notepath, shooterFlywheel))
+                .finallyDo(() ->
+                {
+                    notepath.set(NotepathState.Off);
+                    shooterFlywheel.stop();
+                });
+            // @formatter:on
+        }
+
+        public static Command climbJoystick(Climb climb, ShooterBed shooterBed, BedAngle angle, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
+        {
+            // @formatter:off
+            return 
+                Commands.sequence
+                (
+                    ShooterBedCommands.setAngle(shooterBed, angle),
+                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    ClimbCommands.setVolts(climb, leftSupplier, rightSupplier)
+                )
+                .finallyDo(() -> climb.stop());
+            // @formatter:on
+        }
+
+        public static Command climbJoystick(Climb climb, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
+        {
+            // @formatter:off
+            return 
                 ClimbCommands.setVolts(climb, leftSupplier, rightSupplier)
-            );
-        // @formatter:on
+                .finallyDo(() -> climb.stop());
+            // @formatter:on
+        }
+
+        public static Command setBedVolts(ShooterBed shooterBed, double volts)
+        {
+            return ShooterBedCommands.setVolts(shooterBed, volts).andThen(Commands.idle(shooterBed)).finallyDo(() -> shooterBed.setVolts(0));
+        }
     }
 }

@@ -17,7 +17,8 @@ public class ShooterBed extends SubsystemBase
         IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE), 
         ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE), 
         SubwooferShot(Constants.ShooterBed.BED_SUBWOOFER_SHOT_ANGLE),
-        ClimbVertical(Constants.ShooterBed.BED_CLIMB_VERTICAL_ANGLE);
+        ClimbVertical(Constants.ShooterBed.BED_CLIMB_VERTICAL_ANGLE),
+        Stow(Constants.ShooterBed.BED_STOW_ANGLE);
         // @formatter:on
 
         private Rotation2d _angle;
