@@ -5,25 +5,52 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterBed extends SubsystemBase
 {
+    public enum BedAngle
+    {
+        // @formatter:off
+        IntakeLoad(Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE), 
+        ShooterLoad(Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE), 
+        SubwooferShot(Constants.ShooterBed.BED_SUBWOOFER_SHOT_ANGLE),
+        ClimbVertical(Constants.ShooterBed.BED_CLIMB_VERTICAL_ANGLE);
+        // @formatter:on
+
+        private Rotation2d _angle;
+
+        private BedAngle(Rotation2d angle)
+        {
+            _angle = angle;
+        }
+
+        public Rotation2d getAngle()
+        {
+            return _angle;
+        }
+
+        public void setAngle(Rotation2d angle)
+        {
+            _angle = angle;
+        }
+    }
+
     private final ShooterBedIO                 _io;
-    private final ShooterBedIOInputsAutoLogged _inputs                = new ShooterBedIOInputsAutoLogged();
-    private PIDController                      _bedFeedback;
-    private Rotation2d                         _angleSetpoint         = null;
-    private Rotation2d                         _minBedAngle           = Constants.ShooterBed.MIN_BED_ANGLE;
-    private Rotation2d                         _maxBedAngle           = Constants.ShooterBed.MAX_BED_ANGLE;
-    private Rotation2d                         _bedIntakePickupAngle  = Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE;
-    private Rotation2d                         _bedShooterPickupAngle = Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE;
+    private final ShooterBedIOInputsAutoLogged _inputs        = new ShooterBedIOInputsAutoLogged();
+    private final PIDController                _bedPID;
+    private Rotation2d                         _angleSetpoint = null;
+    private Rotation2d                         _minAngle      = Constants.ShooterBed.MIN_BED_ANGLE;
+    private Rotation2d                         _maxAngle      = Constants.ShooterBed.MAX_BED_ANGLE;
 
     public ShooterBed(ShooterBedIO io)
     {
         _io = io;
 
-        _bedFeedback = new PIDController(34.4, 0, 0); // FIXME: Set values, calibrate
+        _bedPID = new PIDController(22 / Math.PI, 0, 0); // FIXME: Set values, calibrate
+        _bedPID.setTolerance(Units.degreesToRadians(0.5));
     }
 
     @Override
@@ -34,53 +61,68 @@ public class ShooterBed extends SubsystemBase
 
         if (_angleSetpoint != null)
         {
-            _io.setVoltage(_bedFeedback.calculate(_inputs.bedAngle.getRadians(), _angleSetpoint.getRadians()));
+            var feedForward = Constants.ShooterBed.BED_DOWN_MIN_VOLTS;
+
+            if (_angleSetpoint.getRadians() > _inputs.bedAngle.getRadians())
+            {
+                feedForward = Constants.ShooterBed.BED_UP_MIN_VOLTS;
+            }
+
+            if (atSetpoint())
+            {
+                feedForward = 0;
+            }
+
+            _io.setVolts(MathUtil.clamp(feedForward + _bedPID.calculate(_inputs.bedAngle.getRadians(), _angleSetpoint.getRadians()), -Constants.ShooterBed.MAX_BED_VOLTS, Constants.ShooterBed.MAX_BED_VOLTS));
         }
+
+        Logger.recordOutput("Has Bed Setpoint", _angleSetpoint != null);
     }
 
-    public void setAngle(Rotation2d angleSetpoint)
+    public void setVolts(double volts)
     {
-        _angleSetpoint = new Rotation2d(MathUtil.clamp(angleSetpoint.getRadians(), _minBedAngle.getRadians(), _maxBedAngle.getRadians()));
+        _angleSetpoint = null;
+        _io.setVolts(volts);
     }
 
-    public void setIntakePickupAngle()
+    public void setAngle(Rotation2d angle)
     {
-        setAngle(_bedIntakePickupAngle);
+        _angleSetpoint = new Rotation2d(MathUtil.clamp(angle.getRadians(), _minAngle.getRadians(), _maxAngle.getRadians()));
     }
 
-    public void setShooterPickupAngle()
+    public void setAngle(BedAngle angle)
     {
-        setAngle(_bedShooterPickupAngle);
+        setAngle(angle.getAngle());
     }
 
     public void setAngleOffset(Rotation2d angleOffset)
     {
-        _io.setAngleOffset(angleOffset);
+        _io.setOffset(angleOffset);
     }
 
-    public boolean isAtSetpoint()
+    public boolean atSetpoint()
     {
-        return _bedFeedback.atSetpoint();
+        return _bedPID.atSetpoint();
     }
 
-    public void setMinAngle(Rotation2d minBedAngle)
+    public void setMinAngle(Rotation2d angle)
     {
-        _minBedAngle = minBedAngle;
+        _minAngle = angle;
     }
 
-    public void setMaxAngle(Rotation2d maxBedAngle)
+    public void setMaxAngle(Rotation2d angle)
     {
-        _maxBedAngle = maxBedAngle;
+        _maxAngle = angle;
     }
 
-    public void setBedIntakePickupAngle(Rotation2d bedIntakePickupAngle)
+    public void setIntakeLoadAngle(Rotation2d angle)
     {
-        _bedIntakePickupAngle = bedIntakePickupAngle;
+        BedAngle.IntakeLoad.setAngle(angle);
     }
 
-    public void setBedShooterPickupAngle(Rotation2d bedShooterPickupAngle)
+    public void setShooterLoadAngle(Rotation2d angle)
     {
-        _bedShooterPickupAngle = bedShooterPickupAngle;
+        BedAngle.ShooterLoad.setAngle(angle);
     }
 
     public Rotation2d getBedAngle()

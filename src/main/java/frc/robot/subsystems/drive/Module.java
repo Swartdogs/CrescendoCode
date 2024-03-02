@@ -1,15 +1,3 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -17,7 +5,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+
 import frc.robot.Constants;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Module
@@ -84,14 +74,13 @@ public class Module
         // Run closed loop turn control
         if (_angleSetpoint != null)
         {
-            _io.setTurnVoltage(_turnFeedback.calculate(getAngle().getRadians(), _angleSetpoint.getRadians()));
+            _io.setTurnVolts(_turnFeedback.calculate(getAngle().getRadians(), _angleSetpoint.getRadians()));
 
             // Run closed loop drive control
             // Only allowed if closed loop turn control is running
             if (_speedSetpoint != null)
             {
                 // Scale velocity based on turn error
-                //
                 // When the error is 90°, the velocity setpoint should be 0. As the wheel turns
                 // towards the setpoint, its velocity should increase. This is achieved by
                 // taking the component of the velocity in the direction of the setpoint.
@@ -99,7 +88,7 @@ public class Module
 
                 // Run drive controller
                 double velocityRadPerSec = adjustSpeedSetpoint / Constants.Drive.WHEEL_RADIUS;
-                _io.setDriveVoltage(_driveFeedforward.calculate(velocityRadPerSec) + _driveFeedback.calculate(_inputs.driveVelocityRadPerSec, velocityRadPerSec));
+                _io.setDriveVolts(_driveFeedforward.calculate(velocityRadPerSec) + _driveFeedback.calculate(_inputs.driveVelocityRadPerSec, velocityRadPerSec));
             }
         }
     }
@@ -130,15 +119,15 @@ public class Module
         _angleSetpoint = new Rotation2d();
 
         // Open loop drive control
-        _io.setDriveVoltage(volts);
+        _io.setDriveVolts(volts);
         _speedSetpoint = null;
     }
 
     /** Disables all outputs to motors. */
     public void stop()
     {
-        _io.setTurnVoltage(0.0);
-        _io.setDriveVoltage(0.0);
+        _io.setTurnVolts(0.0);
+        _io.setDriveVolts(0.0);
 
         // Disable closed loop control for turn and drive
         _angleSetpoint = null;
@@ -201,5 +190,16 @@ public class Module
     public double getCharacterizationVelocity()
     {
         return _inputs.driveVelocityRadPerSec;
+    }
+
+    public void setAbsoluteEncoderOffset(Rotation2d ModuleOffset)
+    {
+        _io.setAngleOffset(ModuleOffset);
+    }
+
+    public void setDriveVolts(double volts)
+    {
+        _speedSetpoint = null;
+        _io.setDriveVolts(volts);
     }
 }

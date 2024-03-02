@@ -1,0 +1,82 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.761513061487663,
+        "y": 6.77
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5978394939871214,
+        "y": 7.074397927559845
+      },
+      "isLocked": false,
+      "linkedName": "AmpSide"
+    },
+    {
+      "anchor": {
+        "x": 2.894982565999367,
+        "y": 7.003080254377342
+      },
+      "prevControl": {
+        "x": 2.2832321117292285,
+        "y": 6.963612483134107
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note3"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 5.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Start Intake",
+      "waypointRelativePos": 0.45,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load in Motion"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 23.27043733252243,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "AmpSideStartingPaths",
+  "previewStartingState": {
+    "rotation": 56.01704274794713,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

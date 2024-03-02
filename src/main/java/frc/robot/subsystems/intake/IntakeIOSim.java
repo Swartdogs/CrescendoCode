@@ -6,22 +6,22 @@ import frc.robot.Constants;
 
 public class IntakeIOSim implements IntakeIO
 {
-    private DCMotorSim _intakeSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
-    private double     _voltage;
+    private final DCMotorSim _motorSim = new DCMotorSim(DCMotor.getNeo550(1), 6.75, 0.025);
+    private double           _volts;
 
     @Override
     public void updateInputs(IntakeIOInputs inputs)
     {
-        _intakeSim.update(Constants.General.LOOP_PERIOD_SECS);
+        _motorSim.update(Constants.General.LOOP_PERIOD_SECS);
 
-        inputs.appliedVolts = _voltage;
-        inputs.currentAmps  = new double[] { _intakeSim.getCurrentDrawAmps() };
+        inputs.motorVolts   = _volts;
+        inputs.motorCurrent = new double[] { _motorSim.getCurrentDrawAmps() };
     }
 
     @Override
-    public void setVoltage(double volts)
+    public void setVolts(double volts)
     {
-        _voltage = volts;
-        _intakeSim.setInputVoltage(volts);
+        _volts = volts;
+        _motorSim.setInputVoltage(volts);
     }
 }

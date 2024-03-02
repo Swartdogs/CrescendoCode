@@ -4,39 +4,47 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 public class ShooterFlywheel extends SubsystemBase
 {
-    private final ShooterFlywheelIO                 _flywheelIO;
+    private final ShooterFlywheelIO                 _io;
     private final ShooterFlywheelIOInputsAutoLogged _inputs                = new ShooterFlywheelIOInputsAutoLogged();
-    private double                                  _maxFlywheelSpeed      = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED * Constants.General.MAX_NEO_SPEED;
-    private double                                  _flywheelIntakeVoltage = Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE;
+    private double                                  _maxSpeed              = Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED * Constants.General.MAX_NEO_SPEED;
+    private double                                  _intakeVolts           = Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED * Constants.General.MOTOR_VOLTAGE;
+    private double                                  _velocityRange         = Constants.ShooterFlywheel.VELOCITY_RANGE;
     private Double                                  _upperVelocitySetpoint = null;
     private Double                                  _lowerVelocitySetpoint = null;
 
     public ShooterFlywheel(ShooterFlywheelIO flywheelIO)
     {
-        _flywheelIO = flywheelIO;
+        _io = flywheelIO;
     }
 
     @Override
     public void periodic()
     {
-        _flywheelIO.updateInputs(_inputs);
+        _io.updateInputs(_inputs);
         Logger.processInputs("Shooter/Flywheel", _inputs);
     }
 
-    public void setUpperVelocity(double upperVelocitySetpoint)
+    public void setUpperVelocity(double upperVelocity)
     {
-        _upperVelocitySetpoint = MathUtil.clamp(upperVelocitySetpoint, 0, _maxFlywheelSpeed);
-        _flywheelIO.setUpperVelocity(_upperVelocitySetpoint);
+        _upperVelocitySetpoint = MathUtil.clamp(upperVelocity, 0, _maxSpeed);
+        _io.setUpperVelocity(_upperVelocitySetpoint);
     }
 
-    public void setLowerVelocity(double lowerVelocitySetpoint)
+    public void setLowerVelocity(double lowerVelocity)
     {
-        _lowerVelocitySetpoint = MathUtil.clamp(lowerVelocitySetpoint, 0, _maxFlywheelSpeed);
-        _flywheelIO.setLowerVelocity(_lowerVelocitySetpoint);
+        _lowerVelocitySetpoint = MathUtil.clamp(lowerVelocity, 0, _maxSpeed);
+        _io.setLowerVelocity(_lowerVelocitySetpoint);
+    }
+
+    public void setVelocity(double upperVelocity, double lowerVelocity)
+    {
+        setUpperVelocity(upperVelocity);
+        setLowerVelocity(lowerVelocity);
     }
 
     public void stop()
@@ -44,57 +52,47 @@ public class ShooterFlywheel extends SubsystemBase
         _upperVelocitySetpoint = null;
         _lowerVelocitySetpoint = null;
 
-        _flywheelIO.setUpperVoltage(0);
-        _flywheelIO.setLowerVoltage(0);
+        _io.setUpperVolts(0);
+        _io.setLowerVolts(0);
     }
 
-    public void flywheelIntakeOn()
+    public void intake()
     {
         _upperVelocitySetpoint = null;
         _lowerVelocitySetpoint = null;
 
-        _flywheelIO.setUpperVoltage(-_flywheelIntakeVoltage);
-        _flywheelIO.setLowerVoltage(-_flywheelIntakeVoltage);
+        _io.setUpperVolts(-_intakeVolts);
+        _io.setLowerVolts(-_intakeVolts);
     }
 
-    public void setMaxFlywheelSpeed(double maxFlywheelSpeed)
+    public void setMaxSpeed(double maxFlywheelSpeed)
     {
-        _maxFlywheelSpeed = maxFlywheelSpeed * Constants.General.MAX_NEO_SPEED;
+        _maxSpeed = maxFlywheelSpeed * Constants.General.MAX_NEO_SPEED;
     }
 
-    public void setFlywheelIntakeVoltage(double flywheelIntakeSpeed)
+    public void setIntakeSpeed(double flywheelIntakeSpeed)
     {
-        _flywheelIntakeVoltage = flywheelIntakeSpeed * Constants.General.MOTOR_VOLTAGE;
+        _intakeVolts = flywheelIntakeSpeed * Constants.General.MOTOR_VOLTAGE;
     }
 
-    public double getUpperFlywheelVelocity()
+    public double getUpperVelocity()
     {
-        return _inputs.upperFlywheelVelocity;
+        return _inputs.upperVelocity;
     }
 
-    public double getLowerFlywheelVelocity()
+    public double getLowerVelocity()
     {
-        return _inputs.lowerFlywheelVelocity;
+        return _inputs.lowerVelocity;
     }
 
     public boolean upperAtSpeed()
     {
-        if (_upperVelocitySetpoint == null)
-        {
-            return false;
-        }
-
-        return Math.abs(_upperVelocitySetpoint - getUpperFlywheelVelocity()) <= _upperVelocitySetpoint * Constants.ShooterFlywheel.VELOCITY_RANGE;
+        return _upperVelocitySetpoint != null && Math.abs(_upperVelocitySetpoint - getUpperVelocity()) <= _upperVelocitySetpoint * _velocityRange;
     }
 
     public boolean lowerAtSpeed()
     {
-        if (_lowerVelocitySetpoint == null)
-        {
-            return false;
-        }
-
-        return Math.abs(_lowerVelocitySetpoint - getLowerFlywheelVelocity()) <= _lowerVelocitySetpoint * Constants.ShooterFlywheel.VELOCITY_RANGE;
+        return _lowerVelocitySetpoint != null && Math.abs(_lowerVelocitySetpoint - getLowerVelocity()) <= _lowerVelocitySetpoint * _velocityRange;
     }
 
     public boolean atSpeed()
@@ -105,5 +103,10 @@ public class ShooterFlywheel extends SubsystemBase
     public boolean isShooting()
     {
         return _upperVelocitySetpoint != null && _lowerVelocitySetpoint != null && _upperVelocitySetpoint > 0 && _lowerVelocitySetpoint > 0;
+    }
+
+    public void setVelocityRange(double velocityRange)
+    {
+        _velocityRange = velocityRange;
     }
 }

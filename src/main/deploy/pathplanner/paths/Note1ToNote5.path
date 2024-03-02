@@ -1,0 +1,82 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.894982565999367,
+        "y": 4.11050362756931
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.033899298567829,
+        "y": 1.2136339657294701
+      },
+      "isLocked": false,
+      "linkedName": "Note1"
+    },
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 2.4241431649767726
+      },
+      "prevControl": {
+        "x": 6.000859694027081,
+        "y": 1.6477794494050535
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note5"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Sequence",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Start Notepath"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load in Motion"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Note1ToOuterNote",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

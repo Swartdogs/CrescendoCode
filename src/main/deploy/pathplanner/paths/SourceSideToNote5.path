@@ -1,0 +1,76 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.79,
+        "y": 4.227611993027124
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.162305962272408,
+        "y": 0.16395171164094074
+      },
+      "isLocked": false,
+      "linkedName": "SourceSide"
+    },
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 2.4241431649767726
+      },
+      "prevControl": {
+        "x": 6.970353683931332,
+        "y": 2.435854001522554
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note5"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.4,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Pickup"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load in Motion"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SourceSideStartingPaths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

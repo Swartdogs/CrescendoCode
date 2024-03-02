@@ -1,30 +1,19 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+
 import frc.robot.Constants;
 
 public class ModuleIOSim implements ModuleIO
 {
-    private final Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
-    private DCMotorSim       _driveSim                 = new DCMotorSim(DCMotor.getNEO(1), 6.75, 0.025);
-    private DCMotorSim       _turnSim                  = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
-    private double           _driveAppliedVolts        = 0.0;
-    private double           _turnAppliedVolts         = 0.0;
+    private Rotation2d _turnAbsoluteInitPosition = new Rotation2d(Math.random() * 2.0 * Math.PI);
+    private DCMotorSim _driveSim                 = new DCMotorSim(DCMotor.getKrakenX60(1), 6.75, 0.025);
+    private DCMotorSim _turnSim                  = new DCMotorSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004);
+    private double     _driveVolts               = 0.0;
+    private double     _turnVolts                = 0.0;
 
     @Override
     public void updateInputs(ModuleIOInputs inputs)
@@ -34,27 +23,33 @@ public class ModuleIOSim implements ModuleIO
 
         inputs.drivePositionRad       = _driveSim.getAngularPositionRad();
         inputs.driveVelocityRadPerSec = _driveSim.getAngularVelocityRadPerSec();
-        inputs.driveAppliedVolts      = _driveAppliedVolts;
-        inputs.driveCurrentAmps       = new double[] { Math.abs(_driveSim.getCurrentDrawAmps()) };
+        inputs.driveVolts             = _driveVolts;
+        inputs.driveCurrent           = new double[] { Math.abs(_driveSim.getCurrentDrawAmps()) };
 
         inputs.turnAbsolutePosition  = new Rotation2d(_turnSim.getAngularPositionRad()).plus(_turnAbsoluteInitPosition);
         inputs.turnPosition          = new Rotation2d(_turnSim.getAngularPositionRad());
         inputs.turnVelocityRadPerSec = _turnSim.getAngularVelocityRadPerSec();
-        inputs.turnAppliedVolts      = _turnAppliedVolts;
-        inputs.turnCurrentAmps       = new double[] { Math.abs(_turnSim.getCurrentDrawAmps()) };
+        inputs.turnVolts             = _turnVolts;
+        inputs.turnCurrent           = new double[] { Math.abs(_turnSim.getCurrentDrawAmps()) };
     }
 
     @Override
-    public void setDriveVoltage(double volts)
+    public void setDriveVolts(double volts)
     {
-        _driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-        _driveSim.setInputVoltage(_driveAppliedVolts);
+        _driveVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+        _driveSim.setInputVoltage(_driveVolts);
     }
 
     @Override
-    public void setTurnVoltage(double volts)
+    public void setTurnVolts(double volts)
     {
-        _turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-        _turnSim.setInputVoltage(_turnAppliedVolts);
+        _turnVolts = MathUtil.clamp(volts, -Constants.General.MOTOR_VOLTAGE, Constants.General.MOTOR_VOLTAGE);
+        _turnSim.setInputVoltage(_turnVolts);
+    }
+
+    @Override
+    public void setAngleOffset(Rotation2d angleOffset)
+    {
+        _turnAbsoluteInitPosition = angleOffset;
     }
 }

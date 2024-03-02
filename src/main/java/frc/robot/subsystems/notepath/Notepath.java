@@ -1,6 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.notepath;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -11,12 +8,17 @@ import frc.robot.Constants;
 
 public class Notepath extends SubsystemBase
 {
-    private NotepathIO               _io;
-    private NotepathInputsAutoLogged _inputs                     = new NotepathInputsAutoLogged();
-    private double                   _intakePickupPercentOutput  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT;
-    private double                   _notepathFeedPercentOutput  = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT;
-    private double                   _shooterPickupPercentOutput = Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT;
-    private boolean                  _hasNote                    = false;
+    public enum NotepathState
+    {
+        IntakeLoad, ShooterLoad, Feed, Off
+    }
+
+    private final NotepathIO               _io;
+    private final NotepathInputsAutoLogged _inputs           = new NotepathInputsAutoLogged();
+    private double                         _intakeLoadVolts  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
+    private double                         _feedVolts        = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
+    private double                         _shooterLoadVolts = -Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
+    private boolean                        _hasNote          = true; // TODO: CHANGE if needed
 
     public Notepath(NotepathIO io)
     {
@@ -30,49 +32,36 @@ public class Notepath extends SubsystemBase
         Logger.processInputs("Notepath", _inputs);
     }
 
-    public void setNotepathIntakePickupOn()
+    public void set(NotepathState state)
     {
-        _io.setVoltage(_intakePickupPercentOutput * Constants.General.MOTOR_VOLTAGE);
+        _io.setVolts(switch (state)
+        {
+            case IntakeLoad -> _intakeLoadVolts;
+            case ShooterLoad -> _shooterLoadVolts;
+            case Feed -> _feedVolts;
+            case Off -> 0;
+            default -> 0;
+        });
     }
 
-    public void setFeedOn()
+    public void setIntakeLoadSpeed(double speed)
     {
-        _io.setVoltage(_notepathFeedPercentOutput * Constants.General.MOTOR_VOLTAGE);
+        _intakeLoadVolts = Constants.General.MOTOR_VOLTAGE * speed;
     }
 
-    public void setNotepathShooterPickupOn()
+    public void setFeedSpeed(double speed)
     {
-        _io.setVoltage(_shooterPickupPercentOutput * Constants.General.MOTOR_VOLTAGE);
+        _feedVolts = Constants.General.MOTOR_VOLTAGE * speed;
     }
 
-    public void setOff()
+    public void setShooterLoadSpeed(double speed)
     {
-        _io.setVoltage(0);
+        _shooterLoadVolts = -Constants.General.MOTOR_VOLTAGE * speed;
     }
 
-    public void setReverse()
+    public double getSpeed()
     {
-        _io.setVoltage(-_notepathFeedPercentOutput * Constants.General.MOTOR_VOLTAGE);
-    }
-
-    public void setNotepathIntakePickupPercentOutput(double percentOutput)
-    {
-        _intakePickupPercentOutput = percentOutput;
-    }
-
-    public void setNotepathFeedPercentOutput(double percentOutput)
-    {
-        _notepathFeedPercentOutput = percentOutput;
-    }
-
-    public void setNotepathShooterPickupPercentOutput(double percentOutput)
-    {
-        _shooterPickupPercentOutput = percentOutput;
-    }
-
-    public double getPercentOutput()
-    {
-        return _inputs.leaderNotepathAppliedVolts / Constants.General.MOTOR_VOLTAGE;
+        return _inputs.leaderVolts / Constants.General.MOTOR_VOLTAGE;
     }
 
     public boolean sensorTripped()
