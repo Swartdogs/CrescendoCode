@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -168,7 +169,7 @@ public class RobotContainer
 
     private void configureOperatorCommands()
     {
-        _controller.a().onTrue(CompositeCommands.Teleop.intakePickup(_intake, _notepath, _shooterBed));
+        _controller.a().onTrue(CompositeCommands.Teleop.intakePickup(_intake, _notepath, _shooterBed, _controller.getHID()));
         _controller.b().onTrue(CompositeCommands.General.stopIntaking(_intake, _notepath));
         _controller.x().whileTrue(CompositeCommands.Teleop.suckIn(_notepath, _shooterFlywheel));
         _controller.y().onTrue(CompositeCommands.Teleop.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));

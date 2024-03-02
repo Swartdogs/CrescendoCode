@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -13,6 +15,7 @@ import frc.robot.subsystems.notepath.Notepath.NotepathState;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterBed.BedAngle;
+import frc.robot.util.DeferredInstantCommand;
 
 public final class CompositeCommands
 {
@@ -25,19 +28,18 @@ public final class CompositeCommands
         public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
         {
             // @formatter:off
-            return
-                ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
+            return ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
                 .andThen
                 (
                     Commands.waitUntil(() -> shooterBed.atSetpoint()),
                     Commands.parallel
                     (
                         IntakeCommands.start(intake),
-                        NotepathCommands.intakeLoad(notepath)
+                        new DeferredInstantCommand(() -> NotepathCommands.intakeLoad(notepath))
                     )
                 )
                 .unless(() -> notepath.hasNote());
-            // @formatter:on
+            // @formatter:on)
         }
 
         private static Command load(Intake intake, Notepath notepath)
@@ -191,7 +193,7 @@ public final class CompositeCommands
 
     public static class Teleop
     {
-        public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
+        public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed, GenericHID controller)
         {
             // @formatter:off
             return
@@ -205,7 +207,13 @@ public final class CompositeCommands
                         NotepathCommands.intakeLoad(notepath)
                         ),
                         Commands.waitUntil(() -> notepath.sensorTripped()),
-                        ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow)
+                        ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow),
+                        new DeferredInstantCommand(() -> Commands.sequence
+                        (
+                            Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 1)),
+                            Commands.waitSeconds(0.5),
+                            Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 0))
+                        ))
                 )
                 .finallyDo(interrupted ->
                 {
