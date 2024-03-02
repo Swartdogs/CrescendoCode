@@ -202,7 +202,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
         NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
         NamedCommands.registerCommand("Stop Intake", CompositeCommands.loadWhileStopped(_intake, _notepath));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel));
+        NamedCommands.registerCommand("Start Notepath", Commands.deferredProxy(() -> CompositeCommands.startNotepath(_notepath, _shooterFlywheel)));
         NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
