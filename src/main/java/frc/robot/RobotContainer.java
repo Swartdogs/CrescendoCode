@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.simulation.JoystickSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -164,6 +165,7 @@ public class RobotContainer
     private void configureDriverCommands()
     {
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
+        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(()-> _dashboard.toggle()));
     }
 
     private void configureOperatorCommands()
