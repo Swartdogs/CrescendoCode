@@ -46,7 +46,7 @@ public final class CompositeCommands
         {
             // @formatter:off
             return 
-                Commands.runOnce(() -> {}, intake, notepath)
+                new DeferredInstantCommand(() -> Commands.runOnce(() -> {}, intake, notepath))
                 .andThen
                 (
                     Commands.either
@@ -135,7 +135,7 @@ public final class CompositeCommands
                 Commands.sequence
                 (
                     Commands.waitUntil(() -> shooterFlywheel.atSpeed()),
-                    NotepathCommands.feed(notepath),
+                    new DeferredInstantCommand(() -> NotepathCommands.feed(notepath)),
                     Commands.either
                     (
                         Commands.waitSeconds(1), 
