@@ -123,7 +123,7 @@ public class RobotContainer
         // _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed,
         // _shooterFlywheel, _notepath));
 
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), () -> _joystick.getRawButtonPressed(3)));
         // _shooterBed.setDefaultCommand(ShooterBedCommands.setVolts(_shooterBed, () ->
         // Constants.ShooterBed.MAX_BED_VOLTS *
         // -MathUtil.applyDeadband(_controller.getLeftY(),
