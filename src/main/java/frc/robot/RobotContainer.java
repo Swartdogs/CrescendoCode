@@ -157,7 +157,7 @@ public class RobotContainer
 
     private void configureDefaultCommands()
     {
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ()));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), () -> _joystick.getRawButton(3)));
     }
 
     private void configureDriverCommands()

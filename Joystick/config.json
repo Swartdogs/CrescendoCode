@@ -1,0 +1,18 @@
+{
+  "name": "Logitech 3-Axis Joystick",
+  "components": [
+    {
+      "type": "joystick",
+      "isYellow": false,
+      "centerPx": [
+        5,
+        5
+      ],
+      "radiusPx": 3,
+      "xSourceIndex": 3,
+      "xSourceInverted": true,
+      "ySourceIndex": 5,
+      "ySourceInverted": false
+    }
+  ]
+}
