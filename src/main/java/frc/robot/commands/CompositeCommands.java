@@ -169,7 +169,8 @@ public final class CompositeCommands
                         (
                             Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 1)),
                             Commands.waitSeconds(0.5),
-                            Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 0))
+                            Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 0)),
+                            Commands.print("RUMBLE!!!!")
                         ))
                 )
                 .finallyDo(interrupted ->
