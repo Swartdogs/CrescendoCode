@@ -163,7 +163,7 @@ public class RobotContainer
     private void configureDriverCommands()
     {
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
-        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(()-> _dashboard.toggle()));
+        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(()-> _dashboard.toggle()).andThen(Commands.print("Toggle!")));
     }
 
     private void configureOperatorCommands()
@@ -199,10 +199,10 @@ public class RobotContainer
         }, _intake, _notepath, _shooterBed, _shooterFlywheel));
         new JoystickButton(_testJoy, 7).onTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
         new JoystickButton(_testJoy, 8).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
-        new JoystickButton(_testJoy, 9).onTrue(CompositeCommands.Autonomous.loadWhileStopped(_intake, _notepath));
+        //new JoystickButton(_testJoy, 9).onTrue(CompositeCommands.Autonomous.loadWhileStopped(_intake, _notepath));
         new JoystickButton(_testJoy, 10).onTrue(CompositeCommands.Autonomous.intakePickup(_intake, _notepath, _shooterBed));
-        new JoystickButton(_testJoy, 11).onTrue(CompositeCommands.Autonomous.loadWhileStopped(_intake, _notepath));
-        new JoystickButton(_testJoy, 12).onTrue(CompositeCommands.Autonomous.loadInMotion(_intake, _notepath));
+        // new JoystickButton(_testJoy, 11).onTrue(CompositeCommands.Autonomous.loadWhileStopped(_intake, _notepath));
+        // new JoystickButton(_testJoy, 12).onTrue(CompositeCommands.Autonomous.loadInMotion(_intake, _notepath));
     }
 
     private ChassisSpeeds getChassisSpeeds()

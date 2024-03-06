@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.notepath.Notepath;
@@ -42,54 +44,9 @@ public final class CompositeCommands
             // @formatter:on)
         }
 
-        private static Command load(Intake intake, Notepath notepath)
+        public static Command load(Notepath notepath)
         {
-            // @formatter:off
-            return 
-                new DeferredInstantCommand(() -> Commands.runOnce(() -> {}, intake, notepath))
-                .andThen
-                (
-                    Commands.either
-                    (
-                        Commands.waitSeconds(1),
-                        Commands.waitUntil(() -> notepath.sensorTripped()), 
-                        () -> Constants.AdvantageKit.CURRENT_MODE == Constants.AdvantageKit.Mode.SIM
-                    )
-                );
-            // @formatter:on
-        }
-
-        public static Command loadWhileStopped(Intake intake, Notepath notepath)
-        {
-            // @formatter:off
-            return
-                load(intake, notepath)
-                .finallyDo(interrupted ->
-                {
-                    intake.set(IntakeState.Off);
-                    notepath.set(NotepathState.Off);
-                    notepath.setHasNote(!interrupted);
-                })
-                .unless(() -> notepath.hasNote());
-            // @formatter:on
-        }
-
-        public static Command loadInMotion(Intake intake, Notepath notepath)
-        {
-            // @formatter:off
-            return
-                load(intake, notepath)
-                .finallyDo(interrupted ->
-                {
-                    if (!interrupted)
-                    {
-                        intake.set(IntakeState.Off);
-                        notepath.set(NotepathState.Off);
-                    }
-                    notepath.setHasNote(!interrupted);
-                })
-                .unless(() -> notepath.hasNote());
-            // @formatter:on
+            return new DeferredInstantCommand(() -> Commands.waitUntil(() -> notepath.hasNote()).andThen(NotepathCommands.stop(notepath)));
         }
 
         public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
@@ -337,5 +294,13 @@ public final class CompositeCommands
         {
             return ShooterBedCommands.setVolts(shooterBed, volts).andThen(Commands.idle(shooterBed)).finallyDo(() -> shooterBed.setVolts(0));
         }
+
+        // public static Command runThrough(Drive drive, Climb climb, Intake intake, Notepath notepath, ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier buttonPressed)
+        // {
+        //     if(buttonPressed.getAsBoolean())
+        //     {
+        //         return DriveCommands.driveAtOrientation(drive, xSupplier, ySupplier, 0, 0)
+        //     }
+        // }
     }
 }
