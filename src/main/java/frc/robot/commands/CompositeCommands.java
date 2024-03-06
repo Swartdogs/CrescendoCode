@@ -296,12 +296,15 @@ public final class CompositeCommands
             return ShooterBedCommands.setVolts(shooterBed, volts).andThen(Commands.idle(shooterBed)).finallyDo(() -> shooterBed.setVolts(0));
         }
 
-        // public static Command runThrough(Drive drive, Climb climb, Intake intake, Notepath notepath, ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier buttonPressed)
+        // public static Command runThrough(Drive drive, Climb climb, Intake intake,
+        // Notepath notepath, ShooterBed shooterBed, ShooterFlywheel shooterFlywheel,
+        // DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier
+        // buttonPressed)
         // {
-        //     if(buttonPressed.getAsBoolean())
-        //     {
-        //         return DriveCommands.driveAtOrientation(drive, xSupplier, ySupplier, 0, 0)
-        //     }
+        // if(buttonPressed.getAsBoolean())
+        // {
+        // return DriveCommands.driveAtOrientation(drive, xSupplier, ySupplier, 0, 0)
+        // }
         // }
     }
 }

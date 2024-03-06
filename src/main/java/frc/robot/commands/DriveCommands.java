@@ -56,17 +56,22 @@ public final class DriveCommands
             // Convert to field relative speeds & send command
             if (robotCentric.getAsBoolean())
             {
+                System.out.println("Robot centric");
                 drive.runVelocity(
-                    ChassisSpeeds.fromRobotRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())
+                        ChassisSpeeds.fromRobotRelativeSpeeds(
+                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation().div(2)
+                        )
                 );
             }
             else
             {
+                System.out.println("Field centric");
                 drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())
+                        ChassisSpeeds
+                                .fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())
                 );
             }
-            
+
         }, drive);
     }
 

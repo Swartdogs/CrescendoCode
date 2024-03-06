@@ -119,12 +119,11 @@ public class Dashboard extends SubsystemBase
     private final GenericEntry _maxFlywheelSpeed;
     private final GenericEntry _flywheelIntakeSpeed;
 
-    //Vision
-    HttpCamera photonCamera;
-    UsbCamera driverCamera;
-    VideoSink videoSink;
-    boolean showFrontCamera = true;
-
+    // Vision
+    HttpCamera _photonCamera;
+    UsbCamera  _driverCamera;
+    VideoSink  _videoSink;
+    boolean    _showFrontCamera = true;
 
     /*
      * Subsystems
@@ -156,17 +155,18 @@ public class Dashboard extends SubsystemBase
          */
         var dashboard = Shuffleboard.getTab("Dashboard");
 
-        photonCamera = new HttpCamera(Constants.Vision.PHOTON_CAMERA_NAME, Constants.Vision.PHOTON_CAMERA_URL, HttpCameraKind.kMJPGStreamer);
-        photonCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+        _driverCamera = CameraServer.startAutomaticCapture(Constants.Vision.DRIVER_CAMERA_NAME, 0);
+        _driverCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
 
-        driverCamera = CameraServer.startAutomaticCapture(Constants.Vision.DRIVER_CAMERA_NAME, 1);
-        driverCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+        _photonCamera = new HttpCamera(Constants.Vision.PHOTON_CAMERA_NAME, Constants.Vision.PHOTON_CAMERA_URL, HttpCameraKind.kMJPGStreamer);
+        _photonCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
 
-        videoSink = CameraServer.addSwitchedCamera("Switched camera");
+        _videoSink = CameraServer.addSwitchedCamera("Switched camera");
+
+        _videoSink.setSource(_photonCamera);
 
         // Camera Stream
-        dashboard.add("Camera Stream", videoSink).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
-                .withProperties(Map.of("Show crosshair", false, "Show controls", false));
+        dashboard.add("Camera Stream", _videoSink.getSource()).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10).withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
         CameraServer.addSwitchedCamera(getName());
 
@@ -219,18 +219,22 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
         NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
 
-        // NamedCommands.registerCommand("Load in Motion", CompositeCommands.Autonomous.loadInMotion(intake, notepath));
-        // NamedCommands.registerCommand("Load While Stopped", CompositeCommands.Autonomous.loadWhileStopped(intake, notepath));
-        //NamedCommands.registerCommand("Stop Intake", CompositeCommands.General.stopIntaking(_intake, _notepath));
+        // NamedCommands.registerCommand("Load in Motion",
+        // CompositeCommands.Autonomous.loadInMotion(intake, notepath));
+        // NamedCommands.registerCommand("Load While Stopped",
+        // CompositeCommands.Autonomous.loadWhileStopped(intake, notepath));
+        // NamedCommands.registerCommand("Stop Intake",
+        // CompositeCommands.General.stopIntaking(_intake, _notepath));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
-        NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); //TODO: Does this need to be registered as a deferred instant if the contents are? 
+        NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
+                                                                                             // are?
         NamedCommands.registerCommand("Intake Pickup", CompositeCommands.Autonomous.intakePickup(_intake, _notepath, _shooterBed));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel)); //Notepath sequence, shuts off after sensor not tripped
-        
-        //Named Commands for starting shooter, intake, and notepath, does not shut off
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel)); // Notepath sequence, shuts off after sensor not tripped
+
+        // Named Commands for starting shooter, intake, and notepath, does not shut off
         NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
         NamedCommands.registerCommand("Start Intake", IntakeCommands.start(_intake));
-        NamedCommands.registerCommand("Notepath On ", NotepathCommands.intakeLoad(_notepath)); //TODO: Rename other to notepath sequence overall check
+        NamedCommands.registerCommand("Notepath On ", NotepathCommands.intakeLoad(_notepath)); // TODO: Rename other to notepath sequence overall check
         NamedCommands.registerCommand("Notepath Off", NotepathCommands.stop(_notepath));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -391,13 +395,16 @@ public class Dashboard extends SubsystemBase
         });
     }
 
-      public void toggle() {
-        showFrontCamera = !showFrontCamera;
-        if(showFrontCamera) {
-        videoSink.setSource(photonCamera);
+    public void toggle()
+    {
+        _showFrontCamera = !_showFrontCamera;
+        if (_showFrontCamera)
+        {
+            _videoSink.setSource(_photonCamera);
         }
-        else {
-        videoSink.setSource(driverCamera);
+        else
+        {
+            _videoSink.setSource(_driverCamera);
         }
     }
 
