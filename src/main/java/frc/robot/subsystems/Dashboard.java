@@ -218,9 +218,9 @@ public class Dashboard extends SubsystemBase
         _autoDelayChooser.addOption("4", 4);
         _autoDelayChooser.addOption("5", 5);
 
-        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(1.39, 5.56, new Rotation2d()))));
-        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
-        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
+        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(Constants.AUTOPOSES.MIDDLE.getPose())));
+        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(Constants.AUTOPOSES.SOURCE.getPose())));
+        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(Constants.AUTOPOSES.AMP.getPose())));
 
         // NamedCommands.registerCommand("Load in Motion",
         // CompositeCommands.Autonomous.loadInMotion(intake, notepath));
