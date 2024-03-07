@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
@@ -120,10 +121,10 @@ public class Dashboard extends SubsystemBase
     private final GenericEntry _flywheelIntakeSpeed;
 
     // Vision
-    HttpCamera _photonCamera;
-    UsbCamera  _driverCamera;
-    VideoSink  _videoSink;
-    boolean    _showFrontCamera = true;
+    HttpCamera  _photonCamera;
+    UsbCamera   _driverCamera;
+    MjpegServer _videoSink;
+    boolean     _showFrontCamera = true;
 
     /*
      * Subsystems
@@ -166,7 +167,8 @@ public class Dashboard extends SubsystemBase
         _videoSink.setSource(_photonCamera);
 
         // Camera Stream
-        dashboard.add("Camera Stream", _videoSink.getSource()).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10).withProperties(Map.of("Show crosshair", false, "Show controls", false));
+        dashboard.addCamera("Camera Stream", "Switched camera", _videoSink.getListenAddress()).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
+                .withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
         CameraServer.addSwitchedCamera(getName());
 
