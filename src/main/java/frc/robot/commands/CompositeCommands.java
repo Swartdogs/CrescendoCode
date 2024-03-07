@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
@@ -27,6 +29,14 @@ public final class CompositeCommands
 
     public static class Autonomous
     {
+        public static Command startNotepath(Notepath notepath)
+        {
+            return new DeferredInstantCommand(() -> Commands.sequence(NotepathCommands.feed(notepath), Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(() ->
+            {
+                notepath.set(NotepathState.Off);
+            }));
+        }
+
         public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
         {
             // @formatter:off
@@ -46,7 +56,7 @@ public final class CompositeCommands
 
         public static Command load(Notepath notepath)
         {
-            return new DeferredInstantCommand(() -> Commands.waitUntil(() -> notepath.hasNote()).andThen(NotepathCommands.stop(notepath)));
+            return new DeferredInstantCommand(() -> Commands.waitUntil(() -> notepath.sensorTripped()).andThen(NotepathCommands.stop(notepath)));
         }
 
         public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
@@ -298,13 +308,15 @@ public final class CompositeCommands
 
         // public static Command runThrough(Drive drive, Climb climb, Intake intake,
         // Notepath notepath, ShooterBed shooterBed, ShooterFlywheel shooterFlywheel,
-        // DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier
-        // buttonPressed)
+        // Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
+        // BooleanSupplier buttonPressed)
         // {
         // if(buttonPressed.getAsBoolean())
         // {
-        // return DriveCommands.driveAtOrientation(drive, xSupplier, ySupplier, 0, 0)
+        // return DriveCommands.driveAtOrientation(drive, dashboard, xSupplier,
+        // ySupplier, 0, 0); //FIND VALUES
         // }
+
         // }
     }
 }

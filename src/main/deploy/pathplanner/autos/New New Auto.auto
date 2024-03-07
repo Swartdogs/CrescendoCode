@@ -8,13 +8,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Set Pose to Source Side"
+            "name": "Set Pose to Middle Side"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Auto Delay"
+            "name": "Set Bed Angle"
           }
         },
         {
@@ -30,45 +30,27 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SourceSideToNote5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Note5ToBlueLine"
+            "name": "Start Intake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Start Notepath"
+            "name": "Notepath On"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueLineToNote4"
+            "pathName": "New Path"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Note4ToBlueLine"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BlueLineToNote1"
+            "pathName": "New New Path"
           }
         },
         {

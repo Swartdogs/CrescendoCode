@@ -41,13 +41,13 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake Pickup"
+                "name": "Start Intake"
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "Load in Motion"
+                "name": "Load"
               }
             }
           ]

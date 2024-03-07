@@ -14,13 +14,49 @@
         {
           "type": "named",
           "data": {
-            "name": "Start Intake"
+            "name": "Set Bed Angle"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Notepath On"
           }
         },
         {
