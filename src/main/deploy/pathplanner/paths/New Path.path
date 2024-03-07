@@ -45,7 +45,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.25,
+      "waypointRelativePos": 0.2,
       "command": {
         "type": "sequential",
         "data": {
@@ -53,13 +53,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake Pickup"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Load in Motion"
+                "name": "Load"
               }
             }
           ]

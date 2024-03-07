@@ -216,8 +216,7 @@ public class RobotContainer
 
     public Command getAutonomousCommand()
     {
-        return null;
         // return AutoBuilder.buildAuto("New Auto");
-        // return _dashboard.getAuto();
+        return _dashboard.getAuto();
     }
 }
