@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.76,
-      "y": 6.77
-    },
-    "rotation": 59.0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -15,6 +9,12 @@
           "type": "named",
           "data": {
             "name": "Set Pose to Amp Side"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Delay"
           }
         },
         {
@@ -30,65 +30,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Stop Shooter"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "AmpSideToNote3"
           }
         },
         {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Load While Stopped"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Shooter"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Note3ToNote8"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Load While Stopped"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
           }
         },
         {
@@ -110,28 +60,15 @@
           }
         },
         {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Load While Stopped"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Note7ToBlueLine"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
           }
         }
       ]

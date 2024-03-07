@@ -222,12 +222,6 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(Constants.AUTOPOSES.SOURCE.getPose())));
         NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(Constants.AUTOPOSES.AMP.getPose())));
 
-        // NamedCommands.registerCommand("Load in Motion",
-        // CompositeCommands.Autonomous.loadInMotion(intake, notepath));
-        // NamedCommands.registerCommand("Load While Stopped",
-        // CompositeCommands.Autonomous.loadWhileStopped(intake, notepath));
-        // NamedCommands.registerCommand("Stop Intake",
-        // CompositeCommands.General.stopIntaking(_intake, _notepath));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
                                                                                              // are?

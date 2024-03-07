@@ -6,6 +6,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Set Pose to Middle Side"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "TestDrive1"
