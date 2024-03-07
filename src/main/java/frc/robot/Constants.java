@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants
 {
@@ -43,6 +45,29 @@ public final class Constants
         public static final int MODULE_BR_SENSOR   = 3;
         public static final int CLIMB_RIGHT_SENSOR = 4;
         public static final int CLIMB_LEFT_SENSOR  = 5;
+    }
+
+    public static enum AUTOPOSES
+    {
+        // @formatter: off
+        AMP(new Pose2d(15.24, 6.77, Rotation2d.fromDegrees(169.81)), new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))), MIDDLE(new Pose2d(14.61, 5.56, Rotation2d.fromDegrees(180)), new Pose2d(1.39, 5.56, new Rotation2d())),
+        SOURCE(new Pose2d(15.21, 4.23, Rotation2d.fromDegrees(-155.56)), new Pose2d(0.79, 4.23, Rotation2d.fromDegrees(-24.44)));
+        // @formatter: on
+
+        Pose2d _redPose;
+        Pose2d _bluePose;
+
+        private AUTOPOSES(Pose2d redPose, Pose2d bluePose)
+        {
+            _redPose  = redPose;
+            _bluePose = bluePose;
+        }
+
+        public Pose2d getPose()
+        {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) return _redPose;
+            return _bluePose;
+        }
     }
 
     public static class CAN
@@ -169,6 +194,7 @@ public final class Constants
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
         public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(57.3);
+        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(37);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);
         public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
         public static final double     BED_DOWN_MIN_VOLTS       = -4;
