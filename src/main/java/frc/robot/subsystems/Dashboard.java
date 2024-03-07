@@ -125,7 +125,7 @@ public class Dashboard extends SubsystemBase
     UsbCamera   _driverCamera;
     MjpegServer _videoSink;
     boolean     _showFrontCamera = true;
-    boolean   isDriverCamera;
+    boolean     isDriverCamera;
 
     /*
      * Subsystems
@@ -409,8 +409,13 @@ public class Dashboard extends SubsystemBase
         else
         {
             _videoSink.setSource(_driverCamera);
-            isDriverCamera = true; 
+            isDriverCamera = true;
         }
+    }
+
+    public boolean isDriverCamera()
+    {
+        return isDriverCamera;
     }
 
     public void initializeSetting(String key, double defaultValue, GenericEntry entry, DoubleConsumer consumer)

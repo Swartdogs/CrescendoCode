@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.Gyro;
 
@@ -29,7 +30,7 @@ public final class DriveCommands
      * Field relative drive command using two joysticks (controlling linear and
      * angular velocities).
      */
-    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric)
+    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, Dashboard dashboard)
     {
         return Commands.run(() ->
         {
@@ -56,16 +57,17 @@ public final class DriveCommands
             // Convert to field relative speeds & send command
             if (robotCentric.getAsBoolean())
             {
-                System.out.println("Robot centric");
-                drive.runVelocity(
-                        ChassisSpeeds.fromRobotRelativeSpeeds(
-                                linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation().div(2)
-                        )
-                );
+                var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
+
+                if (!dashboard.isDriverCamera())
+                {
+                    chassisSpeeds = chassisSpeeds.times(-1);
+                }
+
+                drive.runVelocity(chassisSpeeds);
             }
             else
             {
-                System.out.println("Field centric");
                 drive.runVelocity(
                         ChassisSpeeds
                                 .fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())
@@ -75,21 +77,21 @@ public final class DriveCommands
         }, drive);
     }
 
-    public static Command driveAtOrientation(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double setpoint, double maxSpeed)
+    public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double setpoint, double maxSpeed)
     {
-        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), () -> false));
+        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), () -> false, dashboard));
     }
 
-    public static Command aimAtSpeaker(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    public static Command aimAtSpeaker(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
         return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER), maxSpeed))
-                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER)), () -> false));
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER)), () -> false, dashboard));
     }
 
-    public static Command aimAtAmp(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    public static Command aimAtAmp(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
         return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_AMP), maxSpeed))
-                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP)), () -> false));
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP)), () -> false, dashboard));
     }
 
     private static double getHeadingToPose(Drive drive, Pose2d pose)
