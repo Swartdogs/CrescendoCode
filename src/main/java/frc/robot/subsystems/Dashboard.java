@@ -125,6 +125,7 @@ public class Dashboard extends SubsystemBase
     UsbCamera   _driverCamera;
     MjpegServer _videoSink;
     boolean     _showFrontCamera = true;
+    boolean   isDriverCamera;
 
     /*
      * Subsystems
@@ -403,10 +404,12 @@ public class Dashboard extends SubsystemBase
         if (_showFrontCamera)
         {
             _videoSink.setSource(_photonCamera);
+            isDriverCamera = false;
         }
         else
         {
             _videoSink.setSource(_driverCamera);
+            isDriverCamera = true; 
         }
     }
 
