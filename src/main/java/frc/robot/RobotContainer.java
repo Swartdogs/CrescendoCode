@@ -176,7 +176,8 @@ public class RobotContainer
         _controller.leftBumper().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS));
         _controller.rightBumper().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS));
 
-        _controller.leftStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 5000, 5000, ShooterBed.BedAngle.PodiumShot));
+        _controller.leftStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot));
+        _controller.rightStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 1000, 4500, ShooterBed.BedAngle.AmpShot));
 
         _controller.start().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
         _controller.back().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
