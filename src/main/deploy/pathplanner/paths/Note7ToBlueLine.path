@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 5.7721615443230885
+        "x": 9.004540656666286,
+        "y": 5.639302012056618
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.415271292081047,
-        "y": 6.176706199566246
+        "x": 6.845745355175863,
+        "y": 6.711356821640298
       },
       "isLocked": false,
       "linkedName": "Note7"
@@ -20,8 +20,8 @@
         "y": 6.423379769836463
       },
       "prevControl": {
-        "x": 6.060061350891934,
-        "y": 6.334577284539185
+        "x": 6.008661462761209,
+        "y": 6.652614092348042
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,28 +42,10 @@
       }
     }
   ],
-  "eventMarkers": [
-    {
-      "name": "Start Notepath",
-      "waypointRelativePos": 0.45,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Start Shooter"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

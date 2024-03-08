@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.76,
+      "y": 6.77
+    },
+    "rotation": 60.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,13 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Set Pose to Amp Side"
+            "name": "Auto Delay"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Auto Delay"
+            "name": "Set Bed Angle"
           }
         },
         {
@@ -33,6 +39,12 @@
           "type": "path",
           "data": {
             "pathName": "AmpSideToNote3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
           }
         },
         {
@@ -69,6 +81,18 @@
           "type": "named",
           "data": {
             "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooter"
           }
         }
       ]

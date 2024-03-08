@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.365936578027003,
-        "y": 6.344444227349993
+        "x": 6.845745355175863,
+        "y": 6.5938713630557855
       },
       "isLocked": false,
       "linkedName": "AmpDriveBack"
     },
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 5.7721615443230885
+        "x": 9.004540656666286,
+        "y": 5.639302012056618
       },
       "prevControl": {
-        "x": 7.263828373810594,
-        "y": 6.018835114593306
+        "x": 7.066030590021825,
+        "y": 5.947701340840965
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,8 +62,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

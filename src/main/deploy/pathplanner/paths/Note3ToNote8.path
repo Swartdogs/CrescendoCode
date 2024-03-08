@@ -3,51 +3,33 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.894982565999367,
-        "y": 7.003080254377342
+        "x": 3.7764377496554644,
+        "y": 7.049127515070773
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.894982565999367,
-        "y": 7.003080254377342
+        "x": 4.776437749655464,
+        "y": 7.049127515070773
       },
       "isLocked": false,
       "linkedName": "Note3"
     },
     {
       "anchor": {
-        "x": 8.28012348332389,
-        "y": 7.449541822160567
+        "x": 8.94579792737403,
+        "y": 7.181298655978349
       },
       "prevControl": {
-        "x": 7.280123483323891,
-        "y": 7.449541822160567
+        "x": 7.945797927374031,
+        "y": 7.181298655978349
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Note8"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3,
-      "rotationDegrees": 22.833505091232652,
-      "rotateFast": true
-    }
-  ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.2,
-      "maxWaypointRelativePos": 0.75,
-      "constraints": {
-        "maxVelocity": 9.0,
-        "maxAcceleration": 5.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "rotationTargets": [],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Sequence",
@@ -56,12 +38,6 @@
         "type": "sequential",
         "data": {
           "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Start Notepath"
-              }
-            },
             {
               "type": "named",
               "data": {
@@ -74,8 +50,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

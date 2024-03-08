@@ -31,10 +31,9 @@ public final class CompositeCommands
     {
         public static Command startNotepath(Notepath notepath)
         {
-            return Commands.sequence
-            (
-                new DeferredInstantCommand(() -> Commands.sequence(NotepathCommands.feed(notepath), Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(() -> notepath.set(NotepathState.Off))),
-                Commands.waitUntil(() -> !notepath.sensorTripped())
+            return Commands.sequence(
+                    new DeferredInstantCommand(() -> Commands.sequence(NotepathCommands.feed(notepath), Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(() -> notepath.set(NotepathState.Off))),
+                    Commands.waitUntil(() -> !notepath.sensorTripped())
             );
         }
 
@@ -57,14 +56,7 @@ public final class CompositeCommands
 
         public static Command load(Notepath notepath)
         {
-            return new DeferredInstantCommand(() -> 
-                Commands.sequence
-                (
-                    NotepathCommands.intakeLoad(notepath),
-                    Commands.waitUntil(() -> notepath.sensorTripped()), 
-                    NotepathCommands.stop(notepath)
-                )
-            );
+            return new DeferredInstantCommand(() -> Commands.sequence(NotepathCommands.intakeLoad(notepath), Commands.waitUntil(() -> notepath.sensorTripped()), NotepathCommands.stop(notepath)));
         }
 
         public static Command startShooter(ShooterFlywheel shooterFlywheel, double upperVelocity, double lowerVelocity)

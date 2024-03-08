@@ -223,7 +223,7 @@ public class Dashboard extends SubsystemBase
         // START UP
         NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(1.39, 5.56, new Rotation2d())))));
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.79, 4.23, Rotation2d.fromDegrees(-24.44))))));
-        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))))));
+        NamedCommands.registerCommand("Set Pose to Amp Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))))));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
         NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 60));
 
@@ -237,6 +237,8 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Start Intake", IntakeCommands.start(_intake));
         NamedCommands.registerCommand("Notepath On", new DeferredInstantCommand(() -> NotepathCommands.intakeLoad(_notepath))); // TODO: Rename other to notepath sequence overall check
         NamedCommands.registerCommand("Notepath Off", NotepathCommands.stop(_notepath));
+        NamedCommands.registerCommand("Stop Intake", IntakeCommands.stop(intake));
+        NamedCommands.registerCommand("Stop Shooter", ShooterFlywheelCommands.stop(shooterFlywheel));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 

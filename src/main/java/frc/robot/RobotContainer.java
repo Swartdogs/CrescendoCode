@@ -220,8 +220,7 @@ public class RobotContainer
     public Command getAutonomousCommand()
     {
         // return AutoBuilder.buildAuto("New Auto");
-        // return _dashboard.getAuto();
-
-        return null;
+        return _dashboard.getAuto();
+        // return null;
     }
 }
