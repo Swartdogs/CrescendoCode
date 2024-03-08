@@ -24,21 +24,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Start Notepath"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
           }
         },
         {
@@ -51,12 +39,6 @@
           "type": "named",
           "data": {
             "name": "Start Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Notepath On"
           }
         },
         {

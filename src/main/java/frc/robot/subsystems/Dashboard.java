@@ -233,7 +233,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Start Notepath", CompositeCommands.Autonomous.startNotepath(_notepath)); // Notepath sequence, shuts off after sensor not tripped
 
         // Named Commands for starting shooter, intake, and notepath, does not shut off
-        NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
+        NamedCommands.registerCommand("Start Shooter", CompositeCommands.Autonomous.startShooter(_shooterFlywheel, 3000, 3000));
         NamedCommands.registerCommand("Start Intake", IntakeCommands.start(_intake));
         NamedCommands.registerCommand("Notepath On", new DeferredInstantCommand(() -> NotepathCommands.intakeLoad(_notepath))); // TODO: Rename other to notepath sequence overall check
         NamedCommands.registerCommand("Notepath Off", NotepathCommands.stop(_notepath));

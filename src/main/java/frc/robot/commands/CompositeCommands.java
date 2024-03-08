@@ -31,10 +31,11 @@ public final class CompositeCommands
     {
         public static Command startNotepath(Notepath notepath)
         {
-            return new DeferredInstantCommand(() -> Commands.sequence(NotepathCommands.feed(notepath), Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(() ->
-            {
-                notepath.set(NotepathState.Off);
-            }));
+            return Commands.sequence
+            (
+                new DeferredInstantCommand(() -> Commands.sequence(NotepathCommands.feed(notepath), Commands.waitUntil(() -> !notepath.sensorTripped())).finallyDo(() -> notepath.set(NotepathState.Off))),
+                Commands.waitUntil(() -> !notepath.sensorTripped())
+            );
         }
 
         public static Command intakePickup(Intake intake, Notepath notepath, ShooterBed shooterBed)
@@ -56,15 +57,24 @@ public final class CompositeCommands
 
         public static Command load(Notepath notepath)
         {
-            return new DeferredInstantCommand(() -> Commands.waitUntil(() -> notepath.sensorTripped()).andThen(NotepathCommands.stop(notepath)));
+            return new DeferredInstantCommand(() -> 
+                Commands.sequence
+                (
+                    NotepathCommands.intakeLoad(notepath),
+                    Commands.waitUntil(() -> notepath.sensorTripped()), 
+                    NotepathCommands.stop(notepath)
+                )
+            );
         }
 
-        public static Command startShooter(ShooterFlywheel shooterFlywheel, Notepath notepath, double upperVelocity, double lowerVelocity)
+        public static Command startShooter(ShooterFlywheel shooterFlywheel, double upperVelocity, double lowerVelocity)
         {
             // @formatter:off
-            return 
-                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity)
-                .onlyIf(()-> notepath.hasNote());
+            return Commands.sequence
+            (
+                ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity),
+                Commands.waitUntil(() -> shooterFlywheel.atSpeed())
+            );
             // @formatter:on
         }
 
