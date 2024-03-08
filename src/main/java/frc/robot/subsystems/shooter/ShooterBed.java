@@ -19,6 +19,7 @@ public class ShooterBed extends SubsystemBase
         SubwooferShot(Constants.ShooterBed.BED_SUBWOOFER_SHOT_ANGLE),
         PodiumShot(Constants.ShooterBed.BED_PODIUM_SHOT_ANGLE),
         AmpShot(Constants.ShooterBed.BED_AMP_SHOT_ANGLE),
+        TrapShot(Constants.ShooterBed.Bed_TRAP_SHOT_ANGLE),
         ClimbVertical(Constants.ShooterBed.BED_CLIMB_VERTICAL_ANGLE),
         Stow(Constants.ShooterBed.BED_STOW_ANGLE);
         // @formatter:on
