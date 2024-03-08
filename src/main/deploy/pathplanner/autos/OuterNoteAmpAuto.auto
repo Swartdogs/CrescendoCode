@@ -1,16 +1,83 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 2,
-      "y": 2
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Pose to Amp Side"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Delay"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AmpSideToNote7"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note7ToBlueLine"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueLineToNote8"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note8ToBlueLine"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BlueLineToNote3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        }
+      ]
     }
   },
   "folder": null,

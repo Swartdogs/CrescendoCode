@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.CompositeCommands;
@@ -46,6 +47,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.util.DeferredInstantCommand;
 import frc.robot.util.Utilities;
 
 public class Dashboard extends SubsystemBase
@@ -168,7 +170,6 @@ public class Dashboard extends SubsystemBase
 
         _videoSink.setSource(_photonCamera);
 
-        // Camera Stream
         dashboard.addCamera("Camera Stream", "Switched camera", _videoSink.getListenAddress()).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
                 .withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
@@ -219,20 +220,22 @@ public class Dashboard extends SubsystemBase
         _autoDelayChooser.addOption("4", 4);
         _autoDelayChooser.addOption("5", 5);
 
+        // START UP
         NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(1.39, 5.56, new Rotation2d())))));
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.79, 4.23, Rotation2d.fromDegrees(-24.44))))));
         NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))))));
-
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
+        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 60));
+
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
-                                                                                             // are?
+                                                                                             // // // are?
         NamedCommands.registerCommand("Intake Pickup", CompositeCommands.Autonomous.intakePickup(_intake, _notepath, _shooterBed));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel)); // Notepath sequence, shuts off after sensor not tripped
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.Autonomous.startNotepath(_notepath)); // Notepath sequence, shuts off after sensor not tripped
 
         // Named Commands for starting shooter, intake, and notepath, does not shut off
         NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
         NamedCommands.registerCommand("Start Intake", IntakeCommands.start(_intake));
-        NamedCommands.registerCommand("Notepath On ", NotepathCommands.intakeLoad(_notepath)); // TODO: Rename other to notepath sequence overall check
+        NamedCommands.registerCommand("Notepath On", new DeferredInstantCommand(() -> NotepathCommands.intakeLoad(_notepath))); // TODO: Rename other to notepath sequence overall check
         NamedCommands.registerCommand("Notepath Off", NotepathCommands.stop(_notepath));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

@@ -42,53 +42,15 @@
           }
         },
         {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Load While Stopped"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Start Shooter"
+            "name": "Start Notepath"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Note1ToNote5"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Load While Stopped"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
           }
         },
         {
@@ -107,25 +69,6 @@
           "type": "path",
           "data": {
             "pathName": "BlueLineToNote4"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Load While Stopped"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
           }
         },
         {
