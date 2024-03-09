@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.004540656666286,
-        "y": 5.639302012056618
+        "x": 8.975169292020158,
+        "y": 5.433702459533721
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.5082041255316865,
-        "y": 6.823335149353662
+        "x": 6.478832760885559,
+        "y": 6.617735596830765
       },
       "isLocked": false,
       "linkedName": "Note7"
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

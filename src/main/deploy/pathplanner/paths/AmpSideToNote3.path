@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.761513061487663,
-        "y": 6.77
+        "x": 0.6579998614542684,
+        "y": 6.679382086036901
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5978394939871214,
-        "y": 7.074397927559845
+        "x": 1.98179923516741,
+        "y": 6.467580748191452
       },
       "isLocked": false,
       "linkedName": "AmpSide"
     },
     {
       "anchor": {
-        "x": 3.7764377496554644,
-        "y": 7.049127515070773
+        "x": 4.40792208954722,
+        "y": 6.549814316086593
       },
       "prevControl": {
-        "x": 3.164687295385326,
-        "y": 7.009659743827538
+        "x": 3.6991710347057056,
+        "y": 7.127161890687418
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Note3"
+      "linkedName": "AmpBlueLine"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Start Intake",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.2,
       "command": {
         "type": "sequential",
         "data": {
@@ -56,20 +56,20 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 0.0,
+    "rotation": 11.05,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "AmpSideStartingPaths",
   "previewStartingState": {
-    "rotation": 56.01704274794713,
+    "rotation": 59.14471786467568,
     "velocity": 0
   },
   "useDefaultConstraints": true

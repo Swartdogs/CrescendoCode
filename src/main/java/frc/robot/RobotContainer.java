@@ -1,13 +1,17 @@
 package frc.robot;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.Dashboard;
@@ -157,13 +161,19 @@ public class RobotContainer
 
     private void configureDefaultCommands()
     {
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), () -> _joystick.getRawButton(3), _dashboard));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), () -> _joystick.getRawButton(1), _dashboard));
     }
 
     private void configureDriverCommands()
     {
+        new JoystickButton(_joystick, 2).whileTrue(DriveCommands.reduceSpeed(_drive));
+        new JoystickButton(_joystick, 3).onTrue(Commands.runOnce(() -> _dashboard.toggle()).ignoringDisable(true));
+        new JoystickButton(_joystick, 7).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 240, 60, 0.6)); // 60 degrees left
+        new JoystickButton(_joystick, 8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 120, 300, 0.6)); // 60 degrees right
+        new JoystickButton(_joystick, 9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 0.6));
+        new JoystickButton(_joystick, 10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 0.6));
+        new JoystickButton(_joystick, 11).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
         new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
-        new JoystickButton(_joystick, 2).onTrue(Commands.runOnce(() -> _dashboard.toggle()).andThen(Commands.print("Toggle!")).ignoringDisable(true));
     }
 
     private void configureOperatorCommands()
@@ -173,24 +183,37 @@ public class RobotContainer
         _controller.x().whileTrue(CompositeCommands.Teleop.suckIn(_notepath, _shooterFlywheel));
         _controller.y().onTrue(CompositeCommands.Teleop.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
 
-        _controller.leftBumper().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS));
-        _controller.rightBumper().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS));
-
-        _controller.leftStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot));
-        _controller.rightStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot));
-
-        _controller.start().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
-        _controller.back().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
-
-        // Intentionally control left arm with right stick and right arm with left
-        // stick. It's more intuitive for the drivers
         _controller.leftTrigger().whileTrue(CompositeCommands.Teleop.climbJoystick(_climb, () -> -_controller.getRightY(), () -> -_controller.getLeftY()));
-        _controller.rightTrigger().onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
 
-        _controller.povUp().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
-        _controller.povDown().onTrue(CompositeCommands.General.setHasNote(_notepath, false));
-        _controller.povLeft().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, 4000, 4000));
-        _controller.povRight().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.TrapShot));
+        _controller.leftStick().whileTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
+
+        _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 0));
+        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 10)); //Set height for extension
+        
+        _controller.start().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
+        _controller.back().onTrue(CompositeCommands.General.setHasNote(_notepath, false));
+        
+        _controller.povUp().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.TrapShot));
+        _controller.povDown().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
+        _controller.povLeft().onTrue(CompositeCommands.Teleop.redAmpOrPodium(_shooterFlywheel, _notepath, _shooterBed));
+        _controller.povRight().onTrue(CompositeCommands.Teleop.blueAmpOrPodium(_shooterFlywheel, _notepath, _shooterBed));
+        
+        _controller.rightStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot));
+        
+        //_controller.leftStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot));
+        
+        // _controller.leftBumper().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, Constants.ShooterBed.MAX_BED_VOLTS));
+        // _controller.rightBumper().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, -Constants.ShooterBed.MAX_BED_VOLTS));
+
+        // _controller.start().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
+        // _controller.back().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
+        
+        //_controller.rightTrigger().onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
+
+        // _controller.povUp().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
+        // _controller.povDown().onTrue(CompositeCommands.General.setHasNote(_notepath, false));
+        // _controller.povLeft().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, 5800, 5800));
+        // _controller.povRight().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.TrapShot));
     }
 
     private void configureTestCommands()

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.231238154784003,
-        "y": 6.729254996971533
+        "x": 4.40792208954722,
+        "y": 6.549814316086593
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.845745355175863,
-        "y": 6.5938713630557855
+        "x": 6.654831484976029,
+        "y": 6.828842280224811
       },
       "isLocked": false,
-      "linkedName": "AmpDriveBack"
+      "linkedName": "AmpBlueLine"
     },
     {
       "anchor": {
-        "x": 9.004540656666286,
-        "y": 5.639302012056618
+        "x": 8.975169292020158,
+        "y": 5.433702459533721
       },
       "prevControl": {
-        "x": 7.066030590021825,
-        "y": 5.947701340840965
+        "x": 7.036659225375697,
+        "y": 5.742101788318068
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,19 +29,7 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.15,
-      "maxWaypointRelativePos": 0.75,
-      "constraints": {
-        "maxVelocity": 9.0,
-        "maxAcceleration": 5.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Start Intake",
@@ -62,8 +50,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -75,7 +63,7 @@
   "reversed": false,
   "folder": "BlueLineToOuterNotes",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 12.0409901243181,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -3,7 +3,9 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -306,6 +308,52 @@ public final class CompositeCommands
         public static Command setBedVolts(ShooterBed shooterBed, double volts)
         {
             return ShooterBedCommands.setVolts(shooterBed, volts).andThen(Commands.idle(shooterBed)).finallyDo(() -> shooterBed.setVolts(0));
+        }
+
+        public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double blueSetpoint, double redSetpoint, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, blueSetpoint, maxSpeed), DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, redSetpoint, maxSpeed),
+                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            );
+        }
+
+        public static Command redAmpOrSubwoofer(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, 0, maxSpeed), // subwoofer shot
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, -90, maxSpeed), // amp shot
+                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            );
+        }
+
+        public static Command blueAmpOrSubwoofer(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, -90, maxSpeed), // subwoofer shot
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, 180, maxSpeed), // amp shot
+                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            );
+        }
+
+        public static Command redAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
+        {
+            return Commands.either
+            (
+                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
+                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
+                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            );
+        }
+
+        public static Command blueAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
+        {
+            return Commands.either
+            (
+                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
+                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
+                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            );
         }
 
         // public static Command runThrough(Drive drive, Climb climb, Intake intake,

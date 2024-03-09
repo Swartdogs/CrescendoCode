@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.76,
-      "y": 6.77
+      "x": 0.6579998614542684,
+      "y": 6.679382086036901
     },
     "rotation": 60.0
   },
@@ -36,9 +36,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Set Bed Angle Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "AmpSideToNote3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Shooter Max Speed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Shooter Angle"
           }
         },
         {
@@ -63,6 +81,12 @@
           "type": "named",
           "data": {
             "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Bed Angle Intake"
           }
         },
         {

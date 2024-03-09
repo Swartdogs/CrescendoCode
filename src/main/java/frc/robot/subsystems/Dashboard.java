@@ -225,7 +225,10 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.79, 4.23, Rotation2d.fromDegrees(-24.44))))));
         NamedCommands.registerCommand("Set Pose to Amp Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))))));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
+        NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.5));
+        NamedCommands.registerCommand("Set Shooter Max Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5800, 5800));
         NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 60));
+        NamedCommands.registerCommand("Set Bed Angle Intake", CompositeCommands.Autonomous.setBedAngle(shooterBed, 65.1));
 
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
                                                                                              // // // are?

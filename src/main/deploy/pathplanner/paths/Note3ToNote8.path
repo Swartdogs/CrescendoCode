@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7764377496554644,
-        "y": 7.049127515070773
+        "x": 4.40792208954722,
+        "y": 6.549814316086593
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.776437749655464,
-        "y": 7.049127515070773
+        "x": 5.465291216807836,
+        "y": 6.681985456994169
       },
       "isLocked": false,
-      "linkedName": "Note3"
+      "linkedName": "AmpBlueLine"
     },
     {
       "anchor": {
-        "x": 8.94579792737403,
-        "y": 7.181298655978349
+        "x": 9.019226338989352,
+        "y": 7.386898208501248
       },
       "prevControl": {
-        "x": 7.945797927374031,
-        "y": 7.181298655978349
+        "x": 8.019226338989352,
+        "y": 7.386898208501248
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,6 +41,12 @@
             {
               "type": "named",
               "data": {
+                "name": "Set Bed Angle Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
                 "name": "Load"
               }
             }
@@ -50,8 +56,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

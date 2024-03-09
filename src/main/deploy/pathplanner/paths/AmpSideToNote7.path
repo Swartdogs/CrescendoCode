@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.761513061487663,
-        "y": 6.768722768214768
+        "x": 0.6579998614542684,
+        "y": 6.679382086036901
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7615130614876628,
-        "y": 6.768722768214768
+        "x": 1.6579998614542681,
+        "y": 6.679382086036901
       },
       "isLocked": false,
       "linkedName": "AmpSide"
     },
     {
       "anchor": {
-        "x": 9.004540656666286,
-        "y": 5.639302012056618
+        "x": 8.975169292020158,
+        "y": 5.433702459533721
       },
       "prevControl": {
-        "x": 7.633035605963879,
-        "y": 6.527326865029401
+        "x": 7.603664241317751,
+        "y": 6.321727312506504
       },
       "nextControl": null,
       "isLocked": false,
@@ -56,8 +56,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

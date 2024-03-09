@@ -15,6 +15,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.Gyro;
+import frc.robot.util.Utilities;
 
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -50,6 +51,8 @@ public final class DriveCommands
             {
                 allianceAdjustment = Rotation2d.fromDegrees(180);
             }
+
+            linearDirection = linearDirection.plus(allianceAdjustment);
 
             // Calcaulate new linear velocity
             Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
@@ -90,8 +93,8 @@ public final class DriveCommands
 
     public static Command aimAtAmp(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
-        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_AMP), maxSpeed))
-                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP)), () -> false, dashboard));
+        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP)), maxSpeed))
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP))), () -> false, dashboard));
     }
 
     private static double getHeadingToPose(Drive drive, Pose2d pose)
@@ -104,11 +107,16 @@ public final class DriveCommands
 
     public static Command resetGyro(Drive drive, Gyro gyro)
     {
-        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))).ignoringDisable(true);
+        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(Utilities.isBlueAlliance() ? 0 : 180)))).ignoringDisable(true);
     }
 
     public static Command driveVolts(Drive drive, double volts)
     {
         return Commands.runOnce(() -> drive.runVolts(volts));
+    }
+
+    public static Command reduceSpeed(Drive drive)
+    {
+        return Commands.startEnd(() -> drive.setSpeedMultipler(0.2), () -> drive.setSpeedMultipler(1));
     }
 }
