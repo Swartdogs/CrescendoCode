@@ -190,9 +190,8 @@ public class RobotContainer
         // _controller.rightStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel,
         // _notepath, _shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot));
 
-        // _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 0));
-        // _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 10));
-        // //Set height for extension
+        _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 2));
+        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 15));
 
         _controller.start().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
         _controller.back().onTrue(CompositeCommands.General.setHasNote(_notepath, false));

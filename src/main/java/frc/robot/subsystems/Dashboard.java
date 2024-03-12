@@ -270,7 +270,7 @@ public class Dashboard extends SubsystemBase
         _climbLeftOffset  = climbSettings.add("Left Offset", Constants.Climb.LEFT_ZERO_OFFSET).withWidget(BuiltInWidgets.kTextView).getEntry();
         _climbRightOffset = climbSettings.add("Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET).withWidget(BuiltInWidgets.kTextView).getEntry();
         _climbMinHeight   = climbSettings.add("Arm Minimum Height", Constants.Climb.MIN_EXTENSION).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _climbMaxHeight   = climbSettings.add("Arm Maximum Height", Constants.Climb.MAX_EXTENSION).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _climbMaxHeight   = climbSettings.add("Arm Maximum Height", Constants.Climb.LEFT_MAX_EXTENSION).withWidget(BuiltInWidgets.kTextView).getEntry();
 
         var notepathSettings = outerLayout.getLayout("Notepath", BuiltInLayouts.kList).withPosition(3, 0).withProperties(Map.of("label position", "LEFT"));
         _notepathShootSpeed = notepathSettings.add("Note Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT).withWidget(BuiltInWidgets.kTextView).getEntry();
@@ -337,7 +337,7 @@ public class Dashboard extends SubsystemBase
             _climb.setMinExtension(value);
         });
 
-        initializeSetting("Climb Maximum Height", Constants.Climb.MAX_EXTENSION, _climbMaxHeight, value ->
+        initializeSetting("Climb Maximum Height", Constants.Climb.LEFT_MAX_EXTENSION, _climbMaxHeight, value ->
         {
             _climb.setMaxExtension(value);
         });

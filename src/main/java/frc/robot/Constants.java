@@ -43,8 +43,8 @@ public final class Constants
         public static final int MODULE_FR_SENSOR   = 1;
         public static final int MODULE_BL_SENSOR   = 2;
         public static final int MODULE_BR_SENSOR   = 3;
-        public static final int CLIMB_RIGHT_SENSOR = 4;
-        public static final int CLIMB_LEFT_SENSOR  = 5;
+        public static final int CLIMB_LEFT_SENSOR  = 4;
+        public static final int CLIMB_RIGHT_SENSOR = 5;
     }
 
     public static enum AUTOPOSES
@@ -99,11 +99,13 @@ public final class Constants
 
     public static class Climb
     {
-        public static final double MIN_EXTENSION     = 0.0;
-        public static final double MAX_EXTENSION     = 17.5;
-        public static final double LEFT_ZERO_OFFSET  = -17.33;
-        public static final double RIGHT_ZERO_OFFSET = 0.357;
-        public static final double SENSOR_SCALE      = 27.473;
+        public static final double MIN_EXTENSION       = 0.0;
+        public static final double LEFT_MAX_EXTENSION  = 17.375;
+        public static final double RIGHT_MAX_EXTENSION = 17.5;
+        public static final double LEFT_ZERO_OFFSET    = -17.403;
+        public static final double RIGHT_ZERO_OFFSET   = 0.3;
+        public static final double LEFT_SENSOR_SCALE   = -27.234;
+        public static final double RIGHT_SENSOR_SCALE  = 27.301;
     }
 
     public static class Controls

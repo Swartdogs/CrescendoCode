@@ -359,37 +359,25 @@ public final class CompositeCommands
         }
 
         public static Command runThrough(BooleanSupplier buttonPressed, Climb climb, Drive drive, Intake intake, Notepath notepath, ShooterFlywheel shooterFlywheel, ShooterBed shooterBed, Dashboard dashboard)
-        { 
-            return Commands.sequence
-            (
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                ClimbCommands.setHeight(climb, Constants.Climb.MIN_EXTENSION), //Climb
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                ClimbCommands.setHeight(climb, Constants.Climb.MAX_EXTENSION), //Climb
+        {
+            return Commands.sequence(
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ClimbCommands.setHeight(climb, Constants.Climb.MIN_EXTENSION), // Climb
+                    // Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                    // ClimbCommands.setHeight(climb, Constants.Climb.MAX_EXTENSION), // Climb
 
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                DriveCommands.joystickDrive(drive, () -> 0.5, ()-> 0, () -> 0, () -> true, dashboard),
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                DriveCommands.joystickDrive(drive, () -> 0.5, null, null, () -> true, dashboard),
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                IntakeCommands.start(intake),                                  //Intake
-                
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                NotepathCommands.intakeLoad(notepath),                         //Notepath
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                NotepathCommands.shooterLoad(notepath),                        //Notepath
-                
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                ShooterFlywheelCommands.start(shooterFlywheel, 4000, 4000),    //Flywheel
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                ShooterFlywheelCommands.intake(shooterFlywheel),               //Flywheel
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), DriveCommands.joystickDrive(drive, () -> 0.5, () -> 0, () -> 0, () -> true, dashboard), Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                    DriveCommands.joystickDrive(drive, () -> 0.5, null, null, () -> true, dashboard), Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
 
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_PODIUM_SHOT_ANGLE.getDegrees()), //Bed
-                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees()) //Bed
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), IntakeCommands.start(intake),                                  // Intake
+
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), NotepathCommands.intakeLoad(notepath),                         // Notepath
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), NotepathCommands.shooterLoad(notepath),                        // Notepath
+
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterFlywheelCommands.start(shooterFlywheel, 4000, 4000),    // Flywheel
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterFlywheelCommands.intake(shooterFlywheel),               // Flywheel
+
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_PODIUM_SHOT_ANGLE.getDegrees()), // Bed
+                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees()) // Bed
             );
         }
     }
