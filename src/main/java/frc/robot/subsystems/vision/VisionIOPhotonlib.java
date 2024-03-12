@@ -52,7 +52,7 @@ public class VisionIOPhotonlib implements VisionIO
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
             PhotonPipelineResult result    = _camera.getLatestResult();
-            double               timestamp = Logger.getRealTimestamp() - (result.getLatencyMillis() / 1000.0);
+            double               timestamp = result.getTimestampSeconds();
 
             List<Double> cornerXList = new ArrayList<>();
             List<Double> cornerYList = new ArrayList<>();

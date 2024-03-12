@@ -44,16 +44,6 @@ public final class DriveCommands
             linearMagnitude = linearMagnitude * linearMagnitude;
             omega           = Math.copySign(omega * omega, omega);
 
-            Rotation2d allianceAdjustment = Rotation2d.fromDegrees(0);
-
-            Optional<Alliance> alliance = DriverStation.getAlliance();
-            if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red)
-            {
-                allianceAdjustment = Rotation2d.fromDegrees(180);
-            }
-
-            linearDirection = linearDirection.plus(allianceAdjustment);
-
             // Calcaulate new linear velocity
             Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
@@ -64,13 +54,18 @@ public final class DriveCommands
 
                 if (!dashboard.isDriverCamera())
                 {
-                    chassisSpeeds = chassisSpeeds.times(-1);
+                    chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
                 }
 
                 drive.runVelocity(chassisSpeeds);
             }
             else
             {
+                if (!Utilities.isBlueAlliance())
+                {
+                    linearVelocity = linearVelocity.unaryMinus();
+                }
+
                 drive.runVelocity(
                         ChassisSpeeds
                                 .fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())

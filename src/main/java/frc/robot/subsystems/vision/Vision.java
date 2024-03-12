@@ -28,7 +28,7 @@ public class Vision extends SubsystemBase
         {
             if (_inputs.hasPose != false)
             {
-                // _drive.addVisionMeasurement(_inputs.pose, _inputs.captureTimestamp);
+                _drive.addVisionMeasurement(_inputs.pose, _inputs.captureTimestamp);
             }
 
             _lastTimestamp = _inputs.captureTimestamp;

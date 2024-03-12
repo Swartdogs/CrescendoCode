@@ -4,7 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.Constants;
 import frc.robot.subsystems.shooter.ShooterBed;
 
 public final class ShooterBedCommands
@@ -33,8 +33,8 @@ public final class ShooterBedCommands
         return shooterBed.runOnce(() -> shooterBed.setVolts(volts));
     }
 
-    public static Command setVolts(ShooterBed shooterBed, DoubleSupplier volts)
+    public static Command setVolts(ShooterBed shooterBed, DoubleSupplier ySupplier)
     {
-        return shooterBed.run(() -> shooterBed.setVolts(volts.getAsDouble()));
+        return shooterBed.run(() -> shooterBed.setVolts(ySupplier.getAsDouble() * Constants.ShooterBed.MAX_BED_VOLTS));
     }
 }

@@ -49,7 +49,7 @@ public class Drive extends SubsystemBase
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
 
-        _rotatePID = new PIDController(0.02, 0, 0); // TODO: tune
+        _rotatePID = new PIDController(0.026, 0, 0); // TODO: tune
         _rotatePID.enableContinuousInput(-180, 180);
 
         _speedMultiplier = 1;
@@ -109,7 +109,7 @@ public class Drive extends SubsystemBase
      */
     public void runVelocity(ChassisSpeeds speeds)
     {
-        speeds.times(_speedMultiplier);
+        speeds = speeds.times(_speedMultiplier);
 
         // Calculate module setpoints
         ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);

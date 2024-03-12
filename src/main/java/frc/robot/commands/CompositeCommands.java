@@ -310,6 +310,11 @@ public final class CompositeCommands
             return ShooterBedCommands.setVolts(shooterBed, volts).andThen(Commands.idle(shooterBed)).finallyDo(() -> shooterBed.setVolts(0));
         }
 
+        public static Command setBedVolts(ShooterBed shooterBed, DoubleSupplier ySupplier)
+        {
+            return ShooterBedCommands.setVolts(shooterBed, ySupplier).finallyDo(() -> shooterBed.setVolts(0));
+        }
+
         public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double blueSetpoint, double redSetpoint, double maxSpeed)
         {
             return Commands.either(
@@ -338,35 +343,54 @@ public final class CompositeCommands
 
         public static Command redAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
-            return Commands.either
-            (
-                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
-                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
-                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            return Commands.either(
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );
         }
 
         public static Command blueAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
-            return Commands.either
-            (
-                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
-                CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
-                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            return Commands.either(
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
+                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );
         }
 
-        // public static Command runThrough(Drive drive, Climb climb, Intake intake,
-        // Notepath notepath, ShooterBed shooterBed, ShooterFlywheel shooterFlywheel,
-        // Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier,
-        // BooleanSupplier buttonPressed)
-        // {
-        // if(buttonPressed.getAsBoolean())
-        // {
-        // return DriveCommands.driveAtOrientation(drive, dashboard, xSupplier,
-        // ySupplier, 0, 0); //FIND VALUES
-        // }
+        public static Command runThrough(BooleanSupplier buttonPressed, Climb climb, Drive drive, Intake intake, Notepath notepath, ShooterFlywheel shooterFlywheel, ShooterBed shooterBed, Dashboard dashboard)
+        { 
+            return Commands.sequence
+            (
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                ClimbCommands.setHeight(climb, Constants.Climb.MIN_EXTENSION), //Climb
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                ClimbCommands.setHeight(climb, Constants.Climb.MAX_EXTENSION), //Climb
 
-        // }
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                DriveCommands.joystickDrive(drive, () -> 0.5, ()-> 0, () -> 0, () -> true, dashboard),
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                DriveCommands.joystickDrive(drive, () -> 0.5, null, null, () -> true, dashboard),
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                IntakeCommands.start(intake),                                  //Intake
+                
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                NotepathCommands.intakeLoad(notepath),                         //Notepath
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                NotepathCommands.shooterLoad(notepath),                        //Notepath
+                
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                ShooterFlywheelCommands.start(shooterFlywheel, 4000, 4000),    //Flywheel
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                ShooterFlywheelCommands.intake(shooterFlywheel),               //Flywheel
+
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_PODIUM_SHOT_ANGLE.getDegrees()), //Bed
+                Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees()) //Bed
+            );
+        }
     }
 }
