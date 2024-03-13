@@ -188,9 +188,9 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final double     MAX_BED_VOLTS            = 7; // TODO: Check if this is enough
-        public static final double     BED_SCALE                = 0.421;
-        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-15.569);
+        public static final double     MAX_BED_VOLTS            = 3.5;
+        public static final double     BED_SCALE                = 1;
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(0);
         public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(88);
         public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(20);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
@@ -201,8 +201,8 @@ public final class Constants
         public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);
         public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
-        public static final double     BED_DOWN_MIN_VOLTS       = -4;
-        public static final double     BED_UP_MIN_VOLTS         = 0.9;
+        public static final double     BED_DOWN_MIN_VOLTS       = -0.5;
+        public static final double     BED_UP_MIN_VOLTS         = 0.11;
     }
 
     public static class ShooterFlywheel
@@ -219,5 +219,6 @@ public final class Constants
         public static final Rotation3d  CAMERA_ROTATION    = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
         public static final Transform3d CAMERA_TRANSFORM   = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
         public static final String      PHOTON_CAMERA_URL  = "http://10.5.25.12:1181/?action=stream";
+        public static final double      MAX_DETECTION_RANGE = Units.inchesToMeters(300);
     }
 }

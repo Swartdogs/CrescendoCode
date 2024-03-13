@@ -1,16 +1,11 @@
 package frc.robot;
 
-import java.util.Optional;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
@@ -19,7 +14,6 @@ import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOVictorSPX;
-import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.GyroIO;
 import frc.robot.subsystems.gyro.GyroIONavX2;
@@ -64,45 +58,10 @@ public class RobotContainer
     private final Dashboard       _dashboard;
 
     // Controls
-    private final Joystick              _joystick   = new Joystick(1);
+    private final CommandJoystick              _joystick   = new CommandJoystick(1);
     @SuppressWarnings("unused")
     private final Joystick              _testJoy    = new Joystick(2);
     private final CommandXboxController _controller = new CommandXboxController(0);
-
-    // public enum Controller
-    // {
-    // Joystick(0), Joystick(1);
-
-    // private Joystick _joystick;
-    // private Joystick _testJoy;
-    // private ArrayList<JoystickButton> _buttons;
-
-    // private Controller(int port, )
-    // {
-    // _joystick = new Joystick(port);
-    // _buttons = new ArrayList<JoystickButton>();
-
-    // for (int i = 0; i < 12; i++)
-    // {
-    // _buttons.add(new JoystickButton(_joystick, i + 1));
-    // }
-    // }
-
-    // public Joystick joystick()
-    // {
-    // return _joystick;
-    // }
-
-    // public Joystick testJoy()
-    // {
-    // return _testJoy;
-    // }
-
-    // public JoystickButton button(int button)
-    // {
-    // return _buttons.get(button - 1);
-    // }
-    // }
 
     public RobotContainer()
     {
@@ -117,7 +76,7 @@ public class RobotContainer
                         new ModuleIOHardware(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOHardware(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
-                _vision = new Vision(_drive, new VisionIOPhotonlib());
+                _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 _intake = new Intake(new IntakeIOSparkMax());
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
@@ -129,7 +88,7 @@ public class RobotContainer
             case SIM:
                 _gyro = new Gyro(new GyroIOSim(this::getChassisSpeeds));
                 _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-                _vision = new Vision(_drive, new VisionIOPhotonlib());
+                _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
@@ -156,24 +115,23 @@ public class RobotContainer
         configureDefaultCommands();
         configureDriverCommands();
         configureOperatorCommands();
-        // configureTestCommands();
     }
 
     private void configureDefaultCommands()
     {
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), () -> _joystick.getRawButton(11), _dashboard));
+        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
     }
 
     private void configureDriverCommands()
     {
-        new JoystickButton(_joystick, 1).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
-        new JoystickButton(_joystick, 2).whileTrue(DriveCommands.reduceSpeed(_drive));
-        new JoystickButton(_joystick, 3).onTrue(Commands.runOnce(() -> _dashboard.toggle()).ignoringDisable(true));
-        new JoystickButton(_joystick, 7).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 240, 60, 0.6)); // 60 degrees left
-        new JoystickButton(_joystick, 8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 120, 300, 0.6)); // 60 degrees right
-        new JoystickButton(_joystick, 9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 0.6));
-        new JoystickButton(_joystick, 10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), 0.6));
-        new JoystickButton(_joystick, 12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
+        _joystick.button(1).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
+        _joystick.button(2).whileTrue(DriveCommands.reduceSpeed(_drive));
+        _joystick.button(4).onTrue(Commands.runOnce(() -> _dashboard.toggle()).ignoringDisable(true));
+        _joystick.button(7).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 240, 60, 0.6)); // 60 degrees left
+        _joystick.button(8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 120, 300, 0.6)); // 60 degrees right
+        _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
+        _joystick.button(10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
+        _joystick.button(12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
     }
 
     private void configureOperatorCommands()
@@ -181,17 +139,15 @@ public class RobotContainer
         _controller.a().onTrue(CompositeCommands.Teleop.intakePickup(_intake, _notepath, _shooterBed, _controller.getHID()));
         _controller.b().onTrue(CompositeCommands.General.stopIntaking(_intake, _notepath));
         _controller.x().whileTrue(CompositeCommands.Teleop.suckIn(_notepath, _shooterFlywheel));
-        _controller.y().onTrue(CompositeCommands.Teleop.shooterPickup(_shooterBed, _shooterFlywheel, _notepath));
+        _controller.y().onTrue(CompositeCommands.Teleop.shooterPickup(_shooterBed, _shooterFlywheel, _notepath, _controller.getHID()));
 
         _controller.leftTrigger().whileTrue(CompositeCommands.Teleop.climbJoystick(_climb, () -> -_controller.getRightY(), () -> -_controller.getLeftY()));
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
-        // _controller.rightStick().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel,
-        // _notepath, _shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot));
 
-        _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 2));
-        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 15));
+        _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
+        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 7));
 
         _controller.start().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
         _controller.back().onTrue(CompositeCommands.General.setHasNote(_notepath, false));
@@ -202,33 +158,18 @@ public class RobotContainer
         _controller.povRight().onTrue(CompositeCommands.Teleop.redAmpOrPodium(_shooterFlywheel, _notepath, _shooterBed));
     }
 
-    private void configureTestCommands()
-    {
-        DriverStation.silenceJoystickConnectionWarning(true);
-
-        new JoystickButton(_testJoy, 1).onTrue(Commands.runOnce(() ->
-        {
-        }, _intake, _notepath, _shooterBed, _shooterFlywheel));
-        new JoystickButton(_testJoy, 7).onTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
-        new JoystickButton(_testJoy, 8).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
-        // new JoystickButton(_testJoy,
-        // 9).onTrue(CompositeCommands.Autonomous.loadWhileStopped(_intake, _notepath));
-        new JoystickButton(_testJoy, 10).onTrue(CompositeCommands.Autonomous.intakePickup(_intake, _notepath, _shooterBed));
-        // new JoystickButton(_testJoy,
-        // 11).onTrue(CompositeCommands.Autonomous.loadWhileStopped(_intake,
-        // _notepath));
-        // new JoystickButton(_testJoy,
-        // 12).onTrue(CompositeCommands.Autonomous.loadInMotion(_intake, _notepath));
-    }
-
     private ChassisSpeeds getChassisSpeeds()
     {
         return _drive.getChassisSpeeds();
     }
 
+    private boolean getRobotCentric()
+    {
+        return _joystick.button(3).getAsBoolean();
+    }
+
     public Command getAutonomousCommand()
     {
-        // return AutoBuilder.buildAuto("New Auto");
         return _dashboard.getAuto();
         // return null;
     }

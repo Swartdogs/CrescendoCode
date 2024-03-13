@@ -6,8 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -17,7 +15,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.util.Utilities;
 
-import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -75,9 +72,9 @@ public final class DriveCommands
         }, drive);
     }
 
-    public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double setpoint, double maxSpeed)
+    public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double setpoint, double maxSpeed)
     {
-        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), () -> false, dashboard));
+        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), robotCentric, dashboard));
     }
 
     public static Command aimAtSpeaker(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)

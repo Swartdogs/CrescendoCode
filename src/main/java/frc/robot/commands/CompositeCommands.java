@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.climb.Climb;
@@ -176,16 +175,10 @@ public final class CompositeCommands
                     (
                         IntakeCommands.start(intake),
                         NotepathCommands.intakeLoad(notepath)
-                        ),
-                        Commands.waitUntil(() -> notepath.sensorTripped()),
-                        ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow),
-                        new DeferredInstantCommand(() -> Commands.sequence
-                        (
-                            Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 1)),
-                            Commands.waitSeconds(0.5),
-                            Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 0)),
-                            Commands.print("RUMBLE!!!!")
-                        ))
+                    ),
+                    Commands.waitUntil(() -> notepath.sensorTripped()),
+                    ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow),
+                    rumble(controller)
                 )
                 .finallyDo(interrupted ->
                 {
@@ -237,7 +230,7 @@ public final class CompositeCommands
             // @formatter:on
         }
 
-        public static Command shooterPickup(ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, Notepath notepath)
+        public static Command shooterPickup(ShooterBed shooterBed, ShooterFlywheel shooterFlywheel, Notepath notepath, GenericHID controller)
         {
             // @formatter:off
             return
@@ -252,7 +245,8 @@ public final class CompositeCommands
                     ),
                     Commands.waitUntil(() -> notepath.sensorTripped()),
                     Commands.waitUntil(() -> !notepath.sensorTripped()),
-                    ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow)
+                    ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow),
+                    rumble(controller)
                 )
                 .finallyDo(interrupted ->
                     {
@@ -315,28 +309,28 @@ public final class CompositeCommands
             return ShooterBedCommands.setVolts(shooterBed, ySupplier).finallyDo(() -> shooterBed.setVolts(0));
         }
 
-        public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double blueSetpoint, double redSetpoint, double maxSpeed)
+        public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double blueSetpoint, double redSetpoint, double maxSpeed)
         {
             return Commands.either(
-                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, blueSetpoint, maxSpeed), DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, redSetpoint, maxSpeed),
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, blueSetpoint, maxSpeed),
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, redSetpoint, maxSpeed), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+            );
+        }
+
+        public static Command redAmpOrSubwoofer(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 0, maxSpeed), // subwoofer shot
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, -90, maxSpeed), // amp shot
                     () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );
         }
 
-        public static Command redAmpOrSubwoofer(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+        public static Command blueAmpOrSubwoofer(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
         {
             return Commands.either(
-                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, 0, maxSpeed), // subwoofer shot
-                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, -90, maxSpeed), // amp shot
-                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-            );
-        }
-
-        public static Command blueAmpOrSubwoofer(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
-        {
-            return Commands.either(
-                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, -90, maxSpeed), // subwoofer shot
-                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, 180, maxSpeed), // amp shot
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, -90, maxSpeed), // subwoofer shot
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 180, maxSpeed), // amp shot
                     () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );
         }
@@ -358,27 +352,41 @@ public final class CompositeCommands
             );
         }
 
+        public static Command rumble(GenericHID controller)
+        {
+            return new DeferredInstantCommand(
+                    () -> Commands.sequence(Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 1)), Commands.waitSeconds(0.5), Commands.runOnce(() -> controller.setRumble(RumbleType.kBothRumble, 0)))
+            );
+        }
+
         public static Command runThrough(BooleanSupplier buttonPressed, Climb climb, Drive drive, Intake intake, Notepath notepath, ShooterFlywheel shooterFlywheel, ShooterBed shooterBed, Dashboard dashboard)
         {
-            return Commands.sequence(
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ClimbCommands.setHeight(climb, Constants.Climb.MIN_EXTENSION), // Climb
-                    // Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                    // ClimbCommands.setHeight(climb, Constants.Climb.MAX_EXTENSION), // Climb
+            // @formatter:off
+            return Commands.sequence
+            (
+                    Commands.waitUntil(buttonPressed), ClimbCommands.setHeight(climb, Constants.Climb.MIN_EXTENSION), // Climb
+                    Commands.waitUntil(buttonPressed), ClimbCommands.setHeight(climb, Constants.Climb.LEFT_MAX_EXTENSION), // Climb
+                    Commands.waitUntil(buttonPressed), ClimbCommands.setHeight(climb, Constants.Climb.RIGHT_MAX_EXTENSION), //C
 
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), DriveCommands.joystickDrive(drive, () -> 0.5, () -> 0, () -> 0, () -> true, dashboard), Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
-                    DriveCommands.joystickDrive(drive, () -> 0.5, null, null, () -> true, dashboard), Commands.waitUntil(() -> buttonPressed.getAsBoolean()),
+                    Commands.deadline(Commands.waitUntil(buttonPressed), DriveCommands.joystickDrive(drive, () -> 0.5, () -> 0, () -> 0, () -> true, dashboard)), //Forward
+                    Commands.deadline(Commands.waitUntil(buttonPressed), DriveCommands.joystickDrive(drive, () -> -0.5, () -> 0, () -> 0, () -> true, dashboard)), //Backwards
+                    Commands.deadline(Commands.waitUntil(buttonPressed), DriveCommands.joystickDrive(drive, () -> 0.0, () -> 0.5, () -> 0, () -> true, dashboard)),  //Left or Right
+                    Commands.deadline(Commands.waitUntil(buttonPressed), DriveCommands.joystickDrive(drive, () -> 0.0, () -> -0.5, () -> 0, () -> true, dashboard)), //Left or Right
+                    Commands.deadline(Commands.waitUntil(buttonPressed), DriveCommands.joystickDrive(drive, () -> 0.0, () -> 0, () -> 0.5, () -> true, dashboard)), //Rotate Left or Right
+                    Commands.deadline(Commands.waitUntil(buttonPressed), DriveCommands.joystickDrive(drive, () -> 0.5, () -> 0, () -> -0.5, () -> true, dashboard)), //Rotate Left or Right
 
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), IntakeCommands.start(intake),                                  // Intake
+                    Commands.waitUntil(buttonPressed), IntakeCommands.start(intake), // Intake
 
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), NotepathCommands.intakeLoad(notepath),                         // Notepath
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), NotepathCommands.shooterLoad(notepath),                        // Notepath
+                    Commands.waitUntil(buttonPressed), NotepathCommands.intakeLoad(notepath),  // Notepath
+                    Commands.waitUntil(buttonPressed), NotepathCommands.shooterLoad(notepath), // Notepath
 
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterFlywheelCommands.start(shooterFlywheel, 4000, 4000),    // Flywheel
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterFlywheelCommands.intake(shooterFlywheel),               // Flywheel
+                    Commands.waitUntil(buttonPressed), ShooterFlywheelCommands.start(shooterFlywheel, 4000, 4000), // Flywheel
+                    Commands.waitUntil(buttonPressed), ShooterFlywheelCommands.intake(shooterFlywheel), // Flywheel
 
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_PODIUM_SHOT_ANGLE.getDegrees()), // Bed
-                    Commands.waitUntil(() -> buttonPressed.getAsBoolean()), ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees()) // Bed
+                    Commands.waitUntil(buttonPressed), ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_PODIUM_SHOT_ANGLE.getDegrees()), // Bed
+                    Commands.waitUntil(buttonPressed), ShooterBedCommands.setAngle(shooterBed, Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees()) // Bed
             );
+            // @formatter:on
         }
     }
 }

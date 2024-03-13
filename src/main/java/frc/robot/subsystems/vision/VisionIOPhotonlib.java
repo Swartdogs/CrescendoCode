@@ -7,13 +7,13 @@ import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Drive;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -29,10 +29,10 @@ public class VisionIOPhotonlib implements VisionIO
     private double                    _captureTimestamp = 0.0;
     private double[]                  _cornerX          = new double[] {};
     private double[]                  _cornerY          = new double[] {};
-    private Pose2d                    _lastPose         = new Pose2d();
+    private Pose2d                    _pose             = new Pose2d();
     private boolean                   _hasPose          = false;
 
-    public VisionIOPhotonlib()
+    public VisionIOPhotonlib(Drive drive)
     {
         AprilTagFieldLayout aprilTagFieldLayout = null;
 
@@ -46,16 +46,17 @@ public class VisionIOPhotonlib implements VisionIO
             System.out.println("Exception encountered: " + e.getMessage());
         }
 
-        _poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, _camera, Constants.Vision.CAMERA_TRANSFORM);
-        _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
+        _poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_LAST_POSE, _camera, Constants.Vision.CAMERA_TRANSFORM);
+        // _poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
-            PhotonPipelineResult result    = _camera.getLatestResult();
-            double               timestamp = result.getTimestampSeconds();
+            PhotonPipelineResult result     = _camera.getLatestResult();
+            double               timestamp  = result.getTimestampSeconds();
 
             List<Double> cornerXList = new ArrayList<>();
             List<Double> cornerYList = new ArrayList<>();
+            List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
 
             for (PhotonTrackedTarget target : result.getTargets())
             {
@@ -64,15 +65,23 @@ public class VisionIOPhotonlib implements VisionIO
                     cornerXList.add(corner.x);
                     cornerYList.add(corner.y);
                 }
+
+                var transform = target.getBestCameraToTarget();
+                var distance  = Math.hypot(transform.getX(), transform.getY());
+
+                if (distance <= Constants.Vision.MAX_DETECTION_RANGE)
+                {
+                    processedTargets.add(target);
+                }
             }
 
-            Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(_lastPose, result);
-            Pose2d                       newPose       = new Pose2d();
+            Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(drive.getPose(), new PhotonPipelineResult(result.getLatencyMillis(), processedTargets));
+            Pose2d                       pose       = new Pose2d();
             boolean                      hasPose       = false;
 
             if (estimatedPose.isPresent())
             {
-                newPose = estimatedPose.get().estimatedPose.toPose2d();
+                pose = estimatedPose.get().estimatedPose.toPose2d();
                 hasPose = true;
             }
 
@@ -81,7 +90,7 @@ public class VisionIOPhotonlib implements VisionIO
                 _captureTimestamp = timestamp;
                 _cornerX          = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
                 _cornerY          = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
-                _lastPose         = newPose;
+                _pose             = pose;
                 _hasPose          = hasPose;
             }
         });
@@ -93,7 +102,7 @@ public class VisionIOPhotonlib implements VisionIO
         inputs.captureTimestamp = _captureTimestamp;
         inputs.cornerX          = _cornerX;
         inputs.cornerY          = _cornerY;
-        inputs.pose             = _lastPose;
+        inputs.pose             = _pose;
         inputs.hasPose          = _hasPose;
     }
 
