@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6579998614542684,
-        "y": 6.679382086036901
+        "x": 0.6486711155240492,
+        "y": 6.6047521185951465
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.98179923516741,
-        "y": 6.467580748191452
+        "x": 2.381297928964374,
+        "y": 6.388271810532888
       },
       "isLocked": false,
       "linkedName": "AmpSide"
     },
     {
       "anchor": {
-        "x": 4.40792208954722,
-        "y": 6.549814316086593
+        "x": 3.4386670562249897,
+        "y": 7.475012302439632
       },
       "prevControl": {
-        "x": 3.6991710347057056,
-        "y": 7.127161890687418
+        "x": 3.1155820451175793,
+        "y": 7.137241609009157
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,19 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "Start Intake",
@@ -63,7 +75,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 11.05,
+    "rotation": 27.758540601059977,
     "rotateFast": false
   },
   "reversed": false,

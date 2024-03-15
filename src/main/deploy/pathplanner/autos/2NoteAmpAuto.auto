@@ -1,0 +1,91 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6579998614542684,
+      "y": 6.679382086036901
+    },
+    "rotation": 60.8025139539354
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Delay "
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Bed Angle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Bed Angle Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AmpSideToNote3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Speed 5000"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Shooter Angle Note 1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0047478556495593,
-        "y": 6.196440085187864
+        "x": 1.8427505945920983,
+        "y": 6.726025815687995
       },
       "isLocked": false,
       "linkedName": "MiddleSide"
     },
     {
       "anchor": {
-        "x": 4.158265490055131,
-        "y": 7.225355702947542
+        "x": 3.428637402729351,
+        "y": 7.071189415106104
       },
       "prevControl": {
-        "x": 3.3667002078134107,
-        "y": 6.408848590947255
+        "x": 2.15059921028933,
+        "y": 7.043203177315446
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,31 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Start Intake",
+      "waypointRelativePos": 0.35,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Start Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

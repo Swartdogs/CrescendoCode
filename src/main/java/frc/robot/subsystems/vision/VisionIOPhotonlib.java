@@ -51,11 +51,11 @@ public class VisionIOPhotonlib implements VisionIO
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
-            PhotonPipelineResult result     = _camera.getLatestResult();
-            double               timestamp  = result.getTimestampSeconds();
+            PhotonPipelineResult result    = _camera.getLatestResult();
+            double               timestamp = result.getTimestampSeconds();
 
-            List<Double> cornerXList = new ArrayList<>();
-            List<Double> cornerYList = new ArrayList<>();
+            List<Double>              cornerXList      = new ArrayList<>();
+            List<Double>              cornerYList      = new ArrayList<>();
             List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
 
             for (PhotonTrackedTarget target : result.getTargets())
@@ -76,12 +76,12 @@ public class VisionIOPhotonlib implements VisionIO
             }
 
             Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(drive.getPose(), new PhotonPipelineResult(result.getLatencyMillis(), processedTargets));
-            Pose2d                       pose       = new Pose2d();
+            Pose2d                       pose          = new Pose2d();
             boolean                      hasPose       = false;
 
             if (estimatedPose.isPresent())
             {
-                pose = estimatedPose.get().estimatedPose.toPose2d();
+                pose    = estimatedPose.get().estimatedPose.toPose2d();
                 hasPose = true;
             }
 

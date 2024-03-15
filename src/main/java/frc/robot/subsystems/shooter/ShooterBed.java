@@ -53,8 +53,8 @@ public class ShooterBed extends SubsystemBase
     {
         _io = io;
 
-        _bedPID = new PIDController(22 / Math.PI, 0, 0); // FIXME: Set values, calibrate
-        _bedPID.setTolerance(Units.degreesToRadians(0.5));
+        _bedPID = new PIDController(90 / Math.PI, 0, 0); // FIXME: Set values, calibrate
+        _bedPID.setTolerance(Units.degreesToRadians(1));
     }
 
     @Override
@@ -65,17 +65,19 @@ public class ShooterBed extends SubsystemBase
 
         if (_angleSetpoint != null)
         {
-            var feedForward = Constants.ShooterBed.BED_DOWN_MIN_VOLTS;
+            // var feedForward = Constants.ShooterBed.BED_DOWN_MIN_VOLTS;
 
-            if (_angleSetpoint.getRadians() > _inputs.bedAngle.getRadians())
-            {
-                feedForward = Constants.ShooterBed.BED_UP_MIN_VOLTS;
-            }
+            // if (_angleSetpoint.getRadians() > _inputs.bedAngle.getRadians())
+            // {
+            // feedForward = Constants.ShooterBed.BED_UP_MIN_VOLTS;
+            // }
 
-            if (atSetpoint())
-            {
-                feedForward = 0;
-            }
+            // if (atSetpoint())
+            // {
+            // feedForward = 0;
+            // }
+
+            var feedForward = Math.sin(_inputs.bedAngle.getRadians()) * Constants.ShooterBed.BED_DOWN_MIN_VOLTS;
 
             _io.setVolts(MathUtil.clamp(feedForward + _bedPID.calculate(_inputs.bedAngle.getRadians(), _angleSetpoint.getRadians()), -Constants.ShooterBed.MAX_BED_VOLTS, Constants.ShooterBed.MAX_BED_VOLTS));
         }

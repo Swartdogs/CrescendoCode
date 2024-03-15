@@ -14,6 +14,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Auto Delay"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Set Bed Angle"
           }
         },
@@ -32,25 +38,37 @@
         {
           "type": "named",
           "data": {
-            "name": "Start Shooter"
+            "name": "Set Bed Angle Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleSideToNote3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Start Intake"
+            "name": "Start Notepath"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "Note3ToNote2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "Note2ToNote1"
           }
         },
         {

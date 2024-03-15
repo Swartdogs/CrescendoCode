@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -22,17 +23,21 @@ public class ShooterBedIOVictorSPX implements ShooterBedIO
         _absoluteEncoder       = new DutyCycleEncoder(Constants.DIO.SHOOTER_BED_SENSOR);
         _absoluteEncoderOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
 
+        _leaderMotor.setInverted(true);
+        _leaderMotor.setNeutralMode(NeutralMode.Brake);
+
         _followerMotor.follow(_leaderMotor);
         _followerMotor.setInverted(true);
-
     }
 
     @Override
     public void updateInputs(ShooterBedIOInputs inputs)
     {
-        inputs.leaderVolts     = _leaderMotor.getMotorOutputVoltage();
-        inputs.followerVolts   = _followerMotor.getMotorOutputVoltage();
-        inputs.bedAngle        = Rotation2d.fromRotations(_absoluteEncoder.getAbsolutePosition()).times(Constants.ShooterBed.BED_SCALE).minus(_absoluteEncoderOffset);
+        inputs.leaderVolts   = _leaderMotor.getMotorOutputVoltage();
+        inputs.followerVolts = _followerMotor.getMotorOutputVoltage();
+        inputs.bedAngle      = Rotation2d.fromDegrees(_absoluteEncoder.getAbsolutePosition() * Constants.ShooterBed.BED_SCALE - _absoluteEncoderOffset.getDegrees());
+        // inputs.bedAngle =
+        // Rotation2d.fromRotations(_absoluteEncoder.getAbsolutePosition()).times(Constants.ShooterBed.BED_SCALE).minus(_absoluteEncoderOffset);
         inputs.bedAngleDegrees = inputs.bedAngle.getDegrees();
     }
 

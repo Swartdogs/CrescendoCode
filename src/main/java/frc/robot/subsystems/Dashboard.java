@@ -138,7 +138,7 @@ public class Dashboard extends SubsystemBase
     private final Intake          _intake;
     private final ShooterFlywheel _shooterFlywheel;
     private final Drive           _drive;
-    private final Climb           _climb;
+    // private final Climb _climb;
 
     /*
      * SendableChoosers for Autonomous options
@@ -146,14 +146,14 @@ public class Dashboard extends SubsystemBase
     private final SendableChooser<Integer>        _autoDelayChooser;
     private final LoggedDashboardChooser<Command> _autoChooser;
 
-    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb)
+    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake)
     {
         _drive           = drive;
         _shooterBed      = shooterBed;
         _notepath        = notepath;
         _shooterFlywheel = shooterFlywheel;
         _intake          = intake;
-        _climb           = climb;
+        // _climb = climb;
 
         /*
          * DASHBOARD
@@ -170,8 +170,7 @@ public class Dashboard extends SubsystemBase
 
         _videoSink.setSource(_photonCamera);
 
-        dashboard.addCamera("Camera Stream", "Switched camera", _videoSink.getListenAddress()).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
-                .withProperties(Map.of("Show crosshair", false, "Show controls", false));
+        dashboard.add("Camera Stream", _driverCamera).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10).withProperties(Map.of("Show crosshair", false, "Show controls", false));
 
         CameraServer.addSwitchedCamera(getName());
 
@@ -225,9 +224,15 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.79, 4.23, Rotation2d.fromDegrees(-24.44))))));
         NamedCommands.registerCommand("Set Pose to Amp Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))))));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
+
         NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.5));
+        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 35.5));
+        NamedCommands.registerCommand("Set Shooter Angle Note 1", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 28.3));
+
+        NamedCommands.registerCommand("Set Inner Note Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4000, 4000));
+        NamedCommands.registerCommand("Set Speed 5000", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5000, 5000));
         NamedCommands.registerCommand("Set Shooter Max Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5800, 5800));
-        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 60));
+        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 52));
         NamedCommands.registerCommand("Set Bed Angle Intake", CompositeCommands.Autonomous.setBedAngle(shooterBed, 65.1));
 
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
@@ -236,7 +241,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Start Notepath", CompositeCommands.Autonomous.startNotepath(_notepath)); // Notepath sequence, shuts off after sensor not tripped
 
         // Named Commands for starting shooter, intake, and notepath, does not shut off
-        NamedCommands.registerCommand("Start Shooter", CompositeCommands.Autonomous.startShooter(_shooterFlywheel, 3000, 3000));
+        NamedCommands.registerCommand("Start Shooter", CompositeCommands.Autonomous.startShooter(_shooterFlywheel, 4000, 4000));
         NamedCommands.registerCommand("Start Intake", IntakeCommands.start(_intake));
         NamedCommands.registerCommand("Notepath On", new DeferredInstantCommand(() -> NotepathCommands.intakeLoad(_notepath))); // TODO: Rename other to notepath sequence overall check
         NamedCommands.registerCommand("Notepath Off", NotepathCommands.stop(_notepath));
@@ -322,25 +327,29 @@ public class Dashboard extends SubsystemBase
         });
 
         // Climb
-        initializeSetting("Climb Left Offset", Constants.Climb.LEFT_ZERO_OFFSET, _climbLeftOffset, value ->
-        {
-            _climb.setLeftOffset(value);
-        });
+        // initializeSetting("Climb Left Offset", Constants.Climb.LEFT_ZERO_OFFSET,
+        // _climbLeftOffset, value ->
+        // {
+        // _climb.setLeftOffset(value);
+        // });
 
-        initializeSetting("Climb Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET, _climbRightOffset, value ->
-        {
-            _climb.setRightOffset(value);
-        });
+        // initializeSetting("Climb Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET,
+        // _climbRightOffset, value ->
+        // {
+        // _climb.setRightOffset(value);
+        // });
 
-        initializeSetting("Climb Minimum Height", Constants.Climb.MIN_EXTENSION, _climbMinHeight, value ->
-        {
-            _climb.setMinExtension(value);
-        });
+        // initializeSetting("Climb Minimum Height", Constants.Climb.MIN_EXTENSION,
+        // _climbMinHeight, value ->
+        // {
+        // _climb.setMinExtension(value);
+        // });
 
-        initializeSetting("Climb Maximum Height", Constants.Climb.LEFT_MAX_EXTENSION, _climbMaxHeight, value ->
-        {
-            _climb.setMaxExtension(value);
-        });
+        // initializeSetting("Climb Maximum Height", Constants.Climb.LEFT_MAX_EXTENSION,
+        // _climbMaxHeight, value ->
+        // {
+        // _climb.setMaxExtension(value);
+        // });
 
         // Notepath
         initializeSetting("Notepath Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT, _notepathShootSpeed, value ->
@@ -359,30 +368,37 @@ public class Dashboard extends SubsystemBase
         });
 
         // Shooter bed
-        initializeSetting("Shooter Bed Offset", Constants.ShooterBed.BED_ANGLE_OFFSET.getDegrees(), _shooterOffset, value ->
-        {
-            _shooterBed.setAngleOffset(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Shooter Bed Offset",
+        // Constants.ShooterBed.BED_ANGLE_OFFSET.getDegrees(), _shooterOffset, value ->
+        // {
+        // _shooterBed.setAngleOffset(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Minimum Angle", Constants.ShooterBed.MIN_BED_ANGLE.getDegrees(), _bedMinimumAngle, value ->
-        {
-            _shooterBed.setMinAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Minimum Angle",
+        // Constants.ShooterBed.MIN_BED_ANGLE.getDegrees(), _bedMinimumAngle, value ->
+        // {
+        // _shooterBed.setMinAngle(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Maximum Angle", Constants.ShooterBed.MAX_BED_ANGLE.getDegrees(), _bedMaximumAngle, value ->
-        {
-            _shooterBed.setMaxAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Maximum Angle",
+        // Constants.ShooterBed.MAX_BED_ANGLE.getDegrees(), _bedMaximumAngle, value ->
+        // {
+        // _shooterBed.setMaxAngle(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Intake Pickup Angle", Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees(), _bedPickupIntakeAngle, value ->
-        {
-            _shooterBed.setIntakeLoadAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Intake Pickup Angle",
+        // Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees(),
+        // _bedPickupIntakeAngle, value ->
+        // {
+        // _shooterBed.setIntakeLoadAngle(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Shooter Pickup Angle", Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE.getDegrees(), _bedPickupShooterAngle, value ->
-        {
-            _shooterBed.setShooterLoadAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Shooter Pickup Angle",
+        // Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE.getDegrees(),
+        // _bedPickupShooterAngle, value ->
+        // {
+        // _shooterBed.setShooterLoadAngle(Rotation2d.fromDegrees(value));
+        // });
 
         // Shooter flywheel
         initializeSetting("Shooter Velocity Range", Constants.ShooterFlywheel.VELOCITY_RANGE, _flywheelVelocityRange, value ->
@@ -475,8 +491,10 @@ public class Dashboard extends SubsystemBase
         _field.setRobotPose(_drive.getPose());
 
         // Climb
-        _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getLeftExtension())));
-        _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getRightExtension())));
+        // _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f",
+        // _climb.getLeftExtension())));
+        // _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f",
+        // _climb.getRightExtension())));
 
         // Intake
         _intakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", _intake.getSpeed())));

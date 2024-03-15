@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShooterBedCommands;
+import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
@@ -50,15 +52,15 @@ public class RobotContainer
     private final Notepath        _notepath;
     private final ShooterBed      _shooterBed;
     private final ShooterFlywheel _shooterFlywheel;
-    private final Climb           _climb;
-    private final Gyro            _gyro;
+    // private final Climb _climb;
+    private final Gyro      _gyro;
     @SuppressWarnings("unused")
-    private final Vision          _vision;
+    private final Vision    _vision;
     @SuppressWarnings("unused")
-    private final Dashboard       _dashboard;
+    private final Dashboard _dashboard;
 
     // Controls
-    private final CommandJoystick              _joystick   = new CommandJoystick(1);
+    private final CommandJoystick       _joystick   = new CommandJoystick(1);
     @SuppressWarnings("unused")
     private final Joystick              _testJoy    = new Joystick(2);
     private final CommandXboxController _controller = new CommandXboxController(0);
@@ -81,7 +83,7 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
-                _climb = new Climb(_gyro, new ClimbIOVictorSPX());
+                // _climb = new Climb(_gyro, new ClimbIOVictorSPX());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -93,7 +95,7 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIOSim());
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
-                _climb = new Climb(_gyro, new ClimbIOSim());
+                // _climb = new Climb(_gyro, new ClimbIOSim());
                 break;
 
             // Replayed robot, disable IO implementations
@@ -105,11 +107,11 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIO() {});
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
-                _climb = new Climb(_gyro, new ClimbIO() {});
+                // _climb = new Climb(_gyro, new ClimbIO() {});
                 break;
         }
 
-        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake);
 
         // Configure the button bindings
         configureDefaultCommands();
@@ -141,13 +143,16 @@ public class RobotContainer
         _controller.x().whileTrue(CompositeCommands.Teleop.suckIn(_notepath, _shooterFlywheel));
         _controller.y().onTrue(CompositeCommands.Teleop.shooterPickup(_shooterBed, _shooterFlywheel, _notepath, _controller.getHID()));
 
-        _controller.leftTrigger().whileTrue(CompositeCommands.Teleop.climbJoystick(_climb, () -> -_controller.getRightY(), () -> -_controller.getLeftY()));
+        // _controller.leftTrigger().whileTrue(CompositeCommands.Teleop.climbJoystick(_climb,
+        // () -> -_controller.getRightY(), () -> -_controller.getLeftY()));
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
 
-        _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
-        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 7));
+        _controller.rightStick().onTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 5000, 5000));
+
+        // _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
+        // _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 7));
 
         _controller.start().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
         _controller.back().onTrue(CompositeCommands.General.setHasNote(_notepath, false));

@@ -44,7 +44,7 @@
   ],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "Load",
       "waypointRelativePos": 0.2,
       "command": {
         "type": "sequential",

@@ -306,7 +306,7 @@ public final class CompositeCommands
 
         public static Command setBedVolts(ShooterBed shooterBed, DoubleSupplier ySupplier)
         {
-            return ShooterBedCommands.setVolts(shooterBed, ySupplier).finallyDo(() -> shooterBed.setVolts(0));
+            return ShooterBedCommands.setVolts(shooterBed, ySupplier).finallyDo(() -> shooterBed.setAngle(shooterBed.getBedAngle()));
         }
 
         public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double blueSetpoint, double redSetpoint, double maxSpeed)
@@ -339,14 +339,14 @@ public final class CompositeCommands
         {
             return Commands.either(
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2000, ShooterBed.BedAngle.AmpShot), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );
         }
 
         public static Command blueAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2000, ShooterBed.BedAngle.AmpShot),
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
                     () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );

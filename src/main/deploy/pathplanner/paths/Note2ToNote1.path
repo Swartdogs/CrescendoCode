@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9066934025451485,
-        "y": 5.550936522700434
+        "x": 2.8315976631953266,
+        "y": 5.503960098829289
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9322404798655763,
-        "y": 4.805201148863836
+        "x": 2.0759692428475764,
+        "y": 5.3547001639457825
       },
       "isLocked": false,
       "linkedName": "Note2"
     },
     {
       "anchor": {
-        "x": 2.542840434518079,
-        "y": 4.097305368134887
+        "x": 2.6263652527305057,
+        "y": 4.123305701156857
       },
       "prevControl": {
-        "x": 2.5603644627626707,
-        "y": 4.97947480283478
+        "x": 1.82409310273166,
+        "y": 4.235250652319487
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Load",
+      "waypointRelativePos": 0.3,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Load"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -39,7 +57,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -88.06590677580591,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
