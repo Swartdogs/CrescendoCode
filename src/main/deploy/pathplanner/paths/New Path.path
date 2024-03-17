@@ -53,6 +53,12 @@
             {
               "type": "named",
               "data": {
+                "name": "Start Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
                 "name": "Load"
               }
             }
@@ -73,7 +79,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "TestDrive",
+  "folder": "Misc.",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

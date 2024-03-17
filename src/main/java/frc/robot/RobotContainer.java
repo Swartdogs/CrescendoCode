@@ -52,12 +52,12 @@ public class RobotContainer
     private final Notepath        _notepath;
     private final ShooterBed      _shooterBed;
     private final ShooterFlywheel _shooterFlywheel;
-    // private final Climb _climb;
-    private final Gyro      _gyro;
+    private final Climb           _climb;
+    private final Gyro            _gyro;
     @SuppressWarnings("unused")
-    private final Vision    _vision;
+    private final Vision          _vision;
     @SuppressWarnings("unused")
-    private final Dashboard _dashboard;
+    private final Dashboard       _dashboard;
 
     // Controls
     private final CommandJoystick       _joystick   = new CommandJoystick(1);
@@ -83,7 +83,7 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
-                // _climb = new Climb(_gyro, new ClimbIOVictorSPX());
+                _climb = new Climb(_gyro, new ClimbIOVictorSPX());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -95,7 +95,7 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIOSim());
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
-                // _climb = new Climb(_gyro, new ClimbIOSim());
+                _climb = new Climb(_gyro, new ClimbIOSim());
                 break;
 
             // Replayed robot, disable IO implementations
@@ -107,11 +107,11 @@ public class RobotContainer
                 _notepath = new Notepath(new NotepathIO() {});
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
-                // _climb = new Climb(_gyro, new ClimbIO() {});
+                _climb = new Climb(_gyro, new ClimbIO() {});
                 break;
         }
 
-        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake);
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
 
         // Configure the button bindings
         configureDefaultCommands();
@@ -128,7 +128,8 @@ public class RobotContainer
     {
         _joystick.button(1).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
         _joystick.button(2).whileTrue(DriveCommands.reduceSpeed(_drive));
-        _joystick.button(4).onTrue(Commands.runOnce(() -> _dashboard.toggle()).ignoringDisable(true));
+        // _joystick.button(4).onTrue(Commands.runOnce(() ->
+        // _dashboard.toggle()).ignoringDisable(true));
         _joystick.button(7).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 240, 60, 0.6)); // 60 degrees left
         _joystick.button(8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 120, 300, 0.6)); // 60 degrees right
         _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
@@ -143,19 +144,21 @@ public class RobotContainer
         _controller.x().whileTrue(CompositeCommands.Teleop.suckIn(_notepath, _shooterFlywheel));
         _controller.y().onTrue(CompositeCommands.Teleop.shooterPickup(_shooterBed, _shooterFlywheel, _notepath, _controller.getHID()));
 
-        // _controller.leftTrigger().whileTrue(CompositeCommands.Teleop.climbJoystick(_climb,
-        // () -> -_controller.getRightY(), () -> -_controller.getLeftY()));
+        _controller.leftTrigger().whileTrue(CompositeCommands.Teleop.climbJoystick(_climb, () -> -_controller.getRightY(), () -> -_controller.getLeftY()));
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
 
-        _controller.rightStick().onTrue(ShooterFlywheelCommands.start(_shooterFlywheel, 5000, 5000));
-
-        // _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
-        // _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 7));
+        _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
+        _controller.rightBumper().whileTrue(ShooterBedCommands.setAngle(_shooterBed, 30).andThen(ClimbCommands.setHeight(_climb, 10.5)));
 
         _controller.start().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
         _controller.back().onTrue(CompositeCommands.General.setHasNote(_notepath, false));
+
+        // _controller.povUp().onTrue(ShooterBedCommands.setAngle(_shooterBed, 65));
+        // _controller.povLeft().onTrue(ShooterBedCommands.setAngle(_shooterBed, 60));
+        // _controller.povRight().onTrue(ShooterBedCommands.setAngle(_shooterBed, 60));
+        // _controller.povDown().onTrue(ShooterBedCommands.setAngle(_shooterBed, 30));
 
         _controller.povUp().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.TrapShot));
         _controller.povDown().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
@@ -176,6 +179,5 @@ public class RobotContainer
     public Command getAutonomousCommand()
     {
         return _dashboard.getAuto();
-        // return null;
     }
 }

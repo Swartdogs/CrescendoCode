@@ -128,7 +128,7 @@ public class Dashboard extends SubsystemBase
     UsbCamera   _driverCamera;
     MjpegServer _videoSink;
     boolean     _showFrontCamera = true;
-    boolean     isDriverCamera;
+    boolean     _isDriverCamera;
 
     /*
      * Subsystems
@@ -138,7 +138,7 @@ public class Dashboard extends SubsystemBase
     private final Intake          _intake;
     private final ShooterFlywheel _shooterFlywheel;
     private final Drive           _drive;
-    // private final Climb _climb;
+    private final Climb           _climb;
 
     /*
      * SendableChoosers for Autonomous options
@@ -146,14 +146,14 @@ public class Dashboard extends SubsystemBase
     private final SendableChooser<Integer>        _autoDelayChooser;
     private final LoggedDashboardChooser<Command> _autoChooser;
 
-    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake)
+    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb)
     {
         _drive           = drive;
         _shooterBed      = shooterBed;
         _notepath        = notepath;
         _shooterFlywheel = shooterFlywheel;
         _intake          = intake;
-        // _climb = climb;
+        _climb           = climb;
 
         /*
          * DASHBOARD
@@ -225,14 +225,16 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Pose to Amp Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))))));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
 
-        NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.5));
-        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 35.5));
+        NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.8));
+        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 36));
         NamedCommands.registerCommand("Set Shooter Angle Note 1", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 28.3));
+        NamedCommands.registerCommand("Podium Shot Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 31.5));
 
         NamedCommands.registerCommand("Set Inner Note Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4000, 4000));
+        NamedCommands.registerCommand("Set Initial Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4500, 4500));
         NamedCommands.registerCommand("Set Speed 5000", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5000, 5000));
         NamedCommands.registerCommand("Set Shooter Max Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5800, 5800));
-        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 52));
+        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 52.5));
         NamedCommands.registerCommand("Set Bed Angle Intake", CompositeCommands.Autonomous.setBedAngle(shooterBed, 65.1));
 
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
@@ -423,18 +425,18 @@ public class Dashboard extends SubsystemBase
         if (_showFrontCamera)
         {
             _videoSink.setSource(_photonCamera);
-            isDriverCamera = false;
+            _isDriverCamera = false;
         }
         else
         {
             _videoSink.setSource(_driverCamera);
-            isDriverCamera = true;
+            _isDriverCamera = true;
         }
     }
 
     public boolean isDriverCamera()
     {
-        return isDriverCamera;
+        return true;
     }
 
     public void initializeSetting(String key, double defaultValue, GenericEntry entry, DoubleConsumer consumer)
@@ -491,10 +493,8 @@ public class Dashboard extends SubsystemBase
         _field.setRobotPose(_drive.getPose());
 
         // Climb
-        // _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f",
-        // _climb.getLeftExtension())));
-        // _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f",
-        // _climb.getRightExtension())));
+        _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getLeftExtension())));
+        _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getRightExtension())));
 
         // Intake
         _intakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", _intake.getSpeed())));

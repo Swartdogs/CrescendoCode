@@ -14,6 +14,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -29,8 +30,12 @@ public class VisionIOPhotonlib implements VisionIO
     private double                    _captureTimestamp = 0.0;
     private double[]                  _cornerX          = new double[] {};
     private double[]                  _cornerY          = new double[] {};
+    private double[]                  _closeCornerX     = new double[] {};
+    private double[]                  _closeCornerY     = new double[] {};
     private Pose2d                    _pose             = new Pose2d();
     private boolean                   _hasPose          = false;
+    private double[]                  _distances        = new double[] {};
+    private int                       _numProcessedTargets;
 
     public VisionIOPhotonlib(Drive drive)
     {
@@ -51,12 +56,14 @@ public class VisionIOPhotonlib implements VisionIO
 
         NetworkTableInstance.getDefault().addListener(NetworkTableInstance.getDefault().getEntry("/photonvision/" + Constants.Vision.PHOTON_CAMERA_NAME + "/latencyMillis"), EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
-            PhotonPipelineResult result    = _camera.getLatestResult();
-            double               timestamp = result.getTimestampSeconds();
-
+            PhotonPipelineResult      result           = _camera.getLatestResult();
+            double                    timestamp        = result.getTimestampSeconds();
             List<Double>              cornerXList      = new ArrayList<>();
             List<Double>              cornerYList      = new ArrayList<>();
+            List<Double>              closeCornerXList = new ArrayList<>();
+            List<Double>              closeCornerYList = new ArrayList<>();
             List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
+            List<Double>              distances        = new ArrayList<>();
 
             for (PhotonTrackedTarget target : result.getTargets())
             {
@@ -68,14 +75,24 @@ public class VisionIOPhotonlib implements VisionIO
 
                 var transform = target.getBestCameraToTarget();
                 var distance  = Math.hypot(transform.getX(), transform.getY());
+                distances.add(distance);
 
                 if (distance <= Constants.Vision.MAX_DETECTION_RANGE)
                 {
                     processedTargets.add(target);
+
+                    for (TargetCorner corner : target.getDetectedCorners())
+                    {
+                        closeCornerXList.add(corner.x);
+                        closeCornerYList.add(corner.y);
+                    }
                 }
             }
 
-            Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(drive.getPose(), new PhotonPipelineResult(result.getLatencyMillis(), processedTargets));
+            PhotonPipelineResult processedResult = new PhotonPipelineResult(result.getLatencyMillis(), processedTargets);
+            processedResult.setTimestampSeconds(timestamp);
+
+            Optional<EstimatedRobotPose> estimatedPose = getEstimatedGlobalPose(drive.getPose(), processedResult);
             Pose2d                       pose          = new Pose2d();
             boolean                      hasPose       = false;
 
@@ -87,11 +104,15 @@ public class VisionIOPhotonlib implements VisionIO
 
             synchronized (VisionIOPhotonlib.this)
             {
-                _captureTimestamp = timestamp;
-                _cornerX          = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
-                _cornerY          = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
-                _pose             = pose;
-                _hasPose          = hasPose;
+                _captureTimestamp    = timestamp;
+                _cornerX             = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
+                _cornerY             = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
+                _closeCornerX        = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
+                _closeCornerY        = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
+                _distances           = distances.stream().mapToDouble(Double::doubleValue).toArray();
+                _pose                = pose;
+                _numProcessedTargets = processedTargets.size();
+                _hasPose             = hasPose;
             }
         });
     }
@@ -99,11 +120,15 @@ public class VisionIOPhotonlib implements VisionIO
     @Override
     public synchronized void updateInputs(VisionIOInputs inputs)
     {
-        inputs.captureTimestamp = _captureTimestamp;
-        inputs.cornerX          = _cornerX;
-        inputs.cornerY          = _cornerY;
-        inputs.pose             = _pose;
-        inputs.hasPose          = _hasPose;
+        inputs.captureTimestamp    = _captureTimestamp;
+        inputs.cornerX             = _cornerX;
+        inputs.cornerY             = _cornerY;
+        inputs.closeCornerX        = _closeCornerX;
+        inputs.closeCornerY        = _closeCornerY;
+        inputs.numProcessedTargets = _numProcessedTargets;
+        inputs.pose                = _pose;
+        inputs.targetDistances     = _distances;
+        inputs.hasPose             = _hasPose;
     }
 
     private Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult result)

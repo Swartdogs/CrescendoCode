@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8335710517574895,
-        "y": 5.555088802485298
+        "x": 2.822268917265107,
+        "y": 4.123305701156857
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0605107364060893,
-        "y": 5.525487974052871
+        "x": 1.7867781190118373,
+        "y": 4.207264414531432
       },
       "isLocked": false,
-      "linkedName": "Test Point"
+      "linkedName": "Note1Edited"
     },
     {
       "anchor": {
-        "x": 1.3929974013794195,
-        "y": 5.564955745296107
+        "x": 0.6113561318031727,
+        "y": 4.52444177615628
       },
       "prevControl": {
-        "x": 1.5903362575955933,
-        "y": 5.564955745296107
+        "x": 1.4322857736624561,
+        "y": 4.244579398249706
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MiddleSide"
+      "linkedName": "SourceSide"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.45,
+      "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 2.0,
@@ -51,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -59.4702941003684,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "TestDrive",
+  "folder": "Misc.",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 0.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

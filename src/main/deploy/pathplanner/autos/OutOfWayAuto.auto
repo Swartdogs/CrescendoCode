@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6486711155240492,
-      "y": 6.6047521185951465
+      "x": 0.6113561318031727,
+      "y": 4.52444177615628
     },
-    "rotation": 60.8025139539354
+    "rotation": -58.10273562978953
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Delay "
+            "name": "Auto Delay"
           }
         },
         {
@@ -42,39 +42,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Set Bed Angle Intake"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "AmpSideToNote3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ToShootAmp"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Bed Angle"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
+            "pathName": "OutOfWay"
           }
         },
         {

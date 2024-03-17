@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.4386670562249897,
-        "y": 7.475012302439632
+        "x": 3.5312536079617614,
+        "y": 7.397695522663773
       },
       "prevControl": {
-        "x": 3.1155820451175793,
-        "y": 7.137241609009157
+        "x": 3.208168596854351,
+        "y": 7.059924829233299
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "AmpBlueLine"
+      "linkedName": "Note3Edited"
     }
   ],
   "rotationTargets": [],

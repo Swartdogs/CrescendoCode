@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.94693201083977,
-        "y": 6.887126081944472
+        "x": 0.6113561318031727,
+        "y": 4.52444177615628
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.537562767433229,
-        "y": 8.613841073835994
+        "x": 0.7365015087811937,
+        "y": 3.421763981273938
       },
       "isLocked": false,
-      "linkedName": "DriveTest3"
+      "linkedName": "SourceSide"
     },
     {
       "anchor": {
-        "x": 1.3929974013794195,
-        "y": 5.564955745296107
+        "x": 3.086210680471451,
+        "y": 0.9251979863530396
       },
       "prevControl": {
-        "x": 5.122701783865108,
-        "y": 4.93347140540435
+        "x": 2.086210680471451,
+        "y": 0.9251979863530396
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MiddleSide"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "TestDrive",
+  "folder": "Misc.",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -62.086365440949855,
     "velocity": 0
   },
   "useDefaultConstraints": true

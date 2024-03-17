@@ -1,16 +1,16 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.3929974013794195,
+      "y": 5.564955745296107
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Pose to Middle Side"
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -32,6 +32,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Set Intial Speed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Start Notepath"
           }
         },
@@ -44,7 +50,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleSideToNote3"
+            "pathName": "MiddleSideToNote2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Shooter Angle Note 2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
           }
         },
         {
@@ -54,15 +72,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Note3ToNote2"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Start Notepath"
+            "name": "Set Bed Angle Intake"
           }
         },
         {
@@ -72,9 +84,89 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Shooter Angle Note 2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note1ToNote2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Bed Angle Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note2ToNote3"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Shooter Angle Note 2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note3ToNote2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooter"
           }
         }
       ]

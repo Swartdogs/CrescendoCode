@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4311279977766789,
-        "y": 5.574358195791997
+        "x": 2.8659254456254897,
+        "y": 4.082619685811823
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3445732483476367,
-        "y": 4.098792791023527
+        "x": 2.1802876521674346,
+        "y": 4.981817339142892
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Note1"
     },
     {
       "anchor": {
-        "x": 3.468813556742662,
-        "y": 1.9908422127828567
+        "x": 3.2918102329943486,
+        "y": 7.019756150424644
       },
       "prevControl": {
-        "x": 2.4733924503512332,
-        "y": 2.248480616790049
+        "x": 2.2491267880567967,
+        "y": 6.7994709155786826
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DriveTest1"
+      "linkedName": "Note3"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 151.99082329198623,
+    "rotation": 20.854458039578073,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "TestDrive",
+  "folder": "InnerNoteToInnerNote",
   "previewStartingState": {
-    "rotation": -88.26429541107166,
+    "rotation": -20.290243170881915,
     "velocity": 0
   },
   "useDefaultConstraints": true

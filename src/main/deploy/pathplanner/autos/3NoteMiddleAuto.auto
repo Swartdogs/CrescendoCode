@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6486711155240492,
-      "y": 6.6047521185951465
+      "x": 1.3929974013794195,
+      "y": 5.564955745296107
     },
-    "rotation": 60.8025139539354
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Delay "
+            "name": "Auto Delay"
           }
         },
         {
@@ -32,12 +32,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Set Initial Speed"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Start Notepath"
           }
         },
@@ -50,43 +44,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "AmpSideToNote3"
+            "pathName": "New Path"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ToShootAmp"
+            "pathName": "Note2ToNote7"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Set Bed Angle"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Shooter"
+            "pathName": "Note7ToBlueLine"
           }
         }
       ]

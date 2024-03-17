@@ -276,20 +276,6 @@ public final class CompositeCommands
             // @formatter:on
         }
 
-        public static Command climbJoystick(Climb climb, ShooterBed shooterBed, BedAngle angle, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
-        {
-            // @formatter:off
-            return 
-                Commands.sequence
-                (
-                    ShooterBedCommands.setAngle(shooterBed, angle),
-                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
-                    ClimbCommands.setVolts(climb, leftSupplier, rightSupplier)
-                )
-                .finallyDo(() -> climb.stop());
-            // @formatter:on
-        }
-
         public static Command climbJoystick(Climb climb, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
         {
             // @formatter:off
@@ -339,14 +325,14 @@ public final class CompositeCommands
         {
             return Commands.either(
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2000, ShooterBed.BedAngle.AmpShot), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );
         }
 
         public static Command blueAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2000, ShooterBed.BedAngle.AmpShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
                     () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
             );

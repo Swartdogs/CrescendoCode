@@ -188,15 +188,15 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final double     MAX_BED_VOLTS            = 4.0;
+        public static final double     MAX_BED_VOLTS            = 6.0;
         public static final double     BED_SCALE                = 170.401;
         public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(59.947);
         public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(88);
-        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(20);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(23);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
         public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(52);
-        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(39);
+        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(31.5);
         public static final Rotation2d BED_AMP_SHOT_ANGLE       = Rotation2d.fromDegrees(48);
         public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);
