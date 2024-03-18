@@ -1,0 +1,518 @@
+{
+  "tabPane": [
+    {
+      "title": "Dashboard",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "24,10": {
+            "size": [
+              15,
+              5
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Climb and Intake",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Number of columns": 3,
+              "Layout/Number of rows": 1,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Climb and Intake/Left Height",
+                  "_title": "Left Height",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Range/Min": 0.0,
+                  "Range/Max": 25.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 5,
+                  "Visuals/Show text": true,
+                  "Visuals/Orientation": "VERTICAL"
+                },
+                "1,0": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Climb and Intake/Intake Speed",
+                  "_title": "Intake Speed",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 5,
+                  "Visuals/Show text": true,
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                "2,0": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Climb and Intake/Right Height",
+                  "_title": "Right Height",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Range/Min": 0.0,
+                  "Range/Max": 25.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 5,
+                  "Visuals/Show text": true,
+                  "Visuals/Orientation": "VERTICAL"
+                }
+              }
+            }
+          },
+          "24,5": {
+            "size": [
+              6,
+              5
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Shooter Flywheel",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Number of columns": 1,
+              "Layout/Number of rows": 2,
+              "Layout/Label position": "HIDDEN",
+              "_children": {
+                "0,1": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Shooter flywheel/Lower Velocity",
+                  "_title": "Lower Velocity",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Range/Min": -6000.0,
+                  "Range/Max": 6000.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 5,
+                  "Visuals/Show text": true,
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                "0,0": {
+                  "_type": "Number Bar",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Shooter flywheel/Upper Velocity",
+                  "_title": "Upper Velocity",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Range/Min": -6000.0,
+                  "Range/Max": 6000.0,
+                  "Range/Center": 0.0,
+                  "Visuals/Num tick marks": 5,
+                  "Visuals/Show text": true,
+                  "Visuals/Orientation": "HORIZONTAL"
+                }
+              }
+            }
+          },
+          "30,5": {
+            "size": [
+              4,
+              5
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Color Box",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Number of columns": 1,
+              "Layout/Number of rows": 2,
+              "Layout/Label position": "LEFT",
+              "_children": {
+                "0,0": {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Color Box/Alliance",
+                  "_title": "Alliance",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#0000FFFF",
+                  "Colors/Color when false": "#FF0000FF"
+                },
+                "0,1": {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Color Box/Has Note",
+                  "_title": "Has Note",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#00FF00FF",
+                  "Colors/Color when false": "#FF0000FF"
+                }
+              }
+            }
+          },
+          "24,0": {
+            "size": [
+              3,
+              5
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/Dashboard/Notepath",
+              "_title": "Notepath",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -1.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          },
+          "27,0": {
+            "size": [
+              3,
+              5
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/Dashboard/Bed angle",
+              "_title": "Bed Angle",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "VERTICAL"
+            }
+          },
+          "34,5": {
+            "size": [
+              5,
+              5
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Swerve Angles",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Number of columns": 2,
+              "Layout/Number of rows": 2,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Swerve Angles/FL Angle",
+                  "_title": "FL Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                "0,1": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Swerve Angles/BL Angle",
+                  "_title": "BL Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                "1,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Swerve Angles/FR Angle",
+                  "_title": "FR Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                "1,1": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///Shuffleboard/Dashboard/Swerve Angles/BR Angle",
+                  "_title": "BR Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              }
+            }
+          },
+          "30,0": {
+            "size": [
+              9,
+              5
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "List Layout",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Split Button Chooser",
+                  "_source0": "network_table:///SmartDashboard/Shuffleboard/Dashboard/Autonomous/Delay Options",
+                  "_title": "Delay Options",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "ComboBox Chooser",
+                  "_source0": "network_table:///SmartDashboard/Shuffleboard/Dashboard/Autonomous/Autonomous Path",
+                  "_title": "Autonomous Path",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              ]
+            }
+          },
+          "0,0": {
+            "size": [
+              24,
+              15
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Shuffleboard/Dashboard/Field",
+              "_title": "Field",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 64.0,
+              "Visuals/Show Outside Circles": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Settings",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              39,
+              12
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Settings",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Number of columns": 6,
+              "Layout/Number of rows": 1,
+              "Layout/Label position": "TOP",
+              "_children": {
+                "2,0": {
+                  "_type": "List Layout",
+                  "_title": "Climb",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Label position": "LEFT",
+                  "_children": [
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Climb/Arm Maximum Height",
+                      "_title": "Arm Maximum Height",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Climb/Arm Minimum Height",
+                      "_title": "Arm Minimum Height",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Climb/Left Offset",
+                      "_title": "Left Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Climb/Right Offset",
+                      "_title": "Right Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  ]
+                },
+                "1,0": {
+                  "_type": "List Layout",
+                  "_title": "Intake",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Label position": "LEFT",
+                  "_children": [
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Intake/Intake In Speed",
+                      "_title": "Intake In Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Intake/Intake Out Speed",
+                      "_title": "Intake Out Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  ]
+                },
+                "3,0": {
+                  "_type": "List Layout",
+                  "_title": "Notepath",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Label position": "LEFT",
+                  "_children": [
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Notepath/Note Shoot Speed",
+                      "_title": "Note Shoot Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Notepath/Note Shoot Speed",
+                      "_title": "Note Shoot Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Notepath/Shooter Intake Speed",
+                      "_title": "Shooter Intake Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  ]
+                },
+                "4,0": {
+                  "_type": "List Layout",
+                  "_title": "Shooter Bed",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Label position": "LEFT",
+                  "_children": [
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Bed/Bed Maximum Angle",
+                      "_title": "Bed Maximum Angle",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Bed/Bed Minimum Angle",
+                      "_title": "Bed Minimum Angle",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Bed/Bed Pickup Intake Angle",
+                      "_title": "Bed Pickup Intake Angle",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Bed/Bed Pickup Shooter Angle",
+                      "_title": "Bed Pickup Shooter Angle",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Bed/Shooter Offset",
+                      "_title": "Shooter Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  ]
+                },
+                "5,0": {
+                  "_type": "List Layout",
+                  "_title": "Shooter Flywheel",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Label position": "LEFT",
+                  "_children": [
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Flywheel/Flywheel Intake Speed",
+                      "_title": "Flywheel Intake Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Flywheel/Flywheel Velocity Range",
+                      "_title": "Flywheel Velocity Range",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Shooter Flywheel/Max Flywheel Speed",
+                      "_title": "Max Flywheel Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  ]
+                },
+                "0,0": {
+                  "_type": "List Layout",
+                  "_title": "Drive",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Label position": "LEFT",
+                  "_children": [
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Drive/FL Offset",
+                      "_title": "FL Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Drive/FR Offset",
+                      "_title": "FR Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Drive/BL Offset",
+                      "_title": "BL Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    {
+                      "_type": "Text View",
+                      "_source0": "network_table:///Shuffleboard/Settings/Settings/Drive/BR Offset",
+                      "_title": "BR Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": -8.0,
+    "y": -8.0,
+    "width": 1936.0,
+    "height": 1056.0
+  }
+}

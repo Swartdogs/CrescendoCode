@@ -215,6 +215,7 @@ public final class Constants
     public static class Vision
     {
         public static final String      PHOTON_CAMERA_NAME  = "photonCam";
+        public static final String      SHOOTER_CAMERA_NAME = "shooterCam";
         public static final String      DRIVER_CAMERA_NAME  = "driveCam";
         public static final Rotation3d  CAMERA_ROTATION     = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
         public static final Transform3d CAMERA_TRANSFORM    = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);

@@ -10,7 +10,6 @@ import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterBedCommands;
-import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIO;
@@ -128,8 +127,7 @@ public class RobotContainer
     {
         _joystick.button(1).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
         _joystick.button(2).whileTrue(DriveCommands.reduceSpeed(_drive));
-        // _joystick.button(4).onTrue(Commands.runOnce(() ->
-        // _dashboard.toggle()).ignoringDisable(true));
+        _joystick.button(4).onTrue(Commands.runOnce(() -> _dashboard.toggleCamera()).ignoringDisable(true));
         _joystick.button(7).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 240, 60, 0.6)); // 60 degrees left
         _joystick.button(8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 120, 300, 0.6)); // 60 degrees right
         _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
