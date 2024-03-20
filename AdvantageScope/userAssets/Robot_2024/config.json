@@ -20,7 +20,7 @@
     {
       "name": "Photon Camera",
       "rotations": [
-	    {
+        {
           "axis": "x",
           "degrees": 0
         },
@@ -32,7 +32,7 @@
           "axis": "z",
           "degrees": 180
         }
-	  ],
+      ],
       "position": [
         -0.1778,
         0.1778,
