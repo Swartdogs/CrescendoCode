@@ -201,7 +201,7 @@ public final class Constants
         public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);
         public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
-        public static final double     BED_DOWN_MIN_VOLTS       = -1.2;// -0.5;
+        public static final double     BED_DOWN_MIN_VOLTS       = -3.5;// -0.5;
         public static final double     BED_UP_MIN_VOLTS         = -2.3;// 0.11;
     }
 

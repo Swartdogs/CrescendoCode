@@ -53,7 +53,7 @@ public class ShooterBed extends SubsystemBase
     {
         _io = io;
 
-        _bedPID = new PIDController(120 / Math.PI, 0, 3); // FIXME: Set values, calibrate
+        _bedPID = new PIDController(220 / Math.PI, 0, 3); // FIXME: Set values, calibrate
         _bedPID.setTolerance(Units.degreesToRadians(1));
     }
 
