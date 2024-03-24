@@ -169,7 +169,7 @@ public final class Constants
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.2;
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.15;
         public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.6;
         public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.3;
     }

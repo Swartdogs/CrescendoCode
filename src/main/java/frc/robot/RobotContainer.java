@@ -53,10 +53,10 @@ public class RobotContainer
     private final ShooterFlywheel _shooterFlywheel;
     private final Climb           _climb;
     private final Gyro            _gyro;
+    // @SuppressWarnings("unused")
+    // private final Vision _vision;
     @SuppressWarnings("unused")
-    private final Vision          _vision;
-    @SuppressWarnings("unused")
-    private final Dashboard       _dashboard;
+    private final Dashboard _dashboard;
 
     // Controls
     private final CommandJoystick       _joystick   = new CommandJoystick(1);
@@ -77,7 +77,7 @@ public class RobotContainer
                         new ModuleIOHardware(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOHardware(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
-                _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
+                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 _intake = new Intake(new IntakeIOSparkMax());
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
@@ -89,7 +89,7 @@ public class RobotContainer
             case SIM:
                 _gyro = new Gyro(new GyroIOSim(this::getChassisSpeeds));
                 _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-                _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
+                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
@@ -101,7 +101,7 @@ public class RobotContainer
             default:
                 _gyro = new Gyro(new GyroIO() {});
                 _drive = new Drive(_gyro, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                _vision = new Vision(_drive, new VisionIO() {});
+                // _vision = new Vision(_drive, new VisionIO() {});
                 _intake = new Intake(new IntakeIO() {});
                 _notepath = new Notepath(new NotepathIO() {});
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
