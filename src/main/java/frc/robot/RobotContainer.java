@@ -148,7 +148,7 @@ public class RobotContainer
         // Constants.Controls.JOYSTICK_DEADBAND)));
 
         _hasNote.onTrue(CompositeCommands.LEDBlinkingTeleOp(_led));
-        _hasNote.onFalse(CompositeCommands.LEDTeleop(_led));
+        _hasNote.onFalse(CompositeCommands.LEDBlink(_led, Constants.LED.RED).andThen(CompositeCommands.LEDTeleop(_led)));
 
         // _controller.y().whileTrue(IntakeCommands.start(_intake).andThen(Commands.idle(_intake)).finallyDo(()
         // -> _intake.set(IntakeState.Off)));
