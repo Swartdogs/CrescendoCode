@@ -1,0 +1,216 @@
+{
+  "name": "Logitech Extreme 3D Pro",
+  "components": [
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": false,
+      "centerPx": [
+        157,
+        10
+      ],
+      "sizePx": [
+        26,
+        16
+      ],
+      "sourceIndex": 1
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        121,
+        120
+      ],
+      "sizePx": [
+        12,
+        30
+      ],
+      "sourceIndex": 2
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        143,
+        111
+      ],
+      "sizePx": [
+        22,
+        29
+      ],
+      "sourceIndex": 3
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        173,
+        111
+      ],
+      "sizePx": [
+        22,
+        29
+      ],
+      "sourceIndex": 4
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        133,
+        87
+      ],
+      "sizePx": [
+        12,
+        20
+      ],
+      "sourceIndex": 5
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        183,
+        87
+      ],
+      "sizePx": [
+        12,
+        20
+      ],
+      "sourceIndex": 6
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        84,
+        118
+      ],
+      "sizePx": [
+        20,
+        20
+      ],
+      "sourceIndex": 7
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        100,
+        132
+      ],
+      "sizePx": [
+        17,
+        17
+      ],
+      "sourceIndex": 8
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        56,
+        165
+      ],
+      "sizePx": [
+        20,
+        20
+      ],
+      "sourceIndex": 9
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        79,
+        170
+      ],
+      "sizePx": [
+        17,
+        17
+      ],
+      "sourceIndex": 10
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        55,
+        217
+      ],
+      "sizePx": [
+        20,
+        20
+      ],
+      "sourceIndex": 11
+    },
+    {
+      "type": "button",
+      "isYellow": true,
+      "isEllipse": true,
+      "centerPx": [
+        77,
+        210
+      ],
+      "sizePx": [
+        17,
+        17
+      ],
+      "sourceIndex": 12
+    },
+    {
+      "type": "joystick",
+      "isYellow": true,
+      "centerPx": [
+        155,
+        190
+      ],
+      "radiusPx": 25,
+      "xSourceIndex": 0,
+      "xSourceInverted": false,
+      "ySourceIndex": 1,
+      "ySourceInverted": true
+    },
+    {
+      "type": "joystick",
+      "isYellow": true,
+      "centerPx": [
+        210,
+        190
+      ],
+      "radiusPx": 15,
+      "xSourceIndex": 2,
+      "xSourceInverted": false,
+      "ySourceIndex": 4,
+      "ySourceInverted": true
+    },
+    {
+      "type": "axis",
+      "isYellow": true,
+      "centerPx": [
+        172,
+        300
+      ],
+      "sizePx": [
+        20,
+        40
+      ],
+      "sourceIndex": 3,
+      "sourceRange": [
+        -1,
+        1
+      ]
+    }
+  ]
+}

@@ -32,12 +32,14 @@ public class ShooterFlywheel extends SubsystemBase
     public void setUpperVelocity(double upperVelocity)
     {
         _upperVelocitySetpoint = MathUtil.clamp(upperVelocity, 0, _maxSpeed);
+        Logger.recordOutput("Shooter/Flywheel/UpperVelocitySetpoint", _upperVelocitySetpoint);
         _io.setUpperVelocity(_upperVelocitySetpoint);
     }
 
     public void setLowerVelocity(double lowerVelocity)
     {
         _lowerVelocitySetpoint = MathUtil.clamp(lowerVelocity, 0, _maxSpeed);
+        Logger.recordOutput("Shooter/Flywheel/LowerVelocitySetpoint", _lowerVelocitySetpoint);
         _io.setLowerVelocity(_lowerVelocitySetpoint);
     }
 

@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.4386670562249897,
+        "y": 7.475012302439632
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.685576451653797,
+        "y": 7.75404026657785
+      },
+      "isLocked": false,
+      "linkedName": "AmpBlueLine"
+    },
+    {
+      "anchor": {
+        "x": 8.975169292020158,
+        "y": 5.433702459533721
+      },
+      "prevControl": {
+        "x": 7.036659225375697,
+        "y": 5.742101788318068
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note7"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Start Intake",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Load"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "BlueLineToOuterNotes",
+  "previewStartingState": {
+    "rotation": 12.0409901243181,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

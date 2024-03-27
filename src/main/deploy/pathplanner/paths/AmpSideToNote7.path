@@ -1,0 +1,76 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.6486711155240492,
+        "y": 6.6047521185951465
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.648671115524049,
+        "y": 6.6047521185951465
+      },
+      "isLocked": false,
+      "linkedName": "AmpSide"
+    },
+    {
+      "anchor": {
+        "x": 8.975169292020158,
+        "y": 5.433702459533721
+      },
+      "prevControl": {
+        "x": 7.603664241317751,
+        "y": 6.321727312506504
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note7"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Start Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "AmpSideStartingPaths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

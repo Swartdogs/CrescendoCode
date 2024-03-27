@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Pose to Middle Side"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Delay"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleSideToNote2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note2ToNote6"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note6ToBlueLine"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -3,6 +3,7 @@ package frc.robot.subsystems.notepath;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -18,7 +19,9 @@ public class Notepath extends SubsystemBase
     private double                         _intakeLoadVolts  = Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
     private double                         _feedVolts        = Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
     private double                         _shooterLoadVolts = -Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT * Constants.General.MOTOR_VOLTAGE;
-    private boolean                        _hasNote          = false;
+    private boolean                        _hasNote          = true; // TODO: CHANGE if needed
+    private boolean                        _sensorTripped    = false;
+    private Debouncer                      _debouncer        = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 
     public Notepath(NotepathIO io)
     {
@@ -30,6 +33,8 @@ public class Notepath extends SubsystemBase
     {
         _io.updateInputs(_inputs);
         Logger.processInputs("Notepath", _inputs);
+
+        _sensorTripped = _debouncer.calculate(_sensorTripped);
     }
 
     public void set(NotepathState state)

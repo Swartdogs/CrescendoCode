@@ -1,0 +1,76 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.4386670562249897,
+        "y": 7.475012302439632
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.496036183485605,
+        "y": 7.607183443347208
+      },
+      "isLocked": false,
+      "linkedName": "AmpBlueLine"
+    },
+    {
+      "anchor": {
+        "x": 9.019226338989352,
+        "y": 7.386898208501248
+      },
+      "prevControl": {
+        "x": 8.019226338989352,
+        "y": 7.386898208501248
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note8"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Sequence",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Set Bed Angle Intake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Load"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Note3ToOuterNote",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

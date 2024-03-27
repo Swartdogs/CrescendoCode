@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 9.019226338989352,
+        "y": 7.386898208501248
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.578652688611282,
+        "y": 7.051422152933752
+      },
+      "isLocked": false,
+      "linkedName": "Note8"
+    },
+    {
+      "anchor": {
+        "x": 3.4386670562249897,
+        "y": 7.475012302439632
+      },
+      "prevControl": {
+        "x": 4.770730670299511,
+        "y": 7.879470235992092
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "AmpBlueLine"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Bed Angle",
+      "waypointRelativePos": 0.3,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Set Shooter Angle"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 10.784297867562607,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "OuterNotesToBlueLine",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

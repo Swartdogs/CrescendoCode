@@ -12,13 +12,14 @@ public class Climb extends SubsystemBase
 {
     private final Gyro                    _gyro;
     private final ClimbIO                 _io;
-    private final ClimbIOInputsAutoLogged _inputs       = new ClimbIOInputsAutoLogged();
+    private final ClimbIOInputsAutoLogged _inputs            = new ClimbIOInputsAutoLogged();
     private final PIDController           _tiltPID;
     private final PIDController           _leftPID;
     private final PIDController           _rightPID;
     private Double                        _desiredHeight;
-    private double                        _minExtension = Constants.Climb.MIN_EXTENSION; // TODO: tune value
-    private double                        _maxExtension = Constants.Climb.MAX_EXTENSION; // TODO: tune value
+    private double                        _minExtension      = Constants.Climb.MIN_EXTENSION; // TODO: tune value
+    private double                        _leftMaxExtension  = Constants.Climb.LEFT_MAX_EXTENSION; // TODO: tune value
+    private double                        _rightMaxExtension = Constants.Climb.RIGHT_MAX_EXTENSION;
 
     public Climb(Gyro gyro, ClimbIO io)
     {
@@ -26,9 +27,9 @@ public class Climb extends SubsystemBase
 
         _io = io;
 
-        _tiltPID  = new PIDController(12, 0, 0); // TODO: tune values
-        _leftPID  = new PIDController(12, 0, 0);
-        _rightPID = new PIDController(12, 0, 0);
+        _tiltPID  = new PIDController(0, 0, 0); // TODO: tune values
+        _leftPID  = new PIDController(24, 0, 0);
+        _rightPID = new PIDController(24, 0, 0);
     }
 
     @Override
@@ -40,8 +41,8 @@ public class Climb extends SubsystemBase
         if (_desiredHeight != null)
         {
             double heightAdjustment = _tiltPID.calculate(_gyro.getRollPosition().getDegrees(), 0);
-            double leftSetpoint     = MathUtil.clamp(_desiredHeight + heightAdjustment, _minExtension, _maxExtension);
-            double rightSetpoint    = MathUtil.clamp(_desiredHeight - heightAdjustment, _minExtension, _maxExtension);
+            double leftSetpoint     = MathUtil.clamp(_desiredHeight + heightAdjustment, _minExtension, _leftMaxExtension);
+            double rightSetpoint    = MathUtil.clamp(_desiredHeight - heightAdjustment, _minExtension, _rightMaxExtension);
 
             _io.setLeftVolts(_leftPID.calculate(getLeftExtension(), leftSetpoint));
             _io.setRightVolts(_rightPID.calculate(getRightExtension(), rightSetpoint));
@@ -63,7 +64,7 @@ public class Climb extends SubsystemBase
 
     public void setMaxExtension(double max)
     {
-        _maxExtension = max;
+        _leftMaxExtension = max;
     }
 
     public void setLeftVolts(double volts)
@@ -74,7 +75,7 @@ public class Climb extends SubsystemBase
             _io.setRightVolts(0.0);
         }
 
-        if ((_inputs.leftExtension >= _maxExtension && volts > 0) || (_inputs.leftExtension <= _minExtension && volts < 0))
+        if ((_inputs.leftExtension >= _leftMaxExtension && volts > 0) || (_inputs.leftExtension <= _minExtension && volts < 0))
         {
             volts = 0;
         }
@@ -90,7 +91,7 @@ public class Climb extends SubsystemBase
             _io.setLeftVolts(0.0);
         }
 
-        if ((_inputs.rightExtension >= _maxExtension && volts > 0) || (_inputs.rightExtension <= _minExtension && volts < 0))
+        if ((_inputs.rightExtension >= _rightMaxExtension && volts > 0) || (_inputs.rightExtension <= _minExtension && volts < 0))
         {
             volts = 0;
         }

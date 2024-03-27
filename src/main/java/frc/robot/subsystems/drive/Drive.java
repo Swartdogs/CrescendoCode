@@ -6,6 +6,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,6 +33,12 @@ public class Drive extends SubsystemBase
     private final Module[]                 _modules    = new Module[4]; // FL, FR, BL, BR
     private final SwerveDrivePoseEstimator _poseEstimator;
     private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
+    private PIDController                  _rotatePID;
+    private double                         _maxSpeed;
+    private double                         _speedMultiplier;
+    // private Pose2d _targetPose = new Pose2d();
+    // private PathConstraints _constraints = new PathConstraints(_maxSpeed,
+    // _maxSpeed, _maxSpeed, _maxSpeed);
 
     public Drive(Gyro gyro, ModuleIO flModuleIO, ModuleIO frModuleIO, ModuleIO blModuleIO, ModuleIO brModuleIO)
     {
@@ -40,6 +48,11 @@ public class Drive extends SubsystemBase
         _modules[1] = new Module(frModuleIO, 1);
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
+
+        _rotatePID = new PIDController(0.026, 0, 0); // TODO: tune
+        _rotatePID.enableContinuousInput(-180, 180);
+
+        _speedMultiplier = 1;
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
@@ -96,6 +109,8 @@ public class Drive extends SubsystemBase
      */
     public void runVelocity(ChassisSpeeds speeds)
     {
+        speeds = speeds.times(_speedMultiplier);
+
         // Calculate module setpoints
         ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
@@ -114,6 +129,22 @@ public class Drive extends SubsystemBase
         // Log setpoint states
         Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
         Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
+    }
+
+    public void runVolts(double volts)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            var optimized = _modules[i].runSetpoint(new SwerveModuleState());
+
+            var speed = volts;
+
+            if (optimized.angle.getDegrees() != 0)
+            {
+                speed *= -1;
+            }
+            _modules[i].setDriveVolts(speed);
+        }
     }
 
     /** Stops the drive. */
@@ -215,14 +246,14 @@ public class Drive extends SubsystemBase
         return wheelPositions;
     }
 
-    public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
-    {
-        _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
-    }
-
     public ChassisSpeeds getChassisSpeeds()
     {
         return _kinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    public void setModuleAbsoluteEncoderOffset(int moduleIndex, Rotation2d offset)
+    {
+        _modules[moduleIndex].setAbsoluteEncoderOffset(offset);
     }
 
     /** Returns an array of module translations. */
@@ -230,5 +261,32 @@ public class Drive extends SubsystemBase
     {
         return new Translation2d[] { new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0),
                 new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, Constants.Drive.TRACK_WIDTH_Y / 2.0), new Translation2d(-Constants.Drive.TRACK_WIDTH_X / 2.0, -Constants.Drive.TRACK_WIDTH_Y / 2.0) };
+    }
+
+    public void rotateInit(double setpoint, double maxSpeed)
+    {
+        _maxSpeed = Math.abs(maxSpeed);
+
+        _rotatePID.setSetpoint(setpoint);
+    }
+
+    public double rotateExecute()
+    {
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees()), -_maxSpeed, _maxSpeed);
+    }
+
+    public double rotateExecute(double setpoint)
+    {
+        return MathUtil.clamp(_rotatePID.calculate(getRotation().getDegrees(), setpoint), -_maxSpeed, _maxSpeed);
+    }
+
+    public boolean rotateIsFinished()
+    {
+        return _rotatePID.atSetpoint();
+    }
+
+    public void setSpeedMultipler(double speedMultiplier)
+    {
+        _speedMultiplier = speedMultiplier;
     }
 }
