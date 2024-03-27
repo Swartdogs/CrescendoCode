@@ -312,43 +312,15 @@ public final class CompositeCommands
         // @formatter.on
     }
 
-    // Note in Path
-    public static Command LEDBlink(LED led, Color color)
-    {
-        return Commands.sequence(
-                LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }), 
-                Commands.waitSeconds(0.5),
-                LEDCommands.setFrame(led, new Color[] { OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, null, null, null, null, null, null }), 
-                Commands.waitSeconds(0.5)
-        );
-    }
-
-    // // Coming for Note
-    // public static Command LEDMovingStrip(LED led, Notepath notepath, Color color)
+    // // Note in Path
+    // public static Command LEDBlink(LED led, Color color)
     // {
-    //     return Commands.repeatingSequence(
-    //             LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, color, color, color, color, color, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, color, color, color, color, color, null, null, null, null, null, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, color, color, color, color, color, null, null, null, null, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, color, color, color, color, color, null, null, null, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, color, color, color, color, color, null, null, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, color, color, color, color, color, null, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, color, color, color, color, color, null, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, color, color, color, color, color, null, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, color, color, color, color, color, null, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, null, color, color, color, color, color, null, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, null, null, color, color, color, color, color, null, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, null, null, null, color, color, color, color, color, null, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, null, null, null, null, color, color, color, color, color, null, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, null, null, null, null, null, color, color, color, color, color, null, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, color, color, color, color, color, null }),
-    //             LEDCommands.setFrame(led, new Color[] { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, color, color, color, color, color }),
-    //             LEDCommands.setFrame(led, new Color[] { color, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, color, color, color, color }),
-    //             LEDCommands.setFrame(led, new Color[] { color, color, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, color, color, color }),
-    //             LEDCommands.setFrame(led, new Color[] { color, color, color, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, color, color }),
-    //             LEDCommands.setFrame(led, new Color[] { color, color, color, color, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, color })
-    //     ).unless(() -> notepath.hasNote());
+    //     return Commands.sequence(
+    //             LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }), 
+    //             Commands.waitSeconds(0.5),
+    //             LEDCommands.setFrame(led, new Color[] { OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, null, null, null, null, null, null }), 
+    //             Commands.waitSeconds(0.5)
+    //     );
     // }
 
     public static Command LEDSetSolidColor(LED led, Color color)
@@ -379,11 +351,35 @@ public final class CompositeCommands
         return CompositeCommands.LEDSetSolidColor(led, color);
     }
 
-    public static Command LEDPulseColor(LED led, Color color)
+    public static Command LEDPulseColor(LED led, int hue, int saturation)
     {
-        return Commands.sequence
+        return Commands.repeatingSequence
         (
-            
+            Commands.runOnce
+            (
+                () -> 
+                {
+                    for (var i = 0; i < 32; i++)
+                    {
+                        Color color = Color.fromHSV(hue, saturation, i*8);
+                        LEDSetSolidColor(led, color);
+                        Commands.waitSeconds(0.5);
+                    }
+                }, led
+            ),
+
+            Commands.runOnce
+            (
+                () -> 
+                {
+                    for (var i = 31; i >= 0; i--)
+                    {
+                        Color color = Color.fromHSV(hue, saturation, i*8+1);
+                        LEDSetSolidColor(led, color);
+                        Commands.waitSeconds(0.5);
+                    }
+                }, led
+            )
         );
     }
 
@@ -392,9 +388,9 @@ public final class CompositeCommands
         return CompositeCommands.LEDFillDown(led, Constants.LED.ORANGE).andThen(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, Constants.LED.ORANGE)));
     }
 
-    public static Command LEDBlinkingTeleOp(LED led)
+    public static Command LEDPulsingTeleop(LED led, int hue, int saturation)
     {
-        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDBlink(led, Constants.LED.ORANGE)));
+        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDPulseColor(led, hue, saturation)));
     }
 
     public static Command LEDPartyMode(LED led)

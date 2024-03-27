@@ -12,23 +12,15 @@ import frc.robot.Constants;
 
 public class LEDIOHardware implements LEDIO
 {
-    private AddressableLED       _flLED;
-    private AddressableLED       _frLED;
-    private AddressableLED       _blLED;
-    private AddressableLED       _brLED;
-    private AddressableLED       _bedLED;
+    private AddressableLED       _led;
     private AddressableLEDBuffer _ledBuffer;
     private ArrayList<Color>     _pattern;
 
     public LEDIOHardware()
     {
-        _flLED       = new AddressableLED(0);
-        _frLED       = new AddressableLED(1);
-        _blLED       = new AddressableLED(2);
-        _brLED       = new AddressableLED(3);
-        _bedLED       = new AddressableLED(4);
+        _led       = new AddressableLED(0);
 
-        _ledBuffer = new AddressableLEDBuffer(4);
+        _ledBuffer = new AddressableLEDBuffer(22);
 
         _led.setLength(_ledBuffer.getLength());
         _led.setData(_ledBuffer);
