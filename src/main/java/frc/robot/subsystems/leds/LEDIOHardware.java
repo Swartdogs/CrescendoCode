@@ -23,6 +23,7 @@ public class LEDIOHardware implements LEDIO
 
         _led.setLength(_ledBuffer.getLength());
         _led.setData(_ledBuffer);
+        _led.start();
     }
 
     @Override
