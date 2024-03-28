@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.79,
-        "y": 4.227611993027124
+        "x": 0.6113561318031727,
+        "y": 4.52444177615628
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.162305962272408,
-        "y": 0.16395171164094074
+        "x": 5.983662094075581,
+        "y": 0.4607814947700967
       },
       "isLocked": false,
       "linkedName": "SourceSide"
     },
     {
       "anchor": {
-        "x": 8.293678213604645,
-        "y": 2.4241431649767726
+        "x": 9.019226338989352,
+        "y": 2.4965659949208994
       },
       "prevControl": {
-        "x": 6.970353683931332,
-        "y": 2.435854001522554
+        "x": 7.695901809316039,
+        "y": 2.508276831466681
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,13 +41,13 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake Pickup"
+                "name": "Start Intake"
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "Load in Motion"
+                "name": "Load"
               }
             }
           ]

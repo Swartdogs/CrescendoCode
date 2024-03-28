@@ -3,49 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 5.7721615443230885
+        "x": 8.975169292020158,
+        "y": 5.433702459533721
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.415271292081047,
-        "y": 6.176706199566246
+        "x": 6.698888531945222,
+        "y": 6.358900445886759
       },
       "isLocked": false,
       "linkedName": "Note7"
     },
     {
       "anchor": {
-        "x": 5.221371211973195,
-        "y": 6.423379769836463
+        "x": 3.4386670562249897,
+        "y": 7.475012302439632
       },
       "prevControl": {
-        "x": 6.060061350891934,
-        "y": 6.334577284539185
+        "x": 4.270014353982195,
+        "y": 7.645503895658955
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AmpBlueLine"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.1,
-      "maxWaypointRelativePos": 0.75,
-      "constraints": {
-        "maxVelocity": 9.0,
-        "maxAcceleration": 5.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Start Notepath",
-      "waypointRelativePos": 0.45,
+      "name": "Set Angle",
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "sequential",
         "data": {
@@ -53,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Start Shooter"
+                "name": "Set Shooter Angle"
               }
             }
           ]
@@ -69,7 +57,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 11.16808958381301,
+    "rotation": 11.05,
     "rotateFast": false
   },
   "reversed": false,

@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.EnumSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.DoubleConsumer;
@@ -12,25 +11,28 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
 import frc.robot.commands.CompositeCommands;
+import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.NotepathCommands;
 import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
@@ -39,6 +41,8 @@ import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.util.DeferredInstantCommand;
+import frc.robot.util.Utilities;
 
 public class Dashboard extends SubsystemBase
 {
@@ -50,68 +54,83 @@ public class Dashboard extends SubsystemBase
     private final Field2d _field;
 
     // Color Box
-    private final GenericEntry _allianceBox;
-    private final GenericEntry _hasNote;
+    private final NetworkTableEntry _allianceBox;
+    private final NetworkTableEntry _hasNote;
 
     // Swerve angles
-    private final GenericEntry _frAngle;
-    private final GenericEntry _flAngle;
-    private final GenericEntry _brAngle;
-    private final GenericEntry _blAngle;
+    private final NetworkTableEntry _frAngle;
+    private final NetworkTableEntry _flAngle;
+    private final NetworkTableEntry _brAngle;
+    private final NetworkTableEntry _blAngle;
 
     // Climb
-    private final GenericEntry _leftHeight;
-    private final GenericEntry _rightHeight;
+    private final NetworkTableEntry _leftHeight;
+    private final NetworkTableEntry _rightHeight;
 
     // Intake
-    private final GenericEntry _intakeSpeed;
+    private final NetworkTableEntry _intakeSpeed;
 
     // Notepath
-    private final GenericEntry _notepathOutput;
+    private final NetworkTableEntry _notepathOutput;
 
     // Shooter bed
-    private final GenericEntry _bedAngle;
+    private final NetworkTableEntry _bedAngle;
 
     // Shooter flywheel
-    private final GenericEntry _upperVelocity;
-    private final GenericEntry _lowerVelocity;
+    private final NetworkTableEntry _upperVelocity;
+    private final NetworkTableEntry _lowerVelocity;
 
     /*
      * Settings
      */
 
     // Drive
-    private final GenericEntry _frOffset;
-    private final GenericEntry _flOffset;
-    private final GenericEntry _brOffset;
-    private final GenericEntry _blOffset;
+    private final NetworkTableEntry _frOffset;
+    private final NetworkTableEntry _flOffset;
+    private final NetworkTableEntry _brOffset;
+    private final NetworkTableEntry _blOffset;
 
     // Intake
-    private final GenericEntry _intakeInSpeed;
-    private final GenericEntry _intakeOutSpeed;
+    private final NetworkTableEntry _intakeInSpeed;
+    private final NetworkTableEntry _intakeOutSpeed;
 
     // Climb
-    private final GenericEntry _climbLeftOffset;
-    private final GenericEntry _climbRightOffset;
-    private final GenericEntry _climbMinHeight;
-    private final GenericEntry _climbMaxHeight;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _climbLeftOffset;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _climbRightOffset;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _climbMinHeight;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _climbMaxHeight;
 
     // Notepath
-    private final GenericEntry _notepathShootSpeed;
-    private final GenericEntry _pickupIntakeSpeed;
-    private final GenericEntry _shooterIntakeSpeed;
+    private final NetworkTableEntry _notepathShootSpeed;
+    private final NetworkTableEntry _pickupIntakeSpeed;
+    private final NetworkTableEntry _shooterIntakeSpeed;
 
     // Shooter Bed
-    private final GenericEntry _shooterOffset;
-    private final GenericEntry _bedMinimumAngle;
-    private final GenericEntry _bedMaximumAngle;
-    private final GenericEntry _bedPickupIntakeAngle;
-    private final GenericEntry _bedPickupShooterAngle;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _shooterOffset;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _bedMinimumAngle;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _bedMaximumAngle;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _bedPickupIntakeAngle;
+    @SuppressWarnings("unused")
+    private final NetworkTableEntry _bedPickupShooterAngle;
 
     // Shooter Flywheel
-    private final GenericEntry _flywheelVelocityRange;
-    private final GenericEntry _maxFlywheelSpeed;
-    private final GenericEntry _flywheelIntakeSpeed;
+    private final NetworkTableEntry _flywheelVelocityRange;
+    private final NetworkTableEntry _maxFlywheelSpeed;
+    private final NetworkTableEntry _flywheelIntakeSpeed;
+
+    // Vision
+    private final UsbCamera   _shooterCamera;
+    private final UsbCamera   _driverCamera;
+    private final MjpegServer _switchedCamera;
+    private boolean           _showDriverCamera = true;
 
     /*
      * Subsystems
@@ -127,7 +146,7 @@ public class Dashboard extends SubsystemBase
     /*
      * SendableChoosers for Autonomous options
      */
-    private final SendableChooser<Integer>        _autoDelayChooser;
+    private final LoggedDashboardChooser<Integer> _autoDelayChooser;
     private final LoggedDashboardChooser<Command> _autoChooser;
 
     public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb, LED led)
@@ -140,119 +159,132 @@ public class Dashboard extends SubsystemBase
         _climb           = climb;
         _led             = led;
 
+        _driverCamera = CameraServer.startAutomaticCapture(Constants.Vision.DRIVER_CAMERA_NAME, 0);
+        _driverCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+        _shooterCamera = CameraServer.startAutomaticCapture(Constants.Vision.SHOOTER_CAMERA_NAME, 1);
+        _shooterCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+        _switchedCamera = CameraServer.addSwitchedCamera("Switched camera");
+        _switchedCamera.setSource(_shooterCamera);
+
         /*
          * DASHBOARD
          */
-        var dashboard = Shuffleboard.getTab("Dashboard");
-
-        // Camera Stream
-        dashboard.addCamera("Camera Stream", Constants.Vision.CAMERA_NAME, Constants.Vision.CAMERA_URL).withWidget(BuiltInWidgets.kCameraStream).withPosition(0, 0).withSize(15, 10)
-                .withProperties(Map.of("Show crosshair", false, "Show controls", false));
-
-        // CameraServer.addSwitchedCamera(getName());
-
+        var dashboard = NetworkTableInstance.getDefault().getTable("Shuffleboard/Dashboard");
         // Field
         _field = new Field2d();
-        dashboard.add("Field", _field).withPosition(15, 0).withSize(15, 8);
+        SmartDashboard.putData("Shuffleboard/Dashboard/Field", _field);
 
         // Color box
-        var colorBoxLayout = dashboard.getLayout("Color Box", BuiltInLayouts.kGrid).withPosition(15, 12).withSize(5, 3).withProperties(Map.of("Number of columns", 1, "Number of rows", 2, "Label position", "LEFT"));
-        _allianceBox = colorBoxLayout.add("Alliance", false).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "blue", "Color when false", "red")).getEntry();
-        _hasNote     = colorBoxLayout.add("Has Note", false).withPosition(0, 1).withWidget(BuiltInWidgets.kBooleanBox).withProperties(Map.of("Color when true", "green", "Color when false", "red")).getEntry();
+        _allianceBox = dashboard.getEntry("Color Box/Alliance");
+        _hasNote     = dashboard.getEntry("Color Box/Has Note");
 
         // Swerve Module Angles
-        var driveSettingsLayout = dashboard.getLayout("Swerve Angles", BuiltInLayouts.kGrid).withPosition(15, 8).withSize(5, 4).withProperties(Map.of("Number of columns", 2, "Number of rows", 2));
-        _flAngle = driveSettingsLayout.add("FL Angle", 0.0).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _frAngle = driveSettingsLayout.add("FR Angle", 0.0).withPosition(1, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _blAngle = driveSettingsLayout.add("BL Angle", 0.0).withPosition(0, 1).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _brAngle = driveSettingsLayout.add("BR Angle", 0.0).withPosition(1, 1).withWidget(BuiltInWidgets.kTextView).getEntry();
+        _flAngle = dashboard.getEntry("Swerve Angles/FL Angle");
+        _frAngle = dashboard.getEntry("Swerve Angles/FR Angle");
+        _blAngle = dashboard.getEntry("Swerve Angles/BL Angle");
+        _brAngle = dashboard.getEntry("Swerve Angles/BR Angle");
 
         // Height, Intake and Speed
-        var heightAndIntakeLayout = dashboard.getLayout("Climb and Intake", BuiltInLayouts.kGrid).withPosition(0, 10).withSize(15, 5).withProperties(Map.of("Number of columns", 3, "Number of rows", 1));
-        _leftHeight  = heightAndIntakeLayout.add("Left Height", 0).withPosition(0, 0).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL", "Min", 0, "Max", 25)).getEntry();
-        _intakeSpeed = heightAndIntakeLayout.add("Intake Speed", 0).withPosition(1, 0).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", -1, "Max", 1)).getEntry();
-        _rightHeight = heightAndIntakeLayout.add("Right Height", 0).withPosition(2, 0).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL", "Min", 0, "Max", 25)).getEntry();
+        _leftHeight  = dashboard.getEntry("Climb and Intake/Left Height");
+        _intakeSpeed = dashboard.getEntry("Climb and Intake/Intake Speed");
+        _rightHeight = dashboard.getEntry("Climb and Intake/Right Height");
 
         // Notepath
-        _notepathOutput = dashboard.add("Notepath", 0).withPosition(26, 8).withSize(6, 7).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", -1, "Max", 1)).getEntry();
+        _notepathOutput = dashboard.getEntry("Notepath");
 
         // Shooter bed
-        _bedAngle = dashboard.add("Bed angle", 0).withPosition(32, 8).withSize(3, 7).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Orientation", "VERTICAL", "Min", 0, "Max", 90)).getEntry();
+        _bedAngle = dashboard.getEntry("Bed angle");
 
         // Shooter flywheel
-        var shooterFlywheelLayout = dashboard.getLayout("Shooter flywheel", BuiltInLayouts.kGrid).withPosition(20, 8).withSize(6, 7).withProperties(Map.of("Number of columns", 1, "Number of rows", 2, "Label position", "HIDDEN"));
-        _upperVelocity = shooterFlywheelLayout.add("Upper Velocity", 0).withPosition(0, 0).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", -6000, "Max", 6000)).getEntry();
-        _lowerVelocity = shooterFlywheelLayout.add("Lower Velocity", 0).withPosition(0, 1).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", -6000, "Max", 6000)).getEntry();
-
-        // Autonomous Options
-        var autonomousLayout = dashboard.getLayout("Autonomous", BuiltInLayouts.kGrid).withPosition(30, 0).withSize(9, 8).withProperties(Map.of("Number of columns", 1, "Number of rows", 4, "Label position", "LEFT"));
+        _upperVelocity = dashboard.getEntry("Shooter flywheel/Upper Velocity");
+        _lowerVelocity = dashboard.getEntry("Shooter flywheel/Lower Velocity");
 
         // Autonomous delay chooser setup
-        _autoDelayChooser = new SendableChooser<>();
-        _autoDelayChooser.setDefaultOption("0", 0);
-        _autoDelayChooser.addOption("1", 1);
-        _autoDelayChooser.addOption("2", 2);
-        _autoDelayChooser.addOption("3", 3);
-        _autoDelayChooser.addOption("4", 4);
-        _autoDelayChooser.addOption("5", 5);
+        var delayChooser = new SendableChooser<Integer>();
+        delayChooser.setDefaultOption("0", 0);
+        delayChooser.addOption("1", 1);
+        delayChooser.addOption("2", 2);
+        delayChooser.addOption("3", 3);
+        delayChooser.addOption("4", 4);
+        delayChooser.addOption("5", 5);
+        _autoDelayChooser = new LoggedDashboardChooser<>("Auto Delay", delayChooser);
 
-        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(1.39, 5.56, new Rotation2d()))));
-        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.79, 4.23, new Rotation2d(-24.44)))));
-        NamedCommands.registerCommand("Set Pose to Amp Side ", Commands.runOnce(() -> _drive.setPose(new Pose2d(0.76, 6.77, new Rotation2d(10.19)))));
-
-        NamedCommands.registerCommand("Load in Motion", CompositeCommands.loadInMotion(intake, notepath));
-        NamedCommands.registerCommand("Load While Stopped", CompositeCommands.loadWhileStopped(intake, notepath));
+        // START UP
+        NamedCommands.registerCommand("Set Pose to Middle Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(1.39, 5.56, new Rotation2d())))));
+        NamedCommands.registerCommand("Set Pose to Source Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.79, 4.23, Rotation2d.fromDegrees(-24.44))))));
+        NamedCommands.registerCommand("Set Pose to Amp Side", Commands.runOnce(() -> _drive.setPose(Utilities.getAutoPose(new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))))));
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
-        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.intakePickup(_intake, _notepath, _shooterBed));
-        NamedCommands.registerCommand("Stop Intake", CompositeCommands.loadWhileStopped(_intake, _notepath));
-        NamedCommands.registerCommand("Start Notepath", CompositeCommands.startNotepath(_notepath, _shooterFlywheel, _led));
-        NamedCommands.registerCommand("Start Shooter", ShooterFlywheelCommands.start(_shooterFlywheel, 3000, 3000));
+
+        NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.8));
+        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 34));
+        NamedCommands.registerCommand("Set Shooter Angle Note 1", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 28.3));
+        NamedCommands.registerCommand("Podium Shot Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 31.5));
+
+        NamedCommands.registerCommand("Set Inner Note Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4000, 4000));
+        NamedCommands.registerCommand("Set Initial Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4500, 4500));
+        NamedCommands.registerCommand("Set Speed 5000", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5000, 5000));
+        NamedCommands.registerCommand("Set Shooter Max Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5800, 5800));
+        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 52.5));
+        NamedCommands.registerCommand("Set Bed Angle Intake", CompositeCommands.Autonomous.setBedAngle(shooterBed, 65.1));
+
+        NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
+                                                                                             // // // are?
+        NamedCommands.registerCommand("Intake Pickup", CompositeCommands.Autonomous.intakePickup(_intake, _notepath, _shooterBed));
+        NamedCommands.registerCommand("Start Notepath", CompositeCommands.Autonomous.startNotepath(_notepath)); // Notepath sequence, shuts off after sensor not tripped
+
+        // Named Commands for starting shooter, intake, and notepath, does not shut off
+        NamedCommands.registerCommand("Start Shooter", CompositeCommands.Autonomous.startShooter(_shooterFlywheel, 4000, 4000));
+        NamedCommands.registerCommand("Start Intake", IntakeCommands.start(_intake));
+        NamedCommands.registerCommand("Notepath On", new DeferredInstantCommand(() -> NotepathCommands.intakeLoad(_notepath))); // TODO: Rename other to notepath sequence overall check
+        NamedCommands.registerCommand("Notepath Off", NotepathCommands.stop(_notepath));
+        NamedCommands.registerCommand("Stop Intake", IntakeCommands.stop(intake));
+        NamedCommands.registerCommand("Stop Shooter", ShooterFlywheelCommands.stop(shooterFlywheel));
 
         _autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-        autonomousLayout.add("Delay Options", _autoDelayChooser).withPosition(0, 0).withWidget(BuiltInWidgets.kSplitButtonChooser);
-        autonomousLayout.add("Autonomous Path", _autoChooser.getSendableChooser()).withPosition(0, 1).withWidget(BuiltInWidgets.kComboBoxChooser);
+        SmartDashboard.putData("Shuffleboard/Dashboard/Autonomous/Delay Options", _autoDelayChooser.getSendableChooser());
+        SmartDashboard.putData("Shuffleboard/Dashboard/Autonomous/Autonomous Path", _autoChooser.getSendableChooser());
 
         /*
          * SETTINGS
          */
 
-        var settingsTab = Shuffleboard.getTab("Settings");
+        var settings = NetworkTableInstance.getDefault().getTable("Shuffleboard/Settings/Settings");
 
-        var outerLayout = settingsTab.getLayout("Settings", BuiltInLayouts.kGrid).withPosition(0, 0).withSize(40, 10).withProperties(Map.of("Number of columns", 6, "Number of rows", 1, "Label position", "TOP"));
+        // Drive
+        _flOffset = settings.getEntry("Drive/FL Offset");
+        _frOffset = settings.getEntry("Drive/FR Offset");
+        _blOffset = settings.getEntry("Drive/BL Offset");
+        _brOffset = settings.getEntry("Drive/BR Offset");
 
-        var driveSettings = outerLayout.getLayout("Drive", BuiltInLayouts.kList).withPosition(0, 0).withProperties(Map.of("label position", "LEFT"));
-        _flOffset = driveSettings.add("FL Offset", Constants.Drive.MODULE_FL_OFFSET.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _frOffset = driveSettings.add("FR Offset", Constants.Drive.MODULE_FR_OFFSET.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _blOffset = driveSettings.add("BL Offset", Constants.Drive.MODULE_BL_OFFSET.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _brOffset = driveSettings.add("BR Offset", Constants.Drive.MODULE_BR_OFFSET.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
+        // Intake
+        _intakeInSpeed  = settings.getEntry("Intake/Intake In Speed");
+        _intakeOutSpeed = settings.getEntry("Intake/Intake Out Speed");
 
-        var intakeSettings = outerLayout.getLayout("Intake", BuiltInLayouts.kList).withPosition(1, 0).withProperties(Map.of("label position", "LEFT"));
-        _intakeInSpeed  = intakeSettings.add("Intake In Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _intakeOutSpeed = intakeSettings.add("Intake Out Speed", Constants.Intake.OUTTAKE_DEFAULT_PERCENT_OUTPUT).withWidget(BuiltInWidgets.kTextView).getEntry();
+        // Climb
+        _climbLeftOffset  = settings.getEntry("Climb/Left Offset");
+        _climbRightOffset = settings.getEntry("Climb/Right Offset");
+        _climbMinHeight   = settings.getEntry("Climb/Arm Minimum Height");
+        _climbMaxHeight   = settings.getEntry("Climb/Arm Maximum Height");
 
-        var climbSettings = outerLayout.getLayout("Climb", BuiltInLayouts.kList).withPosition(2, 0).withProperties(Map.of("label position", "LEFT"));
-        _climbLeftOffset  = climbSettings.add("Left Offset", Constants.Climb.LEFT_ZERO_OFFSET).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _climbRightOffset = climbSettings.add("Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _climbMinHeight   = climbSettings.add("Arm Minimum Height", Constants.Climb.MIN_EXTENSION).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _climbMaxHeight   = climbSettings.add("Arm Maximum Height", Constants.Climb.MAX_EXTENSION).withWidget(BuiltInWidgets.kTextView).getEntry();
+        // Notepath
+        _notepathShootSpeed = settings.getEntry("Notepath/Note Shoot Speed");
+        _pickupIntakeSpeed  = settings.getEntry("Notepath/Pickup Intake Speed");
+        _shooterIntakeSpeed = settings.getEntry("Notepath/Shooter Intake Speed");
 
-        var notepathSettings = outerLayout.getLayout("Notepath", BuiltInLayouts.kList).withPosition(3, 0).withProperties(Map.of("label position", "LEFT"));
-        _notepathShootSpeed = notepathSettings.add("Note Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _pickupIntakeSpeed  = notepathSettings.add("Pickup Intake Speed", Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _shooterIntakeSpeed = notepathSettings.add("Shooter Intake Speed", Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT).withWidget(BuiltInWidgets.kTextView).getEntry();
+        // Shooter Bed
+        _bedMinimumAngle       = settings.getEntry("Shooter Bed/Bed Minimum Angle");
+        _bedMaximumAngle       = settings.getEntry("Shooter Bed/Bed Maximum Angle");
+        _shooterOffset         = settings.getEntry("Shooter Bed/Shooter Offset");
+        _bedPickupIntakeAngle  = settings.getEntry("Shooter Bed/Bed Pickup Intake Angle");
+        _bedPickupShooterAngle = settings.getEntry("Shooter Bed/Bed Pickup Shooter Angle");
 
-        var shooterBedSettings = outerLayout.getLayout("Shooter Bed", BuiltInLayouts.kList).withPosition(4, 0).withProperties(Map.of("label position", "LEFT"));
-        _bedMinimumAngle       = shooterBedSettings.add("Bed Minimum Angle", Constants.ShooterBed.MIN_BED_ANGLE.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _bedMaximumAngle       = shooterBedSettings.add("Bed Maximum Angle", Constants.ShooterBed.MAX_BED_ANGLE.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _shooterOffset         = shooterBedSettings.add("Shooter Offset", Constants.ShooterBed.BED_ANGLE_OFFSET.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _bedPickupIntakeAngle  = shooterBedSettings.add("Bed Pickup Intake Angle", Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _bedPickupShooterAngle = shooterBedSettings.add("Bed Pickup Shooter Angle", Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE.getDegrees()).withWidget(BuiltInWidgets.kTextView).getEntry();
-
-        var shooterFlywheelSettings = outerLayout.getLayout("Shooter Flywheel", BuiltInLayouts.kList).withPosition(5, 0).withProperties(Map.of("label position", "LEFT"));
-        _flywheelVelocityRange = shooterFlywheelSettings.add("Flywheel Velocity Range", Constants.ShooterFlywheel.VELOCITY_RANGE).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _maxFlywheelSpeed      = shooterFlywheelSettings.add("Max Flywheel Speed", Constants.ShooterFlywheel.MAX_FLYWHEEL_SPEED).withWidget(BuiltInWidgets.kTextView).getEntry();
-        _flywheelIntakeSpeed   = shooterFlywheelSettings.add("Flywheel Intake Speed", Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED).withWidget(BuiltInWidgets.kTextView).getEntry();
+        // Shooter Flywheel
+        _flywheelVelocityRange = settings.getEntry("Shooter Flywheel/Flywheel Velocity Range");
+        _maxFlywheelSpeed      = settings.getEntry("Shooter Flywheel/Max Flywheel Speed");
+        _flywheelIntakeSpeed   = settings.getEntry("Shooter Flywheel/Flywheel Intake Speed");
 
         // Drive
         initializeSetting("FL Offset", Constants.Drive.MODULE_FL_OFFSET.getDegrees(), _flOffset, value ->
@@ -287,25 +319,29 @@ public class Dashboard extends SubsystemBase
         });
 
         // Climb
-        initializeSetting("Climb Left Offset", Constants.Climb.LEFT_ZERO_OFFSET, _climbLeftOffset, value ->
-        {
-            _climb.setLeftOffset(value);
-        });
+        // initializeSetting("Climb Left Offset", Constants.Climb.LEFT_ZERO_OFFSET,
+        // _climbLeftOffset, value ->
+        // {
+        // _climb.setLeftOffset(value);
+        // });
 
-        initializeSetting("Climb Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET, _climbRightOffset, value ->
-        {
-            _climb.setRightOffset(value);
-        });
+        // initializeSetting("Climb Right Offset", Constants.Climb.RIGHT_ZERO_OFFSET,
+        // _climbRightOffset, value ->
+        // {
+        // _climb.setRightOffset(value);
+        // });
 
-        initializeSetting("Climb Minimum Height", Constants.Climb.MIN_EXTENSION, _climbMinHeight, value ->
-        {
-            _climb.setMinExtension(value);
-        });
+        // initializeSetting("Climb Minimum Height", Constants.Climb.MIN_EXTENSION,
+        // _climbMinHeight, value ->
+        // {
+        // _climb.setMinExtension(value);
+        // });
 
-        initializeSetting("Climb Maximum Height", Constants.Climb.MAX_EXTENSION, _climbMaxHeight, value ->
-        {
-            _climb.setMaxExtension(value);
-        });
+        // initializeSetting("Climb Maximum Height", Constants.Climb.LEFT_MAX_EXTENSION,
+        // _climbMaxHeight, value ->
+        // {
+        // _climb.setMaxExtension(value);
+        // });
 
         // Notepath
         initializeSetting("Notepath Shoot Speed", Constants.Notepath.NOTEPATH_FEED_PERCENT_OUTPUT, _notepathShootSpeed, value ->
@@ -313,41 +349,48 @@ public class Dashboard extends SubsystemBase
             _notepath.setFeedSpeed(value);
         });
 
-        initializeSetting("Pickup Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _pickupIntakeSpeed, value ->
+        initializeSetting("Pickup Intake Speed", Constants.Notepath.NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT, _pickupIntakeSpeed, value ->
         {
             _notepath.setIntakeLoadSpeed(value);
         });
 
-        initializeSetting("Shooter Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _shooterIntakeSpeed, value ->
+        initializeSetting("Shooter Intake Speed", Constants.Notepath.NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT, _shooterIntakeSpeed, value ->
         {
             _notepath.setShooterLoadSpeed(value);
         });
 
         // Shooter bed
-        initializeSetting("Shooter Bed Offset", Constants.ShooterBed.BED_ANGLE_OFFSET.getDegrees(), _shooterOffset, value ->
-        {
-            _shooterBed.setAngleOffset(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Shooter Bed Offset",
+        // Constants.ShooterBed.BED_ANGLE_OFFSET.getDegrees(), _shooterOffset, value ->
+        // {
+        // _shooterBed.setAngleOffset(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Minimum Angle", Constants.ShooterBed.MIN_BED_ANGLE.getDegrees(), _bedMinimumAngle, value ->
-        {
-            _shooterBed.setMinAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Minimum Angle",
+        // Constants.ShooterBed.MIN_BED_ANGLE.getDegrees(), _bedMinimumAngle, value ->
+        // {
+        // _shooterBed.setMinAngle(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Maximum Angle", Constants.ShooterBed.MAX_BED_ANGLE.getDegrees(), _bedMaximumAngle, value ->
-        {
-            _shooterBed.setMaxAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Maximum Angle",
+        // Constants.ShooterBed.MAX_BED_ANGLE.getDegrees(), _bedMaximumAngle, value ->
+        // {
+        // _shooterBed.setMaxAngle(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Intake Pickup Angle", Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees(), _bedPickupIntakeAngle, value ->
-        {
-            _shooterBed.setIntakeLoadAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Intake Pickup Angle",
+        // Constants.ShooterBed.BED_INTAKE_PICKUP_ANGLE.getDegrees(),
+        // _bedPickupIntakeAngle, value ->
+        // {
+        // _shooterBed.setIntakeLoadAngle(Rotation2d.fromDegrees(value));
+        // });
 
-        initializeSetting("Bed Shooter Pickup Angle", Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE.getDegrees(), _bedPickupShooterAngle, value ->
-        {
-            _shooterBed.setShooterLoadAngle(Rotation2d.fromDegrees(value));
-        });
+        // initializeSetting("Bed Shooter Pickup Angle",
+        // Constants.ShooterBed.BED_SHOOTER_PICKUP_ANGLE.getDegrees(),
+        // _bedPickupShooterAngle, value ->
+        // {
+        // _shooterBed.setShooterLoadAngle(Rotation2d.fromDegrees(value));
+        // });
 
         // Shooter flywheel
         initializeSetting("Shooter Velocity Range", Constants.ShooterFlywheel.VELOCITY_RANGE, _flywheelVelocityRange, value ->
@@ -360,13 +403,32 @@ public class Dashboard extends SubsystemBase
             _shooterFlywheel.setMaxSpeed(value);
         });
 
-        initializeSetting("Flywheel Intake Speed", Constants.Intake.INTAKE_DEFAULT_PERCENT_OUTPUT, _flywheelIntakeSpeed, value ->
+        initializeSetting("Flywheel Intake Speed", Constants.ShooterFlywheel.FLYWHEEL_INTAKE_SPEED, _flywheelIntakeSpeed, value ->
         {
             _shooterFlywheel.setIntakeSpeed(value);
         });
     }
 
-    public void initializeSetting(String key, double defaultValue, GenericEntry entry, DoubleConsumer consumer)
+    public void toggleCamera()
+    {
+        if (_showDriverCamera)
+        {
+            _switchedCamera.setSource(_shooterCamera);
+            _showDriverCamera = false;
+        }
+        else
+        {
+            _switchedCamera.setSource(_driverCamera);
+            _showDriverCamera = true;
+        }
+    }
+
+    public boolean isDriverCamera()
+    {
+        return true;
+    }
+
+    public void initializeSetting(String key, double defaultValue, NetworkTableEntry entry, DoubleConsumer consumer)
     {
         NetworkTableInstance.getDefault().addListener(entry, EnumSet.of(NetworkTableEvent.Kind.kValueRemote), event ->
         {
@@ -396,7 +458,7 @@ public class Dashboard extends SubsystemBase
 
     public Integer autoDelayTime()
     {
-        return _autoDelayChooser.getSelected();
+        return _autoDelayChooser.get();
     }
 
     @Override

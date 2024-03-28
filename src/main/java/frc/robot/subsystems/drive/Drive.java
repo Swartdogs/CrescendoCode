@@ -38,6 +38,7 @@ public class Drive extends SubsystemBase
     private final SwerveDriveKinematics    _kinematics = new SwerveDriveKinematics(getModuleTranslations());
     private PIDController                  _rotatePID;
     private double                         _maxSpeed;
+    private double                         _speedMultiplier;
     // private Pose2d _targetPose = new Pose2d();
     // private PathConstraints _constraints = new PathConstraints(_maxSpeed,
     // _maxSpeed, _maxSpeed, _maxSpeed);
@@ -51,8 +52,10 @@ public class Drive extends SubsystemBase
         _modules[2] = new Module(blModuleIO, 2);
         _modules[3] = new Module(brModuleIO, 3);
 
-        _rotatePID = new PIDController(0.02, 0, 0); // TODO: tune
+        _rotatePID = new PIDController(0.026, 0, 0); // TODO: tune
         _rotatePID.enableContinuousInput(-180, 180);
+
+        _speedMultiplier = 1;
 
         // Configure AutoBuilder for PathPlanner
         AutoBuilder.configureHolonomic(
@@ -127,6 +130,8 @@ public class Drive extends SubsystemBase
      */
     public void runVelocity(ChassisSpeeds speeds)
     {
+        speeds = speeds.times(_speedMultiplier);
+
         // Calculate module setpoints
         ChassisSpeeds       discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] setpointStates = _kinematics.toSwerveModuleStates(discreteSpeeds);
@@ -299,5 +304,10 @@ public class Drive extends SubsystemBase
     public boolean rotateIsFinished()
     {
         return _rotatePID.atSetpoint();
+    }
+
+    public void setSpeedMultipler(double speedMultiplier)
+    {
+        _speedMultiplier = speedMultiplier;
     }
 }

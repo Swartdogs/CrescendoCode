@@ -12,10 +12,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.gyro.Gyro;
+import frc.robot.util.Utilities;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public final class DriveCommands
@@ -28,7 +31,7 @@ public final class DriveCommands
      * Field relative drive command using two joysticks (controlling linear and
      * angular velocities).
      */
-    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier)
+    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, Dashboard dashboard)
     {
         return Commands.run(() ->
         {
@@ -53,29 +56,48 @@ public final class DriveCommands
             Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d())).getTranslation();
 
             // Convert to field relative speeds & send command
-            drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                            linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation().minus(allianceAdjustment)
-                    )
-            );
+            if (robotCentric.getAsBoolean())
+            {
+                var chassisSpeeds = new ChassisSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED);
+
+                if (!dashboard.isDriverCamera())
+                {
+                    chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+                }
+
+                drive.runVelocity(chassisSpeeds);
+            }
+            else
+            {
+                if (!Utilities.isBlueAlliance())
+                {
+                    linearVelocity = linearVelocity.unaryMinus();
+                }
+
+                drive.runVelocity(
+                        ChassisSpeeds
+                                .fromFieldRelativeSpeeds(linearVelocity.getX() * Constants.Drive.MAX_LINEAR_SPEED, linearVelocity.getY() * Constants.Drive.MAX_LINEAR_SPEED, omega * Constants.Drive.MAX_ANGULAR_SPEED, drive.getRotation())
+                );
+            }
+
         }, drive);
     }
 
-    public static Command driveAtOrientation(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double setpoint, double maxSpeed)
+    public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double setpoint, double maxSpeed)
     {
-        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute()));
+        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), robotCentric, dashboard));
     }
 
-    public static Command aimAtSpeaker(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    public static Command aimAtSpeaker(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
         return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER), maxSpeed))
-                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER))));
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER)), () -> false, dashboard));
     }
 
-    public static Command aimAtAmp(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
+    public static Command aimAtAmp(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
-        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_AMP), maxSpeed))
-                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP))));
+        return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP)), maxSpeed))
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP))), () -> false, dashboard));
     }
 
     private static double getHeadingToPose(Drive drive, Pose2d pose)
@@ -86,29 +108,18 @@ public final class DriveCommands
         return Math.atan2(deltaY, deltaX) / Math.PI * 180;
     }
 
-    // public static Command pathFinding(Drive drive, Pose2d targetPose,
-    // PathConstraints constraints)
-    // {
-    // return new PathfindHolonomic(
-    // targetPose, constraints, 3.0, // Goal end velocity in m/s. Optional
-    // drive::getPose, drive::getChassisSpeeds, drive::runVelocity,
-    // Constants.PathPlanner.pathFollowerConfig, // HolonomicPathFollwerConfig, see
-    // the API or "Follow a single path" example for
-    // // more info
-    // 0.0, // Rotation delay distance in meters. This is how far the robot should
-    // travel
-    // // before attempting to rotate. Optional
-    // drive // Reference to drive subsystem to set requirements
-    // );
-    // }
-
     public static Command resetGyro(Drive drive, Gyro gyro)
     {
-        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))).ignoringDisable(true);
+        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(Utilities.isBlueAlliance() ? 0 : 180)))).ignoringDisable(true);
     }
 
     public static Command driveVolts(Drive drive, double volts)
     {
         return Commands.runOnce(() -> drive.runVolts(volts));
+    }
+
+    public static Command reduceSpeed(Drive drive)
+    {
+        return Commands.startEnd(() -> drive.setSpeedMultipler(0.2), () -> drive.setSpeedMultipler(1));
     }
 }

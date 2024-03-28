@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.9,
-  "robotLength": 0.9,
+  "robotWidth": 0.86,
+  "robotLength": 0.64,
   "holonomicMode": true,
   "pathFolders": [
     "AmpSideStartingPaths",
@@ -8,7 +8,6 @@
     "BlueLineToOuterNotes",
     "InnerNoteToInnerNote",
     "MiddleSideStartingPaths",
-    "TestDrive",
     "Note1ToOuterNote",
     "Note2ToOuterNote",
     "Note3ToOuterNote",
@@ -18,7 +17,8 @@
     "Note7ToInnerNote",
     "Note8ToInnerNote",
     "OuterNotesToBlueLine",
-    "SourceSideStartingPaths"
+    "SourceSideStartingPaths",
+    "Misc."
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

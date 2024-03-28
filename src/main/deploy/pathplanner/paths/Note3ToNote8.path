@@ -3,51 +3,33 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.894982565999367,
-        "y": 7.003080254377342
+        "x": 3.4386670562249897,
+        "y": 7.475012302439632
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.894982565999367,
-        "y": 7.003080254377342
+        "x": 4.496036183485605,
+        "y": 7.607183443347208
       },
       "isLocked": false,
-      "linkedName": "Note3"
+      "linkedName": "AmpBlueLine"
     },
     {
       "anchor": {
-        "x": 8.28012348332389,
-        "y": 7.449541822160567
+        "x": 9.019226338989352,
+        "y": 7.386898208501248
       },
       "prevControl": {
-        "x": 7.280123483323891,
-        "y": 7.449541822160567
+        "x": 8.019226338989352,
+        "y": 7.386898208501248
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Note8"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3,
-      "rotationDegrees": 22.833505091232652,
-      "rotateFast": true
-    }
-  ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.2,
-      "maxWaypointRelativePos": 0.75,
-      "constraints": {
-        "maxVelocity": 9.0,
-        "maxAcceleration": 5.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "rotationTargets": [],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Sequence",
@@ -59,19 +41,13 @@
             {
               "type": "named",
               "data": {
-                "name": "Start Notepath"
+                "name": "Set Bed Angle Intake"
               }
             },
             {
               "type": "named",
               "data": {
-                "name": "Intake Pickup"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Load in Motion"
+                "name": "Load"
               }
             }
           ]

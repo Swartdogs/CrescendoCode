@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants
 {
@@ -42,8 +44,31 @@ public final class Constants
         public static final int MODULE_FR_SENSOR   = 1;
         public static final int MODULE_BL_SENSOR   = 2;
         public static final int MODULE_BR_SENSOR   = 3;
-        public static final int CLIMB_RIGHT_SENSOR = 4;
-        public static final int CLIMB_LEFT_SENSOR  = 5;
+        public static final int CLIMB_LEFT_SENSOR  = 4;
+        public static final int CLIMB_RIGHT_SENSOR = 5;
+    }
+
+    public static enum AUTOPOSES
+    {
+        // @formatter: off
+        AMP(new Pose2d(15.24, 6.77, Rotation2d.fromDegrees(169.81)), new Pose2d(0.76, 6.77, Rotation2d.fromDegrees(10.19))), MIDDLE(new Pose2d(14.61, 5.56, Rotation2d.fromDegrees(180)), new Pose2d(1.39, 5.56, new Rotation2d())),
+        SOURCE(new Pose2d(15.21, 4.23, Rotation2d.fromDegrees(-155.56)), new Pose2d(0.79, 4.23, Rotation2d.fromDegrees(-24.44)));
+        // @formatter: on
+
+        Pose2d _redPose;
+        Pose2d _bluePose;
+
+        private AUTOPOSES(Pose2d redPose, Pose2d bluePose)
+        {
+            _redPose  = redPose;
+            _bluePose = bluePose;
+        }
+
+        public Pose2d getPose()
+        {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) return _redPose;
+            return _bluePose;
+        }
     }
 
     public static class CAN
@@ -75,11 +100,13 @@ public final class Constants
 
     public static class Climb
     {
-        public static final double MIN_EXTENSION     = 0.0;
-        public static final double MAX_EXTENSION     = 17.5;
-        public static final double LEFT_ZERO_OFFSET  = -17.33;
-        public static final double RIGHT_ZERO_OFFSET = 0.357;
-        public static final double SENSOR_SCALE      = 27.473;
+        public static final double MIN_EXTENSION       = 0.0;
+        public static final double LEFT_MAX_EXTENSION  = 17.375;
+        public static final double RIGHT_MAX_EXTENSION = 17.5;
+        public static final double LEFT_ZERO_OFFSET    = -17.403;
+        public static final double RIGHT_ZERO_OFFSET   = 0.3;
+        public static final double LEFT_SENSOR_SCALE   = -27.234;
+        public static final double RIGHT_SENSOR_SCALE  = 27.301;
     }
 
     public static class Controls
@@ -156,7 +183,7 @@ public final class Constants
 
     public static class Notepath
     {
-        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.2;
+        public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.15;
         public static final double NOTEPATH_FEED_PERCENT_OUTPUT           = 0.6;
         public static final double NOTEPATH_SHOOTER_PICKUP_PERCENT_OUTPUT = 0.3;
     }
@@ -175,31 +202,38 @@ public final class Constants
 
     public static class ShooterBed // FIXME: Update all these values
     {
-        public static final double     MAX_BED_VOLTS            = 7; // TODO: Check if this is enough
-        public static final double     BED_SCALE                = 0.421;
-        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(-15.569);
+        public static final double     MAX_BED_VOLTS            = 6.0;
+        public static final double     BED_SCALE                = 170.401;
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(59.947);
         public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(88);
-        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(20);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(23);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
-        public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(57.3);
+        public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(52);
+        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(31.5);
+        public static final Rotation2d BED_AMP_SHOT_ANGLE       = Rotation2d.fromDegrees(48);
+        public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
+        public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);
         public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
-        public static final double     BED_DOWN_MIN_VOLTS       = -4;
-        public static final double     BED_UP_MIN_VOLTS         = 0.9;
+        public static final double     BED_DOWN_MIN_VOLTS       = -3.5;// -0.5;
+        public static final double     BED_UP_MIN_VOLTS         = -2.3;// 0.11;
     }
 
     public static class ShooterFlywheel
     {
         public static final double MAX_FLYWHEEL_SPEED    = 1.0;
         public static final double FLYWHEEL_INTAKE_SPEED = 0.15;
-        public static final double VELOCITY_RANGE        = 0.05;
+        public static final double VELOCITY_RANGE        = 0.15;
     }
 
     public static class Vision
     {
-        public static final String      CAMERA_NAME      = "frontCam";
-        public static final Rotation3d  CAMERA_ROTATION  = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
-        public static final Transform3d CAMERA_TRANSFORM = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
-        public static final String      CAMERA_URL       = "mjpg:http://10.5.25.12:1181/?action=stream";
+        public static final String      PHOTON_CAMERA_NAME  = "photonCam";
+        public static final String      SHOOTER_CAMERA_NAME = "shooterCam";
+        public static final String      DRIVER_CAMERA_NAME  = "driveCam";
+        public static final Rotation3d  CAMERA_ROTATION     = new Rotation3d(0.0, Units.degreesToRadians(-33), Units.degreesToRadians(180));
+        public static final Transform3d CAMERA_TRANSFORM    = new Transform3d(Units.inchesToMeters(-7), Units.inchesToMeters(7), Units.inchesToMeters(9.5), CAMERA_ROTATION);
+        public static final String      PHOTON_CAMERA_URL   = "http://10.5.25.12:1181/?action=stream";
+        public static final double      MAX_DETECTION_RANGE = Units.inchesToMeters(300);
     }
 }

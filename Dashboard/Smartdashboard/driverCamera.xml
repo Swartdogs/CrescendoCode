@@ -1,0 +1,12 @@
+<xml version="1.0">
+<dashboard>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="-1" y="0"/>
+		<width>825</width>
+		<height>622</height>
+		<property name="Camera Choice" value="Switched camera"/>
+	</static-widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

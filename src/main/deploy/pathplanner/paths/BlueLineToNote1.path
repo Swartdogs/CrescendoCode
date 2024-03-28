@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.894982565999367,
-        "y": 4.11050362756931
+        "x": 3.0648163114508047,
+        "y": 4.207264414528829
       },
       "prevControl": {
-        "x": 2.9815751939196202,
-        "y": 3.0488853285398885
+        "x": 3.151408939371058,
+        "y": 3.145646115499408
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Start Intake",
-      "waypointRelativePos": 0.05,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "sequential",
         "data": {
@@ -41,19 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake Pickup"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Start Shooter"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Load in Motion"
+                "name": "Load"
               }
             }
           ]

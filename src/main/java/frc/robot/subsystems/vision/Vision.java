@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 
@@ -24,7 +25,7 @@ public class Vision extends SubsystemBase
         _io.updateInputs(_inputs);
         Logger.processInputs("Vision", _inputs);
 
-        if (_lastTimestamp != _inputs.captureTimestamp)
+        if (!DriverStation.isAutonomous() && _lastTimestamp != _inputs.captureTimestamp)
         {
             if (_inputs.hasPose != false)
             {

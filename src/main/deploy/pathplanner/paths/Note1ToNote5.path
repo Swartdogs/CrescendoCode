@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.894982565999367,
-        "y": 4.11050362756931
+        "x": 3.0648163114508047,
+        "y": 4.207264414528829
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.033899298567829,
-        "y": 1.2136339657294701
+        "x": 5.341097071525741,
+        "y": 0.785500433254891
       },
       "isLocked": false,
       "linkedName": "Note1"
     },
     {
       "anchor": {
-        "x": 8.293678213604645,
-        "y": 2.4241431649767726
+        "x": 9.019226338989352,
+        "y": 2.4965659949208994
       },
       "prevControl": {
-        "x": 6.000859694027081,
-        "y": 1.6477794494050535
+        "x": 5.964604415792017,
+        "y": 1.5713680085678599
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Sequence",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "sequential",
         "data": {
@@ -41,19 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Start Notepath"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake Pickup"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Load in Motion"
+                "name": "Load"
               }
             }
           ]

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.293678213604645,
-        "y": 0.7612043754757987
+        "x": 8.931112245050967,
+        "y": 0.8517695747377186
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.024032355754986,
-        "y": 1.6872472206441285
+        "x": 5.661466387201308,
+        "y": 1.7778124199060485
       },
       "isLocked": false,
       "linkedName": "Note4"
@@ -29,19 +29,7 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.15,
-      "maxWaypointRelativePos": 0.8,
-      "constraints": {
-        "maxVelocity": 8.0,
-        "maxAcceleration": 6.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Shooter",

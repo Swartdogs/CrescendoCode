@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.231238154784003,
-        "y": 6.729254996971533
+        "x": 3.4386670562249897,
+        "y": 7.475012302439632
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.365936578027003,
-        "y": 6.344444227349993
+        "x": 5.685576451653797,
+        "y": 7.75404026657785
       },
       "isLocked": false,
-      "linkedName": "AmpDriveBack"
+      "linkedName": "AmpBlueLine"
     },
     {
       "anchor": {
-        "x": 8.289990426134699,
-        "y": 5.7721615443230885
+        "x": 8.975169292020158,
+        "y": 5.433702459533721
       },
       "prevControl": {
-        "x": 7.263828373810594,
-        "y": 6.018835114593306
+        "x": 7.036659225375697,
+        "y": 5.742101788318068
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,19 +29,7 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.15,
-      "maxWaypointRelativePos": 0.75,
-      "constraints": {
-        "maxVelocity": 9.0,
-        "maxAcceleration": 5.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Start Intake",
@@ -53,13 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake Pickup"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Load in Motion"
+                "name": "Load"
               }
             }
           ]
@@ -81,7 +63,7 @@
   "reversed": false,
   "folder": "BlueLineToOuterNotes",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 12.0409901243181,
     "velocity": 0
   },
   "useDefaultConstraints": true
