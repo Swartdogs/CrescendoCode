@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.stream.IntStream;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -402,7 +403,7 @@ public final class CompositeCommands
     public static Command LEDFillUp(LED led, Color color)
     {
         // @formatter:off
-        int totalLEDs      = Constants.LED.NUM_LEDS;
+        int totalLEDs      = NUM_LEDS;
         
         Command[] commandSequence = new Command[totalLEDs];
         return Commands.sequence
@@ -428,45 +429,33 @@ public final class CompositeCommands
     }
 
     // Flywheel No Longer Ready to Shoot
-    public static Command LEDFillDown(LED led, Color color)
-    {
-        // @formatter.off
-        int totalLEDs      = Constants.LED.NUM_LEDS;
-        Command[]  commandSequence = new Command[totalLEDs];
-
-        return Commands.sequence
-        (
-            Commands.runOnce(() ->
-            {
-                var initialPattern = led.getLEDs();
-
-                for (int i = totalLEDs; i >= 0; i--)
-                    {
-                    Color[] newPattern = new Color[totalLEDs];
-                    Arrays.fill(newPattern, i, totalLEDs, color);
-                    System.arraycopy(initialPattern, 0, newPattern, 0, i);
-                    commandSequence[totalLEDs - i] = LEDCommands.setFrame(led, newPattern);
-                }
-            }),
-            Commands.sequence(commandSequence)
-        );
-        // @formatter.on
-    }
-
-    // // Note in Path
-    // public static Command LEDBlink(LED led, Color color)
+    // public static Command LEDFillDown(LED led, Color color)
     // {
-    //     return Commands.sequence(
-    //             LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }), 
-    //             Commands.waitSeconds(0.5),
-    //             LEDCommands.setFrame(led, new Color[] { OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, null, null, null, null, null, null }), 
-    //             Commands.waitSeconds(0.5)
-    //     );
+    // // @formatter.off
+    // int totalLEDs = NUM_LEDS;
+    // Command[] commandSequence = new Command[totalLEDs];
+
+    // return Commands.sequence(Commands.runOnce(() ->
+    // {
+    // var initialPattern = led.getLEDs();
+
+    // for (int i = totalLEDs; i >= 0; i--)
+    // {
+    // Color[] newPattern = new Color[totalLEDs];
+    // Arrays.fill(newPattern, i, totalLEDs, color);
+    // System.arraycopy(initialPattern, 0, newPattern, 0, i);
+    // commandSequence[totalLEDs - i] = LEDCommands.setFrame(led, newPattern);
+    // }
+    // }), Commands.sequence(commandSequence));
+
+    // // Commands.sequence(LEDCommands.setFrame(led, IntStream.range(0,
+    // // NUM_LEDS).mapToObj(i -> Intstream.range(0, NUM_LEDS).mapToObj(j -> ))))
+    // // @formatter.on
     // }
 
     public static Command LEDSetSolidColor(LED led, Color color)
     {
-        return Commands.sequence(LEDCommands.setFrame(led, new Color[] { color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color, color }));
+        return Commands.sequence(LEDCommands.setFrame(led, IntStream.range(0, NUM_LEDS).mapToObj(i -> color).toArray(Color[]::new)));
     }
 
     public static Command LEDAutonomous(LED led)
@@ -478,64 +467,38 @@ public final class CompositeCommands
             case DriverStationJNI.kRed1AllianceStation:
             case DriverStationJNI.kRed2AllianceStation:
             case DriverStationJNI.kRed3AllianceStation:
-                color = Constants.LED.RED;
+                color = RED;
                 break;
             case DriverStationJNI.kBlue1AllianceStation:
             case DriverStationJNI.kBlue2AllianceStation:
             case DriverStationJNI.kBlue3AllianceStation:
-                color = Constants.LED.BLUE;
+                color = BLUE;
                 break;
             default:
-                color = Constants.LED.ORANGE;
+                color = ORANGE;
         }
 
         return CompositeCommands.LEDSetSolidColor(led, color);
     }
 
-    public static Command LEDPulseColor(LED led, int hue, int saturation)
+    public static Command LEDPulseColor(LED led, int hue)
     {
-        return Commands.repeatingSequence
-        (
-            Commands.runOnce
-            (
-                () -> 
-                {
-                    for (var i = 0; i < 32; i++)
-                    {
-                        Color color = Color.fromHSV(hue, saturation, i*8);
-                        LEDSetSolidColor(led, color);
-                        Commands.waitSeconds(0.5);
-                    }
-                }, led
-            ),
-
-            Commands.runOnce
-            (
-                () -> 
-                {
-                    for (var i = 31; i >= 0; i--)
-                    {
-                        Color color = Color.fromHSV(hue, saturation, i*8+1);
-                        LEDSetSolidColor(led, color);
-                        Commands.waitSeconds(0.5);
-                    }
-                }, led
-            )
-        );
+        return Commands.repeatingSequence(IntStream.range(0, 32).mapToObj(i -> Commands.runOnce(() -> LEDSetSolidColor(led, Color.fromHSV(hue, 100, (int)(100 * (((i < 16) ? i : 32 - i) / 16)))), led)).toArray(Command[]::new));
     }
 
-    public static Command LEDTeleop(LED led)
-    {
-        return CompositeCommands.LEDFillDown(led, Constants.LED.ORANGE).andThen(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, Constants.LED.ORANGE)));
-    }
+    // public static Command LEDTeleop(LED led)
+    // {
+    // return CompositeCommands.LEDFillDown(led, ORANGE).andThen(() ->
+    // led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, ORANGE)));
+    // }
 
-    public static Command LEDPulsingTeleop(LED led, int hue, int saturation)
+    public static Command LEDSetDefaultColor(LED led, Color color)
     {
-        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDPulseColor(led, hue, saturation)));
+        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, color)));
     }
 
     public static Command LEDPartyMode(LED led)
     {
-        return Commands.runOnce(() -> Commands.repeatingSequence(LEDCommands.setFrame(led, led.getRandomColoring(Constants.LED.PINK, Constants.LED.ORANGE, Constants.LED.TEAL))));
+        return Commands.runOnce(() -> Commands.repeatingSequence(LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL))));
     }
 }

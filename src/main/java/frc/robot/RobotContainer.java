@@ -61,13 +61,13 @@ public class RobotContainer
     // @SuppressWarnings("unused")
     // private final Vision _vision;
     @SuppressWarnings("unused")
-    private final Vision          _vision;
-    private final LED             _led;
+    private final Vision _vision;
+    private final LED    _led;
 
     // Dashboard inputs
-    //private final LoggedDashboardChooser<Command> _autoChooser;
+    // private final LoggedDashboardChooser<Command> _autoChooser;
     @SuppressWarnings("unused")
-    private final Dashboard             _dashboard;
+    private final Dashboard _dashboard;
 
     // Controls
     private final CommandJoystick       _joystick   = new CommandJoystick(1);
@@ -138,7 +138,9 @@ public class RobotContainer
 
     private void configureDefaultCommands()
     {
-        Trigger _hasNote = new Trigger(() -> _notepath.hasNote());
+        Trigger _hasNote    = new Trigger(() -> _notepath.hasNote());
+        Trigger _isShooting = new Trigger(() -> _shooterFlywheel.isShooting());
+        Trigger _isIntaking = new Trigger(() -> _intake.isIntaking() || _shooterFlywheel.isIntaking());
         // _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed,
         // _shooterFlywheel, _notepath));
 
@@ -148,8 +150,13 @@ public class RobotContainer
         // -MathUtil.applyDeadband(_controller.getLeftY(),
         // Constants.Controls.JOYSTICK_DEADBAND)));
 
-        _hasNote.onTrue(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.GREEN));
-        _hasNote.onFalse(CompositeCommands.LEDSetSolidColor(_led, Constants.LED.RED));
+        CompositeCommands.LEDSetDefaultColor(_led, Constants.LED.ORANGE).schedule();
+
+        _hasNote.onTrue(CompositeCommands.LEDSetDefaultColor(_led, Constants.LED.GREEN));
+        _hasNote.onFalse(CompositeCommands.LEDSetDefaultColor(_led, Constants.LED.RED));
+        _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, 0));
+        _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, 120));
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
     }
 
@@ -202,6 +209,11 @@ public class RobotContainer
     private boolean getRobotCentric()
     {
         return _joystick.button(3).getAsBoolean();
+    }
+
+    public LED getLEDSubsystem()
+    {
+        return _led;
     }
 
     public Command getAutonomousCommand()

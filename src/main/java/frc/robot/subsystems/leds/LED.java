@@ -14,7 +14,7 @@ import frc.robot.Constants;
 public class LED extends SubsystemBase
 {
     private final LEDIO _io;
-    Random rand = new Random();
+    Random              rand = new Random();
 
     public LED(LEDIO io)
     {

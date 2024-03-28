@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.Constants;
 
 public class LEDIOHardware implements LEDIO
 {
@@ -18,7 +17,7 @@ public class LEDIOHardware implements LEDIO
 
     public LEDIOHardware()
     {
-        _led       = new AddressableLED(0);
+        _led = new AddressableLED(0);
 
         _ledBuffer = new AddressableLEDBuffer(22);
 

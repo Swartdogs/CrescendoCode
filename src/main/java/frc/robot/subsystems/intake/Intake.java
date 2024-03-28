@@ -55,4 +55,9 @@ public class Intake extends SubsystemBase
     {
         return _inputs.motorVolts / Constants.General.MOTOR_VOLTAGE;
     }
+
+    public boolean isIntaking()
+    {
+        return _inputs.motorVolts > 0;
+    }
 }

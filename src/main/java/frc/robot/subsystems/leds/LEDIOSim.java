@@ -23,6 +23,7 @@ public class LEDIOSim implements LEDIO
 
         _led.setLength(_ledBuffer.getLength());
         _led.setData(_ledBuffer);
+        _led.start();
         _ledSim.setRunning(true);
     }
 
