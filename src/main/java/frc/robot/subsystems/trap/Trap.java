@@ -9,7 +9,7 @@ public class Trap extends SubsystemBase
     private final TrapIO                 _io;
     private final TrapIOInputsAutoLogged _inputs = new TrapIOInputsAutoLogged();
 
-    public Trap(Trap trap, TrapIO io)
+    public Trap(TrapIO io)
     {
         _io = io;
     }

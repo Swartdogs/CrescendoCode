@@ -20,6 +20,7 @@ import frc.robot.subsystems.notepath.Notepath.NotepathState;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterBed.BedAngle;
+import frc.robot.subsystems.trap.Trap;
 import frc.robot.util.DeferredInstantCommand;
 
 public final class CompositeCommands
@@ -293,6 +294,11 @@ public final class CompositeCommands
         public static Command setBedVolts(ShooterBed shooterBed, DoubleSupplier ySupplier)
         {
             return ShooterBedCommands.setVolts(shooterBed, ySupplier).finallyDo(() -> shooterBed.setAngle(shooterBed.getBedAngle()));
+        }
+
+        public static Command setTrap(Trap trap, DoubleSupplier ySupplier)
+        {
+            return TrapCommands.setVolts(trap, ySupplier).finallyDo(() -> trap.setVolts(0));
         }
 
         public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double blueSetpoint, double redSetpoint, double maxSpeed)

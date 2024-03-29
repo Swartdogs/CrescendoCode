@@ -42,6 +42,9 @@ import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
+import frc.robot.subsystems.trap.Trap;
+import frc.robot.subsystems.trap.TrapIO;
+import frc.robot.subsystems.trap.TrapSnowblower;
 
 public class RobotContainer
 {
@@ -57,6 +60,7 @@ public class RobotContainer
     // private final Vision _vision;
     @SuppressWarnings("unused")
     private final Dashboard _dashboard;
+    private final Trap      _trap;
 
     // Controls
     private final CommandJoystick       _joystick   = new CommandJoystick(1);
@@ -83,6 +87,7 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new Climb(_gyro, new ClimbIOVictorSPX());
+                _trap = new Trap(new TrapSnowblower());
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -95,6 +100,7 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
                 _climb = new Climb(_gyro, new ClimbIOSim());
+                _trap = new Trap(new TrapIO() {});
                 break;
 
             // Replayed robot, disable IO implementations
@@ -107,6 +113,7 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
                 _climb = new Climb(_gyro, new ClimbIO() {});
+                _trap = new Trap(new TrapIO() {});
                 break;
         }
 
@@ -150,8 +157,12 @@ public class RobotContainer
         _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setAngle(_shooterBed, 30).andThen(ClimbCommands.setHeight(_climb, 10.5)));
 
+        _controller.rightStick().whileTrue(CompositeCommands.Teleop.setTrap(null, null));
+
         _controller.start().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
         _controller.back().onTrue(CompositeCommands.General.setHasNote(_notepath, false));
+
+        _controller.rightStick().onTrue(CompositeCommands.Teleop.setTrap(_trap, () -> -_controller.getLeftY()));
 
         // _controller.povUp().onTrue(ShooterBedCommands.setAngle(_shooterBed, 65));
         // _controller.povLeft().onTrue(ShooterBedCommands.setAngle(_shooterBed, 60));
