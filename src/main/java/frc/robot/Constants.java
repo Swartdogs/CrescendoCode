@@ -89,6 +89,7 @@ public final class Constants
         public static final int SHOOTER_FLYWHEEL_UPPER = 16;
         public static final int CLIMB_LEFT             = 17;
         public static final int CLIMB_RIGHT            = 18;
+        public static final int TRAP                   = 19;
     }
 
     public static class Characterization
