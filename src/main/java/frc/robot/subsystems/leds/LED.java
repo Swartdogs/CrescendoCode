@@ -3,8 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.leds;
 
-import java.util.ArrayList;
 import java.util.Random;
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,8 +14,9 @@ import frc.robot.Constants;
 
 public class LED extends SubsystemBase
 {
-    private final LEDIO _io;
-    Random              rand = new Random();
+    private final LEDIO                 _io;
+    private final LEDIOInputsAutoLogged _inputs = new LEDIOInputsAutoLogged();
+    Random                              rand    = new Random();
 
     public LED(LEDIO io)
     {
@@ -24,21 +26,23 @@ public class LED extends SubsystemBase
     @Override
     public void periodic()
     {
+        _io.updateInputs(_inputs);
+        Logger.processInputs("LED", _inputs);
     }
 
     public void applyAnimationFrame(Color[] colorList)
     {
-        var pattern = new ArrayList<Color>();
+        // ArrayList<Color> pattern = new ArrayList<Color>();
 
-        for (int i = 0; i < colorList.length; i++)
-        {
-            pattern.add(colorList[i]);
-        }
+        // for (int i = 0; i < colorList.length; i++)
+        // {
+        // pattern.add(colorList[i]);
+        // }
 
-        _io.applyAnimationFrame(pattern);
+        _io.applyAnimationFrame(colorList);
     }
 
-    public ArrayList<Color> getLEDs()
+    public Color[] getLEDs()
     {
         return _io.getLEDs();
     }

@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems.leds;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
@@ -13,7 +11,7 @@ public class LEDIOHardware implements LEDIO
 {
     private AddressableLED       _led;
     private AddressableLEDBuffer _ledBuffer;
-    private ArrayList<Color>     _pattern;
+    private Color[]              _pattern;
 
     public LEDIOHardware()
     {
@@ -27,11 +25,21 @@ public class LEDIOHardware implements LEDIO
     }
 
     @Override
-    public void applyAnimationFrame(ArrayList<Color> pattern)
+    public void updateInputs(LEDIOInputs inputs)
     {
-        for (int i = 0; i < pattern.size(); i++)
+        inputs.r    = _pattern != null ? (int)_pattern[0].red : 0;
+        inputs.g    = _pattern != null ? (int)_pattern[0].green : 0;
+        inputs.b    = _pattern != null ? (int)_pattern[0].blue : 0;
+        inputs.hex  = _pattern != null ? _pattern[0].toHexString() : "";
+        inputs.test = _pattern != null ? _pattern[0].toString() : "";
+    }
+
+    @Override
+    public void applyAnimationFrame(Color[] pattern)
+    {
+        for (int i = 0; i < pattern.length; i++)
         {
-            var color = pattern.get(i);
+            var color = pattern[i];
 
             if (color != null)
             {
@@ -44,7 +52,7 @@ public class LEDIOHardware implements LEDIO
     }
 
     @Override
-    public ArrayList<Color> getLEDs()
+    public Color[] getLEDs()
     {
         return _pattern;
     }

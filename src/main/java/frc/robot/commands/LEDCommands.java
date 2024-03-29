@@ -13,6 +13,6 @@ public final class LEDCommands
 
     public static Command setFrame(LED led, Color[] colorList)
     {
-        return Commands.runOnce(() -> led.applyAnimationFrame(colorList), led);
+        return Commands.runOnce(() -> led.applyAnimationFrame(colorList), led).ignoringDisable(true);
     }
 }

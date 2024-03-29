@@ -1,7 +1,5 @@
 package frc.robot.subsystems.leds;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
@@ -13,7 +11,7 @@ public class LEDIOSim implements LEDIO
     private AddressableLED       _led;
     private AddressableLEDBuffer _ledBuffer;
     private AddressableLEDSim    _ledSim;
-    private ArrayList<Color>     _pattern;
+    private Color[]              _pattern;
 
     public LEDIOSim()
     {
@@ -28,11 +26,21 @@ public class LEDIOSim implements LEDIO
     }
 
     @Override
-    public void applyAnimationFrame(ArrayList<Color> pattern)
+    public void updateInputs(LEDIOInputs inputs)
     {
-        for (int i = 0; i < pattern.size(); i++)
+        inputs.r    = _pattern != null ? (int)_pattern[0].red : 0;
+        inputs.g    = _pattern != null ? (int)_pattern[0].green : 0;
+        inputs.b    = _pattern != null ? (int)_pattern[0].blue : 0;
+        inputs.hex  = _pattern != null ? _pattern[0].toHexString() : "";
+        inputs.test = _pattern != null ? _pattern[0].toString() : "";
+    }
+
+    @Override
+    public void applyAnimationFrame(Color[] pattern)
+    {
+        for (int i = 0; i < pattern.length; i++)
         {
-            var color = pattern.get(i);
+            var color = pattern[i];
 
             if (color != null)
             {
@@ -45,7 +53,7 @@ public class LEDIOSim implements LEDIO
     }
 
     @Override
-    public ArrayList<Color> getLEDs()
+    public Color[] getLEDs()
     {
         return _pattern;
     }

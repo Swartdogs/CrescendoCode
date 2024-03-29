@@ -455,7 +455,7 @@ public final class CompositeCommands
 
     public static Command LEDSetSolidColor(LED led, Color color)
     {
-        return Commands.sequence(LEDCommands.setFrame(led, IntStream.range(0, NUM_LEDS).mapToObj(i -> color).toArray(Color[]::new)));
+        return LEDCommands.setFrame(led, IntStream.range(0, NUM_LEDS).mapToObj(i -> color).toArray(Color[]::new)).ignoringDisable(true);
     }
 
     public static Command LEDAutonomous(LED led)
@@ -481,9 +481,12 @@ public final class CompositeCommands
         return CompositeCommands.LEDSetSolidColor(led, color);
     }
 
-    public static Command LEDPulseColor(LED led, int hue)
+    public static Command LEDPulseColor(LED led, Color color)
     {
-        return Commands.repeatingSequence(IntStream.range(0, 32).mapToObj(i -> Commands.runOnce(() -> LEDSetSolidColor(led, Color.fromHSV(hue, 100, (int)(100 * (((i < 16) ? i : 32 - i) / 16)))), led)).toArray(Command[]::new));
+        var x = IntStream.range(0, 32)
+                .mapToObj(i -> LEDSetSolidColor(led, new Color((int)(255 * color.red * (((i < 16) ? i : 32 - i) / 16)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16)))))
+                .toArray(Command[]::new);
+        return Commands.repeatingSequence(x).ignoringDisable(true);
     }
 
     // public static Command LEDTeleop(LED led)
@@ -494,11 +497,11 @@ public final class CompositeCommands
 
     public static Command LEDSetDefaultColor(LED led, Color color)
     {
-        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, color)));
+        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, color))).ignoringDisable(true);
     }
 
     public static Command LEDPartyMode(LED led)
     {
-        return Commands.runOnce(() -> Commands.repeatingSequence(LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL))));
+        return Commands.runOnce(() -> Commands.repeatingSequence(LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL)))).ignoringDisable(true);
     }
 }

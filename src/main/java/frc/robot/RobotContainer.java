@@ -47,6 +47,7 @@ import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
+import static frc.robot.Constants.LED.*;
 
 public class RobotContainer
 {
@@ -150,12 +151,12 @@ public class RobotContainer
         // -MathUtil.applyDeadband(_controller.getLeftY(),
         // Constants.Controls.JOYSTICK_DEADBAND)));
 
-        CompositeCommands.LEDSetDefaultColor(_led, Constants.LED.ORANGE).schedule();
+        _hasNote.onTrue(CompositeCommands.LEDSetDefaultColor(_led, GREEN));
+        _hasNote.onFalse(CompositeCommands.LEDSetDefaultColor(_led, RED));
+        _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, RED));
+        _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, GREEN));
 
-        _hasNote.onTrue(CompositeCommands.LEDSetDefaultColor(_led, Constants.LED.GREEN));
-        _hasNote.onFalse(CompositeCommands.LEDSetDefaultColor(_led, Constants.LED.RED));
-        _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, 0));
-        _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, 120));
+        _controller.rightStick().onTrue(Commands.runOnce(() -> System.out.println(_led.getCurrentCommand().getName())));
 
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
     }
