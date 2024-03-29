@@ -16,7 +16,6 @@ public interface LEDIO
         public int    g    = 0;
         public int    b    = 0;
         public String hex  = "";
-        public String test = "";
     }
 
     public default void updateInputs(LEDIOInputs inputs)

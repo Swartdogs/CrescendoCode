@@ -32,7 +32,6 @@ public class LEDIOSim implements LEDIO
         inputs.g    = _pattern != null ? (int)_pattern[0].green : 0;
         inputs.b    = _pattern != null ? (int)_pattern[0].blue : 0;
         inputs.hex  = _pattern != null ? _pattern[0].toHexString() : "";
-        inputs.test = _pattern != null ? _pattern[0].toString() : "";
     }
 
     @Override
