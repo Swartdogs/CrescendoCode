@@ -27,10 +27,10 @@ public class LEDIOHardware implements LEDIO
     @Override
     public void updateInputs(LEDIOInputs inputs)
     {
-        inputs.r    = _pattern != null ? (int)_pattern[0].red : 0;
-        inputs.g    = _pattern != null ? (int)_pattern[0].green : 0;
-        inputs.b    = _pattern != null ? (int)_pattern[0].blue : 0;
-        inputs.hex  = _pattern != null ? _pattern[0].toHexString() : "";
+        inputs.r   = _pattern != null ? (double)_pattern[0].red : 0;
+        inputs.g   = _pattern != null ? (double)_pattern[0].green : 0;
+        inputs.b   = _pattern != null ? (double)_pattern[0].blue : 0;
+        inputs.hex = _pattern != null ? _pattern[0].toHexString() : "";
     }
 
     @Override

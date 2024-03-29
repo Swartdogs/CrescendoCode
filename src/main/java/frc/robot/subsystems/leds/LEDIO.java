@@ -12,10 +12,10 @@ public interface LEDIO
     @AutoLog
     public static class LEDIOInputs
     {
-        public int    r    = 0;
-        public int    g    = 0;
-        public int    b    = 0;
-        public String hex  = "";
+        public double    r   = 0.0;
+        public double    g   = 0.0;
+        public double    b   = 0.0;
+        public String hex = "";
     }
 
     public default void updateInputs(LEDIOInputs inputs)

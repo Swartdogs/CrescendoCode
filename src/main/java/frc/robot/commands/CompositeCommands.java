@@ -484,7 +484,7 @@ public final class CompositeCommands
     public static Command LEDPulseColor(LED led, Color color)
     {
         var x = IntStream.range(0, 32)
-                .mapToObj(i -> LEDSetSolidColor(led, new Color((int)(255 * color.red * (((i < 16) ? i : 32 - i) / 16)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16)))))
+                .mapToObj(i -> LEDSetSolidColor(led, new Color((int)(255 * color.red * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.blue * (((i < 16) ? i : 32 - i) / 16.0)))))
                 .toArray(Command[]::new);
         return Commands.repeatingSequence(x).ignoringDisable(true);
     }
