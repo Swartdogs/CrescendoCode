@@ -27,7 +27,6 @@ public class ShooterBedIOVictorSPX implements ShooterBedIO
         _leaderMotor.setNeutralMode(NeutralMode.Brake);
 
         _followerMotor.follow(_leaderMotor);
-        _followerMotor.setInverted(true);
     }
 
     @Override

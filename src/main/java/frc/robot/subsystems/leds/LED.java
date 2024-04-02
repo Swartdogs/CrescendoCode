@@ -67,7 +67,7 @@ public class LED extends SubsystemBase
 
         for (var i = 0; i < Constants.LED.NUM_LEDS; i++)
         {
-            colorList[i] = threeColors[rand.nextInt(2)];
+            colorList[i] = threeColors[rand.nextInt(3)];
         }
 
         return colorList;

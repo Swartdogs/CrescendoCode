@@ -139,9 +139,9 @@ public class RobotContainer
 
     private void configureDefaultCommands()
     {
-        Trigger _hasNote = new Trigger(() -> _notepath.hasNote());
+        Trigger _hasNote    = new Trigger(() -> _notepath.hasNote());
         Trigger _isShooting = new Trigger(() -> _shooterFlywheel.isShooting());
-        Trigger _isIntaking = new Trigger(() -> _intake.isIntaking() ||_shooterFlywheel.isIntaking());
+        Trigger _isIntaking = new Trigger(() -> _intake.isIntaking() || _shooterFlywheel.isIntaking());
         // _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed,
         // _shooterFlywheel, _notepath));
 
@@ -151,12 +151,12 @@ public class RobotContainer
         // -MathUtil.applyDeadband(_controller.getLeftY(),
         // Constants.Controls.JOYSTICK_DEADBAND)));
 
+        _led.setDefaultCommand(CompositeCommands.LEDSetSolidColor(_led, ORANGE));
+
         _hasNote.onTrue(CompositeCommands.LEDSetDefaultColor(_led, GREEN));
         _hasNote.onFalse(CompositeCommands.LEDSetDefaultColor(_led, RED));
         _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, RED));
         _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, GREEN));
-
-        _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
     }
 
     private void configureDriverCommands()
@@ -182,6 +182,7 @@ public class RobotContainer
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
+        _controller.rightStick().whileTrue(CompositeCommands.LEDPartyMode(_led));
 
         _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setAngle(_shooterBed, 30).andThen(ClimbCommands.setHeight(_climb, 10.5)));

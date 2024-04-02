@@ -8,6 +8,7 @@ import edu.wpi.first.hal.DriverStationJNI;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.Constants;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -483,10 +484,14 @@ public final class CompositeCommands
 
     public static Command LEDPulseColor(LED led, Color color)
     {
-        var x = IntStream.range(0, 32)
-                .mapToObj(i -> LEDSetSolidColor(led, new Color((int)(255 * color.red * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.blue * (((i < 16) ? i : 32 - i) / 16.0)))))
-                .toArray(Command[]::new);
-        return Commands.repeatingSequence(x).ignoringDisable(true);
+        return Commands.repeatingSequence(
+                IntStream.range(0, 32)
+                        .mapToObj(
+                                i -> LEDSetSolidColor(
+                                        led, new Color((int)(255 * color.red * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.blue * (((i < 16) ? i : 32 - i) / 16.0)))
+                                )
+                        ).toArray(Command[]::new)
+        ).ignoringDisable(true);
     }
 
     // public static Command LEDTeleop(LED led)
@@ -502,6 +507,10 @@ public final class CompositeCommands
 
     public static Command LEDPartyMode(LED led)
     {
-        return Commands.runOnce(() -> Commands.repeatingSequence(LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL)))).ignoringDisable(true);
+        //@formatter:off
+        return Commands.repeatingSequence(
+            new ProxyCommand(() -> LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL))), 
+            Commands.waitSeconds(0.5)).ignoringDisable(true);
+        //@formatter:on
     }
 }

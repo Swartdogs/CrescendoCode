@@ -23,7 +23,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.SIM;
+        public static final Mode CURRENT_MODE = Mode.REAL;
 
         public static enum Mode
         {
@@ -111,7 +111,8 @@ public final class Constants
 
     public static class Controls
     {
-        public static final double JOYSTICK_DEADBAND = 0.1;
+        public static final double JOYSTICK_DEADBAND        = 0.1;
+        public static final double ROTATE_JOYSTICK_DEADBAND = 0.15;
     }
 
     public static class DIO
@@ -170,7 +171,7 @@ public final class Constants
 
     public static class LED
     {
-        public static final int   NUM_LEDS = 22; // TODO: Change value
+        public static final int   NUM_LEDS = 6; // TODO: Change value
         public static final Color RED      = new Color(255, 0, 0);
         public static final Color BLUE     = new Color(0, 0, 255);
         public static final Color ORANGE   = new Color(255, 50, 0);
@@ -203,14 +204,14 @@ public final class Constants
     public static class ShooterBed // FIXME: Update all these values
     {
         public static final double     MAX_BED_VOLTS            = 6.0;
-        public static final double     BED_SCALE                = 170.401;
-        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(59.947);
-        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(88);
-        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(23);
+        public static final double     BED_SCALE                = 183.21; // 170.401;
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(6.05 /* 59.947 */);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(96);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(24);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
-        public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(52);
-        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(31.5);
+        public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(54.5);
+        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(34);
         public static final Rotation2d BED_AMP_SHOT_ANGLE       = Rotation2d.fromDegrees(48);
         public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);

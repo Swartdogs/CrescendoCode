@@ -12,9 +12,9 @@ public interface LEDIO
     @AutoLog
     public static class LEDIOInputs
     {
-        public double    r   = 0.0;
-        public double    g   = 0.0;
-        public double    b   = 0.0;
+        public double r   = 0.0;
+        public double g   = 0.0;
+        public double b   = 0.0;
         public String hex = "";
     }
 

@@ -218,7 +218,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
 
         NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.8));
-        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 34));
+        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 37));
         NamedCommands.registerCommand("Set Shooter Angle Note 1", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 28.3));
         NamedCommands.registerCommand("Podium Shot Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 31.5));
 
@@ -226,7 +226,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Initial Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4500, 4500));
         NamedCommands.registerCommand("Set Speed 5000", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5000, 5000));
         NamedCommands.registerCommand("Set Shooter Max Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5800, 5800));
-        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 52.5));
+        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 53.5));
         NamedCommands.registerCommand("Set Bed Angle Intake", CompositeCommands.Autonomous.setBedAngle(shooterBed, 65.1));
 
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
