@@ -31,7 +31,13 @@ public final class DriveCommands
      * Field relative drive command using two joysticks (controlling linear and
      * angular velocities).
      */
+
     public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, Dashboard dashboard)
+    {
+        return joystickDrive(drive, xSupplier, ySupplier, omegaSupplier, robotCentric, 2, 3, dashboard);
+    }
+
+    public static Command joystickDrive(Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, int translateExponent, int rotateExponent, Dashboard dashboard)
     {
         return Commands.run(() ->
         {
@@ -41,8 +47,8 @@ public final class DriveCommands
             double     omega           = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), Constants.Controls.JOYSTICK_DEADBAND);
 
             // Square values
-            linearMagnitude = linearMagnitude * linearMagnitude;
-            omega           = Math.copySign(omega * omega, omega);
+            linearMagnitude = Math.pow(linearMagnitude, translateExponent);
+            omega           = Math.copySign(Math.pow(omega, rotateExponent), omega);
 
             Rotation2d allianceAdjustment = Rotation2d.fromDegrees(0);
 
@@ -85,19 +91,19 @@ public final class DriveCommands
 
     public static Command driveAtOrientation(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double setpoint, double maxSpeed)
     {
-        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), robotCentric, dashboard));
+        return Commands.runOnce(() -> drive.rotateInit(setpoint, maxSpeed)).andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(), robotCentric, 2, 1, dashboard));
     }
 
     public static Command aimAtSpeaker(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
         return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER), maxSpeed))
-                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER)), () -> false, dashboard));
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER)), () -> false, 2, 1, dashboard));
     }
 
     public static Command aimAtAmp(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
         return Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP)), maxSpeed))
-                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP))), () -> false, dashboard));
+                .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP))), () -> false, 2, 1, dashboard));
     }
 
     private static double getHeadingToPose(Drive drive, Pose2d pose)
@@ -110,7 +116,11 @@ public final class DriveCommands
 
     public static Command resetGyro(Drive drive, Gyro gyro)
     {
-        return Commands.runOnce(() -> drive.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(Utilities.isBlueAlliance() ? 0 : 180)))).ignoringDisable(true);
+        return Commands.runOnce(() ->
+        {
+            var pose = drive.getPose();
+            drive.setPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(Utilities.isBlueAlliance() ? 0 : 180)));
+        }).ignoringDisable(true);
     }
 
     public static Command driveVolts(Drive drive, double volts)
