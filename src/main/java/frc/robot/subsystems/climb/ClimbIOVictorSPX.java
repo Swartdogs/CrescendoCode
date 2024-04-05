@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climb;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -23,6 +24,9 @@ public class ClimbIOVictorSPX implements ClimbIO
 
         _leftPot  = new AnalogPotentiometer(Constants.AIO.CLIMB_LEFT_SENSOR, Constants.Climb.LEFT_SENSOR_SCALE);
         _rightPot = new AnalogPotentiometer(Constants.AIO.CLIMB_RIGHT_SENSOR, Constants.Climb.RIGHT_SENSOR_SCALE);
+
+        _leftArmMotor.setNeutralMode(NeutralMode.Brake);
+        _rightArmMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override

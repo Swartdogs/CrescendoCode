@@ -155,8 +155,8 @@ public class RobotContainer
 
         _hasNote.onTrue(CompositeCommands.LEDSetDefaultColor(_led, GREEN));
         _hasNote.onFalse(CompositeCommands.LEDSetDefaultColor(_led, RED));
-        _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, RED));
-        _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, GREEN));
+        _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, GREEN));
+        _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, RED));
     }
 
     private void configureDriverCommands()
@@ -168,6 +168,7 @@ public class RobotContainer
         _joystick.button(8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 120, 300, 0.6)); // 60 degrees right
         _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
+        _joystick.button(11).whileTrue(DriveCommands.aimAtSpeaker(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
     }
 

@@ -23,8 +23,9 @@ public class ShooterBedIOVictorSPX implements ShooterBedIO
         _absoluteEncoder       = new DutyCycleEncoder(Constants.DIO.SHOOTER_BED_SENSOR);
         _absoluteEncoderOffset = Constants.ShooterBed.BED_ANGLE_OFFSET;
 
-        _leaderMotor.setInverted(true);
+        // _leaderMotor.setInverted(true);
         _leaderMotor.setNeutralMode(NeutralMode.Brake);
+        _followerMotor.setNeutralMode(NeutralMode.Brake);
 
         _followerMotor.follow(_leaderMotor);
     }
