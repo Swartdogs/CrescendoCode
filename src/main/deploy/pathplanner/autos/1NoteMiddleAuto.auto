@@ -52,6 +52,24 @@
           "data": {
             "name": "Stop Shooter"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 8.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AmpSideToNote3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
+          }
         }
       ]
     }

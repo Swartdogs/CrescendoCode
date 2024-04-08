@@ -336,14 +336,14 @@ public final class CompositeCommands
         {
             return Commands.either(
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot), () -> Utilities.isBlueAlliance()
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot), () -> Utilities.isBlueAlliance()
             );
         }
 
         public static Command blueAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot),
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot), () -> Utilities.isBlueAlliance()
             );
         }
@@ -500,15 +500,27 @@ public final class CompositeCommands
 
     public static Command LEDSetDefaultColor(LED led, Color color)
     {
-        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, color))).ignoringDisable(true);
+        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, color)));
     }
 
     public static Command LEDPartyMode(LED led)
     {
         //@formatter:off
         return Commands.repeatingSequence(
-            new ProxyCommand(() -> LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL))), 
-            Commands.waitSeconds(0.5)).ignoringDisable(true);
+            IntStream.range(0, 25)
+                        .mapToObj(
+                                i -> new ProxyCommand(() -> LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL)))
+                        ).toArray(Command[]::new)
+            ).ignoringDisable(true);
+        //@formatter:on
+    }
+
+    public static Command LEDDisabled(LED led)
+    {
+        //@formatter:off
+        return Commands.runOnce(
+            () -> led.switchDefaultCommand(CompositeCommands.LEDSetDefaultColor(led, ORANGE))
+        ).ignoringDisable(true);
         //@formatter:on
     }
 }

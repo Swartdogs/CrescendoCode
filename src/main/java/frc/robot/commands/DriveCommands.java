@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -87,21 +88,22 @@ public final class DriveCommands
     {
         return Commands.either(
                 Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER), maxSpeed))
-                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER.rotateBy(new Rotation2d(Math.PI)))), robotCentric, 2, 1, dashboard)), // blue
-                                                                                                                                                                                                                                 // alliance
+                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_SPEAKER)), robotCentric, 2, 1, dashboard)), // blue
+                                                                                                                                                                                               // alliance
                 Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Constants.Field.RED_SPEAKER), maxSpeed))
-                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.RED_SPEAKER.rotateBy(new Rotation2d(Math.PI)))), robotCentric, 2, 1, dashboard)), // red alliance
+                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.RED_SPEAKER)), robotCentric, 2, 1, dashboard)), // red alliance
                 () -> Utilities.isBlueAlliance()
         );
+
     }
 
     public static Command aimAtAmp(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, double maxSpeed)
     {
         return Commands.either(
                 Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP)), maxSpeed))
-                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP.rotateBy(new Rotation2d(Math.PI)))), () -> false, 2, 1, dashboard)),
+                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.BLUE_AMP)), () -> false, 2, 1, dashboard)),
                 Commands.runOnce(() -> drive.rotateInit(getHeadingToPose(drive, Utilities.getAutoPose(Constants.Field.BLUE_AMP)), maxSpeed))
-                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.RED_AMP.rotateBy(new Rotation2d(Math.PI)))), () -> false, 2, 1, dashboard)),
+                        .andThen(joystickDrive(drive, xSupplier, ySupplier, () -> drive.rotateExecute(getHeadingToPose(drive, Constants.Field.RED_AMP)), () -> false, 2, 1, dashboard)),
                 () -> Utilities.isBlueAlliance()
         );
     }
@@ -111,7 +113,7 @@ public final class DriveCommands
         double deltaY = pose.getY() - drive.getPose().getY();
         double deltaX = pose.getX() - drive.getPose().getX();
 
-        return Math.atan2(deltaY, deltaX) / Math.PI * 180;
+        return Units.radiansToDegrees(Math.atan2(deltaY, deltaX)) + 180;
     }
 
     public static Command resetGyro(Drive drive, Gyro gyro)

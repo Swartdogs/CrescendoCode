@@ -61,9 +61,9 @@ public class RobotContainer
     private final Gyro            _gyro;
     // @SuppressWarnings("unused")
     // private final Vision _vision;
-    @SuppressWarnings("unused")
-    private final Vision _vision;
-    private final LED    _led;
+    // @SuppressWarnings("unused")
+    // private final Vision _vision;
+    private final LED _led;
 
     // Dashboard inputs
     // private final LoggedDashboardChooser<Command> _autoChooser;
@@ -97,7 +97,7 @@ public class RobotContainer
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new Climb(_gyro, new ClimbIOVictorSPX());
                 _led = new LED(new LEDIOHardware());
-                _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
+                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -111,7 +111,7 @@ public class RobotContainer
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
                 _climb = new Climb(_gyro, new ClimbIOSim());
                 _led = new LED(new LEDIOSim());
-                _vision = new Vision(_drive, new VisionIO() {});
+                // _vision = new Vision(_drive, new VisionIO() {});
                 break;
 
             // Replayed robot, disable IO implementations
@@ -125,7 +125,7 @@ public class RobotContainer
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
                 _climb = new Climb(_gyro, new ClimbIO() {});
                 _led = new LED(new LEDIO() {});
-                _vision = new Vision(_drive, new VisionIO() {});
+                // _vision = new Vision(_drive, new VisionIO() {});
                 break;
         }
 

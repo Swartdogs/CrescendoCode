@@ -117,6 +117,6 @@ public class Robot extends LoggedRobot
     @Override
     public void disabledInit()
     {
-        _led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(_led, ORANGE));
+        CompositeCommands.LEDDisabled(_led);
     }
 }
