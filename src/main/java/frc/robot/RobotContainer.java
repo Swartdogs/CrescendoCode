@@ -6,8 +6,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.ClimbCommands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CompositeCommands;
+import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterBedCommands;
 import frc.robot.subsystems.Dashboard;
@@ -30,6 +31,10 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSparkMax;
+import frc.robot.subsystems.leds.LED;
+import frc.robot.subsystems.leds.LEDIO;
+import frc.robot.subsystems.leds.LEDIOHardware;
+import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.NotepathIO;
 import frc.robot.subsystems.notepath.NotepathIOSim;
@@ -42,6 +47,7 @@ import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSparkMax;
+import static frc.robot.Constants.LED.*;
 
 public class RobotContainer
 {
@@ -55,6 +61,12 @@ public class RobotContainer
     private final Gyro            _gyro;
     // @SuppressWarnings("unused")
     // private final Vision _vision;
+    // @SuppressWarnings("unused")
+    // private final Vision _vision;
+    private final LED _led;
+
+    // Dashboard inputs
+    // private final LoggedDashboardChooser<Command> _autoChooser;
     @SuppressWarnings("unused")
     private final Dashboard _dashboard;
 
@@ -66,6 +78,7 @@ public class RobotContainer
 
     public RobotContainer()
     {
+
         switch (Constants.AdvantageKit.CURRENT_MODE)
         {
             // Real robot, instantiate hardware IO implementations
@@ -83,6 +96,8 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new Climb(_gyro, new ClimbIOVictorSPX());
+                _led = new LED(new LEDIOHardware());
+                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -95,6 +110,8 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
                 _climb = new Climb(_gyro, new ClimbIOSim());
+                _led = new LED(new LEDIOSim());
+                // _vision = new Vision(_drive, new VisionIO() {});
                 break;
 
             // Replayed robot, disable IO implementations
@@ -107,10 +124,12 @@ public class RobotContainer
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
                 _climb = new Climb(_gyro, new ClimbIO() {});
+                _led = new LED(new LEDIO() {});
+                // _vision = new Vision(_drive, new VisionIO() {});
                 break;
         }
 
-        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb);
+        _dashboard = new Dashboard(_shooterBed, _notepath, _shooterFlywheel, _drive, _intake, _climb, _led);
 
         // Configure the button bindings
         configureDefaultCommands();
@@ -120,7 +139,24 @@ public class RobotContainer
 
     private void configureDefaultCommands()
     {
+        Trigger _hasNote    = new Trigger(() -> _notepath.hasNote());
+        Trigger _isShooting = new Trigger(() -> _shooterFlywheel.isShooting());
+        Trigger _isIntaking = new Trigger(() -> _intake.isIntaking() || _shooterFlywheel.isIntaking());
+        // _controller.a().onTrue(CompositeCommands.shooterPickup(_shooterBed,
+        // _shooterFlywheel, _notepath));
+
         _drive.setDefaultCommand(DriveCommands.joystickDrive(_drive, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
+        // _shooterBed.setDefaultCommand(ShooterBedCommands.setVolts(_shooterBed, () ->
+        // Constants.ShooterBed.MAX_BED_VOLTS *
+        // -MathUtil.applyDeadband(_controller.getLeftY(),
+        // Constants.Controls.JOYSTICK_DEADBAND)));
+
+        _led.setDefaultCommand(CompositeCommands.LEDSetSolidColor(_led, ORANGE));
+
+        _hasNote.onTrue(CompositeCommands.LEDSetDefaultColor(_led, GREEN));
+        _hasNote.onFalse(CompositeCommands.LEDSetDefaultColor(_led, RED));
+        _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, GREEN));
+        _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, RED));
     }
 
     private void configureDriverCommands()
@@ -132,6 +168,7 @@ public class RobotContainer
         _joystick.button(8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 120, 300, 0.6)); // 60 degrees right
         _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
+        _joystick.button(11).whileTrue(DriveCommands.aimAtSpeaker(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
     }
 
@@ -146,6 +183,7 @@ public class RobotContainer
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
+        _controller.rightStick().whileTrue(CompositeCommands.LEDPartyMode(_led));
 
         _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setAngle(_shooterBed, 30).andThen(ClimbCommands.setHeight(_climb, 10.5)));
@@ -172,6 +210,11 @@ public class RobotContainer
     private boolean getRobotCentric()
     {
         return _joystick.button(3).getAsBoolean();
+    }
+
+    public LED getLEDSubsystem()
+    {
+        return _led;
     }
 
     public Command getAutonomousCommand()

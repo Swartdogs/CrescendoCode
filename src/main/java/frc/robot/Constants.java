@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -110,7 +111,8 @@ public final class Constants
 
     public static class Controls
     {
-        public static final double JOYSTICK_DEADBAND = 0.1;
+        public static final double JOYSTICK_DEADBAND        = 0.1;
+        public static final double ROTATE_JOYSTICK_DEADBAND = 0.15;
     }
 
     public static class DIO
@@ -167,6 +169,19 @@ public final class Constants
         public static final double OUTTAKE_DEFAULT_PERCENT_OUTPUT = 0.6;
     }
 
+    public static class LED
+    {
+        public static final int   NUM_LEDS = 6; // TODO: Change value
+        public static final Color RED      = new Color(255, 0, 0);
+        public static final Color BLUE     = new Color(0, 0, 255);
+        public static final Color ORANGE   = new Color(255, 50, 0);
+        public static final Color PURPLE   = new Color(127, 0, 255);
+        public static final Color GREEN    = new Color(0, 115, 0);
+        public static final Color PINK     = new Color(255, 46, 204);
+        public static final Color TEAL     = new Color(0, 70, 139);
+        public static final Color OFF      = new Color(0, 0, 0);
+    }
+
     public static class Notepath
     {
         public static final double NOTEPATH_INTAKE_PICKUP_PERCENT_OUTPUT  = 0.15;
@@ -189,14 +204,14 @@ public final class Constants
     public static class ShooterBed // FIXME: Update all these values
     {
         public static final double     MAX_BED_VOLTS            = 6.0;
-        public static final double     BED_SCALE                = 170.401;
-        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(59.947);
-        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(88);
-        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(23);
+        public static final double     BED_SCALE                = 183.21; // 170.401;
+        public static final Rotation2d BED_ANGLE_OFFSET         = Rotation2d.fromDegrees(6.05 /* 59.947 */);
+        public static final Rotation2d MAX_BED_ANGLE            = Rotation2d.fromDegrees(96);
+        public static final Rotation2d MIN_BED_ANGLE            = Rotation2d.fromDegrees(24);
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
-        public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(52);
-        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(31.5);
+        public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(54.5);
+        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(33);
         public static final Rotation2d BED_AMP_SHOT_ANGLE       = Rotation2d.fromDegrees(48);
         public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);

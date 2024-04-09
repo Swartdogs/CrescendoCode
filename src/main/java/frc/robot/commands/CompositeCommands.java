@@ -1,26 +1,37 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
+import java.util.Arrays;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import org.littletonrobotics.junction.inputs.LoggedDriverStation;
+
+import edu.wpi.first.hal.DriverStationJNI;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.Constants;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.stream.IntStream;
+
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
 import frc.robot.subsystems.Dashboard;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.leds.LED;
+
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.notepath.Notepath.NotepathState;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterBed.BedAngle;
+import static frc.robot.Constants.LED.*;
 import frc.robot.util.DeferredInstantCommand;
+import frc.robot.util.Utilities;
 
 public final class CompositeCommands
 {
@@ -299,7 +310,7 @@ public final class CompositeCommands
         {
             return Commands.either(
                     DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, blueSetpoint, maxSpeed),
-                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, redSetpoint, maxSpeed), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, redSetpoint, maxSpeed), () -> Utilities.isBlueAlliance()
             );
         }
 
@@ -308,7 +319,7 @@ public final class CompositeCommands
             return Commands.either(
                     DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 0, maxSpeed), // subwoofer shot
                     DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, -90, maxSpeed), // amp shot
-                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+                    () -> Utilities.isBlueAlliance()
             );
         }
 
@@ -317,7 +328,7 @@ public final class CompositeCommands
             return Commands.either(
                     DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, -90, maxSpeed), // subwoofer shot
                     DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 180, maxSpeed), // amp shot
-                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+                    () -> Utilities.isBlueAlliance()
             );
         }
 
@@ -325,16 +336,15 @@ public final class CompositeCommands
         {
             return Commands.either(
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot), () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot), () -> Utilities.isBlueAlliance()
             );
         }
 
         public static Command blueAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 250, 2500, ShooterBed.BedAngle.AmpShot),
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
-                    () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot), () -> Utilities.isBlueAlliance()
             );
         }
 
@@ -374,5 +384,143 @@ public final class CompositeCommands
             );
             // @formatter:on
         }
+    }
+
+    public static Command climbJoystick(Climb climb, ShooterBed shooterBed, BedAngle angle, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
+    {
+        // @formatter:off
+        return 
+            Commands.sequence
+            (
+                ShooterBedCommands.setAngle(shooterBed, angle),
+                Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                ClimbCommands.setVolts(climb, leftSupplier, rightSupplier)
+            );
+        // @formatter:on
+    }
+
+    public static Command LEDFillUp(LED led, Color color)
+    {
+        // @formatter:off
+        int totalLEDs      = NUM_LEDS;
+        
+        Command[] commandSequence = new Command[totalLEDs];
+        return Commands.sequence
+        (
+            Commands.runOnce(() -> 
+            {
+                var initialPattern = led.getLEDs();
+        
+                for (int i = 0; i <= totalLEDs; i++)
+                {
+                    Color[] newPattern = new Color[totalLEDs];
+                    Arrays.fill(newPattern, 0, i, color);
+                    if (i < totalLEDs)
+                    {
+                        System.arraycopy(initialPattern, i, newPattern, i, totalLEDs - i);
+                    }
+                    commandSequence[i] = LEDCommands.setFrame(led, newPattern);
+                }
+            }),
+            Commands.sequence(commandSequence)
+        );
+        // @formatter:on
+    }
+
+    // Flywheel No Longer Ready to Shoot
+    // public static Command LEDFillDown(LED led, Color color)
+    // {
+    // // @formatter.off
+    // int totalLEDs = NUM_LEDS;
+    // Command[] commandSequence = new Command[totalLEDs];
+
+    // return Commands.sequence(Commands.runOnce(() ->
+    // {
+    // var initialPattern = led.getLEDs();
+
+    // for (int i = totalLEDs; i >= 0; i--)
+    // {
+    // Color[] newPattern = new Color[totalLEDs];
+    // Arrays.fill(newPattern, i, totalLEDs, color);
+    // System.arraycopy(initialPattern, 0, newPattern, 0, i);
+    // commandSequence[totalLEDs - i] = LEDCommands.setFrame(led, newPattern);
+    // }
+    // }), Commands.sequence(commandSequence));
+
+    // // Commands.sequence(LEDCommands.setFrame(led, IntStream.range(0,
+    // // NUM_LEDS).mapToObj(i -> Intstream.range(0, NUM_LEDS).mapToObj(j -> ))))
+    // // @formatter.on
+    // }
+
+    public static Command LEDSetSolidColor(LED led, Color color)
+    {
+        return LEDCommands.setFrame(led, IntStream.range(0, NUM_LEDS).mapToObj(i -> color).toArray(Color[]::new)).ignoringDisable(true);
+    }
+
+    public static Command LEDAutonomous(LED led)
+    {
+        Color color;
+
+        switch (LoggedDriverStation.getDSData().allianceStation)
+        {
+            case DriverStationJNI.kRed1AllianceStation:
+            case DriverStationJNI.kRed2AllianceStation:
+            case DriverStationJNI.kRed3AllianceStation:
+                color = RED;
+                break;
+            case DriverStationJNI.kBlue1AllianceStation:
+            case DriverStationJNI.kBlue2AllianceStation:
+            case DriverStationJNI.kBlue3AllianceStation:
+                color = BLUE;
+                break;
+            default:
+                color = ORANGE;
+        }
+
+        return CompositeCommands.LEDSetSolidColor(led, color);
+    }
+
+    public static Command LEDPulseColor(LED led, Color color)
+    {
+        return Commands.repeatingSequence(
+                IntStream.range(0, 32)
+                        .mapToObj(
+                                i -> LEDSetSolidColor(
+                                        led, new Color((int)(255 * color.red * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.green * (((i < 16) ? i : 32 - i) / 16.0)), (int)(255 * color.blue * (((i < 16) ? i : 32 - i) / 16.0)))
+                                )
+                        ).toArray(Command[]::new)
+        ).ignoringDisable(true);
+    }
+
+    // public static Command LEDTeleop(LED led)
+    // {
+    // return CompositeCommands.LEDFillDown(led, ORANGE).andThen(() ->
+    // led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, ORANGE)));
+    // }
+
+    public static Command LEDSetDefaultColor(LED led, Color color)
+    {
+        return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, color)));
+    }
+
+    public static Command LEDPartyMode(LED led)
+    {
+        //@formatter:off
+        return Commands.repeatingSequence(
+            IntStream.range(0, 25)
+                        .mapToObj(
+                                i -> new ProxyCommand(() -> LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL)))
+                        ).toArray(Command[]::new)
+            ).ignoringDisable(true);
+        //@formatter:on
+    }
+
+    public static Command LEDDisabled(LED led)
+    {
+        //@formatter:off
+        return Commands.runOnce(
+            () -> led.switchDefaultCommand(CompositeCommands.LEDSetDefaultColor(led, ORANGE))
+        ).ignoringDisable(true);
+        //@formatter:on
     }
 }

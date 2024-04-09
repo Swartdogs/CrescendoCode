@@ -37,6 +37,7 @@ import frc.robot.commands.ShooterFlywheelCommands;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.notepath.Notepath;
 import frc.robot.subsystems.shooter.ShooterBed;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
@@ -140,6 +141,7 @@ public class Dashboard extends SubsystemBase
     private final ShooterFlywheel _shooterFlywheel;
     private final Drive           _drive;
     private final Climb           _climb;
+    private final LED             _led;
 
     /*
      * SendableChoosers for Autonomous options
@@ -147,7 +149,7 @@ public class Dashboard extends SubsystemBase
     private final LoggedDashboardChooser<Integer> _autoDelayChooser;
     private final LoggedDashboardChooser<Command> _autoChooser;
 
-    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb)
+    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb, LED led)
     {
         _drive           = drive;
         _shooterBed      = shooterBed;
@@ -155,6 +157,7 @@ public class Dashboard extends SubsystemBase
         _shooterFlywheel = shooterFlywheel;
         _intake          = intake;
         _climb           = climb;
+        _led             = led;
 
         _driverCamera = CameraServer.startAutomaticCapture(Constants.Vision.DRIVER_CAMERA_NAME, 0);
         _driverCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
@@ -215,7 +218,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Auto Delay", Commands.defer(() -> Commands.waitSeconds(autoDelayTime()), Set.of()));
 
         NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.8));
-        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 34));
+        NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 37));
         NamedCommands.registerCommand("Set Shooter Angle Note 1", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 28.3));
         NamedCommands.registerCommand("Podium Shot Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 31.5));
 
@@ -223,7 +226,7 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Initial Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4500, 4500));
         NamedCommands.registerCommand("Set Speed 5000", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5000, 5000));
         NamedCommands.registerCommand("Set Shooter Max Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5800, 5800));
-        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 52.5));
+        NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 53.5));
         NamedCommands.registerCommand("Set Bed Angle Intake", CompositeCommands.Autonomous.setBedAngle(shooterBed, 65.1));
 
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
