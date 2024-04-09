@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.205076102454639,
+        "y": 2.0917918758889997
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.642906080372346,
+        "y": 1.257324094726315
+      },
+      "isLocked": false,
+      "linkedName": "SourceSideBlueLineShot"
+    },
+    {
+      "anchor": {
+        "x": 8.931112245050967,
+        "y": 0.8517695747377186
+      },
+      "prevControl": {
+        "x": 6.87883889111226,
+        "y": 0.8659547518127771
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note4"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Start Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -18.074655081697227,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "OutsidePaths",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}
