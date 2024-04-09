@@ -117,6 +117,6 @@ public class Robot extends LoggedRobot
     @Override
     public void disabledInit()
     {
-        CompositeCommands.LEDDisabled(_led);
+        CompositeCommands.LEDDisabled(_led).schedule();
     }
 }
