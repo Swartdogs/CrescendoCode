@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2752512917613252,
-        "y": 5.204184436340901
+        "x": 2.3558316207541505,
+        "y": 6.147643568014409
       },
       "isLocked": false,
       "linkedName": "AmpSide"
     },
     {
       "anchor": {
-        "x": 8.76956973949726,
-        "y": 4.053248321165694
+        "x": 2.868912646918959,
+        "y": 6.259588519177063
       },
       "prevControl": {
-        "x": 6.685800912681653,
-        "y": 3.9801681969521168
+        "x": 2.0475672191106957,
+        "y": 6.3557034096652645
+      },
+      "nextControl": {
+        "x": 3.7458147643595576,
+        "y": 6.156972313944652
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.408155725402359,
+        "y": 5.569261320340823
+      },
+      "prevControl": {
+        "x": 4.053663380054032,
+        "y": 6.063684854642437
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Note6"
+      "linkedName": "InnerCenter"
     }
   ],
   "rotationTargets": [],
@@ -38,12 +54,12 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0,
+    "velocity": 0.0,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "AmpSideStartingPaths",
+  "folder": "Misc.",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

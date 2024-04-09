@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.4434387050592283,
+      "y": 7.108504398826979
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,25 +14,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TestDrive1"
+            "pathName": "AmpSideToInnerCenter"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TestDrive2"
+            "pathName": "BlueLineToNote8"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TestDrive3"
+            "pathName": "Note8ToInnerCenter"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TestDrive4"
+            "pathName": "InnerCenterToNote7"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note7ToInnerCenter"
           }
         }
       ]
