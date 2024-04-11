@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.subsystems.leds.LED;
 
-import static frc.robot.Constants.LED.*;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
