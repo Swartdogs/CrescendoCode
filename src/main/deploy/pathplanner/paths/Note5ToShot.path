@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.019226338989352,
-        "y": 2.4965659949208994
+        "x": 8.652084280912748,
+        "y": 2.6140514535054127
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.153706166426936,
-        "y": 1.6298820037622164
+        "x": 6.786564108350332,
+        "y": 1.7473674623467295
       },
       "isLocked": false,
       "linkedName": "Note5"
@@ -73,7 +73,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "OutsidePaths",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

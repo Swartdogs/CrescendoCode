@@ -220,14 +220,18 @@ public class Dashboard extends SubsystemBase
         NamedCommands.registerCommand("Set Shooter Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 38.8));
         NamedCommands.registerCommand("Set Shooter Angle Note 2", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 37));
         NamedCommands.registerCommand("Set Shooter Angle Note 1", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 28.3));
-        NamedCommands.registerCommand("Podium Shot Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 31.5));
+        NamedCommands.registerCommand("Podium Shot Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 24));
 
         NamedCommands.registerCommand("Set Inner Note Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4000, 4000));
         NamedCommands.registerCommand("Set Initial Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 4500, 4500));
-        NamedCommands.registerCommand("Set Speed 5000", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5000, 5000));
+        NamedCommands.registerCommand("Set Speed 5000", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5500, 5000));
         NamedCommands.registerCommand("Set Shooter Max Speed", CompositeCommands.Autonomous.startShooter(shooterFlywheel, 5800, 5800));
         NamedCommands.registerCommand("Set Bed Angle", CompositeCommands.Autonomous.setBedAngle(_shooterBed, 53.5));
         NamedCommands.registerCommand("Set Bed Angle Intake", CompositeCommands.Autonomous.setBedAngle(shooterBed, 65.1));
+
+        NamedCommands.registerCommand("Set Bed Angle Inner Center 1", CompositeCommands.Autonomous.setBedAngle(shooterBed, 23));
+        NamedCommands.registerCommand("Set Bed Angle Inner Center 2", CompositeCommands.Autonomous.setBedAngle(shooterBed, 24.5));
+        NamedCommands.registerCommand("Set Bed Angle Inner Center 3", CompositeCommands.Autonomous.setBedAngle(shooterBed, 24.75));
 
         NamedCommands.registerCommand("Load", CompositeCommands.Autonomous.load(_notepath)); // TODO: Does this need to be registered as a deferred instant if the contents
                                                                                              // // // are?

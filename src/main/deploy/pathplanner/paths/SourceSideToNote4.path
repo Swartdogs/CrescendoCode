@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6740742452279855,
-        "y": 3.8686349295925155
+        "x": 1.602956765841976,
+        "y": 3.1867930641049127
       },
       "isLocked": false,
       "linkedName": "SourceSide"
@@ -20,8 +20,8 @@
         "y": 0.8517695747377186
       },
       "prevControl": {
-        "x": 7.931112245050967,
-        "y": 0.8517695747377186
+        "x": 7.183516048606338,
+        "y": 0.5580559282764374
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "SourceSideStartingPaths",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -60.689884747840374,
     "velocity": 0
   },
   "useDefaultConstraints": true

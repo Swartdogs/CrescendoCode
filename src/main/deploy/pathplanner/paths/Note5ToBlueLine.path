@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.019226338989352,
-        "y": 2.4965659949208994
+        "x": 8.652084280912748,
+        "y": 2.6140514535054127
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.460000363519954,
-        "y": 1.2169881959979374
+        "x": 5.817747592561375,
+        "y": 1.1161118565528736
       },
       "isLocked": false,
       "linkedName": "Note5"
     },
     {
       "anchor": {
-        "x": 4.086672788730195,
-        "y": 1.963521619350932
+        "x": 3.335867279963541,
+        "y": 2.7902796413821807
       },
       "prevControl": {
-        "x": 4.951292335500593,
-        "y": 1.2335973151373854
+        "x": 4.070151396116747,
+        "y": 1.2042259504912576
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SourceDriveBack"
+      "linkedName": "SourceMiddle"
     }
   ],
   "rotationTargets": [],
@@ -42,25 +42,7 @@
       }
     }
   ],
-  "eventMarkers": [
-    {
-      "name": "Start Shooter",
-      "waypointRelativePos": 0.45,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Start Shooter"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -69,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -35.83765295427832,
+    "rotation": -47.121096396661436,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "OuterNotesToBlueLine",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -45.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

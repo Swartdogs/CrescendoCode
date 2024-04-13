@@ -8,6 +8,8 @@
     "BlueLineToOuterNotes",
     "InnerNoteToInnerNote",
     "MiddleSideStartingPaths",
+    "Misc.",
+    "OuterNoteToOuterNote",
     "Note1ToOuterNote",
     "Note2ToOuterNote",
     "Note3ToOuterNote",
@@ -17,8 +19,7 @@
     "Note7ToInnerNote",
     "Note8ToInnerNote",
     "OuterNotesToBlueLine",
-    "SourceSideStartingPaths",
-    "Misc."
+    "SourceSideStartingPaths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

@@ -1,0 +1,155 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6113561318031727,
+      "y": 4.52444177615628
+    },
+    "rotation": -63.498862204774646
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Delay"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Bed Angle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Initial Speed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Bed Angle Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Start Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSideToNote5"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Speed 5000"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Podium Shot Angle"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note5ToBlueLine"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Bed Angle Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueLineToNote6"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Podium Shot Angle"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSideNote6"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

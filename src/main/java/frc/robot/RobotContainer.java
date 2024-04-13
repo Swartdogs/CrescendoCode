@@ -161,7 +161,8 @@ public class RobotContainer
 
     private void configureDriverCommands()
     {
-        _joystick.button(1).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel));
+        // _joystick.button(1).onTrue(CompositeCommands.General.startNotepath(_shooterBed,
+        // _notepath, _shooterFlywheel));
         _joystick.button(2).whileTrue(DriveCommands.reduceSpeed(_drive));
         _joystick.button(4).onTrue(Commands.runOnce(() -> _dashboard.toggleCamera()).ignoringDisable(true));
         _joystick.button(7).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 240, 60, 0.6)); // 60 degrees left
@@ -183,7 +184,8 @@ public class RobotContainer
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
-        _controller.rightStick().whileTrue(CompositeCommands.LEDPartyMode(_led));
+        // _controller.rightStick().whileTrue(CompositeCommands.LEDPartyMode(_led));
+        _controller.rightStick().onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel, _drive));
 
         _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setAngle(_shooterBed, 30).andThen(ClimbCommands.setHeight(_climb, 10.5)));

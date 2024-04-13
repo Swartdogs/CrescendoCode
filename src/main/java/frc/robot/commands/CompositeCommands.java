@@ -109,14 +109,15 @@ public final class CompositeCommands
 
     public static class General
     {
-        public static Command startNotepath(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel)
+        public static Command startNotepath(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive)
         {
             // @formatter:off
             return            
                 Commands.sequence
                 (
+                    DriveCommands.stop(drive),
                     Commands.waitUntil(() -> shooterFlywheel.atSpeed()),
-                    new DeferredInstantCommand(() -> NotepathCommands.feed(notepath)),
+                    NotepathCommands.feed(notepath),
                     Commands.either
                     (
                         Commands.waitSeconds(1), 
@@ -335,7 +336,7 @@ public final class CompositeCommands
         public static Command redAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 5500, 4500, ShooterBed.BedAngle.PodiumShot),
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot), () -> Utilities.isBlueAlliance()
             );
         }
@@ -344,7 +345,7 @@ public final class CompositeCommands
         {
             return Commands.either(
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot),
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 4500, 4500, ShooterBed.BedAngle.PodiumShot), () -> Utilities.isBlueAlliance()
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 5500, 4500, ShooterBed.BedAngle.PodiumShot), () -> Utilities.isBlueAlliance()
             );
         }
 

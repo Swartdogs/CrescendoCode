@@ -134,4 +134,9 @@ public final class DriveCommands
     {
         return Commands.startEnd(() -> drive.setSpeedMultipler(0.2), () -> drive.setSpeedMultipler(1));
     }
+
+    public static Command stop(Drive drive)
+    {
+        return drive.runOnce(() -> drive.stop());
+    }
 }

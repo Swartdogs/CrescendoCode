@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6479049534675645,
-        "y": 7.035219115483277
+        "x": 8.916426562727903,
+        "y": 4.009191274196502
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.07984057976612,
-        "y": 5.883235947915494
+        "x": 4.2023225370315656,
+        "y": 3.6567348984500443
       },
       "isLocked": false,
-      "linkedName": "Note3"
+      "linkedName": "Note6"
     },
     {
       "anchor": {
-        "x": 8.652084280912748,
-        "y": 2.6140514535054127
+        "x": 6.610774438006837,
+        "y": 4.699418343380516
       },
       "prevControl": {
-        "x": 7.267024499929583,
-        "y": 2.982253103987503
+        "x": 5.525481441101342,
+        "y": 4.43894802413899
+      },
+      "nextControl": {
+        "x": 6.9779164960761975,
+        "y": 4.787532437311819
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.446484728397092,
+        "y": 5.756787470648212
+      },
+      "prevControl": {
+        "x": 7.4184869657753625,
+        "y": 5.668673376702747
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Note5"
+      "linkedName": "Note7"
     }
   ],
   "rotationTargets": [],
@@ -43,7 +59,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Note3ToOuterNote",
+  "folder": "OuterNoteToOuterNote",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

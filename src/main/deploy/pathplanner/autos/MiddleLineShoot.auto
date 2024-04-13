@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.4434387050592283,
-      "y": 7.108504398826979
+      "x": 0.6113561318031727,
+      "y": 4.52444177615628
     },
-    "rotation": 0
+    "rotation": -61.897531225018696
   },
   "command": {
     "type": "sequential",
@@ -14,31 +14,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "AmpSideToInnerCenter"
+            "pathName": "SourceSideToNote5"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BlueLineToNote8"
+            "pathName": "Note5ToNote6"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Note8ToInnerCenter"
+            "pathName": "Note6ToNote7"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "InnerCenterToNote7"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Note7ToInnerCenter"
+            "pathName": "Note7ToNote8"
           }
         }
       ]

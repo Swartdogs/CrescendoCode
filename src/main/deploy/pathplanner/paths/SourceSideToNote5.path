@@ -8,20 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.983662094075581,
-        "y": 0.4607814947700967
+        "x": 3.130267727440643,
+        "y": 2.2469093954288093
       },
       "isLocked": false,
       "linkedName": "SourceSide"
     },
     {
       "anchor": {
-        "x": 9.019226338989352,
-        "y": 2.4965659949208994
+        "x": 5.054092111762042,
+        "y": 3.744848992381349
       },
       "prevControl": {
-        "x": 7.695901809316039,
-        "y": 2.508276831466681
+        "x": 4.128894125409004,
+        "y": 3.0693076055204
+      },
+      "nextControl": {
+        "x": 6.169235002726791,
+        "y": 4.559080309593706
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.652084280912748,
+        "y": 2.6140514535054127
+      },
+      "prevControl": {
+        "x": 7.477229695067621,
+        "y": 4.038562638842631
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,18 +48,12 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.4,
+      "name": "Load",
+      "waypointRelativePos": 0.85,
       "command": {
         "type": "sequential",
         "data": {
           "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Start Intake"
-              }
-            },
             {
               "type": "named",
               "data": {
@@ -63,13 +73,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -56.30993247402024,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "SourceSideStartingPaths",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -58.96036219522179,
     "velocity": 0
   },
   "useDefaultConstraints": true
