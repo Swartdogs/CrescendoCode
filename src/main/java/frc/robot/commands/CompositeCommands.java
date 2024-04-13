@@ -504,16 +504,24 @@ public final class CompositeCommands
         return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.LEDSetSolidColor(led, color)));
     }
 
-    public static Command LEDPartyMode(LED led)
+    public static Command[] LEDPartyFrame(LED led, Color[] colors)
     {
         //@formatter:off
-        return Commands.repeatingSequence(
+        return 
             IntStream.range(0, 25)
                         .mapToObj(
-                                i -> new ProxyCommand(() -> LEDCommands.setFrame(led, led.getRandomColoring(PINK, ORANGE, TEAL)))
-                        ).toArray(Command[]::new)
-            ).ignoringDisable(true);
+                                i -> LEDCommands.setFrame(led, colors)
+                        ).toArray(Command[]::new);
         //@formatter:on
+    }
+
+    public static Command LEDPartyMode(LED led)
+    {
+        //formatter:off
+        return Commands.repeatingSequence(
+            LEDPartyFrame(led, led.getRandomColoring(TEAL, GREEN, PURPLE))
+        ).ignoringDisable(true);
+        //formatter:on
     }
 
     public static Command LEDDisabled(LED led)
