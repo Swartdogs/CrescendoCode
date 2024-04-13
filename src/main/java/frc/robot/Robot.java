@@ -94,7 +94,7 @@ public class Robot extends LoggedRobot
             _autonomousCommand.schedule();
         }
 
-        _led.switchDefaultCommand(CompositeCommands.LEDAutonomous(_led));
+        _led.switchDefaultCommand(CompositeCommands.Teleop.LEDAutonomous(_led));
     }
 
     @Override
@@ -115,6 +115,6 @@ public class Robot extends LoggedRobot
     @Override
     public void disabledInit()
     {
-        CompositeCommands.LEDDisabled(_led).schedule();
+        CompositeCommands.Teleop.LEDDisabled(_led).schedule();
     }
 }

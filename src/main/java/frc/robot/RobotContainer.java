@@ -146,12 +146,12 @@ public class RobotContainer
         // -MathUtil.applyDeadband(_controller.getLeftY(),
         // Constants.Controls.JOYSTICK_DEADBAND)));
 
-        _led.setDefaultCommand(CompositeCommands.LEDSetSolidColor(_led, ORANGE));
+        _led.setDefaultCommand(CompositeCommands.Teleop.LEDSetSolidColor(_led, ORANGE));
 
-        _hasNote.onTrue(CompositeCommands.LEDSetDefaultColor(_led, GREEN));
-        _hasNote.onFalse(CompositeCommands.LEDSetDefaultColor(_led, RED));
-        _isShooting.whileTrue(CompositeCommands.LEDPulseColor(_led, GREEN));
-        _isIntaking.whileTrue(CompositeCommands.LEDPulseColor(_led, RED));
+        _hasNote.onTrue(CompositeCommands.Teleop.LEDSetDefaultColor(_led, GREEN));
+        _hasNote.onFalse(CompositeCommands.Teleop.LEDSetDefaultColor(_led, RED));
+        _isShooting.whileTrue(CompositeCommands.Teleop.LEDPulseColor(_led, GREEN));
+        _isIntaking.whileTrue(CompositeCommands.Teleop.LEDPulseColor(_led, RED));
     }
 
     private void configureDriverCommands()
@@ -163,7 +163,7 @@ public class RobotContainer
         _joystick.button(8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 120, 300, 0.6)); // 60 degrees right
         _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
-        _joystick.button(11).whileTrue(DriveCommands.aimAtSpeaker(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
+        _joystick.button(11).whileTrue(CompositeCommands.Teleop.visionAimAtSpeaker(_drive, _vision, () -> -_joystick.getY(), () -> -_joystick.getX(),  () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
         _joystick.button(12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
     }
 
@@ -178,7 +178,7 @@ public class RobotContainer
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
-        _controller.rightStick().whileTrue(CompositeCommands.LEDPartyMode(_led));
+        _controller.rightStick().whileTrue(CompositeCommands.Teleop.LEDPartyMode(_led));
 
         _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
         _controller.rightBumper().whileTrue(ShooterBedCommands.setAngle(_shooterBed, 30).andThen(ClimbCommands.setHeight(_climb, 10.5)));
