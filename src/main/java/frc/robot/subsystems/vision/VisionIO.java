@@ -18,6 +18,8 @@ public interface VisionIO
         public boolean  hasPose             = false;
         public int      numProcessedTargets = 0;
         public double[] targetDistances     = new double[] {};
+        public int[]    targetIds           = new int[] {};
+        public double[] targetYaws          = new double[] {};
     }
 
     public default void updateInputs(VisionIOInputs inputs)

@@ -59,11 +59,9 @@ public class RobotContainer
     private final ShooterFlywheel _shooterFlywheel;
     private final Climb           _climb;
     private final Gyro            _gyro;
-    // @SuppressWarnings("unused")
-    // private final Vision _vision;
-    // @SuppressWarnings("unused")
-    // private final Vision _vision;
-    private final LED _led;
+    @SuppressWarnings("unused")
+    private final Vision          _vision;
+    private final LED             _led;
 
     // Dashboard inputs
     // private final LoggedDashboardChooser<Command> _autoChooser;
@@ -90,42 +88,39 @@ public class RobotContainer
                         new ModuleIOHardware(Constants.CAN.MODULE_BL_DRIVE, Constants.CAN.MODULE_BL_ROTATE, Constants.AIO.MODULE_BL_SENSOR, Constants.Drive.MODULE_BL_OFFSET),
                         new ModuleIOHardware(Constants.CAN.MODULE_BR_DRIVE, Constants.CAN.MODULE_BR_ROTATE, Constants.AIO.MODULE_BR_SENSOR, Constants.Drive.MODULE_BR_OFFSET)
                 );
-                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 _intake = new Intake(new IntakeIOSparkMax());
                 _notepath = new Notepath(new NotepathIOSparkMax());
                 _shooterBed = new ShooterBed(new ShooterBedIOVictorSPX());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new Climb(_gyro, new ClimbIOVictorSPX());
                 _led = new LED(new LEDIOHardware());
-                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
+                _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
             case SIM:
                 _gyro = new Gyro(new GyroIOSim(this::getChassisSpeeds));
                 _drive = new Drive(_gyro, new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim(), new ModuleIOSim());
-                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 _intake = new Intake(new IntakeIOSim());
                 _notepath = new Notepath(new NotepathIOSim());
                 _shooterBed = new ShooterBed(new ShooterBedIOSim());
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
                 _climb = new Climb(_gyro, new ClimbIOSim());
                 _led = new LED(new LEDIOSim());
-                // _vision = new Vision(_drive, new VisionIO() {});
+                _vision = new Vision(_drive, new VisionIO() {});
                 break;
 
             // Replayed robot, disable IO implementations
             default:
                 _gyro = new Gyro(new GyroIO() {});
                 _drive = new Drive(_gyro, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                // _vision = new Vision(_drive, new VisionIO() {});
                 _intake = new Intake(new IntakeIO() {});
                 _notepath = new Notepath(new NotepathIO() {});
                 _shooterBed = new ShooterBed(new ShooterBedIO() {});
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
                 _climb = new Climb(_gyro, new ClimbIO() {});
                 _led = new LED(new LEDIO() {});
-                // _vision = new Vision(_drive, new VisionIO() {});
+                _vision = new Vision(_drive, new VisionIO() {});
                 break;
         }
 

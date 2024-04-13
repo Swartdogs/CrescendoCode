@@ -34,6 +34,8 @@ public class VisionIOPhotonlib implements VisionIO
     private Pose2d                    _pose             = new Pose2d();
     private boolean                   _hasPose          = false;
     private double[]                  _distances        = new double[] {};
+    private int[]                     _ids              = new int[] {};
+    private double[]                  _yaws             = new double[] {};
     private int                       _numProcessedTargets;
 
     public VisionIOPhotonlib(Drive drive)
@@ -63,9 +65,14 @@ public class VisionIOPhotonlib implements VisionIO
             List<Double>              closeCornerYList = new ArrayList<>();
             List<PhotonTrackedTarget> processedTargets = new ArrayList<>();
             List<Double>              distances        = new ArrayList<>();
+            List<Integer>             ids              = new ArrayList<>();
+            List<Double>              yaws             = new ArrayList<>();
 
             for (PhotonTrackedTarget target : result.getTargets())
             {
+                ids.add(target.getFiducialId());
+                yaws.add(target.getYaw());
+
                 for (TargetCorner corner : target.getDetectedCorners())
                 {
                     cornerXList.add(corner.x);
@@ -112,6 +119,8 @@ public class VisionIOPhotonlib implements VisionIO
                 _pose                = pose;
                 _numProcessedTargets = processedTargets.size();
                 _hasPose             = hasPose;
+                _ids                 = ids.stream().mapToInt(Integer::intValue).toArray();
+                _yaws                = yaws.stream().mapToDouble(Double::doubleValue).toArray();
             }
         });
     }
@@ -128,6 +137,8 @@ public class VisionIOPhotonlib implements VisionIO
         inputs.pose                = _pose;
         inputs.targetDistances     = _distances;
         inputs.hasPose             = _hasPose;
+        inputs.targetIds           = _ids;
+        inputs.targetYaws          = _yaws;
     }
 
     private Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose, PhotonPipelineResult result)
