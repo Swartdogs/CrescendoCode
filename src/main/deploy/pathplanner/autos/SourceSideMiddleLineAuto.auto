@@ -67,63 +67,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Set Speed 5000"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Podium Shot Angle"
+                  "name": "Set Bed Angle"
                 }
               },
               {
                 "type": "path",
                 "data": {
                   "pathName": "Note5ToBlueLine"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Set Bed Angle Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BlueLineToNote6"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Podium Shot Angle"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SourceSideNote6"
                 }
               }
             ]
@@ -145,6 +95,12 @@
           "type": "named",
           "data": {
             "name": "Stop Shooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceDriveOut"
           }
         }
       ]

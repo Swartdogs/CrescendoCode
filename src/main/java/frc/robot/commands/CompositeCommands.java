@@ -338,7 +338,7 @@ public final class CompositeCommands
         public static Command redAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 5500, 4500, ShooterBed.BedAngle.PodiumShot),
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 5500, 5000, ShooterBed.BedAngle.PodiumShot),
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot), () -> Utilities.isBlueAlliance()
             );
         }
@@ -347,7 +347,7 @@ public final class CompositeCommands
         {
             return Commands.either(
                     CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 200, 2300, ShooterBed.BedAngle.AmpShot),
-                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 5500, 4500, ShooterBed.BedAngle.PodiumShot), () -> Utilities.isBlueAlliance()
+                    CompositeCommands.Teleop.startShooter(shooterFlywheel, notepath, shooterBed, 5500, 5000, ShooterBed.BedAngle.PodiumShot), () -> Utilities.isBlueAlliance()
             );
         }
 
@@ -502,7 +502,7 @@ public final class CompositeCommands
 
         public static Command LEDSetDefaultColor(LED led, Color color)
         {
-            return Commands.runOnce(() -> led.switchDefaultCommand(CompositeCommands.Teleop.LEDSetSolidColor(led, color)));
+            return led.runOnce(() -> led.switchDefaultCommand(CompositeCommands.Teleop.LEDSetSolidColor(led, color)));
         }
 
         public static Command[] LEDPartyFrame(LED led, Color[] colors)
@@ -538,14 +538,14 @@ public final class CompositeCommands
             {
                 double speed = omegaSupplier.getAsDouble();
 
-                if(vision.seesSpeaker())
+                if (vision.seesSpeaker())
                 {
                     speed = vision.rotateExecute();
                 }
-                
+
                 return speed;
-                
-            }, robotCentric, 2, 1, dashboard);
+
+            }, robotCentric, 2, 1, dashboard).alongWith(DriveCommands.reduceSpeed(drive));
         }
     }
 }

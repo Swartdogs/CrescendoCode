@@ -211,7 +211,7 @@ public final class Constants
         public static final Rotation2d BED_INTAKE_PICKUP_ANGLE  = Rotation2d.fromDegrees(65.1);
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
         public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(54.5);
-        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(30); // 33
+        public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(31);
         public static final Rotation2d BED_AMP_SHOT_ANGLE       = Rotation2d.fromDegrees(48);
         public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);
@@ -237,6 +237,6 @@ public final class Constants
         public static final String      PHOTON_CAMERA_URL      = "http://10.5.25.12:1181/?action=stream";
         public static final double      MAX_DETECTION_RANGE    = Units.inchesToMeters(300);
         public static final boolean     ENABLE_POSE_CORRECTION = false;
-        public static final double      ALIGNMENT_OFFSET       = 0;
+        public static final double      ALIGNMENT_OFFSET       = -3;
     }
 }

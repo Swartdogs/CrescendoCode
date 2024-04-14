@@ -17,7 +17,7 @@ public class Vision extends SubsystemBase
     private final VisionIOInputsAutoLogged _inputs        = new VisionIOInputsAutoLogged();
     private final Drive                    _drive;
     private final PIDController            _rotatePID;
-    private double                         _maxSpeed      = 0.6;
+    private double                         _maxSpeed      = 0.3;
     private double                         _lastTimestamp = 0.0;
 
     public Vision(Drive drive, VisionIO io)
@@ -53,7 +53,7 @@ public class Vision extends SubsystemBase
     @AutoLogOutput(key = "Vision/Sees Speaker")
     public boolean seesSpeaker()
     {
-        int centerSpeakerTargetId = Utilities.isBlueAlliance() ? 7 : 4;
+        int     centerSpeakerTargetId      = Utilities.isBlueAlliance() ? 7 : 4;
         boolean seenTargetsIncludesSpeaker = false;
 
         for (int id : _inputs.targetIds)
@@ -74,7 +74,7 @@ public class Vision extends SubsystemBase
         // First find the index of the target in our inputs array. This is
         // to ensure we're getting the right yaw from the right target
         int centerSpeakerTargetId = Utilities.isBlueAlliance() ? 7 : 4;
-        int targetIndex = _inputs.targetIds.length;
+        int targetIndex           = _inputs.targetIds.length;
 
         for (int i = 0; i < _inputs.targetIds.length; i++)
         {
