@@ -534,7 +534,7 @@ public final class CompositeCommands
 
         public static Command visionAimAtSpeaker(Drive drive, Vision vision, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier omegaSupplier, BooleanSupplier robotCentric, Dashboard dashboard)
         {
-            return DriveCommands.joystickDrive(drive, xSupplier, ySupplier, () ->
+            return Commands.runOnce(() -> vision.setTargetingEnabled(true)).andThen(DriveCommands.joystickDrive(drive, xSupplier, ySupplier, () ->
             {
                 double speed = omegaSupplier.getAsDouble();
 
@@ -545,7 +545,7 @@ public final class CompositeCommands
 
                 return speed;
 
-            }, robotCentric, 2, 1, dashboard).alongWith(DriveCommands.reduceSpeed(drive));
+            }, robotCentric, 2, 1, dashboard).alongWith(DriveCommands.reduceSpeed(drive))).finallyDo(() -> vision.setTargetingEnabled(false));
         }
     }
 }

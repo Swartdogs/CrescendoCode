@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
@@ -14,11 +15,12 @@ import org.littletonrobotics.junction.Logger;
 public class Vision extends SubsystemBase
 {
     private final VisionIO                 _io;
-    private final VisionIOInputsAutoLogged _inputs        = new VisionIOInputsAutoLogged();
+    private final VisionIOInputsAutoLogged _inputs           = new VisionIOInputsAutoLogged();
     private final Drive                    _drive;
     private final PIDController            _rotatePID;
-    private double                         _maxSpeed      = 0.3;
-    private double                         _lastTimestamp = 0.0;
+    private double                         _maxSpeed         = 0.3;
+    private double                         _lastTimestamp    = 0.0;
+    private boolean                        _targetingEnabled = false;
 
     public Vision(Drive drive, VisionIO io)
     {
@@ -48,6 +50,8 @@ public class Vision extends SubsystemBase
                 _lastTimestamp = _inputs.captureTimestamp;
             }
         }
+
+        SmartDashboard.putBoolean("Has Target", seesSpeaker());
     }
 
     @AutoLogOutput(key = "Vision/Sees Speaker")
@@ -56,12 +60,15 @@ public class Vision extends SubsystemBase
         int     centerSpeakerTargetId      = Utilities.isBlueAlliance() ? 7 : 4;
         boolean seenTargetsIncludesSpeaker = false;
 
-        for (int id : _inputs.targetIds)
+        if (_targetingEnabled)
         {
-            if (id == centerSpeakerTargetId)
+            for (int id : _inputs.targetIds)
             {
-                seenTargetsIncludesSpeaker = true;
-                break;
+                if (id == centerSpeakerTargetId)
+                {
+                    seenTargetsIncludesSpeaker = true;
+                    break;
+                }
             }
         }
 
@@ -116,5 +123,10 @@ public class Vision extends SubsystemBase
     public boolean rotateIsFinished()
     {
         return _rotatePID.atSetpoint();
+    }
+
+    public void setTargetingEnabled(boolean enabled)
+    {
+        _targetingEnabled = enabled;
     }
 }
