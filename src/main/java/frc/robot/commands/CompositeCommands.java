@@ -259,6 +259,8 @@ public final class CompositeCommands
                     ),
                     Commands.waitUntil(() -> notepath.sensorTripped()),
                     Commands.waitUntil(() -> !notepath.sensorTripped()),
+                    NotepathCommands.intakeLoad(notepath),
+                    Commands.waitUntil(() -> notepath.sensorTripped()),
                     ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow),
                     rumble(controller)
                 )
