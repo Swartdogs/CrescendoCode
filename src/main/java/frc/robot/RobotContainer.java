@@ -159,8 +159,8 @@ public class RobotContainer
         _joystick.button(1).onTrue(CompositeCommands.General.startNotepath(_shooterBed, _notepath, _shooterFlywheel, _drive));
         _joystick.button(2).whileTrue(DriveCommands.reduceSpeed(_drive));
         _joystick.button(4).onTrue(Commands.runOnce(() -> _dashboard.toggleCamera()).ignoringDisable(true));
-        _joystick.button(7).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 240, 60, 0.6)); // 60 degrees left
-        _joystick.button(8).whileTrue(CompositeCommands.Teleop.driveAtOrientation(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 120, 300, 0.6)); // 60 degrees right
+        _joystick.button(7).whileTrue(CompositeCommands.Teleop.redSourceOrPass(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6)); // 60 degrees left
+        _joystick.button(8).whileTrue(CompositeCommands.Teleop.blueSourceOrPass(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6)); // 60 degrees right
         _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(11).whileTrue(CompositeCommands.Teleop.visionAimAtSpeaker(_drive, _vision, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
@@ -183,7 +183,7 @@ public class RobotContainer
         // _notepath, _shooterFlywheel, _drive));
 
         _controller.leftBumper().whileTrue(ClimbCommands.setHeight(_climb, 1));
-        _controller.rightBumper().whileTrue(ShooterBedCommands.setAngle(_shooterBed, 30).andThen(ClimbCommands.setHeight(_climb, 10.5)));
+        _controller.rightBumper().whileTrue(ClimbCommands.setHeight(_climb, 10.5));
 
         _controller.start().onTrue(CompositeCommands.General.setHasNote(_notepath, true));
         _controller.back().onTrue(CompositeCommands.General.setHasNote(_notepath, false));

@@ -337,6 +337,24 @@ public final class CompositeCommands
             );
         }
 
+        public static Command redSourceOrPass(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 323.73, maxSpeed), // pass
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 60, maxSpeed), // source
+                    () -> Utilities.isBlueAlliance()
+            );
+        }
+
+        public static Command blueSourceOrPass(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 120, maxSpeed), // source
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 216.27, maxSpeed), // pass
+                    () -> Utilities.isBlueAlliance()
+            );
+        }
+
         public static Command redAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
