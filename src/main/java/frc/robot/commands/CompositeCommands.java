@@ -259,6 +259,8 @@ public final class CompositeCommands
                     ),
                     Commands.waitUntil(() -> notepath.sensorTripped()),
                     Commands.waitUntil(() -> !notepath.sensorTripped()),
+                    NotepathCommands.intakeLoad(notepath),
+                    Commands.waitUntil(() -> notepath.sensorTripped()),
                     ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow),
                     rumble(controller)
                 )
@@ -331,6 +333,24 @@ public final class CompositeCommands
             return Commands.either(
                     DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, -90, maxSpeed), // subwoofer shot
                     DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 180, maxSpeed), // amp shot
+                    () -> Utilities.isBlueAlliance()
+            );
+        }
+
+        public static Command redSourceOrPass(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 323.73, maxSpeed), // pass
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 60, maxSpeed), // source
+                    () -> Utilities.isBlueAlliance()
+            );
+        }
+
+        public static Command blueSourceOrPass(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 120, maxSpeed), // source
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 216.27, maxSpeed), // pass
                     () -> Utilities.isBlueAlliance()
             );
         }

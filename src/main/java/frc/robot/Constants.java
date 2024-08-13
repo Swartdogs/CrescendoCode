@@ -212,7 +212,7 @@ public final class Constants
         public static final Rotation2d BED_SHOOTER_PICKUP_ANGLE = Rotation2d.fromDegrees(52.8);
         public static final Rotation2d BED_SUBWOOFER_SHOT_ANGLE = Rotation2d.fromDegrees(54.5);
         public static final Rotation2d BED_PODIUM_SHOT_ANGLE    = Rotation2d.fromDegrees(31);
-        public static final Rotation2d BED_AMP_SHOT_ANGLE       = Rotation2d.fromDegrees(48);
+        public static final Rotation2d BED_AMP_SHOT_ANGLE       = Rotation2d.fromDegrees(50);
         public static final Rotation2d Bed_TRAP_SHOT_ANGLE      = Rotation2d.fromDegrees(53.5);
         public static final Rotation2d BED_STOW_ANGLE           = Rotation2d.fromDegrees(37);
         public static final Rotation2d BED_CLIMB_VERTICAL_ANGLE = MAX_BED_ANGLE.minus(Rotation2d.fromDegrees(2));
