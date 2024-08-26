@@ -193,7 +193,7 @@ public class RobotContainer
         // _controller.povRight().onTrue(ShooterBedCommands.setAngle(_shooterBed, 60));
         // _controller.povDown().onTrue(ShooterBedCommands.setAngle(_shooterBed, 30));
 
-        _controller.povUp().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.TrapShot));
+        _controller.povUp().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 2800, 2800, ShooterBed.BedAngle.TrapShot));
         _controller.povDown().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
         _controller.povLeft().onTrue(CompositeCommands.Teleop.blueAmpOrPodium(_shooterFlywheel, _notepath, _shooterBed));
         _controller.povRight().onTrue(CompositeCommands.Teleop.redAmpOrPodium(_shooterFlywheel, _notepath, _shooterBed));
