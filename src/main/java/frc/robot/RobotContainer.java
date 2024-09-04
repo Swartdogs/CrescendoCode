@@ -148,10 +148,10 @@ public class RobotContainer
 
         _led.setDefaultCommand(CompositeCommands.Teleop.LEDSetSolidColor(_led, ORANGE));
 
-        _hasNote.onTrue(CompositeCommands.Teleop.LEDSetDefaultColor(_led, GREEN));
-        _hasNote.onFalse(CompositeCommands.Teleop.LEDSetDefaultColor(_led, RED));
-        _isShooting.whileTrue(CompositeCommands.Teleop.LEDPulseColor(_led, GREEN));
-        _isIntaking.whileTrue(CompositeCommands.Teleop.LEDPulseColor(_led, RED));
+        _hasNote.onTrue(CompositeCommands.Teleop.LEDSetDefaultColor(_led, BLUE));
+        _hasNote.onFalse(CompositeCommands.Teleop.LEDSetDefaultColor(_led, PURPLE));
+        _isShooting.whileTrue(CompositeCommands.Teleop.LEDPulseColor(_led, BLUE));
+        _isIntaking.whileTrue(CompositeCommands.Teleop.LEDPulseColor(_led, PURPLE));
     }
 
     private void configureDriverCommands()

@@ -16,16 +16,32 @@
     },
     {
       "anchor": {
-        "x": 1.3929974013794195,
-        "y": 5.564955745296107
+        "x": 5.996059559686686,
+        "y": 6.055280579029627
       },
       "prevControl": {
-        "x": 1.5903362575955933,
-        "y": 5.564955745296107
+        "x": 6.193398415902861,
+        "y": 6.055280579029627
+      },
+      "nextControl": {
+        "x": 5.7987207034705115,
+        "y": 6.055280579029627
+      },
+      "isLocked": false,
+      "linkedName": "MiddleSide"
+    },
+    {
+      "anchor": {
+        "x": 8.371948275428082,
+        "y": 3.2633802204541347
+      },
+      "prevControl": {
+        "x": 8.287145902081132,
+        "y": 3.3696943069561818
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MiddleSide"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -43,7 +59,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "TestDrive",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -23,7 +23,7 @@ public final class Constants
 
     public static class AdvantageKit
     {
-        public static final Mode CURRENT_MODE = Mode.REAL;
+        public static final Mode CURRENT_MODE = Mode.SIM;
 
         public static enum Mode
         {
@@ -171,15 +171,20 @@ public final class Constants
 
     public static class LED
     {
-        public static final int   NUM_LEDS = 6; // TODO: Change value
-        public static final Color RED      = new Color(255, 0, 0);
-        public static final Color BLUE     = new Color(0, 0, 255);
-        public static final Color ORANGE   = new Color(255, 50, 0);
-        public static final Color PURPLE   = new Color(127, 0, 255);
-        public static final Color GREEN    = new Color(0, 115, 0);
-        public static final Color PINK     = new Color(255, 46, 204);
-        public static final Color TEAL     = new Color(0, 70, 139);
-        public static final Color OFF      = new Color(0, 0, 0);
+        public static final int   NUM_LEDS    = 6; // TODO: Change value
+        public static final Color RED         = new Color(255, 0, 0);
+        public static final Color BLUE        = new Color(0, 0, 255);
+        public static final Color ORANGE      = new Color(255, 50, 0);
+        public static final Color PURPLE      = new Color(127, 0, 255);
+        public static final Color GREEN       = new Color(0, 115, 0);
+        public static final Color PINK        = new Color(255, 46, 204);
+        public static final Color TEAL        = new Color(0, 70, 139);
+        public static final Color WHITE       = new Color(255, 255, 255);
+        public static final Color OFF         = new Color(0, 0, 0);
+        public static final Color SIGIS_COLOR = new Color(123, 65, 239);
+        public static final Color GREY        = new Color(100, 100, 100);
+        public static final Color ZOESCOLOR   = new Color(25, 120, 100);
+        public static final Color RONISCOLOR  = new Color(27, 44, 129);
     }
 
     public static class Notepath
