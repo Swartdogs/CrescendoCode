@@ -140,8 +140,8 @@ public class Dashboard extends SubsystemBase
     private final Intake          _intake;
     private final ShooterFlywheel _shooterFlywheel;
     private final Drive           _drive;
-    private final Climb           _climb;
-    private final LED             _led;
+    // private final Climb _climb;
+    private final LED _led;
 
     /*
      * SendableChoosers for Autonomous options
@@ -149,15 +149,15 @@ public class Dashboard extends SubsystemBase
     private final LoggedDashboardChooser<Integer> _autoDelayChooser;
     private final LoggedDashboardChooser<Command> _autoChooser;
 
-    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, Climb climb, LED led)
+    public Dashboard(ShooterBed shooterBed, Notepath notepath, ShooterFlywheel shooterFlywheel, Drive drive, Intake intake, LED led)
     {
         _drive           = drive;
         _shooterBed      = shooterBed;
         _notepath        = notepath;
         _shooterFlywheel = shooterFlywheel;
         _intake          = intake;
-        _climb           = climb;
-        _led             = led;
+        // _climb = climb;
+        _led = led;
 
         _driverCamera = CameraServer.startAutomaticCapture(Constants.Vision.DRIVER_CAMERA_NAME, 0);
         _driverCamera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
@@ -486,8 +486,10 @@ public class Dashboard extends SubsystemBase
         _field.setRobotPose(_drive.getPose());
 
         // Climb
-        _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getLeftExtension())));
-        _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f", _climb.getRightExtension())));
+        // _leftHeight.setDouble(Double.parseDouble(String.format("%6.2f",
+        // _climb.getLeftExtension())));
+        // _rightHeight.setDouble(Double.parseDouble(String.format("%6.2f",
+        // _climb.getRightExtension())));
 
         // Intake
         _intakeSpeed.setDouble(Double.parseDouble(String.format("%6.2f", _intake.getSpeed())));

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pneumaticclimb; 
+package frc.robot.subsystems.pneumaticclimb;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -16,5 +16,13 @@ public interface PneumaticClimbIO
 
     }
 
-    
+    public default void setLeft(boolean state)
+    {
+
+    }
+
+    public default void setRight(boolean state)
+    {
+
+    }
 }
