@@ -1,16 +1,16 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.6113561318031727,
+      "y": 4.52444177615628
+    },
+    "rotation": -63.498862204774646
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Pose to Source Side"
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -20,7 +20,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Start Shooter"
+            "name": "Set Bed Angle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Initial Speed"
           }
         },
         {
@@ -30,89 +36,71 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "SourceSideToNote5"
-          }
-        },
-        {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Load While Stopped"
+                  "name": "Set Bed Angle Intake"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "Start Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SourceSideToNote5"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Note5ToBlueLine"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Start Notepath"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BlueLineToNote4"
-          }
-        },
-        {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Load While Stopped"
+                  "name": "Set Bed Angle"
                 }
               },
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 1.0
+                  "pathName": "Note5ToBlueLine"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Note4ToBlueLine"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Start Notepath"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "BlueLineToNote1"
+            "name": "Stop Intake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Start Notepath"
+            "name": "Stop Shooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceDriveOut"
           }
         }
       ]

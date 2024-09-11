@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.205076102454639,
+        "y": 2.0917918758889997
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.452512047631286,
+        "y": 1.566150227462983
+      },
+      "isLocked": false,
+      "linkedName": "SourceSideBlueLineShot"
+    },
+    {
+      "anchor": {
+        "x": 8.578105156210313,
+        "y": 1.8750779319740465
+      },
+      "prevControl": {
+        "x": 7.293056811502359,
+        "y": 1.7418115156129863
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note5"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Start Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 21.05117604122286,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

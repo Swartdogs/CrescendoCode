@@ -3,64 +3,46 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.019226338989352,
-        "y": 2.4965659949208994
+        "x": 8.578105156210313,
+        "y": 1.8750779319740465
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.460000363519954,
-        "y": 1.2169881959979374
+        "x": 5.244455268874761,
+        "y": -0.6508594275929809
       },
       "isLocked": false,
       "linkedName": "Note5"
     },
     {
       "anchor": {
-        "x": 4.086672788730195,
-        "y": 1.963521619350932
+        "x": 0.6113561318031727,
+        "y": 4.52444177615628
       },
       "prevControl": {
-        "x": 4.951292335500593,
-        "y": 1.2335973151373854
+        "x": 2.895296810271618,
+        "y": 2.5406230418900915
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SourceDriveBack"
+      "linkedName": "SourceSide"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.15,
-      "maxWaypointRelativePos": 0.75,
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 9.0,
-        "maxAcceleration": 6.0,
+        "maxVelocity": 2.5,
+        "maxAcceleration": 2.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
     }
   ],
-  "eventMarkers": [
-    {
-      "name": "Start Shooter",
-      "waypointRelativePos": 0.45,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Start Shooter"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -69,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -35.83765295427832,
+    "rotation": -61.13227030540995,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "OuterNotesToBlueLine",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -45.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

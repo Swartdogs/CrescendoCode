@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.916426562727903,
+        "y": 4.009191274196502
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.2023225370315656,
+        "y": 3.6567348984500443
+      },
+      "isLocked": false,
+      "linkedName": "Note6"
+    },
+    {
+      "anchor": {
+        "x": 6.610774438006837,
+        "y": 4.699418343380516
+      },
+      "prevControl": {
+        "x": 5.525481441101342,
+        "y": 4.43894802413899
+      },
+      "nextControl": {
+        "x": 6.9779164960761975,
+        "y": 4.787532437311819
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.446484728397092,
+        "y": 5.756787470648212
+      },
+      "prevControl": {
+        "x": 7.4184869657753625,
+        "y": 5.668673376702747
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Note7"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "OuterNoteToOuterNote",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

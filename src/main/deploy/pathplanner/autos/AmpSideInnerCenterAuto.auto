@@ -1,0 +1,180 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.3874662294779135,
+      "y": 6.99655944766435
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Delay"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Speed 5000"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Bed Angle Inner Center 1"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSideToInnerCenter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Bed Angle Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Start Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BlueLineToNote8"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Bed Angle Inner Center 2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note8ToInnerCenter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Bed Angle Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "InnerCenterToNote7"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Bed Angle Inner Center 3"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Note7ToInnerCenter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Notepath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

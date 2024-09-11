@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CompositeCommands;
 import frc.robot.subsystems.leds.LED;
 
-import static frc.robot.Constants.LED.*;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -96,7 +94,7 @@ public class Robot extends LoggedRobot
             _autonomousCommand.schedule();
         }
 
-        _led.switchDefaultCommand(CompositeCommands.LEDAutonomous(_led));
+        _led.switchDefaultCommand(CompositeCommands.Teleop.LEDAutonomous(_led));
     }
 
     @Override
@@ -117,6 +115,6 @@ public class Robot extends LoggedRobot
     @Override
     public void disabledInit()
     {
-        CompositeCommands.LEDDisabled(_led);
+        CompositeCommands.Teleop.LEDDisabled(_led).schedule();
     }
 }
