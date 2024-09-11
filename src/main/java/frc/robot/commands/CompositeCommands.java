@@ -57,7 +57,7 @@ public final class CompositeCommands
             return ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
                 .andThen
                 (
-                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint()),
                     Commands.parallel
                     (
                         IntakeCommands.start(intake),
@@ -90,8 +90,8 @@ public final class CompositeCommands
             return 
                 Commands.sequence
                 (
-                    ShooterBedCommands.setAngle(shooterBed, bedAngle),
-                    Commands.waitUntil(() -> shooterBed.atSetpoint())
+                    ShooterBedCommands.setAngle(shooterBed, bedAngle)
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint())
                 );
             // @formatter:on
         }
@@ -102,8 +102,8 @@ public final class CompositeCommands
             return 
                 Commands.sequence
                 (
-                    ShooterBedCommands.setAngle(shooterBed, bedAngle),
-                    Commands.waitUntil(() -> shooterBed.atSetpoint())
+                    ShooterBedCommands.setAngle(shooterBed, bedAngle)
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint())
                 );
             // @formatter:on
         }
@@ -184,7 +184,7 @@ public final class CompositeCommands
                 ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.IntakeLoad)
                 .andThen
                 (
-                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint()),
                     Commands.parallel
                     (
                         IntakeCommands.start(intake),
@@ -223,7 +223,7 @@ public final class CompositeCommands
                 Commands.sequence
                 (
                     ShooterBedCommands.setAngle(shooterBed, shootAngle),
-                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint()),
                     ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity)
                 )
                 .onlyIf(()-> notepath.hasNote());
@@ -237,7 +237,7 @@ public final class CompositeCommands
                 Commands.sequence
                 (
                     ShooterBedCommands.setAngle(shooterBed, shootAngle),
-                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint()),
                     ShooterFlywheelCommands.start(shooterFlywheel, lowerVelocity, upperVelocity)
                 )
                 .onlyIf(()-> notepath.hasNote());
@@ -251,7 +251,7 @@ public final class CompositeCommands
                 ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.ShooterLoad)
                 .andThen
                 (
-                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint()),
                     Commands.parallel
                     (
                         ShooterFlywheelCommands.intake(shooterFlywheel),
@@ -259,6 +259,8 @@ public final class CompositeCommands
                     ),
                     Commands.waitUntil(() -> notepath.sensorTripped()),
                     Commands.waitUntil(() -> !notepath.sensorTripped()),
+                    NotepathCommands.intakeLoad(notepath),
+                    Commands.waitUntil(() -> notepath.sensorTripped()),
                     ShooterBedCommands.setAngle(shooterBed, ShooterBed.BedAngle.Stow),
                     rumble(controller)
                 )
@@ -335,6 +337,24 @@ public final class CompositeCommands
             );
         }
 
+        public static Command redSourceOrPass(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 323.73, maxSpeed), // pass
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 60, maxSpeed), // source
+                    () -> Utilities.isBlueAlliance()
+            );
+        }
+
+        public static Command blueSourceOrPass(Drive drive, Dashboard dashboard, DoubleSupplier xSupplier, DoubleSupplier ySupplier, BooleanSupplier robotCentric, double maxSpeed)
+        {
+            return Commands.either(
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 120, maxSpeed), // source
+                    DriveCommands.driveAtOrientation(drive, dashboard, xSupplier, ySupplier, robotCentric, 216.27, maxSpeed), // pass
+                    () -> Utilities.isBlueAlliance()
+            );
+        }
+
         public static Command redAmpOrPodium(ShooterFlywheel shooterFlywheel, Notepath notepath, ShooterBed shooterBed)
         {
             return Commands.either(
@@ -395,7 +415,7 @@ public final class CompositeCommands
                 Commands.sequence
                 (
                     ShooterBedCommands.setAngle(shooterBed, angle),
-                    Commands.waitUntil(() -> shooterBed.atSetpoint()),
+                    //Commands.waitUntil(() -> shooterBed.atSetpoint()),
                     ClimbCommands.setVolts(climb, leftSupplier, rightSupplier)
                 );
             // @formatter:on

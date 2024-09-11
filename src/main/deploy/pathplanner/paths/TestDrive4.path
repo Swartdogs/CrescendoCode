@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.3929974013794195,
-        "y": 5.564955745296107
+        "x": 5.996059559686686,
+        "y": 6.055280579029627
       },
       "prevControl": {
-        "x": 5.122701783865108,
-        "y": 4.93347140540435
+        "x": 9.725763942172374,
+        "y": 5.42379623913787
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "TestDrive",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
