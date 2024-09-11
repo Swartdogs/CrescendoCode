@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.pneumaticclimb.PneumaticClimb;
-import frc.robot.subsystems.pneumaticclimb.PneumaticClimbIO;
 
 public final class ClimbCommands
 {
