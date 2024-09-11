@@ -26,7 +26,7 @@ import frc.robot.subsystems.drive.ModuleIOHardware;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
-// import frc.robot.subsystems.vision.VisionIOPhotonlib;
+import frc.robot.subsystems.vision.VisionIOPhotonlib;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -98,7 +98,7 @@ public class RobotContainer
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new PneumaticClimb(new PneumaticClimbIOCTRE());
                 _led = new LED(new LEDIOHardware());
-                _vision = new Vision(_drive, new VisionIO() {});
+                _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
