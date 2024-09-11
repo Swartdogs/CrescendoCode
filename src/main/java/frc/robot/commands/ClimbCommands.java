@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.pneumaticclimb.PneumaticClimb;
 
 public final class ClimbCommands
 {
@@ -25,5 +26,10 @@ public final class ClimbCommands
     public static Command setHeight(Climb climb, double height)
     {
         return climb.runOnce(() -> climb.setHeight(height));
+    }
+
+    public static Command set(PneumaticClimb climb, boolean state)
+    {
+        return climb.runOnce(() -> climb.set(state));
     }
 }
