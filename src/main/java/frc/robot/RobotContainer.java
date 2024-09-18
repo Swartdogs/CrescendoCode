@@ -174,7 +174,7 @@ public class RobotContainer
     private void configureOperatorCommands()
     {
         _controller.a().onTrue(CompositeCommands.Teleop.intakePickup(_intake, _notepath, _shooterBed, _controller.getHID()));
-        _controller.b().onTrue(CompositeCommands.General.stopIntaking(_intake, _notepath));
+        _controller.b().onTrue(CompositeCommands.Teleop.spitOut(_notepath, _shooterFlywheel));
         _controller.x().whileTrue(CompositeCommands.Teleop.suckIn(_notepath, _shooterFlywheel));
         _controller.y().onTrue(CompositeCommands.Teleop.shooterPickup(_shooterBed, _shooterFlywheel, _notepath, _controller.getHID()));
 
@@ -183,6 +183,8 @@ public class RobotContainer
         _controller.rightTrigger().whileTrue(CompositeCommands.Teleop.setBedVolts(_shooterBed, () -> -_controller.getRightY()));
 
         _controller.leftStick().onTrue(CompositeCommands.General.stopShooter(_shooterFlywheel, _notepath));
+        _controller.rightStick().onTrue(CompositeCommands.General.stopIntaking(_intake, _notepath));
+
         // _controller.rightStick().whileTrue(CompositeCommands.Teleop.LEDPartyMode(_led));
         // _controller.rightStick().onTrue(CompositeCommands.General.startNotepath(_shooterBed,
         // _notepath, _shooterFlywheel, _drive));
@@ -198,7 +200,7 @@ public class RobotContainer
         // _controller.povRight().onTrue(ShooterBedCommands.setAngle(_shooterBed, 60));
         // _controller.povDown().onTrue(ShooterBedCommands.setAngle(_shooterBed, 30));
 
-        _controller.povUp().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 2800, 2800, ShooterBed.BedAngle.TrapShot));
+        _controller.povUp().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.TrapShot));
         _controller.povDown().onTrue(CompositeCommands.Teleop.startShooter(_shooterFlywheel, _notepath, _shooterBed, 4000, 4000, ShooterBed.BedAngle.SubwooferShot));
         _controller.povLeft().onTrue(CompositeCommands.Teleop.blueAmpOrPodium(_shooterFlywheel, _notepath, _shooterBed));
         _controller.povRight().onTrue(CompositeCommands.Teleop.redAmpOrPodium(_shooterFlywheel, _notepath, _shooterBed));

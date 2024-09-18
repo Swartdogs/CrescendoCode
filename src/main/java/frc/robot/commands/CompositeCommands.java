@@ -292,6 +292,22 @@ public final class CompositeCommands
             // @formatter:on
         }
 
+        public static Command spitOut(Notepath notepath, ShooterFlywheel shooterFlywheel)
+        {
+            return 
+                Commands.parallel
+                (
+                    NotepathCommands.feed(notepath),
+                    ShooterFlywheelCommands.start(shooterFlywheel, 3000, 3000)
+                )
+                .andThen(Commands.idle(notepath, shooterFlywheel))
+                .finallyDo(() ->
+                {
+                    notepath.set(NotepathState.Off);
+                    shooterFlywheel.stop();
+                });
+        }
+
         public static Command climbJoystick(Climb climb, DoubleSupplier leftSupplier, DoubleSupplier rightSupplier)
         {
             // @formatter:off
