@@ -26,7 +26,7 @@ import frc.robot.subsystems.drive.ModuleIOHardware;
 import frc.robot.subsystems.gyro.Gyro;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
-//import frc.robot.subsystems.vision.VisionIOPhotonlib;
+// import frc.robot.subsystems.vision.VisionIOPhotonlib;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -64,7 +64,7 @@ public class RobotContainer
     private final PneumaticClimb  _climb;
     private final Gyro            _gyro;
     @SuppressWarnings("unused")
-    //private final Vision          _vision;
+    // private final Vision _vision;
     private final LED             _led;
 
     // Dashboard inputs
@@ -98,7 +98,7 @@ public class RobotContainer
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSparkMax());
                 _climb = new PneumaticClimb(new PneumaticClimbIOCTRE());
                 _led = new LED(new LEDIOHardware());
-                //_vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
+                // _vision = new Vision(_drive, new VisionIOPhotonlib(_drive));
                 break;
 
             // Sim robot, instantiate physics sim IO implementations
@@ -111,7 +111,7 @@ public class RobotContainer
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
                 _climb = new PneumaticClimb(new PneumaticClimbIOSim());
                 _led = new LED(new LEDIOSim());
-                //_vision = new Vision(_drive, new VisionIO() {});
+                // _vision = new Vision(_drive, new VisionIO() {});
                 break;
 
             // Replayed robot, disable IO implementations
@@ -124,7 +124,7 @@ public class RobotContainer
                 _shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
                 _climb = new PneumaticClimb(new PneumaticClimbIO() {});
                 _led = new LED(new LEDIO() {});
-                //_vision = new Vision(_drive, new VisionIO() {});
+                // _vision = new Vision(_drive, new VisionIO() {});
                 break;
         }
 
@@ -167,7 +167,9 @@ public class RobotContainer
         _joystick.button(8).whileTrue(CompositeCommands.Teleop.blueSourceOrPass(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6)); // 60 degrees right
         _joystick.button(9).whileTrue(CompositeCommands.Teleop.blueAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
         _joystick.button(10).whileTrue(CompositeCommands.Teleop.redAmpOrSubwoofer(_drive, _dashboard, () -> -_joystick.getY(), () -> -_joystick.getX(), this::getRobotCentric, 0.6));
-        //_joystick.button(11).whileTrue(CompositeCommands.Teleop.visionAimAtSpeaker(_drive, _vision, () -> -_joystick.getY(), () -> -_joystick.getX(), () -> -_joystick.getZ(), this::getRobotCentric, _dashboard));
+        // _joystick.button(11).whileTrue(CompositeCommands.Teleop.visionAimAtSpeaker(_drive,
+        // _vision, () -> -_joystick.getY(), () -> -_joystick.getX(), () ->
+        // -_joystick.getZ(), this::getRobotCentric, _dashboard));
         _joystick.button(12).onTrue(DriveCommands.resetGyro(_drive, _gyro));
     }
 
