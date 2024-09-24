@@ -2,9 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.CompositeCommands;
-import frc.robot.subsystems.leds.LED;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -16,7 +13,6 @@ public class Robot extends LoggedRobot
 {
     private Command        _autonomousCommand;
     private RobotContainer _robotContainer;
-    private LED            _led;
 
     @Override
     public void robotInit()
@@ -75,7 +71,6 @@ public class Robot extends LoggedRobot
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our autonomous chooser on the dashboard.
         _robotContainer = new RobotContainer();
-        _led            = _robotContainer.getLEDSubsystem();
     }
 
     @Override
@@ -93,8 +88,6 @@ public class Robot extends LoggedRobot
         {
             _autonomousCommand.schedule();
         }
-
-        _led.switchDefaultCommand(CompositeCommands.Teleop.LEDAutonomous(_led));
     }
 
     @Override
@@ -110,11 +103,5 @@ public class Robot extends LoggedRobot
     public void testInit()
     {
         CommandScheduler.getInstance().cancelAll();
-    }
-
-    @Override
-    public void disabledInit()
-    {
-        CompositeCommands.Teleop.LEDDisabled(_led).schedule();
     }
 }

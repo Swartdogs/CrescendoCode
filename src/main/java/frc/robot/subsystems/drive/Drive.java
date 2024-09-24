@@ -1,12 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -18,15 +11,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.gyro.Gyro;
-import frc.robot.util.LocalADStarAK;
-
-import java.util.List;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -58,29 +46,12 @@ public class Drive extends SubsystemBase
         _speedMultiplier = 1;
 
         // Configure AutoBuilder for PathPlanner
-        AutoBuilder.configureHolonomic(
-                this::getPose, this::setPose, this::getChassisSpeeds, this::runVelocity, new HolonomicPathFollowerConfig(Constants.Drive.MAX_LINEAR_SPEED, Constants.Drive.DRIVE_BASE_RADIUS, new ReplanningConfig()),
-                () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red, this
-        );
-
-        Pathfinding.setPathfinder(new LocalADStarAK());
-
-        PathPlannerLogging.setLogActivePathCallback((activePath) ->
-        {
-            Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-
-        PathPlannerLogging.setLogTargetPoseCallback((targetPose) ->
-        {
-            Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
 
         _poseEstimator = new SwerveDrivePoseEstimator(_kinematics, new Rotation2d(), getModulePositions(), new Pose2d());
 
         // Create a list of bezier points from poses. Each pose represents one waypoint.
         // The rotation component of the pose should be the direction of travel. Do not
         // use holonomic rotation.
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)), new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90)));
 
         // // Create the path using the bezier points created above
         // PathPlannerPath path = new PathPlannerPath(
