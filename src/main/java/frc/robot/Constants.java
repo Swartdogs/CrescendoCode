@@ -28,24 +28,43 @@ public final class Constants
         }
     }
 
+    public static class RobotConfig
+    {
+        public static final Robots CURRENT_ROBOT = Robots.GRASSHOPPER;
+
+        public static enum Robots
+        {
+            GRASSHOPPER(15, 60), MELMAN(30, 20);
+
+            public double TRACK_WIDTH;
+            public double WHEEL_BASE;
+
+            private Robots(double tw, double wb)
+            {
+                TRACK_WIDTH = tw;
+                WHEEL_BASE  = wb;
+            }
+        }
+    }
+
     public static class AIO
     {
-        public static final int MODULE_FL_SENSOR   = 0;
-        public static final int MODULE_FR_SENSOR   = 1;
-        public static final int MODULE_BL_SENSOR   = 2;
-        public static final int MODULE_BR_SENSOR   = 3;
+        public static final int MODULE_FL_SENSOR = 0;
+        public static final int MODULE_FR_SENSOR = 1;
+        public static final int MODULE_BL_SENSOR = 2;
+        public static final int MODULE_BR_SENSOR = 3;
     }
 
     public static class CAN
     {
-        public static final int MODULE_FL_DRIVE        = 1;
-        public static final int MODULE_FL_ROTATE       = 2;
-        public static final int MODULE_FR_DRIVE        = 3;
-        public static final int MODULE_FR_ROTATE       = 4;
-        public static final int MODULE_BL_DRIVE        = 5;
-        public static final int MODULE_BL_ROTATE       = 6;
-        public static final int MODULE_BR_DRIVE        = 7;
-        public static final int MODULE_BR_ROTATE       = 8;
+        public static final int MODULE_FL_DRIVE  = 1;
+        public static final int MODULE_FL_ROTATE = 2;
+        public static final int MODULE_FR_DRIVE  = 3;
+        public static final int MODULE_FR_ROTATE = 4;
+        public static final int MODULE_BL_DRIVE  = 5;
+        public static final int MODULE_BL_ROTATE = 6;
+        public static final int MODULE_BR_DRIVE  = 7;
+        public static final int MODULE_BR_ROTATE = 8;
     }
 
     public static class Characterization
@@ -59,7 +78,7 @@ public final class Constants
         public static final double JOYSTICK_DEADBAND        = 0.1;
         public static final double ROTATE_JOYSTICK_DEADBAND = 0.15;
     }
-    
+
     public static class Drive
     {
         public static final double     TRACK_WIDTH_X     = Units.inchesToMeters(20.0);

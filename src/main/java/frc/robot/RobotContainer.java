@@ -16,11 +16,11 @@ import frc.robot.subsystems.gyro.Gyro;
 public class RobotContainer
 {
     // Subsystems
-    private final Drive           _drive;
-    private final Gyro            _gyro;
+    private final Drive _drive;
+    private final Gyro  _gyro;
 
     // Controls
-    private final CommandJoystick       _joystick   = new CommandJoystick(1);
+    private final CommandJoystick _joystick = new CommandJoystick(1);
 
     public RobotContainer()
     {
