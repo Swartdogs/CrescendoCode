@@ -1,8 +1,13 @@
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 public final class Constants
 {
@@ -34,15 +39,32 @@ public final class Constants
 
         public static enum Robots
         {
-            GRASSHOPPER(15, 60), MELMAN(30, 20);
+            GRASSHOPPER (Units.inchesToMeters(25), 24,    Rotation2d.fromDegrees(0), 0, 0, 0, new TalonFX(CAN.MODULE_FL_DRIVE), new TalonFX(CAN.MODULE_FR_DRIVE), new TalonFX(CAN.MODULE_BL_DRIVE), new TalonFX(CAN.MODULE_BR_DRIVE)),
+            MELMAN      (Units.inchesToMeters(20), 28.75, Rotation2d.fromDegrees(0), 0, 0, 0, new CANSparkMax(CAN.MODULE_FL_DRIVE, MotorType.kBrushless), new CANSparkMax(CAN.MODULE_FR_DRIVE, MotorType.kBrushless), new CANSparkMax(CAN.MODULE_BL_DRIVE, MotorType.kBrushless), new CANSparkMax(CAN.MODULE_BR_DRIVE, MotorType.kBrushless));
 
-            public double TRACK_WIDTH;
-            public double WHEEL_BASE;
+            public final double TRACK_WIDTH;
+            public final double WHEEL_BASE;
+            public final Rotation2d FL_OFFSET;
+            public final double FR_OFFSET;
+            public final double BL_OFFSET;
+            public final double BR_OFFSET;
+            public final MotorController FL_MOTOR;
+            public final MotorController FR_MOTOR;
+            public final MotorController BL_MOTOR;
+            public final MotorController BR_MOTOR;
 
-            private Robots(double tw, double wb)
+            private Robots(double tw, double wb, Rotation2d flo, double fro, double blo, double bro, MotorController flm, MotorController frm, MotorController blm, MotorController brm)
             {
                 TRACK_WIDTH = tw;
                 WHEEL_BASE  = wb;
+                FL_OFFSET = flo;
+                FR_OFFSET = fro;
+                BL_OFFSET = blo;
+                BR_OFFSET = bro;
+                FL_MOTOR = flm;
+                FR_MOTOR = frm;
+                BL_MOTOR = blm;
+                BR_MOTOR = brm;
             }
         }
     }
@@ -84,6 +106,7 @@ public final class Constants
         public static final double     TRACK_WIDTH_X     = Units.inchesToMeters(20.0);
         public static final double     TRACK_WIDTH_Y     = Units.inchesToMeters(28.5);
         public static final double     WHEEL_RADIUS      = Units.inchesToMeters(2.0);
+        // These constants are for Odie. For Melman and Grasshopper, drive gear ratio should be (14.0 / 36.0) * (15.0 / 45.0), and turn gear ratio should be (10.0 / 1.0) * (18.0 / 72.0)
         public static final double     DRIVE_GEAR_RATIO  = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
         public static final double     TURN_GEAR_RATIO   = (150.0 / 7.0);
         public static final double     MAX_LINEAR_SPEED  = Units.feetToMeters(13.86);
